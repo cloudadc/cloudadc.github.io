@@ -1,3 +1,4 @@
 = 目录
 
 . link:README.adoc[BASICS]
+. link:dba/cluster-admin.adoc[基本集群管理]

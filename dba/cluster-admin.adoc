@@ -1,0 +1,233 @@
+= 基本集群管理
+:toc: manual
+
+== mongod & mongo
+
+`mongod` 命令用来启动一个 MongoDB Server 后台进程，`mongo` 是一个 Shell 入口用来连接 MongoDB Server 执行一些数据库管理操作。
+
+=== 基本操作
+
+本部分说明 `mongod` 和 `mongo` 命令的一些基本使用操作。
+
+[source, text]
+.*1. 启动 MongoDB Server*
+----
+$ mongod
+2019-03-13T14:03:02.496+0000 I CONTROL  [initandlisten] MongoDB starting : pid=2530 port=27017 dbpath=/data/db 64-bit host=m103
+2019-03-13T14:03:02.497+0000 I CONTROL  [initandlisten] db version v3.6.11
+2019-03-13T14:03:02.497+0000 I CONTROL  [initandlisten] git version: b4339db12bf57ffee5b84a95c6919dbd35fe31c9
+
+...
+
+2019-03-13T14:03:03.493+0000 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+2019-03-13T14:03:03.493+0000 I NETWORK  [initandlisten] waiting for connections on port 27017
+----
+
+如上输出可以显示：
+
+* MongoDB 启动成功
+* 进程 ID 为 2530
+* 监听的端口为 27017
+* dbpath 为 /data/db
+* MongoDB 的版本为 v3.6.11
+
+[source, text]
+.*2. 查看 mongod 监听的端口*
+----
+$ netstat -ntulop 2350
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name Timer
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      -                off (0.00/0/0)
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -                off (0.00/0/0)
+tcp        0      0 0.0.0.0:43671           0.0.0.0:*               LISTEN      -                off (0.00/0/0)
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      2530/mongod      off (0.00/0/0)
+tcp6       0      0 :::111                  :::*                    LISTEN      -                off (0.00/0/0)
+tcp6       0      0 :::22                   :::*                    LISTEN      -                off (0.00/0/0)
+tcp6       0      0 :::45403                :::*                    LISTEN      -                off (0.00/0/0)
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           -                off (0.00/0/0)
+udp        0      0 0.0.0.0:51421           0.0.0.0:*                           -                off (0.00/0/0)
+udp        0      0 0.0.0.0:7926            0.0.0.0:*                           -                off (0.00/0/0)
+udp        0      0 0.0.0.0:775             0.0.0.0:*                           -                off (0.00/0/0)
+udp        0      0 127.0.0.1:904           0.0.0.0:*                           -                off (0.00/0/0)
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           -                off (0.00/0/0)
+udp6       0      0 :::111                  :::*                                -                off (0.00/0/0)
+udp6       0      0 :::52488                :::*                                -                off (0.00/0/0)
+udp6       0      0 :::14840                :::*                                -                off (0.00/0/0)
+udp6       0      0 :::775                  :::*                                -                off (0.00/0/0) 
+----
+
+[source, text]
+.*3. mongo 命令客户端连接*
+----
+$ mongo
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("26452ac6-5ba0-4a35-826f-2c5fcf491742") }
+MongoDB server version: 3.6.11
+MongoDB Enterprise > 
+----
+
+[source, text]
+.*4. 查看 mongod Console 接收到连接信息*
+----
+2019-03-13T14:09:12.012+0000 I NETWORK  [listener] connection accepted from 127.0.0.1:46344 #1 (1 connection now open)
+2019-03-13T14:09:12.012+0000 I NETWORK  [conn1] received client metadata from 127.0.0.1:46344 conn1: { application: { name: "MongoDB Shell" }, driver: { name: "MongoDB Internal Client", version: "3.6.11" }, os: { type: "Linux", name: "Ubuntu", architecture: "x86_64", version: "14.04" } } 
+----
+
+[source, text]
+.*5. MongoDB shell 查看所有的数据库列表*
+----
+MongoDB Enterprise > show dbs
+admin   0.000GB
+config  0.000GB
+local   0.000GB 
+----
+
+[source, text]
+.*6. MongoDB shell 在 admin 库下执行停止 MongoDB 命令*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.shutdownServer()
+server should be down...
+----
+
+[source, text]
+.*7. 查看 mongod Console 中数据库停止的消息*
+----
+2019-03-13T14:13:25.764+0000 I COMMAND  [conn1] terminating, shutdown command received
+2019-03-13T14:13:25.764+0000 I NETWORK  [conn1] shutdown: going to close listening sockets...
+2019-03-13T14:13:25.764+0000 I NETWORK  [conn1] removing socket file: /tmp/mongodb-27017.sock
+2019-03-13T14:13:25.765+0000 I FTDC     [conn1] Shutting down full-time diagnostic data capture
+2019-03-13T14:13:25.766+0000 I STORAGE  [conn1] WiredTigerKVEngine shutting down
+2019-03-13T14:13:25.912+0000 I STORAGE  [conn1] shutdown: removing fs lock...
+2019-03-13T14:13:25.912+0000 I CONTROL  [conn1] now exiting
+2019-03-13T14:13:25.913+0000 I CONTROL  [conn1] shutting down with code:0
+----
+
+[source, text]
+.*8. 退出 MongoDB shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
+=== mongod 启动指定参数
+
+本部分说明 `mongod` 启动 MongoDB 数据库时指定相应参数。
+ 
+[source, text]
+.*1. 查看 mongod 帮助*
+----
+$ mongod -h
+
+...
+
+  --port arg                            specify port number - 27017 by default
+  --dbpath arg                          directory for datafiles - defaults to 
+                                        /data/db
+  --logpath arg                         log file to send write to instead of 
+                                        stdout - has to be a file, not 
+                                        directory
+  --fork                                fork server process
+----
+
+[source, text]
+.*2. 创建一个本地目录*
+----
+$ mkdir first_mongod
+----
+
+[source, text]
+.*3. 启动 MongoDB 并指定参数*
+----
+$ mongod --port 30000 --dbpath first_mongod/ --logpath first_mongod/mongod01.log --fork
+about to fork child process, waiting until server is ready for connections.
+forked process: 2750
+child process started successfully, parent exiting
+----
+
+[source, text]
+.*4. 查看运行进程*
+----
+$ ps -aux | grep mongo*
+vagrant   2750  0.8  2.5 1105028 53100 ?       Sl   14:25   0:00 mongod --port 30000 --dbpath first_mongod/ --logpath first_mongod/mongod01.log --fork
+----
+[source, text]
+.*5. 查看监听的端口*
+----
+$ netstat -ntulop | grep 2750
+tcp        0      0 127.0.0.1:30000         0.0.0.0:*               LISTEN      2750/mongod      off (0.00/0/0)
+----
+
+[source, text]
+.*6. mongo 命令客户端连接*
+----
+$ mongo --port 30000
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:30000/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("db4aa0de-5309-401a-bd64-1f60466a5acf") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*7. Mongo Shell 命令行执行停止 MongoDB*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.shutdownServer()
+server should be down...
+----
+
+[source, text]
+.*8. 退出 MongoDB shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
