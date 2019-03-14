@@ -188,6 +188,248 @@ MongoDB Enterprise > exit
 bye
 ----
 
+=== 绑定多个地址，创建用户
+
+本部分说明 `mongod` 启动 MongoDB 数据库时邦定多个 IP，并通过 `mongo` 命令创建一个管理账户。
+
+[source, text]
+.*1. 启动 MongoDB*
+----
+$ mongod --port 27000 --dbpath /data/db/ --bind_ip '192.168.103.100,localhost'
+----
+
+[source, text]
+.*2. 查看运行的进程*
+----
+$ ps -ef | grep mongod
+vagrant   2547  1959  7 23:35 pts/0    00:00:00 mongod --port 27000 --dbpath /data/db/ --bind_ip 192.168.103.100,localhost
+----
+
+[source, text]
+.*3. 查看监听的端口*
+----
+$ netstat -antulop | grep 2547
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      2547/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      2547/mongod      off (0.00/0/0)
+----
+
+[source, text]
+.*4. 创建管理用户*
+----
+$ mongo admin --host localhost:27000 --eval '
+  db.createUser({
+    user: "kylin",
+    pwd: "mongodb",
+    roles: [
+      {role: "root", db: "admin"}
+    ]
+  })
+'
+----
+
+[source, text]
+.*5. 使用新创建的用户连接数据库*
+----
+$ mongo kylin --host localhost:27000 
+MongoDB shell version v3.6.11
+connecting to: mongodb://localhost:27000/kylin?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("3b10edf4-5d3a-4831-a505-787298cdae34") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*6. Mongo Shell 命令行执行停止 MongoDB*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.shutdownServer()
+server should be down...
+----
+
+[source, text]
+.*7. 退出 MongoDB shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
+=== 通过配制文件启动 MongoDB
+
+本部通过一个配制文件指定 `mongod` 启动时所需要的参数。
+
+[source, text]
+.*1. 创建 my-mongod.conf，内容如下*
+----
+storage:
+  dbPath: /data/db/
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+security:
+  authorization: enabled
+----
+
+[source, text]
+.*2. 启动 MongoDB*
+----
+$ mongod --config my-mongod.conf
+----
+
+[source, text]
+.*3. 查看运行的进程*
+----
+$ ps -ef | grep mongod
+vagrant   2699  1959  0 23:48 pts/0    00:00:01 mongod --config my-mongod.conf
+----
+
+[source, text]
+.*4. 查看监听的端口*
+----
+$ netstat -antulop | grep 2699
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      2699/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      2699/mongod      off (0.00/0/0
+---- 
+
+[source, text]
+.*5. Kill 停止运行的 mongod*
+----
+$ kill -9 2699
+----
+
+=== 改变默认的数据存储路径
+
+本部分说明在 `mongod` 启动时指定一个额外的路径。
+
+[source, text]
+.*1. 创建一个路径*
+----
+$ sudo mkdir -p /var/mongodb/db/
+----
+
+[source, text]
+.*2. 修改以上创建的路径为 vagrant 用户所有*
+----
+$ sudo chown vagrant:vagrant /var/mongodb/db/
+
+$ ls -l /var/mongodb/
+total 4
+drwxr-xr-x 2 vagrant vagrant 4096 Mar 14 00:10 db
+----
+
+[source, text]
+.*3. 创建 my-mongod.conf，内容如下*
+----
+storage:
+  dbPath: /var/mongodb/db/
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+security:
+  authorization: enabled
+----
+
+[source, text]
+.*4. 启动 MongoDB*
+----
+$ mongod --config my-mongod.conf
+----
+
+[source, text]
+.*5. 查看运行的进程*
+----
+$ ps -ef | grep mongod
+vagrant   3257  1959  1 00:17 pts/0    00:00:00 mongod --config my-mongod.conf
+----
+
+[source, text]
+.*6. 查看监听的端口*
+----
+$ netstat -antulop | grep 3257
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      3257/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      3257/mongod      off (0.00/0/0)
+----
+
+[source, text]
+.*7. 查看数据库文件*
+----
+$ ls -l /var/mongodb/db/
+total 196
+-rw------- 1 vagrant vagrant    45 Mar 14 00:17 WiredTiger
+-rw------- 1 vagrant vagrant    21 Mar 14 00:17 WiredTiger.lock
+-rw------- 1 vagrant vagrant  1103 Mar 14 00:19 WiredTiger.turtle
+-rw------- 1 vagrant vagrant 57344 Mar 14 00:19 WiredTiger.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 WiredTigerLAS.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 _mdb_catalog.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 collection-0--7654468380997166951.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 collection-2--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 collection-4--7654468380997166951.wt
+drwx------ 2 vagrant vagrant  4096 Mar 14 00:20 diagnostic.data
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 index-1--7654468380997166951.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 index-3--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 index-5--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:18 index-6--7654468380997166951.wt
+drwx------ 2 vagrant vagrant  4096 Mar 14 00:17 journal
+-rw------- 1 vagrant vagrant     5 Mar 14 00:17 mongod.lock
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:19 sizeStorer.wt
+-rw------- 1 vagrant vagrant   114 Mar 14 00:17 storage.bson
+----
+
+[source, text]
+.*8. mongo 命令客户端连接*
+----
+$ mongo admin --port 27000
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/admin?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("bf41ace1-63a6-4da1-af9f-c93882fdbcda") }
+MongoDB server version: 3.6.11
+MongoDB Enterprise > 
+----
+
+[source, text]
+.*9. Mongo Shell 命令行执行停止 MongoDB*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.shutdownServer()
+server should be down...
+----
+
+[source, text]
+.*10. 退出 MongoDB shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
+=== TODO
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
 
 [source, text]
 .**
