@@ -405,61 +405,404 @@ MongoDB Enterprise > exit
 bye
 ----
 
+=== 设定日志策略
+
+本部分设计日志策略，将查询时间大于 50 毫秒的操作日志输出。
+
+[source, text]
+.*1. 创建 my-mongod.conf，内容如下*
+----
+storage:
+  dbPath: /var/mongodb/db/
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db/mongod.log
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+operationProfiling:
+  slowOpThresholdMs: 50
+
+security:
+  authorization: enabled
+----
+
+[source, text]
+.*2. 启动 MongoDB*
+----
+$ mongod --config my-mongod.conf
+----
+
+[source, text]
+.*3. 执行一次查询*
+----
+//
+----
+
+[source, text]
+.*4. 查看日志输出*
+----
+//
+----
+
+=== 执行计划分析
+
+MongoDB 中如果要分析某些执行操作的性能，如执行时间等，就需要执行计划 `Profiler`，本部分说明 MongoDB 执行计划分析。
+
+[source, text]
+.*1. 创建一个新 DB*
+----
+MongoDB Enterprise > use newDB
+switched to db newDB
+----
+
+[source, text]
+.*2. 查看计划执行级别*
+----
+MongoDB Enterprise > db.getProfilingLevel()
+0
+----
+
+[source, text]
+.*3. 设定计划执行级别为 1，收集执行操作较长的操作(默认 100 毫秒)*
+----
+MongoDB Enterprise > db.setProfilingLevel(1)
+{ "was" : 0, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }
+----
+
+[source, text]
+.*4. 查看生成执行计划保存的 collection*
+----
+MongoDB Enterprise > show collections
+system.profile
+----
+
+[source, text]
+.*5. 调整较长执行时间阀值为 0，即收集所有操作(测试目的)*
+----
+MongoDB Enterprise > db.setProfilingLevel(1, {slowms: 0})
+{ "was" : 1, "slowms" : 100, "sampleRate" : 1, "ok" : 1 }
+----
+
+[source, text]
+.*6. 执行一次插入数据操作*
+----
+MongoDB Enterprise > db.new_connection.insert({"id": 1001, "name": "Kylin"})
+WriteResult({ "nInserted" : 1 })
+----
+
+[source, text]
+.*7. 查看执行计划*
+----
+MongoDB Enterprise > db.system.profile.find().pretty()
+{
+	"op" : "insert",
+	"ns" : "newDB.new_connection",
+	"command" : {
+		"insert" : "new_connection",
+		"ordered" : true,
+		"lsid" : {
+			"id" : UUID("a5f34116-7269-4372-ab7c-67a3254a1afe")
+		},
+		"$db" : "newDB"
+	},
+	"ninserted" : 1,
+	"keysInserted" : 1,
+	"numYield" : 0,
+	"locks" : {
+		"Global" : {
+			"acquireCount" : {
+				"r" : NumberLong(5),
+				"w" : NumberLong(3)
+			}
+		},
+		"Database" : {
+			"acquireCount" : {
+				"r" : NumberLong(1),
+				"w" : NumberLong(2),
+				"W" : NumberLong(1)
+			}
+		},
+		"Collection" : {
+			"acquireCount" : {
+				"r" : NumberLong(1),
+				"w" : NumberLong(2)
+			}
+		}
+	},
+	"responseLength" : 29,
+	"protocol" : "op_msg",
+	"millis" : 60,
+	"ts" : ISODate("2019-03-14T09:37:47.393Z"),
+	"client" : "127.0.0.1",
+	"appName" : "MongoDB Shell",
+	"allUsers" : [ ],
+	"user" : ""
+}
+----
+
+[source, text]
+.*8. 执行一次读取操作*
+----
+MongoDB Enterprise > db.new_connection.find({"id": 1001})
+{ "_id" : ObjectId("5c8a20eb29d0caf9229a8d82"), "id" : 1001, "name" : "Kylin" }
+----
+
+[source, text]
+.*9. 再次查看执行计划*
+----
+MongoDB Enterprise > db.system.profile.find().pretty()
+
+...
+
+{
+	"op" : "query",
+	"ns" : "newDB.new_connection",
+	"command" : {
+		"find" : "new_connection",
+		"filter" : {
+			"id" : 1001
+		},
+		"lsid" : {
+			"id" : UUID("a5f34116-7269-4372-ab7c-67a3254a1afe")
+		},
+		"$db" : "newDB"
+	},
+	"keysExamined" : 0,
+	"docsExamined" : 1,
+	"cursorExhausted" : true,
+	"numYield" : 0,
+	"locks" : {
+		"Global" : {
+			"acquireCount" : {
+				"r" : NumberLong(2)
+			}
+		},
+		"Database" : {
+			"acquireCount" : {
+				"r" : NumberLong(1)
+			}
+		},
+		"Collection" : {
+			"acquireCount" : {
+				"r" : NumberLong(1)
+			}
+		}
+	},
+	"nreturned" : 1,
+	"responseLength" : 146,
+	"protocol" : "op_msg",
+	"millis" : 0,
+	"planSummary" : "COLLSCAN",
+	"execStats" : {
+		"stage" : "COLLSCAN",
+		"filter" : {
+			"id" : {
+				"$eq" : 1001
+			}
+		},
+		"nReturned" : 1,
+		"executionTimeMillisEstimate" : 0,
+		"works" : 3,
+		"advanced" : 1,
+		"needTime" : 1,
+		"needYield" : 0,
+		"saveState" : 0,
+		"restoreState" : 0,
+		"isEOF" : 1,
+		"invalidates" : 0,
+		"direction" : "forward",
+		"docsExamined" : 1
+	},
+	"ts" : ISODate("2019-03-14T09:43:54.961Z"),
+...
+----
+
+=== 创建管理用户
+
+[source, text]
+.*1. 启动 MongoDB*
+----
+$ mongod -f /etc/mongod.conf
+----
+
+[source, text]
+.*2. 查看运行的进程*
+----
+$ ps -ef | grep mongod
+vagrant   5191  1956  5 14:52 pts/0    00:00:00 mongod -f /etc/mongod.conf
+----
+
+[source, text]
+.*3. 查看监听的端口*
+----
+$ netstat -antulop | grep 5191
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      5191/mongod      off (0.00/0/0
+----
+
+[source, text]
+.*4. mongo 命令客户端连接*
+----
+$ mongo --host 127.0.0.1:27017
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("d34d9ea7-369a-4466-865a-833556a63a3f") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*5. 创建一个 root 用户，具有 root 权限*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.createUser({user: "root", pwd: "root123", roles: ["root"]})
+Successfully added user: { "user" : "root", "roles" : [ "root" ] }
+----
+
+[source, text]
+.*6. 退出 Mongo Shell 终端，以新创建的用户登录*
+----
+$ mongo --username root --password root123 --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("eb8549e7-025c-4d89-94ec-e42096526967") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*7. 查看 DB 状态*
+----
+MongoDB Enterprise > db.stats()
+{
+	"db" : "test",
+	"collections" : 0,
+	"views" : 0,
+	"objects" : 0,
+	"avgObjSize" : 0,
+	"dataSize" : 0,
+	"storageSize" : 0,
+	"numExtents" : 0,
+	"indexes" : 0,
+	"indexSize" : 0,
+	"fileSize" : 0,
+	"fsUsedSize" : 0,
+	"fsTotalSize" : 0,
+	"ok" : 1
+}
+----
+
+[source, text]
+.*8. 退出 MongoDB shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
+=== 创建应用用户
+
+[source, text]
+.*1. 创建 test-mongod.conf，内容如下*
+----
+storage:
+  dbPath: /var/mongodb/db/
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db/mongod.log
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+security:
+  authorization: enabled
+----
+
+[source, text]
+.*2. 启动 MongoDB*
+----
+$ mongod -f test-mongod.conf 
+forked process: 5405
+----
+
+[source, text]
+.*3. 查看监听的端口*
+----
+$ netstat -antulop | grep 5405
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      5405/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      5405/mongod      off (0.00/0/0)
+----
+
+[source, text]
+.*4. mongo 命令客户端连接*
+----
+$ mongo --host 127.0.0.1:27000
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("dd7a993a-9b0d-4ad5-a802-b92d7127a1d0") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*5. 在 admin 数据库中创建 root 用户*
+----
+MongoDB Enterprise > use admin
+switched to db admin
+MongoDB Enterprise > db.createUser({user: "m103-admin", pwd: "m103-pass", roles: ["root"]})
+Successfully added user: { "user" : "m103-admin", "roles" : [ "root" ] }
+MongoDB Enterprise > exit
+bye
+----
+
+[source, text]
+.*6. 以新创建的用户登录*
+----
+$ mongo admin --host 127.0.0.1:27000 -u m103-admin -p m103-pass
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/admin?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("e903a74b-fb15-4f3d-a295-8af6d72f7af2") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*7. 创建一个应用用户可以对 applicationData 数据库进行读写操作*
+----
+MongoDB Enterprise > db.createUser(
+...   { user: "m103-application-user",
+...     pwd: "m103-application-pass",
+...     roles: [ { db: "applicationData", role: "readWrite" } ]
+...   }
+... )
+Successfully added user: {
+	"user" : "m103-application-user",
+	"roles" : [
+		{
+			"db" : "applicationData",
+			"role" : "readWrite"
+		}
+	]
+}
+----
+
+[source, text]
+.*8. 退出 Mongo Shell*
+----
+MongoDB Enterprise > exit
+bye
+----
+
 === TODO
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
 
 [source, text]
 .**
