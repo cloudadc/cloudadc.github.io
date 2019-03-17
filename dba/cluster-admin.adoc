@@ -778,12 +778,10 @@ MongoDB server version: 3.6.11
 [source, text]
 .*7. 创建一个应用用户可以对 applicationData 数据库进行读写操作*
 ----
-MongoDB Enterprise > db.createUser(
-...   { user: "m103-application-user",
-...     pwd: "m103-application-pass",
-...     roles: [ { db: "applicationData", role: "readWrite" } ]
-...   }
-... )
+MongoDB Enterprise > use applicationData
+switched to db applicationData
+MongoDB Enterprise > show users
+MongoDB Enterprise > db.createUser({user: "m103-application-user", pwd: "m103-application-pass", roles: [{db: "applicationData", role: "readWrite"}]})
 Successfully added user: {
 	"user" : "m103-application-user",
 	"roles" : [
@@ -796,13 +794,79 @@ Successfully added user: {
 ----
 
 [source, text]
-.*8. 退出 Mongo Shell*
+.*8. 使用应用帐号连接 Mongo Shell*
+----
+$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/applicationData?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("2fb69f0c-5e8c-4c48-9f2a-2656a2372a1c") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*9. 执行写操作*
+----
+MongoDB Enterprise > db.inventory.insertMany([{ item: "journal", qty: 25, status: "A", size: { h: 14, w: 21, uom: "cm" }, tags: [ "blank", "red" ] }, { item: "notebook", qty: 50, status: "A", size: { h: 8.5, w: 11, uom: "in" }, tags: [ "red", "blank" ] }]);
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		ObjectId("5c8d2518d2fe64d546a47c9e"),
+		ObjectId("5c8d2518d2fe64d546a47c9f")
+	]
+}
+----
+
+[source, text]
+.*10. 执行读操作*
+----
+MongoDB Enterprise > db.inventory.find({})
+{ "_id" : ObjectId("5c8d2518d2fe64d546a47c9e"), "item" : "journal", "qty" : 25, "status" : "A", "size" : { "h" : 14, "w" : 21, "uom" : "cm" }, "tags" : [ "blank", "red" ] }
+{ "_id" : ObjectId("5c8d2518d2fe64d546a47c9f"), "item" : "notebook", "qty" : 50, "status" : "A", "size" : { "h" : 8.5, "w" : 11, "uom" : "in" }, "tags" : [ "red", "blank" ] }
+----
+
+[source, text]
+.*11. 退出 Mongo Shell*
 ----
 MongoDB Enterprise > exit
 bye
 ----
 
-=== TODO
+=== 批量导入数据
+
+本部分使用 `创建应用用户` 批量导入数据。
+
+[source, text]
+.*1. 查看要导入的数据*
+----
+$ ls -l products.json 
+-rw-rw-r-- 1 vagrant vagrant 92216793 Mar 15 05:34 products.json
+----
+
+[source, text]
+.*2. mongoimport 批量导入*
+----
+$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --file products.json 
+2019-03-16T16:19:11.249+0000	no collection specified
+2019-03-16T16:19:11.249+0000	using filename 'products' as collection
+2019-03-16T16:19:11.262+0000	connected to: localhost:27000
+2019-03-16T16:19:14.252+0000	[#####...................] applicationData.products	20.4MB/87.9MB (23.2%)
+2019-03-16T16:19:17.252+0000	[###########.............] applicationData.products	40.6MB/87.9MB (46.2%)
+2019-03-16T16:19:20.255+0000	[################........] applicationData.products	59.9MB/87.9MB (68.1%)
+2019-03-16T16:19:23.251+0000	[#####################...] applicationData.products	79.8MB/87.9MB (90.8%)
+2019-03-16T16:19:24.451+0000	[########################] applicationData.products	87.9MB/87.9MB (100.0%)
+2019-03-16T16:19:24.451+0000	imported 516784 documents
+----
+
+[source, text]
+.*3. 在 Mongo Shell 中查看文档总数目*
+----
+MongoDB Enterprise > db.products.count()
+516784
+----
+
+== 集群复制
+
+=== 3 节点集群复制
 
 [source, text]
 .**
@@ -815,4 +879,53 @@ bye
 ----
 
 ----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
 
