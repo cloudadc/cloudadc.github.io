@@ -864,9 +864,673 @@ MongoDB Enterprise > db.products.count()
 516784
 ----
 
-== 集群复制
+== 集群管理
 
-=== 3 节点集群复制
+=== 3 节点集群复制配制
+
+[source, text]
+.*1. 创建一个 keyfile，确保节点之间通信安全*
+----
+$ sudo mkdir -p /var/mongodb/pki
+$ sudo chown vagrant:vagrant -R /var/mongodb
+$ openssl rand -base64 741 > /var/mongodb/pki/m103-keyfile
+$ chmod 600 /var/mongodb/pki/m103-keyfile
+----
+
+*2. 创建三个节点配制文件，内容如下*
+
+[cols="5a,5a,5a"]
+|===
+|mongod-repl-1.conf |mongod-repl-2.conf |mongod-repl-3.conf  
+
+|
+[source, text]
+----
+storage:
+  dbPath: /var/mongodb/db/1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27001
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod1.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|
+[source, text]
+----
+storage:
+  dbPath: /var/mongodb/db/2
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27002
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod2.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|
+[source, text]
+----
+storage:
+  dbPath: /var/mongodb/db/3
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27003
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod3.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|===
+
+[source, text]
+.*3. 创建日志存储路径*
+----
+$ mkdir -p /var/mongodb/db/{1,2,3}
+----
+
+[source, text]
+.*4. 启动三个节点*
+----
+$ mongod -f mongod-repl-1.conf 
+$ mongod -f mongod-repl-2.conf 
+$ mongod -f mongod-repl-3.conf 
+----
+
+[source, text]
+.*5. 查看运行进程*
+----
+$ ps -ef | grep mongod
+vagrant   2155     1  0 07:29 ?        00:00:00 mongod -f mongod-repl-1.conf
+vagrant   2194     1  0 07:30 ?        00:00:00 mongod -f mongod-repl-2.conf
+vagrant   2232     1  0 07:31 ?        00:00:00 mongod -f mongod-repl-3.conf
+----
+
+[source, text]
+.*6. 查看三个进行监听的端口*
+----
+$ for i in 2155 2194 2232 ; do netstat -antulop | grep $i; done
+tcp        0      0 127.0.0.1:27001         0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27002         0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27003         0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+----
+
+[source, text]
+.*7. 连接到主节点，初始化集群*
+----
+$ mongo --port 27001
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27001/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("b5bd64d4-fec1-4002-b078-c4465e1fd966") }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise > rs.initiate()
+{
+	"info2" : "no configuration specified. Using a default configuration for the set",
+	"me" : "192.168.103.100:27001",
+	"ok" : 1
+}
+----
+
+[source, text]
+.*8. 查看集群状态*
+----
+MongoDB Enterprise m103-repl:SECONDARY> rs.status()
+{
+	"set" : "m103-repl",
+	"date" : ISODate("2019-03-18T07:40:20.648Z"),
+	"myState" : 1,
+	"term" : NumberLong(1),
+	"syncingTo" : "",
+	"syncSourceHost" : "",
+	"syncSourceId" : -1,
+	"heartbeatIntervalMillis" : NumberLong(2000),
+	"optimes" : {
+		"lastCommittedOpTime" : {
+			"ts" : Timestamp(1552894818, 1),
+			"t" : NumberLong(1)
+		},
+		"readConcernMajorityOpTime" : {
+			"ts" : Timestamp(1552894818, 1),
+			"t" : NumberLong(1)
+		},
+		"appliedOpTime" : {
+			"ts" : Timestamp(1552894818, 1),
+			"t" : NumberLong(1)
+		},
+		"durableOpTime" : {
+			"ts" : Timestamp(1552894818, 1),
+			"t" : NumberLong(1)
+		}
+	},
+	"members" : [
+		{
+			"_id" : 0,
+			"name" : "192.168.103.100:27001",
+			"health" : 1,
+			"state" : 1,
+			"stateStr" : "PRIMARY",
+			"uptime" : 640,
+			"optime" : {
+				"ts" : Timestamp(1552894818, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2019-03-18T07:40:18Z"),
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "could not find member to sync from",
+			"electionTime" : Timestamp(1552894756, 2),
+			"electionDate" : ISODate("2019-03-18T07:39:16Z"),
+			"configVersion" : 1,
+			"self" : true,
+			"lastHeartbeatMessage" : ""
+		}
+	],
+	"ok" : 1,
+	"operationTime" : Timestamp(1552894818, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552894818, 1),
+		"signature" : {
+			"hash" : BinData(0,"b2Owp1OlR6reFIFTnG9/4e02+Tw="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*9. 创建一个超级用户*
+----
+MongoDB Enterprise m103-repl:PRIMARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:PRIMARY> db.createUser({user: "m103-admin", pwd: "m103-pass", roles: [{role: "root", db: "admin"}]})
+Successfully added user: {
+	"user" : "m103-admin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
+MongoDB Enterprise m103-repl:PRIMARY> exit
+bye
+----
+
+[source, text]
+.*10. 已超级用户登录*
+----
+$ mongo --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27001/?authSource=admin&gssapiServiceName=mongodb&replicaSet=m103-repl
+2019-03-18T07:47:47.621+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-repl/192.168.103.100:27001
+2019-03-18T07:47:47.622+0000 I NETWORK  [thread1] Successfully connected to 192.168.103.100:27001 (1 connections now open to 192.168.103.100:27001 with a 5 second timeout)
+Implicit session: session { "id" : UUID("b1ea59d3-b36f-4a84-bf96-3739d1a620e9") }
+MongoDB server version: 3.6.11
+----
+
+[source, text]
+.*11. 添加成员*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.add("192.168.103.100:27002")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552895444, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552895444, 1),
+		"signature" : {
+			"hash" : BinData(0,"/fYb24lG+07P1vFJbWlrave4/wg="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+MongoDB Enterprise m103-repl:PRIMARY> rs.add("192.168.103.100:27003")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552895447, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552895447, 1),
+		"signature" : {
+			"hash" : BinData(0,"3qY1jjhSv+hsOWXvMPDFrHFOeic="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*12. 查看集群状态*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.status()
+{
+	"set" : "m103-repl",
+	"date" : ISODate("2019-03-18T07:52:04.922Z"),
+	"myState" : 1,
+	"term" : NumberLong(1),
+	"syncingTo" : "",
+	"syncSourceHost" : "",
+	"syncSourceId" : -1,
+	"heartbeatIntervalMillis" : NumberLong(2000),
+	"optimes" : {
+		"lastCommittedOpTime" : {
+			"ts" : Timestamp(1552895518, 1),
+			"t" : NumberLong(1)
+		},
+		"readConcernMajorityOpTime" : {
+			"ts" : Timestamp(1552895518, 1),
+			"t" : NumberLong(1)
+		},
+		"appliedOpTime" : {
+			"ts" : Timestamp(1552895518, 1),
+			"t" : NumberLong(1)
+		},
+		"durableOpTime" : {
+			"ts" : Timestamp(1552895518, 1),
+			"t" : NumberLong(1)
+		}
+	},
+	"members" : [
+		{
+			"_id" : 0,
+			"name" : "192.168.103.100:27001",
+			"health" : 1,
+			"state" : 1,
+			"stateStr" : "PRIMARY",
+			"uptime" : 1344,
+			"optime" : {
+				"ts" : Timestamp(1552895518, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2019-03-18T07:51:58Z"),
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "",
+			"electionTime" : Timestamp(1552894756, 2),
+			"electionDate" : ISODate("2019-03-18T07:39:16Z"),
+			"configVersion" : 3,
+			"self" : true,
+			"lastHeartbeatMessage" : ""
+		},
+		{
+			"_id" : 1,
+			"name" : "192.168.103.100:27002",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 80,
+			"optime" : {
+				"ts" : Timestamp(1552895518, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1552895518, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2019-03-18T07:51:58Z"),
+			"optimeDurableDate" : ISODate("2019-03-18T07:51:58Z"),
+			"lastHeartbeat" : ISODate("2019-03-18T07:52:03.064Z"),
+			"lastHeartbeatRecv" : ISODate("2019-03-18T07:52:03.607Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "192.168.103.100:27001",
+			"syncSourceHost" : "192.168.103.100:27001",
+			"syncSourceId" : 0,
+			"infoMessage" : "",
+			"configVersion" : 3
+		},
+		{
+			"_id" : 2,
+			"name" : "192.168.103.100:27003",
+			"health" : 1,
+			"state" : 2,
+			"stateStr" : "SECONDARY",
+			"uptime" : 77,
+			"optime" : {
+				"ts" : Timestamp(1552895518, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(1552895518, 1),
+				"t" : NumberLong(1)
+			},
+			"optimeDate" : ISODate("2019-03-18T07:51:58Z"),
+			"optimeDurableDate" : ISODate("2019-03-18T07:51:58Z"),
+			"lastHeartbeat" : ISODate("2019-03-18T07:52:03.064Z"),
+			"lastHeartbeatRecv" : ISODate("2019-03-18T07:52:03.012Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "",
+			"syncingTo" : "192.168.103.100:27002",
+			"syncSourceHost" : "192.168.103.100:27002",
+			"syncSourceId" : 1,
+			"infoMessage" : "",
+			"configVersion" : 3
+		}
+	],
+	"ok" : 1,
+	"operationTime" : Timestamp(1552895518, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552895518, 1),
+		"signature" : {
+			"hash" : BinData(0,"0GmanYs4kEgfT36dh6aE7p5BSeI="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*13. 查看监听端口*
+----
+$ for i in 2155 2194 2232 ; do netstat -antulop | grep $i; echo ;done
+tcp        0      0 127.0.0.1:27001         0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50635   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:41951   192.168.103.100:27002   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:41195   192.168.103.100:27003   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50632   ESTABLISHED 2155/mongod      keepalive (183.92/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50631   ESTABLISHED 2155/mongod      keepalive (225.90/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50643   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50638   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50658   ESTABLISHED 2155/mongod      keepalive (123.50/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50650   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50659   ESTABLISHED 2155/mongod      keepalive (123.50/0/0)
+
+tcp        0      0 127.0.0.1:27002         0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41966   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41951   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41973   ESTABLISHED 2194/mongod      keepalive (123.50/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41969   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41970   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:50638   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41972   ESTABLISHED 2194/mongod      keepalive (117.35/0/0)
+tcp        0      0 192.168.103.100:50635   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:50650   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:41201   192.168.103.100:27003   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+
+tcp        0      0 127.0.0.1:27003         0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41201   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41210   192.168.103.100:27003   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41210   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:41966   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41973   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:50658   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:50643   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41195   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41207   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41972   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (117.34/0/0)
+tcp        0      0 192.168.103.100:50659   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:41969   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+----
+
+=== 添加和删除节点
+
+本部分在上面 *3 节点集群复制配制* 基础上进行添加和删除节点。
+
+*1. 创建两个配制文件内容如下*
+
+[cols="5a,5a"]
+|===
+|mongod-repl-4.conf |arbiter.conf 
+
+|
+[source, text]
+----
+storage:
+  dbPath: /var/mongodb/db/4
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27004
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod4.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|
+[source, text]
+----
+storage:
+  dbPath: /var/mongodb/db/arbiter
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 28000
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod-arbiter.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|===
+
+[source, text]
+.*2. 启动 mongod 进程*
+----
+$ mongod -f mongod-repl-4.conf
+$ mongod -f arbiter.conf
+----
+
+[source, text]
+.*3. 添加新创建的节点到集群*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.add("192.168.103.100:27004")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900251, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900251, 1),
+		"signature" : {
+			"hash" : BinData(0,"tgvIK0IO8r7x2965MiC3GuBL4NM="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+
+MongoDB Enterprise m103-repl:PRIMARY> rs.addArb("192.168.103.100:28000")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900296, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900296, 1),
+		"signature" : {
+			"hash" : BinData(0,"3KERoIv/hxKNDo1Wh/UWvJC4c2U="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*4. 查看新添加的两个节点*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002",
+		"192.168.103.100:27003",
+		"192.168.103.100:27004"
+	],
+	"arbiters" : [
+		"192.168.103.100:28000"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 9,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27001",
+	"me" : "192.168.103.100:27001",
+	"electionId" : ObjectId("7fffffff0000000000000001"),
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1552900328, 1),
+			"t" : NumberLong(1)
+		},
+		"lastWriteDate" : ISODate("2019-03-18T09:12:08Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1552900328, 1),
+			"t" : NumberLong(1)
+		},
+		"majorityWriteDate" : ISODate("2019-03-18T09:12:08Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2019-03-18T09:12:09.222Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 6,
+	"readOnly" : false,
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900328, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900328, 1),
+		"signature" : {
+			"hash" : BinData(0,"NYyWWkgAKi1u8fPZEUQdEc8U3ps="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*5. 删除 arbiter 节点*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.remove("192.168.103.100:28000")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900423, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900423, 1),
+		"signature" : {
+			"hash" : BinData(0,"dA94M4Nv2EhsJdq5mC8PjZgC8tY="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+
+[source, text]
+.*6. 隐藏一个节点*
+----
+MongoDB Enterprise m103-repl:PRIMARY> var cfg = rs.conf()
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members[3].votes = 0
+0
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members[3].hidden = true
+true
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members[3].priority = 0
+0
+
+MongoDB Enterprise m103-repl:PRIMARY> rs.reconfig(cfg)
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900605, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900605, 1),
+		"signature" : {
+			"hash" : BinData(0,"ibtCCQKaVLHIYaiQE/fNhGfYUFQ="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*7. 查看集群*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002",
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 11,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27001",
+	"me" : "192.168.103.100:27001",
+	"electionId" : ObjectId("7fffffff0000000000000001"),
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1552900698, 1),
+			"t" : NumberLong(1)
+		},
+		"lastWriteDate" : ISODate("2019-03-18T09:18:18Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1552900698, 1),
+			"t" : NumberLong(1)
+		},
+		"majorityWriteDate" : ISODate("2019-03-18T09:18:18Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2019-03-18T09:18:28.633Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 6,
+	"readOnly" : false,
+	"ok" : 1,
+	"operationTime" : Timestamp(1552900698, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552900698, 1),
+		"signature" : {
+			"hash" : BinData(0,"iJnZ5UHzZ3AwTy4b0zXYtLFzv4o="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+=== TODO
 
 [source, text]
 .**

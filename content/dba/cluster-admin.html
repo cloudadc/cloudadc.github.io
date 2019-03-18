@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>基本集群管理 · GitBook</title>
+        <title>集群管理 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -62,7 +62,7 @@
 
     
     
-    <link rel="prev" href="../" />
+    <link rel="prev" href="basic.html" />
     
 
     </head>
@@ -96,7 +96,7 @@
                 <a href="../">
             
                     
-                    BASICS
+                    MongoDB
             
                 </a>
             
@@ -104,12 +104,25 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.2" data-path="cluster-admin.html">
+        <li class="chapter " data-level="1.2" data-path="basic.html">
+            
+                <a href="basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3" data-path="cluster-admin.html">
             
                 <a href="cluster-admin.html">
             
                     
-                    基本集群管理
+                    集群管理
             
                 </a>
             
@@ -147,7 +160,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >基本集群管理</a>
+        <a href=".." >集群管理</a>
     </h1>
 </div>
 
@@ -170,6 +183,21 @@
 <ul class="sectlevel2">
 <li><a href="#__">&#x57FA;&#x672C;&#x64CD;&#x4F5C;</a></li>
 <li><a href="#_mongod">mongod &#x542F;&#x52A8;&#x6307;&#x5B9A;&#x53C2;&#x6570;</a></li>
+<li><a href="#___2">&#x7ED1;&#x5B9A;&#x591A;&#x4E2A;&#x5730;&#x5740;&#xFF0C;&#x521B;&#x5EFA;&#x7528;&#x6237;</a></li>
+<li><a href="#__mongodb">&#x901A;&#x8FC7;&#x914D;&#x5236;&#x6587;&#x4EF6;&#x542F;&#x52A8; MongoDB</a></li>
+<li><a href="#___3">&#x6539;&#x53D8;&#x9ED8;&#x8BA4;&#x7684;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;</a></li>
+<li><a href="#___4">&#x8BBE;&#x5B9A;&#x65E5;&#x5FD7;&#x7B56;&#x7565;</a></li>
+<li><a href="#___5">&#x6267;&#x884C;&#x8BA1;&#x5212;&#x5206;&#x6790;</a></li>
+<li><a href="#___6">&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</a></li>
+<li><a href="#___7">&#x521B;&#x5EFA;&#x5E94;&#x7528;&#x7528;&#x6237;</a></li>
+<li><a href="#___8">&#x6279;&#x91CF;&#x5BFC;&#x5165;&#x6570;&#x636E;</a></li>
+</ul>
+</li>
+<li><a href="#___9">&#x96C6;&#x7FA4;&#x7BA1;&#x7406;</a>
+<ul class="sectlevel2">
+<li><a href="#_3">3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</a></li>
+<li><a href="#___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</a></li>
+<li><a href="#_todo">TODO</a></li>
 </ul>
 </li>
 </ul>
@@ -381,6 +409,1407 @@ server should be down...</code></pre>
 bye</code></pre>
 </div>
 </div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x7ED1;&#x5B9A;&#x591A;&#x4E2A;&#x5730;&#x5740;&#xFF0C;&#x521B;&#x5EFA;&#x7528;&#x6237;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E; <code>mongod</code> &#x542F;&#x52A8; MongoDB &#x6570;&#x636E;&#x5E93;&#x65F6;&#x90A6;&#x5B9A;&#x591A;&#x4E2A; IP&#xFF0C;&#x5E76;&#x901A;&#x8FC7; <code>mongo</code> &#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x7BA1;&#x7406;&#x8D26;&#x6237;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod --port 27000 --dbpath /data/db/ --bind_ip &apos;192.168.103.100,localhost&apos;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x7684;&#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   2547  1959  7 23:35 pts/0    00:00:00 mongod --port 27000 --dbpath /data/db/ --bind_ip 192.168.103.100,localhost</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ netstat -antulop | grep 2547
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      2547/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      2547/mongod      off (0.00/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --host localhost:27000 --eval &apos;
+  db.createUser({
+    user: &quot;kylin&quot;,
+    pwd: &quot;mongodb&quot;,
+    roles: [
+      {role: &quot;root&quot;, db: &quot;admin&quot;}
+    ]
+  })
+&apos;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x4F7F;&#x7528;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;&#x8FDE;&#x63A5;&#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo kylin --host localhost:27000
+MongoDB shell version v3.6.11
+connecting to: mongodb://localhost:27000/kylin?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;3b10edf4-5d3a-4831-a505-787298cdae34&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. Mongo Shell &#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C;&#x505C;&#x6B62; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use admin
+switched to db admin
+MongoDB Enterprise &gt; db.shutdownServer()
+server should be down...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x9000;&#x51FA; MongoDB shell</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; exit
+bye</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__mongodb">&#x901A;&#x8FC7;&#x914D;&#x5236;&#x6587;&#x4EF6;&#x542F;&#x52A8; MongoDB</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x901A;&#x8FC7;&#x4E00;&#x4E2A;&#x914D;&#x5236;&#x6587;&#x4EF6;&#x6307;&#x5B9A; <code>mongod</code> &#x542F;&#x52A8;&#x65F6;&#x6240;&#x9700;&#x8981;&#x7684;&#x53C2;&#x6570;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; my-mongod.conf&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /data/db/
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+security:
+  authorization: enabled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod --config my-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x7684;&#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   2699  1959  0 23:48 pts/0    00:00:01 mongod --config my-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ netstat -antulop | grep 2699
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      2699/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      2699/mongod      off (0.00/0/0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. Kill &#x505C;&#x6B62;&#x8FD0;&#x884C;&#x7684; mongod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ kill -9 2699</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x6539;&#x53D8;&#x9ED8;&#x8BA4;&#x7684;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E;&#x5728; <code>mongod</code> &#x542F;&#x52A8;&#x65F6;&#x6307;&#x5B9A;&#x4E00;&#x4E2A;&#x989D;&#x5916;&#x7684;&#x8DEF;&#x5F84;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x8DEF;&#x5F84;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ sudo mkdir -p /var/mongodb/db/</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4FEE;&#x6539;&#x4EE5;&#x4E0A;&#x521B;&#x5EFA;&#x7684;&#x8DEF;&#x5F84;&#x4E3A; vagrant &#x7528;&#x6237;&#x6240;&#x6709;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ sudo chown vagrant:vagrant /var/mongodb/db/
+
+$ ls -l /var/mongodb/
+total 4
+drwxr-xr-x 2 vagrant vagrant 4096 Mar 14 00:10 db</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA; my-mongod.conf&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+security:
+  authorization: enabled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod --config my-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x7684;&#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   3257  1959  1 00:17 pts/0    00:00:00 mongod --config my-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ netstat -antulop | grep 3257
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      3257/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      3257/mongod      off (0.00/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x6570;&#x636E;&#x5E93;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ls -l /var/mongodb/db/
+total 196
+-rw------- 1 vagrant vagrant    45 Mar 14 00:17 WiredTiger
+-rw------- 1 vagrant vagrant    21 Mar 14 00:17 WiredTiger.lock
+-rw------- 1 vagrant vagrant  1103 Mar 14 00:19 WiredTiger.turtle
+-rw------- 1 vagrant vagrant 57344 Mar 14 00:19 WiredTiger.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 WiredTigerLAS.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 _mdb_catalog.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 collection-0--7654468380997166951.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 collection-2--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 collection-4--7654468380997166951.wt
+drwx------ 2 vagrant vagrant  4096 Mar 14 00:20 diagnostic.data
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 index-1--7654468380997166951.wt
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:18 index-3--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:17 index-5--7654468380997166951.wt
+-rw------- 1 vagrant vagrant  4096 Mar 14 00:18 index-6--7654468380997166951.wt
+drwx------ 2 vagrant vagrant  4096 Mar 14 00:17 journal
+-rw------- 1 vagrant vagrant     5 Mar 14 00:17 mongod.lock
+-rw------- 1 vagrant vagrant 16384 Mar 14 00:19 sizeStorer.wt
+-rw------- 1 vagrant vagrant   114 Mar 14 00:17 storage.bson</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. mongo &#x547D;&#x4EE4;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --port 27000
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/admin?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;bf41ace1-63a6-4da1-af9f-c93882fdbcda&quot;) }
+MongoDB server version: 3.6.11
+MongoDB Enterprise &gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. Mongo Shell &#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C;&#x505C;&#x6B62; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use admin
+switched to db admin
+MongoDB Enterprise &gt; db.shutdownServer()
+server should be down...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x9000;&#x51FA; MongoDB shell</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; exit
+bye</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x8BBE;&#x5B9A;&#x65E5;&#x5FD7;&#x7B56;&#x7565;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x8BBE;&#x8BA1;&#x65E5;&#x5FD7;&#x7B56;&#x7565;&#xFF0C;&#x5C06;&#x67E5;&#x8BE2;&#x65F6;&#x95F4;&#x5927;&#x4E8E; 50 &#x6BEB;&#x79D2;&#x7684;&#x64CD;&#x4F5C;&#x65E5;&#x5FD7;&#x8F93;&#x51FA;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; my-mongod.conf&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db/mongod.log
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+operationProfiling:
+  slowOpThresholdMs: 50
+
+security:
+  authorization: enabled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod --config my-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C;&#x4E00;&#x6B21;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">//</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x65E5;&#x5FD7;&#x8F93;&#x51FA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">//</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x6267;&#x884C;&#x8BA1;&#x5212;&#x5206;&#x6790;</h3>
+<div class="paragraph">
+<p>MongoDB &#x4E2D;&#x5982;&#x679C;&#x8981;&#x5206;&#x6790;&#x67D0;&#x4E9B;&#x6267;&#x884C;&#x64CD;&#x4F5C;&#x7684;&#x6027;&#x80FD;&#xFF0C;&#x5982;&#x6267;&#x884C;&#x65F6;&#x95F4;&#x7B49;&#xFF0C;&#x5C31;&#x9700;&#x8981;&#x6267;&#x884C;&#x8BA1;&#x5212; <code>Profiler</code>&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E; MongoDB &#x6267;&#x884C;&#x8BA1;&#x5212;&#x5206;&#x6790;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0; DB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use newDB
+switched to db newDB</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x8BA1;&#x5212;&#x6267;&#x884C;&#x7EA7;&#x522B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.getProfilingLevel()
+0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x8BBE;&#x5B9A;&#x8BA1;&#x5212;&#x6267;&#x884C;&#x7EA7;&#x522B;&#x4E3A; 1&#xFF0C;&#x6536;&#x96C6;&#x6267;&#x884C;&#x64CD;&#x4F5C;&#x8F83;&#x957F;&#x7684;&#x64CD;&#x4F5C;(&#x9ED8;&#x8BA4; 100 &#x6BEB;&#x79D2;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.setProfilingLevel(1)
+{ &quot;was&quot; : 0, &quot;slowms&quot; : 100, &quot;sampleRate&quot; : 1, &quot;ok&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x751F;&#x6210;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x4FDD;&#x5B58;&#x7684; collection</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; show collections
+system.profile</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8C03;&#x6574;&#x8F83;&#x957F;&#x6267;&#x884C;&#x65F6;&#x95F4;&#x9600;&#x503C;&#x4E3A; 0&#xFF0C;&#x5373;&#x6536;&#x96C6;&#x6240;&#x6709;&#x64CD;&#x4F5C;(&#x6D4B;&#x8BD5;&#x76EE;&#x7684;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.setProfilingLevel(1, {slowms: 0})
+{ &quot;was&quot; : 1, &quot;slowms&quot; : 100, &quot;sampleRate&quot; : 1, &quot;ok&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x6267;&#x884C;&#x4E00;&#x6B21;&#x63D2;&#x5165;&#x6570;&#x636E;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.new_connection.insert({&quot;id&quot;: 1001, &quot;name&quot;: &quot;Kylin&quot;})
+WriteResult({ &quot;nInserted&quot; : 1 })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.system.profile.find().pretty()
+{
+	&quot;op&quot; : &quot;insert&quot;,
+	&quot;ns&quot; : &quot;newDB.new_connection&quot;,
+	&quot;command&quot; : {
+		&quot;insert&quot; : &quot;new_connection&quot;,
+		&quot;ordered&quot; : true,
+		&quot;lsid&quot; : {
+			&quot;id&quot; : UUID(&quot;a5f34116-7269-4372-ab7c-67a3254a1afe&quot;)
+		},
+		&quot;$db&quot; : &quot;newDB&quot;
+	},
+	&quot;ninserted&quot; : 1,
+	&quot;keysInserted&quot; : 1,
+	&quot;numYield&quot; : 0,
+	&quot;locks&quot; : {
+		&quot;Global&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(5),
+				&quot;w&quot; : NumberLong(3)
+			}
+		},
+		&quot;Database&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(1),
+				&quot;w&quot; : NumberLong(2),
+				&quot;W&quot; : NumberLong(1)
+			}
+		},
+		&quot;Collection&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(1),
+				&quot;w&quot; : NumberLong(2)
+			}
+		}
+	},
+	&quot;responseLength&quot; : 29,
+	&quot;protocol&quot; : &quot;op_msg&quot;,
+	&quot;millis&quot; : 60,
+	&quot;ts&quot; : ISODate(&quot;2019-03-14T09:37:47.393Z&quot;),
+	&quot;client&quot; : &quot;127.0.0.1&quot;,
+	&quot;appName&quot; : &quot;MongoDB Shell&quot;,
+	&quot;allUsers&quot; : [ ],
+	&quot;user&quot; : &quot;&quot;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x6267;&#x884C;&#x4E00;&#x6B21;&#x8BFB;&#x53D6;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.new_connection.find({&quot;id&quot;: 1001})
+{ &quot;_id&quot; : ObjectId(&quot;5c8a20eb29d0caf9229a8d82&quot;), &quot;id&quot; : 1001, &quot;name&quot; : &quot;Kylin&quot; }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x518D;&#x6B21;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.system.profile.find().pretty()
+
+...
+
+{
+	&quot;op&quot; : &quot;query&quot;,
+	&quot;ns&quot; : &quot;newDB.new_connection&quot;,
+	&quot;command&quot; : {
+		&quot;find&quot; : &quot;new_connection&quot;,
+		&quot;filter&quot; : {
+			&quot;id&quot; : 1001
+		},
+		&quot;lsid&quot; : {
+			&quot;id&quot; : UUID(&quot;a5f34116-7269-4372-ab7c-67a3254a1afe&quot;)
+		},
+		&quot;$db&quot; : &quot;newDB&quot;
+	},
+	&quot;keysExamined&quot; : 0,
+	&quot;docsExamined&quot; : 1,
+	&quot;cursorExhausted&quot; : true,
+	&quot;numYield&quot; : 0,
+	&quot;locks&quot; : {
+		&quot;Global&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(2)
+			}
+		},
+		&quot;Database&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(1)
+			}
+		},
+		&quot;Collection&quot; : {
+			&quot;acquireCount&quot; : {
+				&quot;r&quot; : NumberLong(1)
+			}
+		}
+	},
+	&quot;nreturned&quot; : 1,
+	&quot;responseLength&quot; : 146,
+	&quot;protocol&quot; : &quot;op_msg&quot;,
+	&quot;millis&quot; : 0,
+	&quot;planSummary&quot; : &quot;COLLSCAN&quot;,
+	&quot;execStats&quot; : {
+		&quot;stage&quot; : &quot;COLLSCAN&quot;,
+		&quot;filter&quot; : {
+			&quot;id&quot; : {
+				&quot;$eq&quot; : 1001
+			}
+		},
+		&quot;nReturned&quot; : 1,
+		&quot;executionTimeMillisEstimate&quot; : 0,
+		&quot;works&quot; : 3,
+		&quot;advanced&quot; : 1,
+		&quot;needTime&quot; : 1,
+		&quot;needYield&quot; : 0,
+		&quot;saveState&quot; : 0,
+		&quot;restoreState&quot; : 0,
+		&quot;isEOF&quot; : 1,
+		&quot;invalidates&quot; : 0,
+		&quot;direction&quot; : &quot;forward&quot;,
+		&quot;docsExamined&quot; : 1
+	},
+	&quot;ts&quot; : ISODate(&quot;2019-03-14T09:43:54.961Z&quot;),
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f /etc/mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x7684;&#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   5191  1956  5 14:52 pts/0    00:00:00 mongod -f /etc/mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ netstat -antulop | grep 5191
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      5191/mongod      off (0.00/0/0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. mongo &#x547D;&#x4EE4;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host 127.0.0.1:27017
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;d34d9ea7-369a-4466-865a-833556a63a3f&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; root &#x7528;&#x6237;&#xFF0C;&#x5177;&#x6709; root &#x6743;&#x9650;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use admin
+switched to db admin
+MongoDB Enterprise &gt; db.createUser({user: &quot;root&quot;, pwd: &quot;root123&quot;, roles: [&quot;root&quot;]})
+Successfully added user: { &quot;user&quot; : &quot;root&quot;, &quot;roles&quot; : [ &quot;root&quot; ] }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x9000;&#x51FA; Mongo Shell &#x7EC8;&#x7AEF;&#xFF0C;&#x4EE5;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;&#x767B;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --username root --password root123 --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;eb8549e7-025c-4d89-94ec-e42096526967&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B; DB &#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.stats()
+{
+	&quot;db&quot; : &quot;test&quot;,
+	&quot;collections&quot; : 0,
+	&quot;views&quot; : 0,
+	&quot;objects&quot; : 0,
+	&quot;avgObjSize&quot; : 0,
+	&quot;dataSize&quot; : 0,
+	&quot;storageSize&quot; : 0,
+	&quot;numExtents&quot; : 0,
+	&quot;indexes&quot; : 0,
+	&quot;indexSize&quot; : 0,
+	&quot;fileSize&quot; : 0,
+	&quot;fsUsedSize&quot; : 0,
+	&quot;fsTotalSize&quot; : 0,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x9000;&#x51FA; MongoDB shell</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; exit
+bye</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x521B;&#x5EFA;&#x5E94;&#x7528;&#x7528;&#x6237;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; test-mongod.conf&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db/mongod.log
+
+net:
+  port: 27000
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+security:
+  authorization: enabled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f test-mongod.conf
+forked process: 5405</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ netstat -antulop | grep 5405
+tcp        0      0 192.168.103.100:27000   0.0.0.0:*               LISTEN      5405/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27000         0.0.0.0:*               LISTEN      5405/mongod      off (0.00/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. mongo &#x547D;&#x4EE4;&#x5BA2;&#x6237;&#x7AEF;&#x8FDE;&#x63A5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host 127.0.0.1:27000
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;dd7a993a-9b0d-4ad5-a802-b92d7127a1d0&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5728; admin &#x6570;&#x636E;&#x5E93;&#x4E2D;&#x521B;&#x5EFA; root &#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use admin
+switched to db admin
+MongoDB Enterprise &gt; db.createUser({user: &quot;m103-admin&quot;, pwd: &quot;m103-pass&quot;, roles: [&quot;root&quot;]})
+Successfully added user: { &quot;user&quot; : &quot;m103-admin&quot;, &quot;roles&quot; : [ &quot;root&quot; ] }
+MongoDB Enterprise &gt; exit
+bye</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x4EE5;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;&#x767B;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --host 127.0.0.1:27000 -u m103-admin -p m103-pass
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/admin?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;e903a74b-fb15-4f3d-a295-8af6d72f7af2&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5E94;&#x7528;&#x7528;&#x6237;&#x53EF;&#x4EE5;&#x5BF9; applicationData &#x6570;&#x636E;&#x5E93;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use applicationData
+switched to db applicationData
+MongoDB Enterprise &gt; show users
+MongoDB Enterprise &gt; db.createUser({user: &quot;m103-application-user&quot;, pwd: &quot;m103-application-pass&quot;, roles: [{db: &quot;applicationData&quot;, role: &quot;readWrite&quot;}]})
+Successfully added user: {
+	&quot;user&quot; : &quot;m103-application-user&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;db&quot; : &quot;applicationData&quot;,
+			&quot;role&quot; : &quot;readWrite&quot;
+		}
+	]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x4F7F;&#x7528;&#x5E94;&#x7528;&#x5E10;&#x53F7;&#x8FDE;&#x63A5; Mongo Shell</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27000/applicationData?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;2fb69f0c-5e8c-4c48-9f2a-2656a2372a1c&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x6267;&#x884C;&#x5199;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.inventory.insertMany([{ item: &quot;journal&quot;, qty: 25, status: &quot;A&quot;, size: { h: 14, w: 21, uom: &quot;cm&quot; }, tags: [ &quot;blank&quot;, &quot;red&quot; ] }, { item: &quot;notebook&quot;, qty: 50, status: &quot;A&quot;, size: { h: 8.5, w: 11, uom: &quot;in&quot; }, tags: [ &quot;red&quot;, &quot;blank&quot; ] }]);
+{
+	&quot;acknowledged&quot; : true,
+	&quot;insertedIds&quot; : [
+		ObjectId(&quot;5c8d2518d2fe64d546a47c9e&quot;),
+		ObjectId(&quot;5c8d2518d2fe64d546a47c9f&quot;)
+	]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x6267;&#x884C;&#x8BFB;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.inventory.find({})
+{ &quot;_id&quot; : ObjectId(&quot;5c8d2518d2fe64d546a47c9e&quot;), &quot;item&quot; : &quot;journal&quot;, &quot;qty&quot; : 25, &quot;status&quot; : &quot;A&quot;, &quot;size&quot; : { &quot;h&quot; : 14, &quot;w&quot; : 21, &quot;uom&quot; : &quot;cm&quot; }, &quot;tags&quot; : [ &quot;blank&quot;, &quot;red&quot; ] }
+{ &quot;_id&quot; : ObjectId(&quot;5c8d2518d2fe64d546a47c9f&quot;), &quot;item&quot; : &quot;notebook&quot;, &quot;qty&quot; : 50, &quot;status&quot; : &quot;A&quot;, &quot;size&quot; : { &quot;h&quot; : 8.5, &quot;w&quot; : 11, &quot;uom&quot; : &quot;in&quot; }, &quot;tags&quot; : [ &quot;red&quot;, &quot;blank&quot; ] }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x9000;&#x51FA; Mongo Shell</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; exit
+bye</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">&#x6279;&#x91CF;&#x5BFC;&#x5165;&#x6570;&#x636E;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x4F7F;&#x7528; <code>&#x521B;&#x5EFA;&#x5E94;&#x7528;&#x7528;&#x6237;</code> &#x6279;&#x91CF;&#x5BFC;&#x5165;&#x6570;&#x636E;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x8981;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ls -l products.json
+-rw-rw-r-- 1 vagrant vagrant 92216793 Mar 15 05:34 products.json</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. mongoimport &#x6279;&#x91CF;&#x5BFC;&#x5165;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --file products.json
+2019-03-16T16:19:11.249+0000	no collection specified
+2019-03-16T16:19:11.249+0000	using filename &apos;products&apos; as collection
+2019-03-16T16:19:11.262+0000	connected to: localhost:27000
+2019-03-16T16:19:14.252+0000	[#####...................] applicationData.products	20.4MB/87.9MB (23.2%)
+2019-03-16T16:19:17.252+0000	[###########.............] applicationData.products	40.6MB/87.9MB (46.2%)
+2019-03-16T16:19:20.255+0000	[################........] applicationData.products	59.9MB/87.9MB (68.1%)
+2019-03-16T16:19:23.251+0000	[#####################...] applicationData.products	79.8MB/87.9MB (90.8%)
+2019-03-16T16:19:24.451+0000	[########################] applicationData.products	87.9MB/87.9MB (100.0%)
+2019-03-16T16:19:24.451+0000	imported 516784 documents</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5728; Mongo Shell &#x4E2D;&#x67E5;&#x770B;&#x6587;&#x6863;&#x603B;&#x6570;&#x76EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.count()
+516784</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">&#x96C6;&#x7FA4;&#x7BA1;&#x7406;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_3">3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; keyfile&#xFF0C;&#x786E;&#x4FDD;&#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x901A;&#x4FE1;&#x5B89;&#x5168;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ sudo mkdir -p /var/mongodb/pki
+$ sudo chown vagrant:vagrant -R /var/mongodb
+$ openssl rand -base64 741 &gt; /var/mongodb/pki/m103-keyfile
+$ chmod 600 /var/mongodb/pki/m103-keyfile</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x521B;&#x5EFA;&#x4E09;&#x4E2A;&#x8282;&#x70B9;&#x914D;&#x5236;&#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-1.conf</th>
+<th class="tableblock halign-left valign-top">mongod-repl-2.conf</th>
+<th class="tableblock halign-left valign-top">mongod-repl-3.conf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27001
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod1.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/2
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27002
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod2.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/3
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27003
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod3.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x65E5;&#x5FD7;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir -p /var/mongodb/db/{1,2,3}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x542F;&#x52A8;&#x4E09;&#x4E2A;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-repl-1.conf
+$ mongod -f mongod-repl-2.conf
+$ mongod -f mongod-repl-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   2155     1  0 07:29 ?        00:00:00 mongod -f mongod-repl-1.conf
+vagrant   2194     1  0 07:30 ?        00:00:00 mongod -f mongod-repl-2.conf
+vagrant   2232     1  0 07:31 ?        00:00:00 mongod -f mongod-repl-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x4E09;&#x4E2A;&#x8FDB;&#x884C;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ for i in 2155 2194 2232 ; do netstat -antulop | grep $i; done
+tcp        0      0 127.0.0.1:27001         0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27002         0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 127.0.0.1:27003         0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x8FDE;&#x63A5;&#x5230;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x521D;&#x59CB;&#x5316;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 27001
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27001/?gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;b5bd64d4-fec1-4002-b078-c4465e1fd966&quot;) }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise &gt; rs.initiate()
+{
+	&quot;info2&quot; : &quot;no configuration specified. Using a default configuration for the set&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; rs.status()
+{
+	&quot;set&quot; : &quot;m103-repl&quot;,
+	&quot;date&quot; : ISODate(&quot;2019-03-18T07:40:20.648Z&quot;),
+	&quot;myState&quot; : 1,
+	&quot;term&quot; : NumberLong(1),
+	&quot;syncingTo&quot; : &quot;&quot;,
+	&quot;syncSourceHost&quot; : &quot;&quot;,
+	&quot;syncSourceId&quot; : -1,
+	&quot;heartbeatIntervalMillis&quot; : NumberLong(2000),
+	&quot;optimes&quot; : {
+		&quot;lastCommittedOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552894818, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;readConcernMajorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552894818, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;appliedOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552894818, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;durableOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552894818, 1),
+			&quot;t&quot; : NumberLong(1)
+		}
+	},
+	&quot;members&quot; : [
+		{
+			&quot;_id&quot; : 0,
+			&quot;name&quot; : &quot;192.168.103.100:27001&quot;,
+			&quot;health&quot; : 1,
+			&quot;state&quot; : 1,
+			&quot;stateStr&quot; : &quot;PRIMARY&quot;,
+			&quot;uptime&quot; : 640,
+			&quot;optime&quot; : {
+				&quot;ts&quot; : Timestamp(1552894818, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDate&quot; : ISODate(&quot;2019-03-18T07:40:18Z&quot;),
+			&quot;syncingTo&quot; : &quot;&quot;,
+			&quot;syncSourceHost&quot; : &quot;&quot;,
+			&quot;syncSourceId&quot; : -1,
+			&quot;infoMessage&quot; : &quot;could not find member to sync from&quot;,
+			&quot;electionTime&quot; : Timestamp(1552894756, 2),
+			&quot;electionDate&quot; : ISODate(&quot;2019-03-18T07:39:16Z&quot;),
+			&quot;configVersion&quot; : 1,
+			&quot;self&quot; : true,
+			&quot;lastHeartbeatMessage&quot; : &quot;&quot;
+		}
+	],
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552894818, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552894818, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;b2Owp1OlR6reFIFTnG9/4e02+Tw=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x8D85;&#x7EA7;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:PRIMARY&gt; db.createUser({user: &quot;m103-admin&quot;, pwd: &quot;m103-pass&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})
+Successfully added user: {
+	&quot;user&quot; : &quot;m103-admin&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;role&quot; : &quot;root&quot;,
+			&quot;db&quot; : &quot;admin&quot;
+		}
+	]
+}
+MongoDB Enterprise m103-repl:PRIMARY&gt; exit
+bye</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x5DF2;&#x8D85;&#x7EA7;&#x7528;&#x6237;&#x767B;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27001/?authSource=admin&amp;gssapiServiceName=mongodb&amp;replicaSet=m103-repl
+2019-03-18T07:47:47.621+0000 I NETWORK  [thread1] Starting new replica set monitor for m103-repl/192.168.103.100:27001
+2019-03-18T07:47:47.622+0000 I NETWORK  [thread1] Successfully connected to 192.168.103.100:27001 (1 connections now open to 192.168.103.100:27001 with a 5 second timeout)
+Implicit session: session { &quot;id&quot; : UUID(&quot;b1ea59d3-b36f-4a84-bf96-3739d1a620e9&quot;) }
+MongoDB server version: 3.6.11</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x6DFB;&#x52A0;&#x6210;&#x5458;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.add(&quot;192.168.103.100:27002&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552895444, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552895444, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;/fYb24lG+07P1vFJbWlrave4/wg=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.add(&quot;192.168.103.100:27003&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552895447, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552895447, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;3qY1jjhSv+hsOWXvMPDFrHFOeic=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.status()
+{
+	&quot;set&quot; : &quot;m103-repl&quot;,
+	&quot;date&quot; : ISODate(&quot;2019-03-18T07:52:04.922Z&quot;),
+	&quot;myState&quot; : 1,
+	&quot;term&quot; : NumberLong(1),
+	&quot;syncingTo&quot; : &quot;&quot;,
+	&quot;syncSourceHost&quot; : &quot;&quot;,
+	&quot;syncSourceId&quot; : -1,
+	&quot;heartbeatIntervalMillis&quot; : NumberLong(2000),
+	&quot;optimes&quot; : {
+		&quot;lastCommittedOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552895518, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;readConcernMajorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552895518, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;appliedOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552895518, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;durableOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552895518, 1),
+			&quot;t&quot; : NumberLong(1)
+		}
+	},
+	&quot;members&quot; : [
+		{
+			&quot;_id&quot; : 0,
+			&quot;name&quot; : &quot;192.168.103.100:27001&quot;,
+			&quot;health&quot; : 1,
+			&quot;state&quot; : 1,
+			&quot;stateStr&quot; : &quot;PRIMARY&quot;,
+			&quot;uptime&quot; : 1344,
+			&quot;optime&quot; : {
+				&quot;ts&quot; : Timestamp(1552895518, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDate&quot; : ISODate(&quot;2019-03-18T07:51:58Z&quot;),
+			&quot;syncingTo&quot; : &quot;&quot;,
+			&quot;syncSourceHost&quot; : &quot;&quot;,
+			&quot;syncSourceId&quot; : -1,
+			&quot;infoMessage&quot; : &quot;&quot;,
+			&quot;electionTime&quot; : Timestamp(1552894756, 2),
+			&quot;electionDate&quot; : ISODate(&quot;2019-03-18T07:39:16Z&quot;),
+			&quot;configVersion&quot; : 3,
+			&quot;self&quot; : true,
+			&quot;lastHeartbeatMessage&quot; : &quot;&quot;
+		},
+		{
+			&quot;_id&quot; : 1,
+			&quot;name&quot; : &quot;192.168.103.100:27002&quot;,
+			&quot;health&quot; : 1,
+			&quot;state&quot; : 2,
+			&quot;stateStr&quot; : &quot;SECONDARY&quot;,
+			&quot;uptime&quot; : 80,
+			&quot;optime&quot; : {
+				&quot;ts&quot; : Timestamp(1552895518, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDurable&quot; : {
+				&quot;ts&quot; : Timestamp(1552895518, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDate&quot; : ISODate(&quot;2019-03-18T07:51:58Z&quot;),
+			&quot;optimeDurableDate&quot; : ISODate(&quot;2019-03-18T07:51:58Z&quot;),
+			&quot;lastHeartbeat&quot; : ISODate(&quot;2019-03-18T07:52:03.064Z&quot;),
+			&quot;lastHeartbeatRecv&quot; : ISODate(&quot;2019-03-18T07:52:03.607Z&quot;),
+			&quot;pingMs&quot; : NumberLong(0),
+			&quot;lastHeartbeatMessage&quot; : &quot;&quot;,
+			&quot;syncingTo&quot; : &quot;192.168.103.100:27001&quot;,
+			&quot;syncSourceHost&quot; : &quot;192.168.103.100:27001&quot;,
+			&quot;syncSourceId&quot; : 0,
+			&quot;infoMessage&quot; : &quot;&quot;,
+			&quot;configVersion&quot; : 3
+		},
+		{
+			&quot;_id&quot; : 2,
+			&quot;name&quot; : &quot;192.168.103.100:27003&quot;,
+			&quot;health&quot; : 1,
+			&quot;state&quot; : 2,
+			&quot;stateStr&quot; : &quot;SECONDARY&quot;,
+			&quot;uptime&quot; : 77,
+			&quot;optime&quot; : {
+				&quot;ts&quot; : Timestamp(1552895518, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDurable&quot; : {
+				&quot;ts&quot; : Timestamp(1552895518, 1),
+				&quot;t&quot; : NumberLong(1)
+			},
+			&quot;optimeDate&quot; : ISODate(&quot;2019-03-18T07:51:58Z&quot;),
+			&quot;optimeDurableDate&quot; : ISODate(&quot;2019-03-18T07:51:58Z&quot;),
+			&quot;lastHeartbeat&quot; : ISODate(&quot;2019-03-18T07:52:03.064Z&quot;),
+			&quot;lastHeartbeatRecv&quot; : ISODate(&quot;2019-03-18T07:52:03.012Z&quot;),
+			&quot;pingMs&quot; : NumberLong(0),
+			&quot;lastHeartbeatMessage&quot; : &quot;&quot;,
+			&quot;syncingTo&quot; : &quot;192.168.103.100:27002&quot;,
+			&quot;syncSourceHost&quot; : &quot;192.168.103.100:27002&quot;,
+			&quot;syncSourceId&quot; : 1,
+			&quot;infoMessage&quot; : &quot;&quot;,
+			&quot;configVersion&quot; : 3
+		}
+	],
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552895518, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552895518, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;0GmanYs4kEgfT36dh6aE7p5BSeI=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ for i in 2155 2194 2232 ; do netstat -antulop | grep $i; echo ;done
+tcp        0      0 127.0.0.1:27001         0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   0.0.0.0:*               LISTEN      2155/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50635   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:41951   192.168.103.100:27002   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:41195   192.168.103.100:27003   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50632   ESTABLISHED 2155/mongod      keepalive (183.92/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50631   ESTABLISHED 2155/mongod      keepalive (225.90/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50643   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50638   ESTABLISHED 2155/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50658   ESTABLISHED 2155/mongod      keepalive (123.50/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50650   ESTABLISHED 2155/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27001   192.168.103.100:50659   ESTABLISHED 2155/mongod      keepalive (123.50/0/0)
+
+tcp        0      0 127.0.0.1:27002         0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   0.0.0.0:*               LISTEN      2194/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41966   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41951   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41973   ESTABLISHED 2194/mongod      keepalive (123.50/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41969   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41970   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:50638   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:27002   192.168.103.100:41972   ESTABLISHED 2194/mongod      keepalive (117.35/0/0)
+tcp        0      0 192.168.103.100:50635   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (103.02/0/0)
+tcp        0      0 192.168.103.100:50650   192.168.103.100:27001   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+tcp        0      0 192.168.103.100:41201   192.168.103.100:27003   ESTABLISHED 2194/mongod      keepalive (106.09/0/0)
+
+tcp        0      0 127.0.0.1:27003         0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   0.0.0.0:*               LISTEN      2232/mongod      off (0.00/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41201   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41210   192.168.103.100:27003   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41210   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:41966   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41973   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:50658   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:50643   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41195   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:27003   192.168.103.100:41207   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
+tcp        0      0 192.168.103.100:41972   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (117.34/0/0)
+tcp        0      0 192.168.103.100:50659   192.168.103.100:27001   ESTABLISHED 2232/mongod      keepalive (123.49/0/0)
+tcp        0      0 192.168.103.100:41969   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x57FA;&#x7840;&#x4E0A;&#x8FDB;&#x884C;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><strong>1. &#x521B;&#x5EFA;&#x4E24;&#x4E2A;&#x914D;&#x5236;&#x6587;&#x4EF6;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-4.conf</th>
+<th class="tableblock halign-left valign-top">arbiter.conf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/4
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27004
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod4.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db/arbiter
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 28000
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod-arbiter.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8; mongod &#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-repl-4.conf
+$ mongod -f arbiter.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6DFB;&#x52A0;&#x65B0;&#x521B;&#x5EFA;&#x7684;&#x8282;&#x70B9;&#x5230;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.add(&quot;192.168.103.100:27004&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900251, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900251, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;tgvIK0IO8r7x2965MiC3GuBL4NM=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.addArb(&quot;192.168.103.100:28000&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900296, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900296, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;3KERoIv/hxKNDo1Wh/UWvJC4c2U=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x65B0;&#x6DFB;&#x52A0;&#x7684;&#x4E24;&#x4E2A;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;,
+		&quot;192.168.103.100:27003&quot;,
+		&quot;192.168.103.100:27004&quot;
+	],
+	&quot;arbiters&quot; : [
+		&quot;192.168.103.100:28000&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 9,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;),
+	&quot;lastWrite&quot; : {
+		&quot;opTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552900328, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;lastWriteDate&quot; : ISODate(&quot;2019-03-18T09:12:08Z&quot;),
+		&quot;majorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552900328, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;majorityWriteDate&quot; : ISODate(&quot;2019-03-18T09:12:08Z&quot;)
+	},
+	&quot;maxBsonObjectSize&quot; : 16777216,
+	&quot;maxMessageSizeBytes&quot; : 48000000,
+	&quot;maxWriteBatchSize&quot; : 100000,
+	&quot;localTime&quot; : ISODate(&quot;2019-03-18T09:12:09.222Z&quot;),
+	&quot;logicalSessionTimeoutMinutes&quot; : 30,
+	&quot;minWireVersion&quot; : 0,
+	&quot;maxWireVersion&quot; : 6,
+	&quot;readOnly&quot; : false,
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900328, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900328, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;NYyWWkgAKi1u8fPZEUQdEc8U3ps=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5220;&#x9664; arbiter &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.remove(&quot;192.168.103.100:28000&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900423, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900423, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;dA94M4Nv2EhsJdq5mC8PjZgC8tY=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x9690;&#x85CF;&#x4E00;&#x4E2A;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; var cfg = rs.conf()
+MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members[3].votes = 0
+0
+MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members[3].hidden = true
+true
+MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members[3].priority = 0
+0
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900605, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900605, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;ibtCCQKaVLHIYaiQE/fNhGfYUFQ=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;,
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 11,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;),
+	&quot;lastWrite&quot; : {
+		&quot;opTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552900698, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;lastWriteDate&quot; : ISODate(&quot;2019-03-18T09:18:18Z&quot;),
+		&quot;majorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552900698, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;majorityWriteDate&quot; : ISODate(&quot;2019-03-18T09:18:18Z&quot;)
+	},
+	&quot;maxBsonObjectSize&quot; : 16777216,
+	&quot;maxMessageSizeBytes&quot; : 48000000,
+	&quot;maxWriteBatchSize&quot; : 100000,
+	&quot;localTime&quot; : ISODate(&quot;2019-03-18T09:18:28.633Z&quot;),
+	&quot;logicalSessionTimeoutMinutes&quot; : 30,
+	&quot;minWireVersion&quot; : 0,
+	&quot;maxWireVersion&quot; : 6,
+	&quot;readOnly&quot; : false,
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552900698, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552900698, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;iJnZ5UHzZ3AwTy4b0zXYtLFzv4o=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_todo">TODO</h3>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -452,7 +1881,7 @@ bye</code></pre>
 
             
                 
-                <a href="../" class="navigation navigation-prev navigation-unique" aria-label="Previous page: BASICS">
+                <a href="basic.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 基础">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -464,7 +1893,7 @@ bye</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"基本集群管理","level":"1.2","depth":1,"previous":{"title":"BASICS","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-13T14:31:58.660Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-13T14:56:38.355Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-18T09:18:57.888Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-18T09:20:07.752Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

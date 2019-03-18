@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>BASICS · GitBook</title>
+        <title>MongoDB · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="dba/cluster-admin.html" />
+    <link rel="next" href="dba/basic.html" />
     
     
 
@@ -96,7 +96,7 @@
                 <a href="./">
             
                     
-                    BASICS
+                    MongoDB
             
                 </a>
             
@@ -104,12 +104,25 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2" data-path="dba/cluster-admin.html">
+        <li class="chapter " data-level="1.2" data-path="dba/basic.html">
+            
+                <a href="dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="dba/cluster-admin.html">
             
                 <a href="dba/cluster-admin.html">
             
                     
-                    基本集群管理
+                    集群管理
             
                 </a>
             
@@ -147,7 +160,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="." >BASICS</a>
+        <a href="." >MongoDB</a>
     </h1>
 </div>
 
@@ -162,195 +175,8 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="mongodb-&#x57FA;&#x7840;">MongoDB &#x57FA;&#x7840;</h1>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#__">&#x8F6F;&#x4EF6;&#x5B89;&#x88C5;</a>
-<ul class="sectlevel2">
-<li><a href="#_rhel_7_mongodb_enterprise_server">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-enterprise-server</a></li>
-<li><a href="#_rhel_7_mongodb_enterprise_tools">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-enterprise-tools</a></li>
-<li><a href="#_rhel_7_mongodb_compass">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-compass</a></li>
-</ul>
-</li>
-<li><a href="#_todo">TODO</a></li>
-</ul>
-</div>
-<div class="sect1">
-<h2 id="__">&#x8F6F;&#x4EF6;&#x5B89;&#x88C5;</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_rhel_7_mongodb_enterprise_server">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-enterprise-server</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>&#x8BBF;&#x95EE; MongoDB Server &#x4E0B;&#x8F7D;&#x9875;&#x9762; <a href="https://www.mongodb.com/download-center/enterprise" class="bare" target="_blank">https://www.mongodb.com/download-center/enterprise</a></p>
-</li>
-<li>
-<p>&#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x548C;&#x8F6F;&#x4EF6;&#x7248;&#x672C;&#xFF0C;&#x70B9;&#x51FB;&#x4E0B;&#x8F7D;&#x3002;</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x672C;&#x5730;&#x5B89;&#x88C5;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># yum localinstall mongodb-enterprise-server-4.0.6-1.el7.x86_64.rpm
+                                <h1 id="mongodb">MongoDB</h1>
 
-...
-
-Installed:
-  mongodb-enterprise-server.x86_64 0:4.0.6-1.el7
-
-Dependency Installed:
-  net-snmp.x86_64 1:5.7.2-37.el7                                                           net-snmp-agent-libs.x86_64 1:5.7.2-37.el7
-
-Complete!</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>rpm -q -a - &#x67E5;&#x770B;&#x5168;&#x90E8;&#x5DF2;&#x5B89;&#x88C5;&#x4E86;&#x7684;&#x5305;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -qa | grep &quot;mongodb*&quot;
-mongodb-enterprise-server-4.0.6-1.el7.x86_64</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5217;&#x51FA;&#x5B89;&#x88C5;&#x5F15;&#x5165;&#x7684;&#x6240;&#x6709;&#x6587;&#x4EF6;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -q -l mongodb-enterprise-server
-/etc/mongod.conf
-/lib/systemd/system/mongod.service
-/usr/bin/mongod
-/usr/share/doc/mongodb-enterprise-server-4.0.6
-/usr/share/doc/mongodb-enterprise-server-4.0.6/LICENSE-Enterprise.txt
-/usr/share/doc/mongodb-enterprise-server-4.0.6/MONGOD-MIB.txt
-/usr/share/doc/mongodb-enterprise-server-4.0.6/MONGODBINC-MIB.txt
-/usr/share/doc/mongodb-enterprise-server-4.0.6/MPL-2
-/usr/share/doc/mongodb-enterprise-server-4.0.6/README
-/usr/share/doc/mongodb-enterprise-server-4.0.6/README-snmp.txt
-/usr/share/doc/mongodb-enterprise-server-4.0.6/THIRD-PARTY-NOTICES
-/usr/share/doc/mongodb-enterprise-server-4.0.6/mongod.conf.master
-/usr/share/doc/mongodb-enterprise-server-4.0.6/mongod.conf.subagent
-/usr/share/man/man1/mongod.1
-/var/lib/mongo
-/var/log/mongodb
-/var/log/mongodb/mongod.log
-/var/run/mongodb</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_rhel_7_mongodb_enterprise_tools">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-enterprise-tools</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>&#x8BBF;&#x95EE; MongoDB Tools &#x4E0B;&#x8F7D;&#x9875;&#x9762; <a href="https://www.mongodb.com/download-center/enterprise" class="bare" target="_blank">https://www.mongodb.com/download-center/enterprise</a></p>
-</li>
-<li>
-<p>&#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x548C;&#x8F6F;&#x4EF6;&#x7248;&#x672C;&#xFF0C;&#x70B9;&#x51FB;&#x4E0B;&#x8F7D;&#x3002;</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x672C;&#x5730;&#x5B89;&#x88C5;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># yum localinstall mongodb-enterprise-tools-4.0.6-1.el7.x86_64.rpm
-
-...
-
-Installed:
-  mongodb-enterprise-tools.x86_64 0:4.0.6-1.el7
-
-Complete!</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>rpm -q -a - &#x67E5;&#x770B;&#x5168;&#x90E8;&#x5DF2;&#x5B89;&#x88C5;&#x4E86;&#x7684;&#x5305;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -qa | grep &quot;mongodb*&quot;
-mongodb-enterprise-server-4.0.6-1.el7.x86_64
-mongodb-enterprise-tools-4.0.6-1.el7.x86_64</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5217;&#x51FA;&#x5B89;&#x88C5;&#x5F15;&#x5165;&#x7684;&#x6240;&#x6709;&#x6587;&#x4EF6;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -q -l mongodb-enterprise-tools
-/usr/bin/bsondump
-/usr/bin/install_compass
-/usr/bin/mongodecrypt
-/usr/bin/mongodump
-/usr/bin/mongoexport
-/usr/bin/mongofiles
-/usr/bin/mongoimport
-/usr/bin/mongoldap
-/usr/bin/mongorestore
-/usr/bin/mongostat
-/usr/bin/mongotop
-/usr/share/man/man1/bsondump.1
-/usr/share/man/man1/mongodump.1
-/usr/share/man/man1/mongoexport.1
-/usr/share/man/man1/mongofiles.1
-/usr/share/man/man1/mongoimport.1
-/usr/share/man/man1/mongorestore.1
-/usr/share/man/man1/mongostat.1
-/usr/share/man/man1/mongotop.1</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_rhel_7_mongodb_compass">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-compass</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>&#x8BBF;&#x95EE; MongoDB Compass &#x4E0B;&#x8F7D;&#x9875;&#x9762; <a href="https://www.mongodb.com/download-center/compass" class="bare" target="_blank">https://www.mongodb.com/download-center/compass</a></p>
-</li>
-<li>
-<p>&#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x548C;&#x8F6F;&#x4EF6;&#x7248;&#x672C;&#xFF0C;&#x70B9;&#x51FB;&#x4E0B;&#x8F7D;&#x3002;</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x672C;&#x5730;&#x5B89;&#x88C5;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># yum localinstall mongodb-compass-1.17.0.x86_64.rpm
-
-...
-
-Installed:
-  mongodb-compass.x86_64 0:1.17.0-1.el7
-
-Complete!</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>rpm -q -a - &#x67E5;&#x770B;&#x5168;&#x90E8;&#x5DF2;&#x5B89;&#x88C5;&#x4E86;&#x7684;&#x5305;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -qa | grep &quot;mongodb-compass&quot;
-mongodb-compass-1.17.0-1.el7.x86_64</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>&#x5217;&#x51FA;&#x5B89;&#x88C5;&#x5F15;&#x5165;&#x7684;&#x6240;&#x6709;&#x6587;&#x4EF6;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"># rpm -ql mongodb-compass
-/usr/bin/mongodb-compass
-/usr/share/applications/mongodb-compass.desktop
-/usr/share/doc/mongodb-compass
-/usr/share/doc/mongodb-compass/copyright
-/usr/share/mongodb-compass
-...</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_todo">TODO</h2>
-<div class="sectionbody">
-
-</div>
-</div>
                                 
                                 </section>
                             
@@ -378,7 +204,7 @@ mongodb-compass-1.17.0-1.el7.x86_64</code></pre>
             
                 
                 
-                <a href="dba/cluster-admin.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基本集群管理">
+                <a href="dba/basic.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -389,7 +215,7 @@ mongodb-compass-1.17.0-1.el7.x86_64</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"BASICS","level":"1.1","depth":1,"next":{"title":"基本集群管理","level":"1.2","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-03-13T07:41:21.331Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-13T14:56:38.355Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-03-14T10:25:04.794Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-18T09:20:07.752Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
