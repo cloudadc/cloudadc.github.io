@@ -879,9 +879,9 @@ $ chmod 600 /var/mongodb/pki/m103-keyfile
 
 *2. 创建三个节点配制文件，内容如下*
 
-[cols="5a,5a,5a"]
+[cols="5a,5a"]
 |===
-|mongod-repl-1.conf |mongod-repl-2.conf |mongod-repl-3.conf  
+|mongod-repl-1.conf |mongod-repl-2.conf 
 
 |
 [source, text]
@@ -925,6 +925,12 @@ replication:
   replSetName: m103-repl
 ----
 
+|===
+
+[cols="5a,5a"]
+|===
+|mongod-repl-3.conf |
+
 |
 [source, text]
 ----
@@ -945,6 +951,8 @@ processManagement:
 replication:
   replSetName: m103-repl
 ----
+
+|
 
 |===
 
@@ -1530,7 +1538,406 @@ MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
 }
 ----
 
-=== TODO
+=== 集群中读写操作
+
+[source, text]
+.*1. 连接到 PRIMARY 节点*
+----
+$ mongo --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+----
+
+[source, text]
+.*2. 查看复制集合的拓扑结构*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002",
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 12,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27001",
+	"me" : "192.168.103.100:27001",
+	"electionId" : ObjectId("7fffffff0000000000000002"),
+	"lastWrite" : {
+		"opTime" : {
+			"ts" : Timestamp(1552913488, 1),
+			"t" : NumberLong(2)
+		},
+		"lastWriteDate" : ISODate("2019-03-18T12:51:28Z"),
+		"majorityOpTime" : {
+			"ts" : Timestamp(1552913488, 1),
+			"t" : NumberLong(2)
+		},
+		"majorityWriteDate" : ISODate("2019-03-18T12:51:28Z")
+	},
+	"maxBsonObjectSize" : 16777216,
+	"maxMessageSizeBytes" : 48000000,
+	"maxWriteBatchSize" : 100000,
+	"localTime" : ISODate("2019-03-18T12:51:36.762Z"),
+	"logicalSessionTimeoutMinutes" : 30,
+	"minWireVersion" : 0,
+	"maxWireVersion" : 6,
+	"readOnly" : false,
+	"ok" : 1,
+	"operationTime" : Timestamp(1552913488, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552913488, 1),
+		"signature" : {
+			"hash" : BinData(0,"lW8h9HG2b0kXlEhRC5V7sPvU1vY="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*3. 创建一个数据库，并在数据库中创建一个集成，添加一条数据*
+----
+MongoDB Enterprise m103-repl:PRIMARY> use replSetTestDB
+switched to db replSetTestDB
+MongoDB Enterprise m103-repl:PRIMARY> db.new_collection.insert( { "student": "Matt Javaly", "grade": "A+" } )
+WriteResult({ "nInserted" : 1 })
+----
+
+[source, text]
+.*4. 连接到 SECONDARY 节点*
+----
+$ mongo --host "192.168.103.100:27002" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+----
+
+[source, text]
+.*5. 执行读操作*
+----
+MongoDB Enterprise m103-repl:SECONDARY> show dbs
+2019-03-18T12:55:21.314+0000 E QUERY    [thread1] Error: listDatabases failed:{
+	"operationTime" : Timestamp(1552913718, 1),
+	"ok" : 0,
+	"errmsg" : "not master and slaveOk=false",
+	"code" : 13435,
+	"codeName" : "NotMasterNoSlaveOk",
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552913718, 1),
+		"signature" : {
+			"hash" : BinData(0,"L55vr/U4ScHAh55r5DI7x0DK4K8="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+} :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+Mongo.prototype.getDBs@src/mongo/shell/mongo.js:67:1
+shellHelper.show@src/mongo/shell/utils.js:860:19
+shellHelper@src/mongo/shell/utils.js:750:15
+@(shellhelp2):1:1
+----
+
+[source, text]
+.*6. 设定 slaveOk=true 后执行读操作*
+----
+MongoDB Enterprise m103-repl:SECONDARY> rs.slaveOk()
+MongoDB Enterprise m103-repl:SECONDARY> show dbs
+admin          0.000GB
+config         0.000GB
+local          0.000GB
+replSetTestDB  0.000GB
+
+MongoDB Enterprise m103-repl:SECONDARY> use replSetTestDB
+switched to db replSetTestDB
+MongoDB Enterprise m103-repl:SECONDARY> db.new_collection.find()
+{ "_id" : ObjectId("5c8f94e3501302bdac004143"), "student" : "Matt Javaly", "grade" : "A+" }
+----
+
+[source, text]
+.*7. 在 SECONDARY 节点上执行写操作(执行失败，因为写操作只能在 PRIMARY 上执行)*
+----
+MongoDB Enterprise m103-repl:SECONDARY> db.new_collection.insert( { "student": "Norberto Leite", "grade": "B+" } )
+WriteResult({ "writeError" : { "code" : 10107, "errmsg" : "not master" } })
+----
+
+[source, text]
+.*8. 停止运行 SECONDARY 节点*
+----
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+----
+
+[source, text]
+.*9. 在 PRIMARY 节点上查看状态*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.status()
+
+...
+
+		{
+			"_id" : 1,
+			"name" : "192.168.103.100:27002",
+			"health" : 0,
+			"state" : 8,
+			"stateStr" : "(not reachable/healthy)",
+			"uptime" : 0,
+			"optime" : {
+				"ts" : Timestamp(0, 0),
+				"t" : NumberLong(-1)
+			},
+			"optimeDurable" : {
+				"ts" : Timestamp(0, 0),
+				"t" : NumberLong(-1)
+			},
+			"optimeDate" : ISODate("1970-01-01T00:00:00Z"),
+			"optimeDurableDate" : ISODate("1970-01-01T00:00:00Z"),
+			"lastHeartbeat" : ISODate("2019-03-18T13:02:49.468Z"),
+			"lastHeartbeatRecv" : ISODate("2019-03-18T13:01:17.390Z"),
+			"pingMs" : NumberLong(0),
+			"lastHeartbeatMessage" : "Connection refused",
+			"syncingTo" : "",
+			"syncSourceHost" : "",
+			"syncSourceId" : -1,
+			"infoMessage" : "",
+			"configVersion" : -1
+		},
+...
+----
+
+[source, text]
+.*10. 在 PRIMARY 节点上插入另一条数据*
+----
+MongoDB Enterprise m103-repl:PRIMARY> db.new_collection.insert( { "student": "Kylin Soong", "grade": "A+" } )
+MongoDB Enterprise m103-repl:PRIMARY> db.new_collection.find()
+{ "_id" : ObjectId("5c8f94e3501302bdac004143"), "student" : "Matt Javaly", "grade" : "A+" }
+{ "_id" : ObjectId("5c8f9797501302bdac004144"), "student" : "Kylin Soong", "grade" : "A+" }
+----
+
+[source, text]
+.*11. 连接到另一个 SECONDARY 节点上执行读操作*
+----
+$ mongo --host "192.168.103.100:27003" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise m103-repl:SECONDARY> rs.slaveOk()
+
+MongoDB Enterprise m103-repl:SECONDARY> use replSetTestDB
+switched to db replSetTestDB
+
+MongoDB Enterprise m103-repl:SECONDARY> db.new_collection.find()
+{ "_id" : ObjectId("5c8f94e3501302bdac004143"), "student" : "Matt Javaly", "grade" : "A+" }
+{ "_id" : ObjectId("5c8f9797501302bdac004144"), "student" : "Kylin Soong", "grade" : "A+" }
+----
+
+[source, text]
+.*12. 停止运行 SECONDARY 节点*
+----
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+----
+
+[source, text]
+.*13. 连接到初始 PRIMARY 节点上查看状态*
+----
+$ mongo --host "192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27001/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("647ca0a3-af10-4216-9480-ebc517f11432") }
+MongoDB server version: 3.6.11
+MongoDB Enterprise m103-repl:SECONDARY> 
+----
+
+[source, text]
+.*14. 查看初始 PRIMARY 节点变成 SECONDARY 节点*
+----
+MongoDB Enterprise m103-repl:SECONDARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002",
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 12,
+	"ismaster" : false,
+	"secondary" : true,
+	"me" : "192.168.103.100:27001",
+----
+
+=== 故障转移及主节点选举
+
+[source, text]
+.*1. 连接到主节点*
+----
+$ mongo --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+----
+
+[source, text]
+.*2. 设定一个备节点的优先级为 0，重新配制集群子集*
+----
+MongoDB Enterprise m103-repl:PRIMARY> var cfg = rs.conf()
+
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members[2].priority = 0
+0
+
+MongoDB Enterprise m103-repl:PRIMARY> rs.reconfig(cfg)
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552919705, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552919705, 1),
+		"signature" : {
+			"hash" : BinData(0,"p81iAKaoMrp/Y7u7VlWImY63Hws="),
+			"keyId" : NumberLong("6669632199739834369")
+		}
+	}
+}
+----
+
+[source, text]
+.*3. 查看集群子集拓扑*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002"
+	],
+	"passives" : [
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 13,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27001",
+	"me" : "192.168.103.100:27001",
+	"electionId" : ObjectId("7fffffff0000000000000004"),
+...
+----
+
+[source, text]
+.*4. 强制执行一次主节点选举*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.stepDown()
+----
+
+[source, text]
+.*5. 查看集群子集拓扑*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002"
+	],
+	"passives" : [
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 13,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27002",
+	"me" : "192.168.103.100:27002",
+	"electionId" : ObjectId("7fffffff0000000000000005"),
+...
+----
+
+=== writeConcern
+
+MongoDB 复制子集中通过 `writeConcern` 来确认写操作的可靠性。本部分说明 `writeConcern` 确认
+
+[source, text]
+.*1. 连接到三节点集群中任意一节点，关闭该节点*
+----
+$ mongo --host "192.168.103.100:27003" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27003/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("fe6813ac-8f15-4e5f-b615-a8cef3584a84") }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+----
+
+[source, text]
+.*2. 查看复制子集状态*
+----
+MongoDB Enterprise m103-repl:PRIMARY> rs.status()
+
+...
+
+		{
+			"_id" : 2,
+			"name" : "192.168.103.100:27003",
+			"health" : 0,
+			"state" : 8,
+			"stateStr" : "(not reachable/healthy)",
+			"uptime" : 0,
+...
+----
+
+[source, text]
+.*3. 执行写操作，并设定 writeConcern 为 3*
+----
+MongoDB Enterprise m103-repl:PRIMARY> use testDatabase
+switched to db testDatabase
+
+MongoDB Enterprise m103-repl:PRIMARY> db.new_data.insert({"m103": "very fun"}, { writeConcern: { w: 3, wtimeout: 1000 }})
+WriteResult({
+	"nInserted" : 1,
+	"writeConcernError" : {
+		"code" : 64,
+		"codeName" : "WriteConcernFailed",
+		"errInfo" : {
+			"wtimeout" : true
+		},
+		"errmsg" : "waiting for replication timed out"
+	}
+})
+----
+
+=== readConcern 
+
+[source, text]
+.*1. 导入测试数据*
+----
+$ mongoimport --drop --host m103-repl/192.168.103.100:27002,192.168.103.100:27001,192.168.103.100:27003 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --db applicationData --collection products /dataset/products.json
+2019-03-18T15:24:31.240+0000	connected to: m103-repl/192.168.103.100:27002,192.168.103.100:27001,192.168.103.100:27003
+2019-03-18T15:24:31.241+0000	dropping: applicationData.products
+2019-03-18T15:24:34.225+0000	[#.......................] applicationData.products	5.08MB/87.9MB (5.8%)
+2019-03-18T15:24:37.220+0000	[##......................] applicationData.products	10.3MB/87.9MB (11.7%)
+2019-03-18T15:24:40.220+0000	[####....................] applicationData.products	15.5MB/87.9MB (17.6%)
+2019-03-18T15:24:43.220+0000	[#####...................] applicationData.products	20.7MB/87.9MB (23.6%)
+2019-03-18T15:24:46.221+0000	[######..................] applicationData.products	25.5MB/87.9MB (29.0%)
+2019-03-18T15:24:49.220+0000	[########................] applicationData.products	30.6MB/87.9MB (34.8%)
+2019-03-18T15:24:52.228+0000	[########................] applicationData.products	32.5MB/87.9MB (37.0%)
+2019-03-18T15:24:55.220+0000	[#########...............] applicationData.products	34.2MB/87.9MB (38.9%)
+2019-03-18T15:24:58.220+0000	[##########..............] applicationData.products	39.1MB/87.9MB (44.5%)
+2019-03-18T15:25:01.220+0000	[###########.............] applicationData.products	44.0MB/87.9MB (50.0%)
+2019-03-18T15:25:04.220+0000	[#############...........] applicationData.products	48.9MB/87.9MB (55.6%)
+2019-03-18T15:25:07.221+0000	[##############..........] applicationData.products	53.9MB/87.9MB (61.3%)
+2019-03-18T15:25:10.220+0000	[###############.........] applicationData.products	58.6MB/87.9MB (66.6%)
+2019-03-18T15:25:13.220+0000	[#################.......] applicationData.products	63.7MB/87.9MB (72.4%)
+2019-03-18T15:25:16.220+0000	[##################......] applicationData.products	69.0MB/87.9MB (78.4%)
+2019-03-18T15:25:19.220+0000	[####################....] applicationData.products	73.7MB/87.9MB (83.8%)
+2019-03-18T15:25:22.220+0000	[#####################...] applicationData.products	78.7MB/87.9MB (89.4%)
+2019-03-18T15:25:25.220+0000	[######################..] applicationData.products	83.3MB/87.9MB (94.7%)
+2019-03-18T15:25:27.518+0000	[########################] applicationData.products	87.9MB/87.9MB (100.0%)
+2019-03-18T15:25:27.518+0000	imported 516784 documents
+----
+
+[source, text]
+.*2. 执行读操作*
+----
+$ mongo --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise m103-repl:PRIMARY> use applicationData
+switched to db applicationData
+----
+
+== 分片管理
 
 [source, text]
 .**
@@ -1555,41 +1962,4 @@ MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
 ----
 
 ----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
 
