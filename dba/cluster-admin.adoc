@@ -864,7 +864,7 @@ MongoDB Enterprise > db.products.count()
 516784
 ----
 
-== 集群管理
+== 复制(Replication)管理
 
 === 3 节点集群复制配制
 
@@ -1596,7 +1596,7 @@ MongoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
 ----
 
 [source, text]
-.*3. 创建一个数据库，并在数据库中创建一个集成，添加一条数据*
+.*3. 创建一个数据库，并在数据库中创建一个集合，添加一条数据*
 ----
 MongoDB Enterprise m103-repl:PRIMARY> use replSetTestDB
 switched to db replSetTestDB
@@ -1937,7 +1937,570 @@ MongoDB Enterprise m103-repl:PRIMARY> use applicationData
 switched to db applicationData
 ----
 
-== 分片管理
+== 分片(Sharding)管理
+
+=== 配制一个分片集群
+
+本部分在上面 *3 节点集群复制配制* 的基础上，配制一个 3 节点的 Config Server，及一个 mongos，构成一个最小化的分片集群。
+
+[source, text]
+.*1. Mongo Shell 连接到主节点，确保复制子集运行正常*
+----
+$ mongo --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+ngoDB Enterprise m103-repl:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:27001",
+		"192.168.103.100:27002",
+		"192.168.103.100:27003"
+	],
+	"setName" : "m103-repl",
+	"setVersion" : 3,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:27001",
+	"me" : "192.168.103.100:27001",
+...
+----
+
+*2. 创建三个 Config Server 节点配制文件，内容如下*
+
+[cols="5a,5a"]
+|===
+|mongod-csrs-1.conf |mongod-csrs-2.conf
+
+|
+[source, text]
+----
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26001
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs1/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs1
+----
+
+|
+[source, text]
+----
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26002
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs2/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs2
+----
+
+|===
+
+[cols="5a,5a"]
+|===
+|mongod-csrs-3.conf |
+
+|
+[source, text]
+----
+sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26003
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs3/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs3
+----
+
+|
+
+|===
+
+[source, text]
+.*3. 创建日志存储路径*
+----
+$ mkdir -p /var/mongodb/db/csrs{1,2,3}
+----
+
+[source, text]
+.*4. 启动三个节点*
+----
+$ mongod -f mongod-csrs-1.conf 
+$ mongod -f mongod-csrs-2.conf 
+$ mongod -f mongod-csrs-3.conf 
+----
+
+[source, text]
+.*5. 查看运行的 mongod 进程*
+----
+$ ps -ef | grep mongod
+vagrant   2368     1  0 09:37 ?        00:00:08 mongod -f mongod-repl-1.conf
+vagrant   2398     1  0 09:37 ?        00:00:07 mongod -f mongod-repl-2.conf
+vagrant   2428     1  0 09:37 ?        00:00:08 mongod -f mongod-repl-3.conf
+vagrant   2789     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-1.conf
+vagrant   2827     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-2.conf
+vagrant   2864     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-3.conf
+----
+
+[source, text]
+.*6. 连接到 Config Server 主节点，初始化集群*
+----
+$ mongo --port 26001
+
+MongoDB Enterprise > rs.initiate()
+{
+	"info2" : "no configuration specified. Using a default configuration for the set",
+	"me" : "192.168.103.100:26001",
+	"ok" : 1,
+	"$gleStats" : {
+		"lastOpTime" : Timestamp(1552989761, 1),
+		"electionId" : ObjectId("000000000000000000000000")
+	}
+}
+----
+
+[source, text]
+.*7. 创建一个超级用户*
+----
+MongoDB Enterprise m103-csrs:SECONDARY> use admin
+switched to db admin
+
+MongoDB Enterprise m103-csrs:PRIMARY> db.createUser({user: "m103-admin", pwd: "m103-pass", roles: [{role: "root", db: "admin"}]})
+Successfully added user: {
+	"user" : "m103-admin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
+
+MongoDB Enterprise m103-csrs:PRIMARY> db.auth("m103-admin", "m103-pass")
+1
+----
+
+[source, text]
+.*8. 添加两个备节点*
+----
+MongoDB Enterprise m103-csrs:PRIMARY> rs.add("192.168.103.100:26002")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552989889, 1),
+	"$gleStats" : {
+		"lastOpTime" : {
+			"ts" : Timestamp(1552989889, 1),
+			"t" : NumberLong(1)
+		},
+		"electionId" : ObjectId("7fffffff0000000000000001")
+	},
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552989889, 1),
+		"signature" : {
+			"hash" : BinData(0,"L8929773rnlHXegrwczReqJ0uUk="),
+			"keyId" : NumberLong("6670040243107790859")
+		}
+	}
+}
+MongoDB Enterprise m103-csrs:PRIMARY> rs.add("192.168.103.100:26003")
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1552989893, 1),
+	"$gleStats" : {
+		"lastOpTime" : {
+			"ts" : Timestamp(1552989893, 1),
+			"t" : NumberLong(1)
+		},
+		"electionId" : ObjectId("7fffffff0000000000000001")
+	},
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1552989893, 1),
+		"signature" : {
+			"hash" : BinData(0,"SkmXMO118gGEp3S9XAmunUo1omU="),
+			"keyId" : NumberLong("6670040243107790859")
+		}
+	}
+}
+----
+
+[source, text]
+.*9. 查看集群状态*
+----
+MongoDB Enterprise m103-csrs:PRIMARY> rs.isMaster()
+{
+	"hosts" : [
+		"192.168.103.100:26001",
+		"192.168.103.100:26002",
+		"192.168.103.100:26003"
+	],
+	"setName" : "m103-csrs",
+	"setVersion" : 3,
+	"ismaster" : true,
+	"secondary" : false,
+	"primary" : "192.168.103.100:26001",
+	"me" : "192.168.103.100:26001",
+	"electionId" : ObjectId("7fffffff0000000000000001"),
+...
+----
+
+*10. 创建 mongos.conf 文件，内容如下*
+
+[cols="5a,5a"]
+|===
+|mongos.conf |
+
+|
+[source, text]
+----
+sharding:
+  configDB: m103-csrs/192.168.103.100:26001,192.168.103.100:26002,192.168.103.100:26003
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26000
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongos.log
+  logAppend: true
+processManagement:
+  fork: true
+----
+
+|
+
+|===
+
+[source, text]
+.*11. 启动 mongos*
+----
+$ mongos -f mongos.conf
+----
+
+[source, text]
+.*12. 查看 mongos 进程及监听端口信息*
+----
+$ ps -ef | grep mongos
+vagrant   5065     1  0 14:25 ?        00:00:00 mongos -f mongos.conf
+
+$ sudo netstat -antulop | grep 5065
+tcp        0      0 192.168.103.100:26000   0.0.0.0:*               LISTEN      5065/mongos      off (0.00/0/0)
+tcp        0      0 127.0.0.1:26000         0.0.0.0:*               LISTEN      5065/mongos      off (0.00/0/0)
+tcp        0      0 192.168.103.100:51380   192.168.103.100:26002   ESTABLISHED 5065/mongos      keepalive (127.78/0/0)
+tcp        0      0 192.168.103.100:51374   192.168.103.100:26002   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:56908   192.168.103.100:26003   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:44612   192.168.103.100:26001   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:56913   192.168.103.100:26003   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:44608   192.168.103.100:26001   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+----
+
+[source, text]
+.*13. Mongo Shell 连接到 mongos*
+----
+$ mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("0691aaa5-4695-457a-b848-68819fdf5b75") }
+MongoDB server version: 3.6.11
+MongoDB Enterprise mongos> 
+----
+
+[source, text]
+.*14. 查看分区集群的状态*
+----
+MongoDB Enterprise mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+  	"_id" : 1,
+  	"minCompatibleVersion" : 5,
+  	"currentVersion" : 6,
+  	"clusterId" : ObjectId("5c90be43507efebbab5cc5e8")
+  }
+  shards:
+  active mongoses:
+        "3.6.11" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+----
+
+*15. 创建三个节点配制文件，添加 sharding 及 wiredTiger 配制，内容如下*
+
+[cols="5a,5a"]
+|===
+|mongod-repl-1.conf |mongod-repl-2.conf
+
+|
+[source, text]
+----
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/1
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27001
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod1.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+
+----
+|
+
+[source, text]
+----
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/2
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27002
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod2.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|===
+
+[cols="5a,5a"]
+|===
+|mongod-repl-3.conf |
+
+|
+[source, text]
+----
+sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/3
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27003
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod3.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl
+----
+
+|
+
+|===
+
+[source, text]
+.*16. ROLLING UPGRADE I - 备节点重起*
+----
+$ mongo --port 27002 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+
+$ mongod -f mongod-repl-2.conf
+----
+
+[source, text]
+.*17. ROLLING UPGRADE II - 备节点重起*
+----
+$ mongo --port 27003 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+
+$ mongod -f mongod-repl-3.conf
+----
+
+[source, text]
+.*18. ROLLING UPGRADE III - 主节点重起*
+----
+$ mongo --port 27001 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise m103-repl:PRIMARY> rs.stepDown()
+
+MongoDB Enterprise m103-repl:SECONDARY> use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY> db.shutdownServer()
+
+$ mongod -f mongod-repl-1.conf 
+----
+
+[source, text]
+.*19. 连接到 mongos, 添加一个分片*
+----
+$ mongo --port 26000 -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin"
+
+MongoDB Enterprise mongos> sh.addShard("m103-repl/192.168.103.100:27002")
+{
+	"shardAdded" : "m103-repl",
+	"ok" : 1,
+	"operationTime" : Timestamp(1553007892, 9),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1553007892, 9),
+		"signature" : {
+			"hash" : BinData(0,"Fkn0MODTuvcLjFT9uWPkcjfB1s0="),
+			"keyId" : NumberLong("6670040243107790859")
+		}
+	}
+}
+----
+
+[source, text]
+.*20. 查看分区集群的状态*
+----
+MongoDB Enterprise mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+  	"_id" : 1,
+  	"minCompatibleVersion" : 5,
+  	"currentVersion" : 6,
+  	"clusterId" : ObjectId("5c90be43507efebbab5cc5e8")
+  }
+  shards:
+        {  "_id" : "m103-repl",  "host" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",  "state" : 1 }
+  active mongoses:
+        "3.6.11" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                No recent migrations
+  databases:
+        {  "_id" : "config",  "primary" : "config",  "partitioned" : true }
+----
+
+=== TODO
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
 
 [source, text]
 .**
