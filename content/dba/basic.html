@@ -188,7 +188,19 @@
 <li><a href="#_rhel_7_mongodb_compass">RHEL 7 &#x4E0A;&#x5B89;&#x88C5; mongodb-compass</a></li>
 </ul>
 </li>
-<li><a href="#_todo">TODO</a></li>
+<li><a href="#_atlas">Atlas &#x5B9E;&#x8DF5;</a>
+<ul class="sectlevel2">
+<li><a href="#__atlas_sandbox">&#x521B;&#x5EFA; Atlas Sandbox &#x96C6;&#x7FA4;</a></li>
+<li><a href="#_mongo_shell_atlas_sandbox">Mongo Shell &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</a></li>
+<li><a href="#_atlas_sandbox">Atlas Sandbox &#x96C6;&#x7FA4;&#x4E2D;&#x5BFC;&#x5165;&#x6570;&#x636E;</a></li>
+<li><a href="#_mongo_compass_atlas_sandbox">Mongo Compass &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</a></li>
+<li><a href="#___2">&#x5355;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</a></li>
+<li><a href="#___3">&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</a></li>
+<li><a href="#___4">&#x6587;&#x6863;&#x67E5;&#x8BE2;</a></li>
+<li><a href="#___5">&#x6587;&#x6863;&#x66F4;&#x65B0;</a></li>
+<li><a href="#___6">&#x6587;&#x6863;&#x5220;&#x9664;</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="sect1">
@@ -361,9 +373,575 @@ mongodb-compass-1.17.0-1.el7.x86_64</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_todo">TODO</h2>
+<h2 id="_atlas">Atlas &#x5B9E;&#x8DF5;</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="__atlas_sandbox">&#x521B;&#x5EFA; Atlas Sandbox &#x96C6;&#x7FA4;</h3>
+<div class="paragraph">
+<p><strong>1. &#x6CE8;&#x518C;&#x5E10;&#x53F7;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x8BBF;&#x95EE; <a href="https://cloud.mongodb.com" class="bare" target="_blank">https://cloud.mongodb.com</a> &#x9875;&#x9762;&#xFF0C;&#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x5E10;&#x53F7;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas_registration.png" alt="atlas registration.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x8D26;&#x6237;&#x6CE8;&#x518C;&#x5B8C;&#x540E;&#xFF0C;&#x70B9;&#x51FB; <code>Build a Cluster</code> &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x96C6;&#x7FA4;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>3. &#x9009;&#x62E9; AWS &#x4E3A;&#x4E91;&#x63D0;&#x4F9B;&#x5546;&#xFF0C;&#x9009;&#x62E9;&#x6709; <code>Free Tier Available</code> &#x6807;&#x8BB0;&#x7684;&#x5730;&#x533A;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/cluster_provider.png" alt="cluster provider.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>4. &#x9009;&#x62E9; M0 &#x514D;&#x8D39;&#x7684; Cluster Tier</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/cluster_tier.png" alt="cluster tier.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>5. &#x8BBE;&#x5B9A;&#x96C6;&#x7FA4;&#x7684;&#x540D;&#x79F0;&#x4E3A; <code>Sandbox</code></strong></p>
+</div>
+<div class="paragraph">
+<p><strong>6. &#x5728; <code>Sandbox</code> &#x96C6;&#x7FA4;&#x9875;&#x9762;&#xFF0C;&#x524D;&#x5F80; Settings&#xFF0C;&#x8BBE;&#x5B9A; Project &#x7684;&#x540D;&#x79F0;&#x4E3A; <code>M001</code></strong></p>
+</div>
+<div class="paragraph">
+<p><strong>7. &#x521B;&#x5EFA; IT &#x767D;&#x540D;&#x5355;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x96C6;&#x7FA4;&#x89C6;&#x56FE;&#x4E0B;&#xFF0C;&#x70B9;&#x51FB; <code>Security</code> &#x2192; <code>IP Whitelist</code>&#xFF0C;&#x70B9;&#x51FB; <code>Add IP Address</code> &#x6309;&#x94AE;&#xFF0C;&#x9009;&#x62E9; <code>Allow Access from Anywhere</code>&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas-cluster-while-list.png" alt="atlas cluster while list.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>8. &#x521B;&#x5EFA;&#x7528;&#x6237;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; <code>MongoDB Users</code> &#x2192; <code>Add New User</code> &#x521B;&#x5EFA;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>username: <strong>m001-student</strong></p>
+</li>
+<li>
+<p>password: <strong>m001-mongodb-basics</strong></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x9009;&#x62E9; <code>Read and write to any database</code>&#xFF0C;&#x70B9;&#x51FB; <code>Add User</code> &#x5B8C;&#x6210;&#x521B;&#x5EFA;&#x7528;&#x6237;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/m001_user.png" alt="m001 user.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mongo_shell_atlas_sandbox">Mongo Shell &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</h3>
+<div class="paragraph">
+<p><strong>1. &#x5728; Atlas Sandbox &#x96C6;&#x7FA4;&#x754C;&#x9762;&#xFF0C;&#x70B9;&#x51FB; <code>CONNECT</code> &#x6309;&#x94AE;&#xFF0C;&#x9009;&#x62E9; <code>Connect with the Mongo Shell</code> &#x9009;&#x9879;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas-connect-mongo-shell.png" alt="atlas connect mongo shell.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x5728; Connect to Sandbox &#x9875;&#x9762;&#x9009;&#x62E9; <code>I have the Mongo Shell installed</code></strong></p>
+</div>
+<div class="paragraph">
+<p>&#x9009;&#x62E9;&#x7248;&#x672C;&#xFF1A; <code>3.6 or later</code>&#xFF0C;&#x5728; <code>Run your connection string in your command line</code> &#x90E8;&#x5206;&#xFF0C;&#x70B9;&#x51FB; <code>Copy</code> &#x6309;&#x94AE;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas-sandbox-shell-copy.png" alt="atlas sandbox shell copy.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5C06;&#x4E0A;&#x9762;&#x6B65;&#x9AA4;&#x62F7;&#x8D1D;&#x7684;&#x547D;&#x4EE4;&#x590D;&#x5236;&#x5230;&#x547D;&#x4EE4;&#x884C;, &#x5E76;&#x6DFB;&#x52A0; password &#x90E8;&#x5206;&#xFF0C;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo &quot;mongodb+srv://sandbox-jsdhf.mongodb.net/test&quot; --username m001-student --password m001-mongodb-basics
+MongoDB shell version v4.0.6
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_atlas_sandbox">Atlas Sandbox &#x96C6;&#x7FA4;&#x4E2D;&#x5BFC;&#x5165;&#x6570;&#x636E;</h3>
+<div class="paragraph">
+<p><strong>1. &#x51C6;&#x5907;&#x6570;&#x636E;</strong></p>
+</div>
+<div class="paragraph">
+<p>Mongo Shell &#x662F;&#x4E00;&#x6B3E; JS 100% &#x517C;&#x5BB9;&#x7684;&#x5BA2;&#x6237;&#x7AEF;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7; JS &#x6587;&#x4EF6;&#x51C6;&#x5907;&#x6570;&#x636E;&#xFF0C;JS &#x91CC;&#x53EF;&#x4EE5;&#x662F;&#x4E00;&#x7CFB;&#x5217;&#x7684;&#x6279;&#x91CF;&#x6570;&#x636E;&#xFF0C;&#x4F8B;&#x5982;&#x521B;&#x5EFA; <code>loadMovieDetailsDataset.js</code> &#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db = db.getSiblingDB(&quot;video&quot;);
+db.movieDetails.drop();
+db.movieDetails.insertMany([
+{},{},{}
+]);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5728;&#x548C; JS &#x6587;&#x4EF6;&#x540C;&#x4E00;&#x4F4D;&#x7F6E;&#x5904; Mongo Shell &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo &quot;mongodb+srv://sandbox-jsdhf.mongodb.net/test&quot; --username m001-student --password m001-mongodb-basics
+MongoDB shell version v4.0.6
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C; load &#x6570;&#x636E;&#x65B9;&#x6CD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; load(&quot;loadMovieDetailsDataset.js&quot;)
+true</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684;&#x6570;&#x636E;&#x5E93;&#x540D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; show dbs
+admin  0.000GB
+local  2.747GB
+video  0.001GB</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B; collections</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; show collections
+movieDetails</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x6587;&#x6863;&#x603B;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.count()
+2295</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mongo_compass_atlas_sandbox">Mongo Compass &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</h3>
+<div class="paragraph">
+<p><strong>1. &#x9009;&#x62E9;&#x4E3B;&#x673A;&#x540D;&#x79F0;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728; Atlas Sandbox &#x96C6;&#x7FA4;&#x754C;&#x9762;&#xFF0C;&#x70B9;&#x51FB;&#x96C6;&#x7FA4;&#x540D;&#x79F0; <code>Sandbox</code>&#xFF0C;&#x5728; Sandbox &#x754C;&#x9762;&#x70B9;&#x51FB; <code>PRIMARY</code> &#x8282;&#x70B9;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas-sandbox-primary.png" alt="atlas sandbox primary.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x62F7;&#x8D1D;&#x4E3B;&#x673A;&#x540D;&#x79F0;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x4E3B;&#x673A;&#x660E;&#x7EC6;&#x7684;&#x754C;&#x9762;&#x4E0A;&#x62F7;&#x8D1D;&#x4E3B;&#x673A;&#x540D;&#x79F0;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/atlas-sandbox-primary-host.png" alt="atlas sandbox primary host.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x4F8B;&#x5982;&#xFF1A;<code>sandbox-shard-00-00-jsdhf.mongodb.net</code></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongodb-compass</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>4. &#x5728; Connect to Host &#x9875;&#x9762;&#x914D;&#x5236;&#x76F8;&#x5E94;&#x7684;&#x503C;</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Hostname: <code>sandbox-shard-00-00-jsdhf.mongodb.net</code></p>
+</li>
+<li>
+<p>Port: <code>27017</code></p>
+</li>
+<li>
+<p>Authentication: <code>Username/Password</code></p>
+</li>
+<li>
+<p>Username: <code>m001-student</code></p>
+</li>
+<li>
+<p>Password: <code>m001-mongodb-basics</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x503C;&#xFF0C;&#x70B9;&#x51FB; <strong>CONNECT</strong> &#x6309;&#x94AE;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongodb-compass-connect.png" alt="mongodb compass connect.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>5. &#x6267;&#x884C;&#x7B80;&#x5355;&#x6570;&#x636E;&#x5206;&#x6790;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x9009;&#x62E9;&#x6570;&#x636E;&#x5E93; <code>video</code>&#xFF0C;&#x70B9;&#x51FB; collection <code>movieDetails</code>&#xFF0C;&#x5728; <code>Schema</code> &#x680F;&#x70B9;&#x51FB; <code>ANALYZE</code> &#x6309;&#x94AE;&#xFF0C;&#x67E5;&#x770B;&#x6570;&#x636E;&#x5206;&#x6790;&#x7ED3;&#x679C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongodb-compass-analyze.png" alt="mongodb compass analyze.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x5355;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</h3>
+<div class="paragraph">
+<p><strong>1. &#x521B;&#x5EFA; Collection</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728; Compass &#x754C;&#x9762; <code>movie</code> &#x4E2D;&#xFF0C;&#x70B9;&#x51FB; <code>CREATE COLLECTION</code> &#x6309;&#x94AE;&#xFF0C;&#x521B;&#x5EFA; <code>movieScratch</code></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongodb-compass-create-collection.png" alt="mongodb compass create collection.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x63D2;&#x5165;&#x4E00;&#x6761;&#x6570;&#x636E;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB;&#x65B0;&#x521B;&#x5EFA;&#x7684; <code>movieScratch</code>&#xFF0C;&#x70B9;&#x51FB; <code>Documents</code> &#x680F;&#xFF0C;&#x70B9;&#x51FB; <code>INSERT DOCUMENT</code>&#xFF0C;&#x5728; <code>Insert Document</code> &#x754C;&#x9762;&#x63D2;&#x5165;&#x6570;&#x636E;&#xFF0C;&#x6DFB;&#x52A0; <code>title</code>, <code>year</code>, <code>imdb</code>&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongodb-compass-insert-document.png" alt="mongodb compass insert document.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; <code>INSERT</code> &#x5B8C;&#x6210;&#x63D2;&#x5165;&#x4E00;&#x6761;&#x6570;&#x636E;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x4ECE; Mongo Shell &#x63D2;&#x5165;&#x4E00;&#x6761;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.insertOne({title: &quot;Fire&quot;, year: 1992, imdb: &quot;tt0084726&quot;})
+{
+	&quot;acknowledged&quot; : true,
+	&quot;insertedId&quot; : ObjectId(&quot;5c92f14660e022ecdc660669&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.find()
+{ &quot;_id&quot; : ObjectId(&quot;5c92ef675879df5d63a5f74e&quot;), &quot;title&quot; : &quot;Rocky&quot;, &quot;year&quot; : 1976, &quot;imdb&quot; : &quot;tt0075148&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5c92f08d5879df5d63a5f74f&quot;), &quot;title&quot; : &quot;Creed&quot;, &quot;year&quot; : 2015, &quot;imdb&quot; : &quot;tt30766&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5c92f14660e022ecdc660669&quot;), &quot;title&quot; : &quot;Fire&quot;, &quot;year&quot; : 1992, &quot;imdb&quot; : &quot;tt0084726&quot; }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x9ED8;&#x8BA4;&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;&#x662F;&#x6309;&#x7167;&#x987A;&#x5E8F;&#x6267;&#x884C;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x6267;&#x884C;&#x51FA;&#x9519;&#xFF0C;&#x8DF3;&#x8FC7;&#x63D2;&#x5165;&#x540E;&#x9762;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.insertMany(
+...     [
+...         {
+...       &quot;_id&quot; : &quot;tt0084726&quot;,
+...       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+...       &quot;year&quot; : 1982,
+...       &quot;type&quot; : &quot;movie&quot;
+...           },
+...           {
+...       &quot;_id&quot; : &quot;tt0796366&quot;,
+...       &quot;title&quot; : &quot;Star Trek&quot;,
+...       &quot;year&quot; : 2009,
+...       &quot;type&quot; : &quot;movie&quot;
+...           },
+...           {
+...       &quot;_id&quot; : &quot;tt0084726&quot;,
+...       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+...       &quot;year&quot; : 1982,
+...       &quot;type&quot; : &quot;movie&quot;
+...           },
+...           {
+...       &quot;_id&quot; : &quot;tt1408101&quot;,
+...       &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
+...       &quot;year&quot; : 2013,
+...       &quot;type&quot; : &quot;movie&quot;
+...           },
+...           {
+...       &quot;_id&quot; : &quot;tt0117731&quot;,
+...       &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
+...       &quot;year&quot; : 1996,
+...       &quot;type&quot; : &quot;movie&quot;
+...         }
+...     ]
+... );
+2019-03-21T10:25:58.388+0800 E QUERY    [js] BulkWriteError: write error at item 2 in bulk operation :
+BulkWriteError({
+	&quot;writeErrors&quot; : [
+		{
+			&quot;index&quot; : 2,
+			&quot;code&quot; : 11000,
+			&quot;errmsg&quot; : &quot;E11000 duplicate key error collection: video.movieScratch index: _id_ dup key: { : \&quot;tt0084726\&quot; }&quot;,
+			&quot;op&quot; : {
+				&quot;_id&quot; : &quot;tt0084726&quot;,
+				&quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+				&quot;year&quot; : 1982,
+				&quot;type&quot; : &quot;movie&quot;
+			}
+		}
+	],
+	&quot;writeConcernErrors&quot; : [ ],
+	&quot;nInserted&quot; : 2,
+	&quot;nUpserted&quot; : 0,
+	&quot;nMatched&quot; : 0,
+	&quot;nModified&quot; : 0,
+	&quot;nRemoved&quot; : 0,
+	&quot;upserted&quot; : [ ]
+})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x987A;&#x5E8F;&#x63D2;&#x5165;&#x7B2C;&#x4E09;&#x6761;&#x6570;&#x636E;&#x65F6;&#x56E0;&#x4E3A; _id &#x552F;&#x4E00;&#x6027;&#x51B2;&#x7A81;&#x5BFC;&#x81F4;&#x63D2;&#x5165;&#x5931;&#x8D25;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.find()
+{ &quot;_id&quot; : &quot;tt0084726&quot;, &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;, &quot;year&quot; : 1982, &quot;type&quot; : &quot;movie&quot; }
+{ &quot;_id&quot; : &quot;tt0796366&quot;, &quot;title&quot; : &quot;Star Trek&quot;, &quot;year&quot; : 2009, &quot;type&quot; : &quot;movie&quot; }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x8BBE;&#x5B9A; order &#x4E3A; false &#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x63D2;&#x5165;&#x4E0D;&#x662F;&#x6309;&#x987A;&#x5E8F;&#x6267;&#x884C;&#xFF0C;&#x63D2;&#x5165;&#x662F;&#x5982;&#x679C;&#x9047;&#x5230;&#x9519;&#x8BEF;&#xFF0C;&#x4F1A;&#x8DF3;&#x8FC7;&#x9519;&#x8BEF;&#x7EE7;&#x7EED;&#x6267;&#x884C;&#x63D2;&#x5165;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.insertMany(
+...     [
+...         {
+...     &quot;_id&quot; : &quot;tt0084726&quot;,
+...     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+...     &quot;year&quot; : 1982,
+...     &quot;type&quot; : &quot;movie&quot;
+...         },
+...         {
+...     &quot;_id&quot; : &quot;tt0796366&quot;,
+...     &quot;title&quot; : &quot;Star Trek&quot;,
+...     &quot;year&quot; : 2009,
+...     &quot;type&quot; : &quot;movie&quot;
+...         },
+...         {
+...     &quot;_id&quot; : &quot;tt0084726&quot;,
+...     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+...     &quot;year&quot; : 1982,
+...     &quot;type&quot; : &quot;movie&quot;
+...         },
+...         {
+...     &quot;_id&quot; : &quot;tt1408101&quot;,
+...     &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
+...     &quot;year&quot; : 2013,
+...     &quot;type&quot; : &quot;movie&quot;
+...         },
+...         {
+...     &quot;_id&quot; : &quot;tt0117731&quot;,
+...     &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
+...     &quot;year&quot; : 1996,
+...     &quot;type&quot; : &quot;movie&quot;
+...         }
+...     ],
+...     {
+...         &quot;ordered&quot;: false
+...     }
+... );
+2019-03-21T10:28:21.868+0800 E QUERY    [js] BulkWriteError: 3 write errors in bulk operation :
+BulkWriteError({
+	&quot;writeErrors&quot; : [
+		{
+			&quot;index&quot; : 0,
+			&quot;code&quot; : 11000,
+			&quot;errmsg&quot; : &quot;E11000 duplicate key error collection: video.movieScratch index: _id_ dup key: { : \&quot;tt0084726\&quot; }&quot;,
+			&quot;op&quot; : {
+				&quot;_id&quot; : &quot;tt0084726&quot;,
+				&quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+				&quot;year&quot; : 1982,
+				&quot;type&quot; : &quot;movie&quot;
+			}
+		},
+		{
+			&quot;index&quot; : 1,
+			&quot;code&quot; : 11000,
+			&quot;errmsg&quot; : &quot;E11000 duplicate key error collection: video.movieScratch index: _id_ dup key: { : \&quot;tt0796366\&quot; }&quot;,
+			&quot;op&quot; : {
+				&quot;_id&quot; : &quot;tt0796366&quot;,
+				&quot;title&quot; : &quot;Star Trek&quot;,
+				&quot;year&quot; : 2009,
+				&quot;type&quot; : &quot;movie&quot;
+			}
+		},
+		{
+			&quot;index&quot; : 2,
+			&quot;code&quot; : 11000,
+			&quot;errmsg&quot; : &quot;E11000 duplicate key error collection: video.movieScratch index: _id_ dup key: { : \&quot;tt0084726\&quot; }&quot;,
+			&quot;op&quot; : {
+				&quot;_id&quot; : &quot;tt0084726&quot;,
+				&quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+				&quot;year&quot; : 1982,
+				&quot;type&quot; : &quot;movie&quot;
+			}
+		}
+	],
+	&quot;writeConcernErrors&quot; : [ ],
+	&quot;nInserted&quot; : 2,
+	&quot;nUpserted&quot; : 0,
+	&quot;nMatched&quot; : 0,
+	&quot;nModified&quot; : 0,
+	&quot;nRemoved&quot; : 0,
+	&quot;upserted&quot; : [ ]
+})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x6279;&#x91CF;&#x63D2;&#x5165;&#x7684;&#x524D;&#x4E09;&#x6761;&#x6570;&#x636E;&#x90FD;&#x9047;&#x5230;&#x4E86; _id &#x552F;&#x4E00;&#x6027;&#x51B2;&#x7A81;&#x5BFC;&#x81F4;&#x5931;&#x8D25;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x4F46;&#x7EE7;&#x7EED;&#x63D2;&#x5165;&#x4E86;&#x7B2C;&#x56DB;&#x548C;&#x7B2C;&#x4E94;&#x6761;&#x6570;&#x636E;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.find()
+{ &quot;_id&quot; : &quot;tt0084726&quot;, &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;, &quot;year&quot; : 1982, &quot;type&quot; : &quot;movie&quot; }
+{ &quot;_id&quot; : &quot;tt0796366&quot;, &quot;title&quot; : &quot;Star Trek&quot;, &quot;year&quot; : 2009, &quot;type&quot; : &quot;movie&quot; }
+{ &quot;_id&quot; : &quot;tt1408101&quot;, &quot;title&quot; : &quot;Star Trek Into Darkness&quot;, &quot;year&quot; : 2013, &quot;type&quot; : &quot;movie&quot; }
+{ &quot;_id&quot; : &quot;tt0117731&quot;, &quot;title&quot; : &quot;Star Trek: First Contact&quot;, &quot;year&quot; : 1996, &quot;type&quot; : &quot;movie&quot; }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x6587;&#x6863;&#x67E5;&#x8BE2;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x4E24;&#x6B21;&#x83B7;&#x5956;&#xFF0C;&#x4E24;&#x6B21;&#x63D0;&#x540D;&#x7684;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;awards.wins&quot;: 2, &quot;awards.nominations&quot;: 2}).count()
+12</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x6807;&#x8BB0;&#x4E3A; PG&#xFF0C;10 &#x6B64;&#x83B7;&#x5F97;&#x63D0;&#x540D;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;rated&quot;: &quot;PG&quot;, &quot;awards.nominations&quot;: 10}).count()
+3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x7535;&#x5F71;&#x7684;&#x4F5C;&#x8005;&#x5305;&#x62EC;&#x4E24;&#x4E2A;&#x4EBA; Ethan Coen &#x548C; Joel Coen&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;writers&quot;: [&quot;Ethan Coen&quot;, &quot;Joel Coen&quot;]}).count()
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; genres &#x4E2D;&#x5305;&#x542B; Family &#x7684;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;genres&quot;: &quot;Family&quot;}).count()
+124</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B; genres &#x4E2D;&#x7B2C; 2 &#x9879;&#x4E3A; Western &#x7684;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;genres.1&quot;: &quot;Western&quot;}).count()
+14</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8F93;&#x51FA;&#x7535;&#x5F71;&#x7684;&#x540D;&#x79F0;&#xFF0C;&#x51FA;&#x7248;&#x5E74;&#x4EFD;&#xFF0C;&#x5BFC;&#x6F14;&#x540D;&#x79F0;&#xFF0C;&#x4E0D;&#x8F93;&#x51FA; ID</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;genres&quot;: &quot;Family&quot;}, {title: 1, year: 1, director: 1, _id: 0})
+{ &quot;title&quot; : &quot;An American Tail: Fievel Goes West&quot;, &quot;year&quot; : 1991, &quot;director&quot; : &quot;Phil Nibbelink, Simon Wells&quot; }
+{ &quot;title&quot; : &quot;Lost in Space&quot;, &quot;year&quot; : 1998, &quot;director&quot; : &quot;Stephen Hopkins&quot; }
+{ &quot;title&quot; : &quot;Muppets from Space&quot;, &quot;year&quot; : 1999, &quot;director&quot; : &quot;Tim Hill&quot; }
+{ &quot;title&quot; : &quot;The Many Adventures of Winnie the Pooh&quot;, &quot;year&quot; : 1977, &quot;director&quot; : &quot;John Lounsbery, Wolfgang Reitherman&quot; }
+{ &quot;title&quot; : &quot;The Adventures of Sharkboy and Lavagirl 3-D&quot;, &quot;year&quot; : 2005, &quot;director&quot; : &quot;Robert Rodriguez&quot; }
+{ &quot;title&quot; : &quot;The Greatest Show on Earth&quot;, &quot;year&quot; : 1952, &quot;director&quot; : &quot;Cecil B. DeMille&quot; }
+{ &quot;title&quot; : &quot;Show Boat&quot;, &quot;year&quot; : 1951, &quot;director&quot; : &quot;George Sidney&quot; }
+{ &quot;title&quot; : &quot;Treasure Planet&quot;, &quot;year&quot; : 2002, &quot;director&quot; : &quot;Ron Clements, John Musker&quot; }
+{ &quot;title&quot; : &quot;Forbidden Planet&quot;, &quot;year&quot; : 1956, &quot;director&quot; : &quot;Fred M. Wilcox&quot; }
+{ &quot;title&quot; : &quot;The Karate Kid&quot;, &quot;year&quot; : 1984, &quot;director&quot; : &quot;John G. Avildsen&quot; }
+{ &quot;title&quot; : &quot;The Karate Kid&quot;, &quot;year&quot; : 2010, &quot;director&quot; : &quot;Harald Zwart&quot; }
+{ &quot;title&quot; : &quot;The Kid&quot;, &quot;year&quot; : 1921, &quot;director&quot; : &quot;Charles Chaplin&quot; }
+{ &quot;title&quot; : &quot;The Karate Kid, Part II&quot;, &quot;year&quot; : 1986, &quot;director&quot; : &quot;John G. Avildsen&quot; }
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x6587;&#x6863;&#x66F4;&#x65B0;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. TODO</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">&#x6587;&#x6863;&#x5220;&#x9664;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x51C6;&#x5907;&#x6570;&#x636E;&#xFF0C;&#x521B;&#x5EFA; loadReviewsDataset.js &#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db = db.getSiblingDB(&quot;video&quot;);
+db.reviews.drop();
+db.reviews.insertMany([
+...
+---
 
+[source, text]
+.*2. &#x5BFC;&#x5165;&#x6570;&#x636E;*</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>$ mongo &quot;mongodb+srv://sandbox-jsdhf.mongodb.net/video&quot; --username m001-student --password m001-mongodb-basics loadReviewsDataset.js</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[source, text]
+.*3. &#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; use video
+switched to db video</p>
+</div>
+<div class="paragraph">
+<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
+20</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[source, text]
+.*4. &#x6839;&#x636E; ID &#x5220;&#x9664;*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteOne({_id: ObjectId(&quot;5c930f3cea4690b776113acd&quot;)})
+{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 1 }</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[source, text]
+.*5. &#x5220;&#x9664;&#x591A;&#x4E2A;&#x6587;&#x6863;*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteMany({reviewer_id: 759723314})
+{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 3 }</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>[source, text]
+.*6. &#x67E5;&#x770B;&#x5269;&#x4F59;&#x6587;&#x6863;&#x603B;&#x6570;*</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
+16</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
                                 
@@ -408,7 +986,7 @@ mongodb-compass-1.17.0-1.el7.x86_64</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-03-14T10:18:46.861Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-18T09:20:07.752Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-03-21T04:26:39.690Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-21T04:27:15.328Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

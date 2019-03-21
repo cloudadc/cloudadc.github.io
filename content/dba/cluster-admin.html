@@ -193,10 +193,19 @@
 <li><a href="#___8">&#x6279;&#x91CF;&#x5BFC;&#x5165;&#x6570;&#x636E;</a></li>
 </ul>
 </li>
-<li><a href="#___9">&#x96C6;&#x7FA4;&#x7BA1;&#x7406;</a>
+<li><a href="#__replication">&#x590D;&#x5236;(Replication)&#x7BA1;&#x7406;</a>
 <ul class="sectlevel2">
 <li><a href="#_3">3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</a></li>
-<li><a href="#___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</a></li>
+<li><a href="#___9">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</a></li>
+<li><a href="#___10">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</a></li>
+<li><a href="#___11">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</a></li>
+<li><a href="#_writeconcern">writeConcern</a></li>
+<li><a href="#_readconcern">readConcern</a></li>
+</ul>
+</li>
+<li><a href="#__sharding">&#x5206;&#x7247;(Sharding)&#x7BA1;&#x7406;</a>
+<ul class="sectlevel2">
+<li><a href="#___12">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
 <li><a href="#_todo">TODO</a></li>
 </ul>
 </li>
@@ -1103,7 +1112,7 @@ bye</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___9">&#x96C6;&#x7FA4;&#x7BA1;&#x7406;</h2>
+<h2 id="__replication">&#x590D;&#x5236;(Replication)&#x7BA1;&#x7406;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_3">3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</h3>
@@ -1121,15 +1130,13 @@ $ chmod 600 /var/mongodb/pki/m103-keyfile</code></pre>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
+<col style="width: 50%;">
+<col style="width: 50%;">
 </colgroup>
 <thead>
 <tr>
 <th class="tableblock halign-left valign-top">mongod-repl-1.conf</th>
 <th class="tableblock halign-left valign-top">mongod-repl-2.conf</th>
-<th class="tableblock halign-left valign-top">mongod-repl-3.conf</th>
 </tr>
 </thead>
 <tbody>
@@ -1174,6 +1181,22 @@ replication:
   replSetName: m103-repl</code></pre>
 </div>
 </div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-3.conf</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td class="tableblock halign-left valign-top"><div><div class="listingblock">
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">storage:
@@ -1194,6 +1217,7 @@ replication:
   replSetName: m103-repl</code></pre>
 </div>
 </div></div></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
 </tr>
 </tbody>
 </table>
@@ -1545,7 +1569,7 @@ tcp        0      0 192.168.103.100:41969   192.168.103.100:27002   ESTABLISHED 
 </div>
 </div>
 <div class="sect2">
-<h3 id="___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</h3>
+<h3 id="___9">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x57FA;&#x7840;&#x4E0A;&#x8FDB;&#x884C;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;&#x3002;</p>
 </div>
@@ -1791,7 +1815,985 @@ MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
 </div>
 </div>
 <div class="sect2">
+<h3 id="___10">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230; PRIMARY &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x590D;&#x5236;&#x96C6;&#x5408;&#x7684;&#x62D3;&#x6251;&#x7ED3;&#x6784;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;,
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 12,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000002&quot;),
+	&quot;lastWrite&quot; : {
+		&quot;opTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552913488, 1),
+			&quot;t&quot; : NumberLong(2)
+		},
+		&quot;lastWriteDate&quot; : ISODate(&quot;2019-03-18T12:51:28Z&quot;),
+		&quot;majorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552913488, 1),
+			&quot;t&quot; : NumberLong(2)
+		},
+		&quot;majorityWriteDate&quot; : ISODate(&quot;2019-03-18T12:51:28Z&quot;)
+	},
+	&quot;maxBsonObjectSize&quot; : 16777216,
+	&quot;maxMessageSizeBytes&quot; : 48000000,
+	&quot;maxWriteBatchSize&quot; : 100000,
+	&quot;localTime&quot; : ISODate(&quot;2019-03-18T12:51:36.762Z&quot;),
+	&quot;logicalSessionTimeoutMinutes&quot; : 30,
+	&quot;minWireVersion&quot; : 0,
+	&quot;maxWireVersion&quot; : 6,
+	&quot;readOnly&quot; : false,
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552913488, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552913488, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;lW8h9HG2b0kXlEhRC5V7sPvU1vY=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x5E76;&#x5728;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#xFF0C;&#x6DFB;&#x52A0;&#x4E00;&#x6761;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; use replSetTestDB
+switched to db replSetTestDB
+MongoDB Enterprise m103-repl:PRIMARY&gt; db.new_collection.insert( { &quot;student&quot;: &quot;Matt Javaly&quot;, &quot;grade&quot;: &quot;A+&quot; } )
+WriteResult({ &quot;nInserted&quot; : 1 })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x8FDE;&#x63A5;&#x5230; SECONDARY &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;192.168.103.100:27002&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x6267;&#x884C;&#x8BFB;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; show dbs
+2019-03-18T12:55:21.314+0000 E QUERY    [thread1] Error: listDatabases failed:{
+	&quot;operationTime&quot; : Timestamp(1552913718, 1),
+	&quot;ok&quot; : 0,
+	&quot;errmsg&quot; : &quot;not master and slaveOk=false&quot;,
+	&quot;code&quot; : 13435,
+	&quot;codeName&quot; : &quot;NotMasterNoSlaveOk&quot;,
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552913718, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;L55vr/U4ScHAh55r5DI7x0DK4K8=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+} :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+Mongo.prototype.getDBs@src/mongo/shell/mongo.js:67:1
+shellHelper.show@src/mongo/shell/utils.js:860:19
+shellHelper@src/mongo/shell/utils.js:750:15
+@(shellhelp2):1:1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8BBE;&#x5B9A; slaveOk=true &#x540E;&#x6267;&#x884C;&#x8BFB;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; rs.slaveOk()
+MongoDB Enterprise m103-repl:SECONDARY&gt; show dbs
+admin          0.000GB
+config         0.000GB
+local          0.000GB
+replSetTestDB  0.000GB
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use replSetTestDB
+switched to db replSetTestDB
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.new_collection.find()
+{ &quot;_id&quot; : ObjectId(&quot;5c8f94e3501302bdac004143&quot;), &quot;student&quot; : &quot;Matt Javaly&quot;, &quot;grade&quot; : &quot;A+&quot; }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x5728; SECONDARY &#x8282;&#x70B9;&#x4E0A;&#x6267;&#x884C;&#x5199;&#x64CD;&#x4F5C;(&#x6267;&#x884C;&#x5931;&#x8D25;&#xFF0C;&#x56E0;&#x4E3A;&#x5199;&#x64CD;&#x4F5C;&#x53EA;&#x80FD;&#x5728; PRIMARY &#x4E0A;&#x6267;&#x884C;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; db.new_collection.insert( { &quot;student&quot;: &quot;Norberto Leite&quot;, &quot;grade&quot;: &quot;B+&quot; } )
+WriteResult({ &quot;writeError&quot; : { &quot;code&quot; : 10107, &quot;errmsg&quot; : &quot;not master&quot; } })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x505C;&#x6B62;&#x8FD0;&#x884C; SECONDARY &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x5728; PRIMARY &#x8282;&#x70B9;&#x4E0A;&#x67E5;&#x770B;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.status()
+
+...
+
+		{
+			&quot;_id&quot; : 1,
+			&quot;name&quot; : &quot;192.168.103.100:27002&quot;,
+			&quot;health&quot; : 0,
+			&quot;state&quot; : 8,
+			&quot;stateStr&quot; : &quot;(not reachable/healthy)&quot;,
+			&quot;uptime&quot; : 0,
+			&quot;optime&quot; : {
+				&quot;ts&quot; : Timestamp(0, 0),
+				&quot;t&quot; : NumberLong(-1)
+			},
+			&quot;optimeDurable&quot; : {
+				&quot;ts&quot; : Timestamp(0, 0),
+				&quot;t&quot; : NumberLong(-1)
+			},
+			&quot;optimeDate&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;),
+			&quot;optimeDurableDate&quot; : ISODate(&quot;1970-01-01T00:00:00Z&quot;),
+			&quot;lastHeartbeat&quot; : ISODate(&quot;2019-03-18T13:02:49.468Z&quot;),
+			&quot;lastHeartbeatRecv&quot; : ISODate(&quot;2019-03-18T13:01:17.390Z&quot;),
+			&quot;pingMs&quot; : NumberLong(0),
+			&quot;lastHeartbeatMessage&quot; : &quot;Connection refused&quot;,
+			&quot;syncingTo&quot; : &quot;&quot;,
+			&quot;syncSourceHost&quot; : &quot;&quot;,
+			&quot;syncSourceId&quot; : -1,
+			&quot;infoMessage&quot; : &quot;&quot;,
+			&quot;configVersion&quot; : -1
+		},
+...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x5728; PRIMARY &#x8282;&#x70B9;&#x4E0A;&#x63D2;&#x5165;&#x53E6;&#x4E00;&#x6761;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; db.new_collection.insert( { &quot;student&quot;: &quot;Kylin Soong&quot;, &quot;grade&quot;: &quot;A+&quot; } )
+MongoDB Enterprise m103-repl:PRIMARY&gt; db.new_collection.find()
+{ &quot;_id&quot; : ObjectId(&quot;5c8f94e3501302bdac004143&quot;), &quot;student&quot; : &quot;Matt Javaly&quot;, &quot;grade&quot; : &quot;A+&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5c8f9797501302bdac004144&quot;), &quot;student&quot; : &quot;Kylin Soong&quot;, &quot;grade&quot; : &quot;A+&quot; }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x8FDE;&#x63A5;&#x5230;&#x53E6;&#x4E00;&#x4E2A; SECONDARY &#x8282;&#x70B9;&#x4E0A;&#x6267;&#x884C;&#x8BFB;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;192.168.103.100:27003&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; rs.slaveOk()
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use replSetTestDB
+switched to db replSetTestDB
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.new_collection.find()
+{ &quot;_id&quot; : ObjectId(&quot;5c8f94e3501302bdac004143&quot;), &quot;student&quot; : &quot;Matt Javaly&quot;, &quot;grade&quot; : &quot;A+&quot; }
+{ &quot;_id&quot; : ObjectId(&quot;5c8f9797501302bdac004144&quot;), &quot;student&quot; : &quot;Kylin Soong&quot;, &quot;grade&quot; : &quot;A+&quot; }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x505C;&#x6B62;&#x8FD0;&#x884C; SECONDARY &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. &#x8FDE;&#x63A5;&#x5230;&#x521D;&#x59CB; PRIMARY &#x8282;&#x70B9;&#x4E0A;&#x67E5;&#x770B;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27001/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;647ca0a3-af10-4216-9480-ebc517f11432&quot;) }
+MongoDB server version: 3.6.11
+MongoDB Enterprise m103-repl:SECONDARY&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>14. &#x67E5;&#x770B;&#x521D;&#x59CB; PRIMARY &#x8282;&#x70B9;&#x53D8;&#x6210; SECONDARY &#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:SECONDARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;,
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 12,
+	&quot;ismaster&quot; : false,
+	&quot;secondary&quot; : true,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___11">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230;&#x4E3B;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8BBE;&#x5B9A;&#x4E00;&#x4E2A;&#x5907;&#x8282;&#x70B9;&#x7684;&#x4F18;&#x5148;&#x7EA7;&#x4E3A; 0&#xFF0C;&#x91CD;&#x65B0;&#x914D;&#x5236;&#x96C6;&#x7FA4;&#x5B50;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; var cfg = rs.conf()
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members[2].priority = 0
+0
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552919705, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552919705, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;p81iAKaoMrp/Y7u7VlWImY63Hws=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6669632199739834369&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x5B50;&#x96C6;&#x62D3;&#x6251;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;
+	],
+	&quot;passives&quot; : [
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 13,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000004&quot;),
+...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x5F3A;&#x5236;&#x6267;&#x884C;&#x4E00;&#x6B21;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.stepDown()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x5B50;&#x96C6;&#x62D3;&#x6251;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;
+	],
+	&quot;passives&quot; : [
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 13,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27002&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27002&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000005&quot;),
+...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_writeconcern">writeConcern</h3>
+<div class="paragraph">
+<p>MongoDB &#x590D;&#x5236;&#x5B50;&#x96C6;&#x4E2D;&#x901A;&#x8FC7; <code>writeConcern</code> &#x6765;&#x786E;&#x8BA4;&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x53EF;&#x9760;&#x6027;&#x3002;&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E; <code>writeConcern</code> &#x786E;&#x8BA4;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230;&#x4E09;&#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x4E2D;&#x4EFB;&#x610F;&#x4E00;&#x8282;&#x70B9;&#xFF0C;&#x5173;&#x95ED;&#x8BE5;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;192.168.103.100:27003&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+MongoDB shell version v3.6.11
+connecting to: mongodb://192.168.103.100:27003/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;fe6813ac-8f15-4e5f-b615-a8cef3584a84&quot;) }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; rs.status()
+
+...
+
+		{
+			&quot;_id&quot; : 2,
+			&quot;name&quot; : &quot;192.168.103.100:27003&quot;,
+			&quot;health&quot; : 0,
+			&quot;state&quot; : 8,
+			&quot;stateStr&quot; : &quot;(not reachable/healthy)&quot;,
+			&quot;uptime&quot; : 0,
+...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C;&#x5199;&#x64CD;&#x4F5C;&#xFF0C;&#x5E76;&#x8BBE;&#x5B9A; writeConcern &#x4E3A; 3</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; use testDatabase
+switched to db testDatabase
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; db.new_data.insert({&quot;m103&quot;: &quot;very fun&quot;}, { writeConcern: { w: 3, wtimeout: 1000 }})
+WriteResult({
+	&quot;nInserted&quot; : 1,
+	&quot;writeConcernError&quot; : {
+		&quot;code&quot; : 64,
+		&quot;codeName&quot; : &quot;WriteConcernFailed&quot;,
+		&quot;errInfo&quot; : {
+			&quot;wtimeout&quot; : true
+		},
+		&quot;errmsg&quot; : &quot;waiting for replication timed out&quot;
+	}
+})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_readconcern">readConcern</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6D4B;&#x8BD5;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --drop --host m103-repl/192.168.103.100:27002,192.168.103.100:27001,192.168.103.100:27003 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --db applicationData --collection products /dataset/products.json
+2019-03-18T15:24:31.240+0000	connected to: m103-repl/192.168.103.100:27002,192.168.103.100:27001,192.168.103.100:27003
+2019-03-18T15:24:31.241+0000	dropping: applicationData.products
+2019-03-18T15:24:34.225+0000	[#.......................] applicationData.products	5.08MB/87.9MB (5.8%)
+2019-03-18T15:24:37.220+0000	[##......................] applicationData.products	10.3MB/87.9MB (11.7%)
+2019-03-18T15:24:40.220+0000	[####....................] applicationData.products	15.5MB/87.9MB (17.6%)
+2019-03-18T15:24:43.220+0000	[#####...................] applicationData.products	20.7MB/87.9MB (23.6%)
+2019-03-18T15:24:46.221+0000	[######..................] applicationData.products	25.5MB/87.9MB (29.0%)
+2019-03-18T15:24:49.220+0000	[########................] applicationData.products	30.6MB/87.9MB (34.8%)
+2019-03-18T15:24:52.228+0000	[########................] applicationData.products	32.5MB/87.9MB (37.0%)
+2019-03-18T15:24:55.220+0000	[#########...............] applicationData.products	34.2MB/87.9MB (38.9%)
+2019-03-18T15:24:58.220+0000	[##########..............] applicationData.products	39.1MB/87.9MB (44.5%)
+2019-03-18T15:25:01.220+0000	[###########.............] applicationData.products	44.0MB/87.9MB (50.0%)
+2019-03-18T15:25:04.220+0000	[#############...........] applicationData.products	48.9MB/87.9MB (55.6%)
+2019-03-18T15:25:07.221+0000	[##############..........] applicationData.products	53.9MB/87.9MB (61.3%)
+2019-03-18T15:25:10.220+0000	[###############.........] applicationData.products	58.6MB/87.9MB (66.6%)
+2019-03-18T15:25:13.220+0000	[#################.......] applicationData.products	63.7MB/87.9MB (72.4%)
+2019-03-18T15:25:16.220+0000	[##################......] applicationData.products	69.0MB/87.9MB (78.4%)
+2019-03-18T15:25:19.220+0000	[####################....] applicationData.products	73.7MB/87.9MB (83.8%)
+2019-03-18T15:25:22.220+0000	[#####################...] applicationData.products	78.7MB/87.9MB (89.4%)
+2019-03-18T15:25:25.220+0000	[######################..] applicationData.products	83.3MB/87.9MB (94.7%)
+2019-03-18T15:25:27.518+0000	[########################] applicationData.products	87.9MB/87.9MB (100.0%)
+2019-03-18T15:25:27.518+0000	imported 516784 documents</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C;&#x8BFB;&#x64CD;&#x4F5C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; use applicationData
+switched to db applicationData</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__sharding">&#x5206;&#x7247;(Sharding)&#x7BA1;&#x7406;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___12">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x7684;&#x57FA;&#x7840;&#x4E0A;&#xFF0C;&#x914D;&#x5236;&#x4E00;&#x4E2A; 3 &#x8282;&#x70B9;&#x7684; Config Server&#xFF0C;&#x53CA;&#x4E00;&#x4E2A; mongos&#xFF0C;&#x6784;&#x6210;&#x4E00;&#x4E2A;&#x6700;&#x5C0F;&#x5316;&#x7684;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. Mongo Shell &#x8FDE;&#x63A5;&#x5230;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x786E;&#x4FDD;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x8FD0;&#x884C;&#x6B63;&#x5E38;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+ngoDB Enterprise m103-repl:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27001&quot;,
+		&quot;192.168.103.100:27002&quot;,
+		&quot;192.168.103.100:27003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl&quot;,
+	&quot;setVersion&quot; : 3,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27001&quot;,
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x521B;&#x5EFA;&#x4E09;&#x4E2A; Config Server &#x8282;&#x70B9;&#x914D;&#x5236;&#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-csrs-1.conf</th>
+<th class="tableblock halign-left valign-top">mongod-csrs-2.conf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26001
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs1/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs1</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26002
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs2/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs2</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-csrs-3.conf</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: configsvr
+replication:
+  replSetName: m103-csrs
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26003
+systemLog:
+  destination: file
+  path: /var/mongodb/db/csrs3/mongod.log
+  logAppend: true
+processManagement:
+  fork: true
+storage:
+  dbPath: /var/mongodb/db/csrs3</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x65E5;&#x5FD7;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir -p /var/mongodb/db/csrs{1,2,3}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x542F;&#x52A8;&#x4E09;&#x4E2A;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-csrs-1.conf
+$ mongod -f mongod-csrs-2.conf
+$ mongod -f mongod-csrs-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x8FD0;&#x884C;&#x7684; mongod &#x8FDB;&#x7A0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongod
+vagrant   2368     1  0 09:37 ?        00:00:08 mongod -f mongod-repl-1.conf
+vagrant   2398     1  0 09:37 ?        00:00:07 mongod -f mongod-repl-2.conf
+vagrant   2428     1  0 09:37 ?        00:00:08 mongod -f mongod-repl-3.conf
+vagrant   2789     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-1.conf
+vagrant   2827     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-2.conf
+vagrant   2864     1  0 09:56 ?        00:00:00 mongod -f mongod-csrs-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8FDE;&#x63A5;&#x5230; Config Server &#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x521D;&#x59CB;&#x5316;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 26001
+
+MongoDB Enterprise &gt; rs.initiate()
+{
+	&quot;info2&quot; : &quot;no configuration specified. Using a default configuration for the set&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:26001&quot;,
+	&quot;ok&quot; : 1,
+	&quot;$gleStats&quot; : {
+		&quot;lastOpTime&quot; : Timestamp(1552989761, 1),
+		&quot;electionId&quot; : ObjectId(&quot;000000000000000000000000&quot;)
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x8D85;&#x7EA7;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-csrs:SECONDARY&gt; use admin
+switched to db admin
+
+MongoDB Enterprise m103-csrs:PRIMARY&gt; db.createUser({user: &quot;m103-admin&quot;, pwd: &quot;m103-pass&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})
+Successfully added user: {
+	&quot;user&quot; : &quot;m103-admin&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;role&quot; : &quot;root&quot;,
+			&quot;db&quot; : &quot;admin&quot;
+		}
+	]
+}
+
+MongoDB Enterprise m103-csrs:PRIMARY&gt; db.auth(&quot;m103-admin&quot;, &quot;m103-pass&quot;)
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x6DFB;&#x52A0;&#x4E24;&#x4E2A;&#x5907;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-csrs:PRIMARY&gt; rs.add(&quot;192.168.103.100:26002&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552989889, 1),
+	&quot;$gleStats&quot; : {
+		&quot;lastOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552989889, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;)
+	},
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552989889, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;L8929773rnlHXegrwczReqJ0uUk=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}
+MongoDB Enterprise m103-csrs:PRIMARY&gt; rs.add(&quot;192.168.103.100:26003&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1552989893, 1),
+	&quot;$gleStats&quot; : {
+		&quot;lastOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1552989893, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;)
+	},
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1552989893, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;SkmXMO118gGEp3S9XAmunUo1omU=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-csrs:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:26001&quot;,
+		&quot;192.168.103.100:26002&quot;,
+		&quot;192.168.103.100:26003&quot;
+	],
+	&quot;setName&quot; : &quot;m103-csrs&quot;,
+	&quot;setVersion&quot; : 3,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:26001&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:26001&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;),
+...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>10. &#x521B;&#x5EFA; mongos.conf &#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongos.conf</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  configDB: m103-csrs/192.168.103.100:26001,192.168.103.100:26002,192.168.103.100:26003
+security:
+  keyFile: /var/mongodb/pki/m103-keyfile
+net:
+  bindIp: localhost,192.168.103.100
+  port: 26000
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongos.log
+  logAppend: true
+processManagement:
+  fork: true</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>11. &#x542F;&#x52A8; mongos</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongos -f mongos.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x67E5;&#x770B; mongos &#x8FDB;&#x7A0B;&#x53CA;&#x76D1;&#x542C;&#x7AEF;&#x53E3;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongos
+vagrant   5065     1  0 14:25 ?        00:00:00 mongos -f mongos.conf
+
+$ sudo netstat -antulop | grep 5065
+tcp        0      0 192.168.103.100:26000   0.0.0.0:*               LISTEN      5065/mongos      off (0.00/0/0)
+tcp        0      0 127.0.0.1:26000         0.0.0.0:*               LISTEN      5065/mongos      off (0.00/0/0)
+tcp        0      0 192.168.103.100:51380   192.168.103.100:26002   ESTABLISHED 5065/mongos      keepalive (127.78/0/0)
+tcp        0      0 192.168.103.100:51374   192.168.103.100:26002   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:56908   192.168.103.100:26003   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:44612   192.168.103.100:26001   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:56913   192.168.103.100:26003   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)
+tcp        0      0 192.168.103.100:44608   192.168.103.100:26001   ESTABLISHED 5065/mongos      keepalive (96.04/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. Mongo Shell &#x8FDE;&#x63A5;&#x5230; mongos</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 26000 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:26000/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;0691aaa5-4695-457a-b848-68819fdf5b75&quot;) }
+MongoDB server version: 3.6.11
+MongoDB Enterprise mongos&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>14. &#x67E5;&#x770B;&#x5206;&#x533A;&#x96C6;&#x7FA4;&#x7684;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.status()
+--- Sharding Status ---
+  sharding version: {
+  	&quot;_id&quot; : 1,
+  	&quot;minCompatibleVersion&quot; : 5,
+  	&quot;currentVersion&quot; : 6,
+  	&quot;clusterId&quot; : ObjectId(&quot;5c90be43507efebbab5cc5e8&quot;)
+  }
+  shards:
+  active mongoses:
+        &quot;3.6.11&quot; : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours:
+                No recent migrations
+  databases:
+        {  &quot;_id&quot; : &quot;config&quot;,  &quot;primary&quot; : &quot;config&quot;,  &quot;partitioned&quot; : true }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>15. &#x521B;&#x5EFA;&#x4E09;&#x4E2A;&#x8282;&#x70B9;&#x914D;&#x5236;&#x6587;&#x4EF6;&#xFF0C;&#x6DFB;&#x52A0; sharding &#x53CA; wiredTiger &#x914D;&#x5236;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-1.conf</th>
+<th class="tableblock halign-left valign-top">mongod-repl-2.conf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/1
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27001
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod1.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/2
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27002
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod2.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-3.conf</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/3
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27003
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod3.log
+  logAppend: true
+processManagement:
+  fork: true
+replication:
+  replSetName: m103-repl</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>16. ROLLING UPGRADE I - &#x5907;&#x8282;&#x70B9;&#x91CD;&#x8D77;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 27002 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()
+
+$ mongod -f mongod-repl-2.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>17. ROLLING UPGRADE II - &#x5907;&#x8282;&#x70B9;&#x91CD;&#x8D77;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 27003 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()
+
+$ mongod -f mongod-repl-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>18. ROLLING UPGRADE III - &#x4E3B;&#x8282;&#x70B9;&#x91CD;&#x8D77;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 27001 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.stepDown()
+
+MongoDB Enterprise m103-repl:SECONDARY&gt; use admin
+switched to db admin
+MongoDB Enterprise m103-repl:SECONDARY&gt; db.shutdownServer()
+
+$ mongod -f mongod-repl-1.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>19. &#x8FDE;&#x63A5;&#x5230; mongos, &#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x5206;&#x7247;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 26000 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl/192.168.103.100:27002&quot;)
+{
+	&quot;shardAdded&quot; : &quot;m103-repl&quot;,
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1553007892, 9),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1553007892, 9),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;Fkn0MODTuvcLjFT9uWPkcjfB1s0=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>20. &#x67E5;&#x770B;&#x5206;&#x533A;&#x96C6;&#x7FA4;&#x7684;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.status()
+--- Sharding Status ---
+  sharding version: {
+  	&quot;_id&quot; : 1,
+  	&quot;minCompatibleVersion&quot; : 5,
+  	&quot;currentVersion&quot; : 6,
+  	&quot;clusterId&quot; : ObjectId(&quot;5c90be43507efebbab5cc5e8&quot;)
+  }
+  shards:
+        {  &quot;_id&quot; : &quot;m103-repl&quot;,  &quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,  &quot;state&quot; : 1 }
+  active mongoses:
+        &quot;3.6.11&quot; : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours:
+                No recent migrations
+  databases:
+        {  &quot;_id&quot; : &quot;config&quot;,  &quot;primary&quot; : &quot;config&quot;,  &quot;partitioned&quot; : true }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_todo">TODO</h3>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -1893,7 +2895,7 @@ MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-18T09:18:57.888Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-18T09:20:07.752Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-19T15:06:44.997Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-21T04:27:15.328Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
