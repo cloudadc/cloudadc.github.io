@@ -1,3 +1,15 @@
 = MongoDB
 :toc: manual
 
+== MongoDB 使用的业务场景
+
+MongoDB 是一个数据平台，存储着各种现代业务系统的数据，从业务底层编程语言的角读看，任何数据如果要存储到 MongoDB，必须通过连接驱动来实现，本部分从 MongoDB 驱动(连接器)的社区活跃度看 MongoDB 究竟使用在什么业务场景。
+
+下图为 2019 年 3 月 MongoDB 社区统计的数据(link:etc/files/github-mongodb-trends.csv[mongodb-trends.csv])：
+
+image:etc/img/mongodb-driver-github-tr.png[]
+
+
+
+
+
