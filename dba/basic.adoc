@@ -579,7 +579,7 @@ db = db.getSiblingDB("video");
 db.reviews.drop();
 db.reviews.insertMany([
 ...
----
+----
 
 [source, text]
 .*2. 导入数据*
