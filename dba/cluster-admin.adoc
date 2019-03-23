@@ -2612,9 +2612,9 @@ $ mkdir /var/mongodb/db/{4,5,6}
 [source, text]
 .*8. 启动分片二*
 ----
-$ vim mongod-repl-4.conf
-$ vim mongod-repl-5.conf
-$ vim mongod-repl-6.conf
+$ mongod -f mongod-repl-4.conf
+$ mongod -f mongod-repl-5.conf
+$ mongod -f mongod-repl-6.conf
 ----
 
 [source, text]
@@ -2834,6 +2834,21 @@ MongoDB Enterprise mongos> db.adminCommand({shardCollection: "m103.products", ke
 	}
 }
 ----
+
+[source, text]
+.*19. 查看分片结果*
+----
+$ mongo m103 --host "192.168.103.100:26000" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
+516784
+
+$ mongo m103 --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
+217885
+
+$ mongo m103 --host "m103-repl-2/192.168.103.100:27004" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
+298899
+----
+
+NOTE: 可以看到 mongos 查询结果为导入文档的总数。分片一和分片二文档数相加就等于导入的文档总数。
 
 === TODO
 
