@@ -61,6 +61,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
+    <link rel="next" href="../examples/" />
+    
     
     <link rel="prev" href="basic.html" />
     
@@ -127,6 +129,38 @@
                 </a>
             
 
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../examples/">
+            
+                <a href="../examples/">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../examples/aggregation-sum.html">
+            
+                <a href="../examples/aggregation-sum.html">
+            
+                    
+                    sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -206,6 +240,7 @@
 <li><a href="#__sharding">&#x5206;&#x7247;(Sharding)&#x7BA1;&#x7406;</a>
 <ul class="sectlevel2">
 <li><a href="#___12">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
+<li><a href="#___13">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</a></li>
 <li><a href="#_todo">TODO</a></li>
 </ul>
 </li>
@@ -2769,19 +2804,446 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl/192.168.103.100:27002&
 </div>
 </div>
 <div class="sect2">
+<h3 id="___13">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x524D;&#x9762;<code>Config Server &#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#xFF0C;<code>&#x5206;&#x7247;&#x4E00;&#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#xFF0C;<code>mongos</code> &#x7684;&#x57FA;&#x7840;&#x4E0A;&#x6DFB;&#x52A0;<code>&#x5206;&#x7247;&#x4E8C;&#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. Config Server &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-csrs-1.conf
+$ mongod -f mongod-csrs-2.conf
+$ mongod -f mongod-csrs-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. mongos &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongos -f mongos.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5206;&#x7247;&#x4E00;&#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-repl-1.conf
+$ mongod -f mongod-repl-2.conf
+$ mongod -f mongod-repl-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x76D1;&#x542C;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ps -ef | grep mongo
+vagrant   2202     1  1 02:14 ?        00:00:02 mongod -f mongod-csrs-1.conf
+vagrant   2285     1  1 02:14 ?        00:00:02 mongod -f mongod-csrs-2.conf
+vagrant   2371     1  1 02:14 ?        00:00:02 mongod -f mongod-csrs-3.conf
+vagrant   2482     1  0 02:14 ?        00:00:00 mongos -f mongos.conf
+vagrant   2519     1  1 02:15 ?        00:00:01 mongod -f mongod-repl-1.conf
+vagrant   2615     1  1 02:15 ?        00:00:01 mongod -f mongod-repl-2.conf
+vagrant   2720     1  1 02:15 ?        00:00:01 mongod -f mongod-repl-3.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8FDE;&#x63A5;&#x5230; mongos&#xFF0C;&#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 26000 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise mongos&gt; sh.status()
+--- Sharding Status ---
+  sharding version: {
+  	&quot;_id&quot; : 1,
+  	&quot;minCompatibleVersion&quot; : 5,
+  	&quot;currentVersion&quot; : 6,
+  	&quot;clusterId&quot; : ObjectId(&quot;5c90be43507efebbab5cc5e8&quot;)
+  }
+  shards:
+        {  &quot;_id&quot; : &quot;m103-repl&quot;,  &quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,  &quot;state&quot; : 1 }
+  active mongoses:
+        &quot;3.6.11&quot; : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>6. &#x521B;&#x5EFA;&#x5206;&#x7247;&#x4E8C;&#x7684;&#x8282;&#x70B9;&#x914D;&#x5236;&#x6587;&#x4EF6;&#x5982;&#x4E0B;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-4.conf</th>
+<th class="tableblock halign-left valign-top">mongod-repl-5.conf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/4
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27004
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod4.log
+  logAppend: true
+processManagement:
+  fork: true
+operationProfiling:
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl-2</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/5
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27005
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod5.log
+  logAppend: true
+processManagement:
+  fork: true
+operationProfiling:
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl-2</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">mongod-repl-6.conf</th>
+<th class="tableblock halign-left valign-top"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">sharding:
+  clusterRole: shardsvr
+storage:
+  dbPath: /var/mongodb/db/6
+  wiredTiger:
+    engineConfig:
+      cacheSizeGB: .1
+net:
+  bindIp: 192.168.103.100,localhost
+  port: 27006
+security:
+  authorization: enabled
+  keyFile: /var/mongodb/pki/m103-keyfile
+systemLog:
+  destination: file
+  path: /var/mongodb/db/mongod6.log
+  logAppend: true
+processManagement:
+  fork: true
+operationProfiling:
+  slowOpThresholdMs: 50
+replication:
+  replSetName: m103-repl-2</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x8DEF;&#x5F84;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir /var/mongodb/db/{4,5,6}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x542F;&#x52A8;&#x5206;&#x7247;&#x4E8C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f mongod-repl-4.conf
+$ mongod -f mongod-repl-5.conf
+$ mongod -f mongod-repl-6.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. Mongo Shell &#x8FDE;&#x63A5;&#x5230;&#x5206;&#x7247;&#x4E8C;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x521D;&#x59CB;&#x5316;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 27004
+
+MongoDB Enterprise &gt; rs.initiate()
+{
+	&quot;info2&quot; : &quot;no configuration specified. Using a default configuration for the set&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27004&quot;,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x8D85;&#x7EA7;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl-2:PRIMARY&gt; use admin
+switched to db admin
+
+MongoDB Enterprise m103-repl-2:PRIMARY&gt; db.createUser({user: &quot;m103-admin&quot;, pwd: &quot;m103-pass&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})
+Successfully added user: {
+	&quot;user&quot; : &quot;m103-admin&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;role&quot; : &quot;root&quot;,
+			&quot;db&quot; : &quot;admin&quot;
+		}
+	]
+}
+
+MongoDB Enterprise m103-repl-2:PRIMARY&gt; db.auth(&quot;m103-admin&quot;, &quot;m103-pass&quot;)
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x5206;&#x7247;&#x4E8C;&#x4E3B;&#x8282;&#x70B9;&#x6DFB;&#x52A0;&#x4E24;&#x4E2A;&#x5907;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl-2:PRIMARY&gt; rs.add(&quot;192.168.103.100:27005&quot;)
+{ &quot;ok&quot; : 1 }
+MongoDB Enterprise m103-repl-2:PRIMARY&gt; rs.add(&quot;192.168.103.100:27006&quot;)
+{ &quot;ok&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x5206;&#x7247;&#x4E8C;&#x67E5;&#x770B;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl-2:PRIMARY&gt; rs.isMaster()
+{
+	&quot;hosts&quot; : [
+		&quot;192.168.103.100:27004&quot;,
+		&quot;192.168.103.100:27005&quot;,
+		&quot;192.168.103.100:27006&quot;
+	],
+	&quot;setName&quot; : &quot;m103-repl-2&quot;,
+	&quot;setVersion&quot; : 3,
+	&quot;ismaster&quot; : true,
+	&quot;secondary&quot; : false,
+	&quot;primary&quot; : &quot;192.168.103.100:27004&quot;,
+	&quot;me&quot; : &quot;192.168.103.100:27004&quot;,
+	&quot;electionId&quot; : ObjectId(&quot;7fffffff0000000000000001&quot;),
+	&quot;lastWrite&quot; : {
+		&quot;opTime&quot; : {
+			&quot;ts&quot; : Timestamp(1553223267, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;lastWriteDate&quot; : ISODate(&quot;2019-03-22T02:54:27Z&quot;),
+		&quot;majorityOpTime&quot; : {
+			&quot;ts&quot; : Timestamp(1553223267, 1),
+			&quot;t&quot; : NumberLong(1)
+		},
+		&quot;majorityWriteDate&quot; : ISODate(&quot;2019-03-22T02:54:27Z&quot;)
+	},
+	&quot;maxBsonObjectSize&quot; : 16777216,
+	&quot;maxMessageSizeBytes&quot; : 48000000,
+	&quot;maxWriteBatchSize&quot; : 100000,
+	&quot;localTime&quot; : ISODate(&quot;2019-03-22T02:54:28.188Z&quot;),
+	&quot;minWireVersion&quot; : 0,
+	&quot;maxWireVersion&quot; : 6,
+	&quot;readOnly&quot; : false,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. Mongo Shell &#x8FDE;&#x63A5;&#x5230; mongos&#xFF0C;&#x6DFB;&#x52A0;&#x5206;&#x7247;&#x4E8C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --port 26000 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot;
+
+MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl-2/192.168.103.100:27004&quot;)
+{
+	&quot;shardAdded&quot; : &quot;m103-repl-2&quot;,
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1553223361, 10),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1553223361, 10),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;/aXB+cCpajXDA6Uk5Y1hhp2BMjo=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>14. &#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.status()
+--- Sharding Status ---
+  sharding version: {
+  	&quot;_id&quot; : 1,
+  	&quot;minCompatibleVersion&quot; : 5,
+  	&quot;currentVersion&quot; : 6,
+  	&quot;clusterId&quot; : ObjectId(&quot;5c90be43507efebbab5cc5e8&quot;)
+  }
+  shards:
+        {  &quot;_id&quot; : &quot;m103-repl&quot;,  &quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,  &quot;state&quot; : 1 }
+        {  &quot;_id&quot; : &quot;m103-repl-2&quot;,  &quot;host&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,  &quot;state&quot; : 1 }
+  active mongoses:
+        &quot;3.6.11&quot; : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>15. &#x6279;&#x91CF;&#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --drop /dataset/products.json --port 26000 -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --db m103 --collection products
+2019-03-22T03:02:41.271+0000	connected to: localhost:26000
+2019-03-22T03:02:41.272+0000	dropping: m103.products
+2019-03-22T03:02:44.264+0000	[........................] m103.products	3.37MB/87.9MB (3.8%)
+2019-03-22T03:02:47.264+0000	[........................] m103.products	3.37MB/87.9MB (3.8%)
+2019-03-22T03:02:50.260+0000	[##......................] m103.products	8.12MB/87.9MB (9.2%)
+2019-03-22T03:02:53.259+0000	[###.....................] m103.products	13.5MB/87.9MB (15.3%)
+2019-03-22T03:02:56.259+0000	[#####...................] m103.products	18.4MB/87.9MB (20.9%)
+2019-03-22T03:02:59.260+0000	[#####...................] m103.products	18.5MB/87.9MB (21.1%)
+2019-03-22T03:03:02.259+0000	[#####...................] m103.products	21.9MB/87.9MB (24.9%)
+2019-03-22T03:03:05.260+0000	[#######.................] m103.products	26.9MB/87.9MB (30.6%)
+2019-03-22T03:03:08.260+0000	[#######.................] m103.products	29.1MB/87.9MB (33.1%)
+2019-03-22T03:03:11.259+0000	[#######.................] m103.products	29.1MB/87.9MB (33.1%)
+2019-03-22T03:03:14.259+0000	[#########...............] m103.products	33.0MB/87.9MB (37.5%)
+2019-03-22T03:03:17.259+0000	[##########..............] m103.products	38.2MB/87.9MB (43.5%)
+2019-03-22T03:03:20.260+0000	[###########.............] m103.products	43.4MB/87.9MB (49.4%)
+2019-03-22T03:03:23.264+0000	[############............] m103.products	47.3MB/87.9MB (53.8%)
+2019-03-22T03:03:26.260+0000	[############............] m103.products	47.3MB/87.9MB (53.8%)
+2019-03-22T03:03:29.259+0000	[##############..........] m103.products	51.9MB/87.9MB (59.1%)
+2019-03-22T03:03:32.259+0000	[###############.........] m103.products	57.0MB/87.9MB (64.8%)
+2019-03-22T03:03:35.259+0000	[################........] m103.products	62.2MB/87.9MB (70.7%)
+2019-03-22T03:03:38.261+0000	[##################......] m103.products	67.6MB/87.9MB (76.9%)
+2019-03-22T03:03:41.259+0000	[###################.....] m103.products	72.7MB/87.9MB (82.7%)
+2019-03-22T03:03:44.259+0000	[#####################...] m103.products	78.0MB/87.9MB (88.7%)
+2019-03-22T03:03:47.260+0000	[######################..] m103.products	83.0MB/87.9MB (94.4%)
+2019-03-22T03:03:49.688+0000	[########################] m103.products	87.9MB/87.9MB (100.0%)
+2019-03-22T03:03:49.688+0000	imported 516784 documents</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>16. &#x8BBE;&#x5B9A;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;&#x5E93;&#x5206;&#x533A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.enableSharding(&quot;m103&quot;)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1553224043, 5),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1553224043, 5),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;YYMdriYT49B7C4xe86DPEhffldo=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>17. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.products.createIndex({&quot;sku&quot;: 1})
+{
+	&quot;raw&quot; : {
+		&quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot; : {
+			&quot;createdCollectionAutomatically&quot; : false,
+			&quot;numIndexesBefore&quot; : 1,
+			&quot;numIndexesAfter&quot; : 2,
+			&quot;ok&quot; : 1
+		}
+	},
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1553225658, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1553225658, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;7mtbmtuvoV8oO17YDJjRTxaXMk0=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>18. &#x6267;&#x884C;&#x5206;&#x533A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.adminCommand({shardCollection: &quot;m103.products&quot;, key: {sku: 1}})
+{
+	&quot;collectionsharded&quot; : &quot;m103.products&quot;,
+	&quot;collectionUUID&quot; : UUID(&quot;a9f9e8d6-57f5-4b27-877e-d62e7bd3ad5a&quot;),
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1553225779, 8),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1553225779, 8),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;VTCDFiglVcFm2nPyUHvfQm9km0Q=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6670040243107790859&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>19. &#x67E5;&#x770B;&#x5206;&#x7247;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo m103 --host &quot;192.168.103.100:26000&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
+516784
+
+$ mongo m103 --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
+217885
+
+$ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
+298899</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230; mongos &#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x4E3A;&#x5BFC;&#x5165;&#x6587;&#x6863;&#x7684;&#x603B;&#x6570;&#x3002;&#x5206;&#x7247;&#x4E00;&#x548C;&#x5206;&#x7247;&#x4E8C;&#x6587;&#x6863;&#x6570;&#x76F8;&#x52A0;&#x5C31;&#x7B49;&#x4E8E;&#x5BFC;&#x5165;&#x7684;&#x6587;&#x6863;&#x603B;&#x6570;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_todo">TODO</h3>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -2883,10 +3345,14 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl/192.168.103.100:27002&
 
             
                 
-                <a href="basic.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 基础">
+                <a href="basic.html" class="navigation navigation-prev " aria-label="Previous page: 基础">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
+                
+                <a href="../examples/" class="navigation navigation-next " aria-label="Next page: 示例">
+                    <i class="fa fa-angle-right"></i>
+                </a>
                 
             
         
@@ -2895,7 +3361,7 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl/192.168.103.100:27002&
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-19T15:06:44.997Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-21T04:27:15.328Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"next":{"title":"示例","level":"1.4","depth":1,"path":"examples/README.adoc","ref":"examples/README.adoc","articles":[{"title":"sum","level":"1.4.1","depth":2,"path":"examples/aggregation-sum.adoc","ref":"examples/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-23T10:00:30.994Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-24T16:01:44.765Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

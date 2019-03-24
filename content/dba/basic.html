@@ -132,6 +132,38 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4" data-path="../examples/">
+            
+                <a href="../examples/">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../examples/aggregation-sum.html">
+            
+                <a href="../examples/aggregation-sum.html">
+            
+                    
+                    sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
 
     
 
@@ -882,63 +914,44 @@ BulkWriteError({
 <pre class="highlight"><code class="language-text" data-lang="text">db = db.getSiblingDB(&quot;video&quot;);
 db.reviews.drop();
 db.reviews.insertMany([
-...
----
+...</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo &quot;mongodb+srv://sandbox-jsdhf.mongodb.net/video&quot; --username m001-student --password m001-mongodb-basics loadReviewsDataset.js</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; use video
+switched to db video
 
-[source, text]
-.*2. &#x5BFC;&#x5165;&#x6570;&#x636E;*</code></pre>
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
+20</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>$ mongo &quot;mongodb+srv://sandbox-jsdhf.mongodb.net/video&quot; --username m001-student --password m001-mongodb-basics loadReviewsDataset.js</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>4. &#x6839;&#x636E; ID &#x5220;&#x9664;</strong></div>
 <div class="content">
-<pre>[source, text]
-.*3. &#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;*</pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteOne({_id: ObjectId(&quot;5c930f3cea4690b776113acd&quot;)})
+{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 1 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; use video
-switched to db video</p>
-</div>
-<div class="paragraph">
-<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
-20</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>5. &#x5220;&#x9664;&#x591A;&#x4E2A;&#x6587;&#x6863;</strong></div>
 <div class="content">
-<pre>[source, text]
-.*4. &#x6839;&#x636E; ID &#x5220;&#x9664;*</pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteMany({reviewer_id: 759723314})
+{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 3 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteOne({_id: ObjectId(&quot;5c930f3cea4690b776113acd&quot;)})
-{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 1 }</p>
 </div>
 <div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x5269;&#x4F59;&#x6587;&#x6863;&#x603B;&#x6570;</strong></div>
 <div class="content">
-<pre>[source, text]
-.*5. &#x5220;&#x9664;&#x591A;&#x4E2A;&#x6587;&#x6863;*</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.deleteMany({reviewer_id: 759723314})
-{ &quot;acknowledged&quot; : true, &quot;deletedCount&quot; : 3 }</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>[source, text]
-.*6. &#x67E5;&#x770B;&#x5269;&#x4F59;&#x6587;&#x6863;&#x603B;&#x6570;*</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
-16</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.reviews.find().count()
+16</code></pre>
 </div>
 </div>
 </div>
@@ -986,7 +999,7 @@ switched to db video</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-03-21T04:26:39.690Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-21T04:27:15.328Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-03-22T03:44:15.935Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-24T16:01:44.765Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

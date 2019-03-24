@@ -1,0 +1,154 @@
+= sum
+:toc: manual
+
+== 旋转门转动总次数
+
+link:files/sensor_data.json[sensor_data.json] 是某城市建筑的大门旋转次数一个月内的记录数据，记录数据每小时记录一次，一天记录 24 次。
+
+[source, text]
+.*查看文档总条目*
+----
+> db.data.find().count()
+31
+----
+
+[source, text]
+.*查看一天 24 小时中每一小时旋转木的转动次数*
+----
+> db.data.findOne()
+{
+	"_id" : ObjectId("5b3c0d4a55593f76b5a9417f"),
+	"day" : 0,
+	"turnstile" : [
+		{
+			"hour" : 0,
+			"count" : 314
+		},
+		{
+			"hour" : 1,
+			"count" : "XFERR1101"
+		},
+		{
+			"hour" : 2,
+			"count" : "XFERR1101"
+		},
+		{
+			"hour" : 3,
+			"count" : 395
+		},
+		{
+			"hour" : 4,
+			"count" : 751
+		},
+		{
+			"hour" : 5,
+			"count" : 184
+		},
+		{
+			"hour" : 6,
+			"count" : 891
+		},
+		{
+			"hour" : 7,
+			"count" : 243
+		},
+		{
+			"hour" : 8,
+			"count" : 344
+		},
+		{
+			"hour" : 9,
+			"count" : 253
+		},
+		{
+			"hour" : 10,
+			"count" : 351
+		},
+		{
+			"hour" : 11,
+			"count" : 438
+		},
+		{
+			"hour" : 12,
+			"count" : 868.6595978655923
+		},
+		{
+			"hour" : 13,
+			"error" : 631
+		},
+		{
+			"hour" : 14,
+			"count" : 456
+		},
+		{
+			"hour" : 15,
+			"count" : 929
+		},
+		{
+			"hour" : 16,
+			"count" : 509
+		},
+		{
+			"hour" : 17,
+			"error" : "XFERR1101"
+		},
+		{
+			"hour" : 18,
+			"error" : 759.1292282785604
+		},
+		{
+			"hour" : 19,
+			"count" : 883
+		},
+		{
+			"hour" : 20,
+			"count" : 945.4712973582698
+		},
+		{
+			"hour" : 21,
+			"count" : 409
+		},
+		{
+			"hour" : 22,
+			"count" : "XFERR1101"
+		},
+		{
+			"hour" : 23,
+			"count" : 205
+		}
+	]
+}
+----
+
+NOTE: count 数据类型不全是 int32，还可能是 string, double, 或 undefined。
+
+*目的*
+
+计算中 count 的总数，且需要忽略错误的字段。
+
+[source, text]
+.*答案*
+----
+> db.data.aggregate([
+  {
+    "$unwind": "$turnstile"
+  },
+  {
+    "$group": {
+      "_id": 0,
+      "sum": {
+        "$sum": {
+          "$convert": {
+            "input": "$turnstile.count",
+            "to": "int",
+            "onError": 0,  
+            "onNull": 0
+          }
+        }
+      }
+    }
+  }
+])
+
+{ "_id" : 0, "sum" : 281245 }
+----

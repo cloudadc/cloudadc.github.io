@@ -1,0 +1,479 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>sum · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../dba/basic.html">
+            
+                <a href="../dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../dba/cluster-admin.html">
+            
+                <a href="../dba/cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.4.1" data-path="aggregation-sum.html">
+            
+                <a href="aggregation-sum.html">
+            
+                    
+                    sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >sum</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="sum">sum</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x65CB;&#x8F6C;&#x95E8;&#x8F6C;&#x52A8;&#x603B;&#x6B21;&#x6570;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x65CB;&#x8F6C;&#x95E8;&#x8F6C;&#x52A8;&#x603B;&#x6B21;&#x6570;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="files/sensor_data.json">sensor_data.json</a> &#x662F;&#x67D0;&#x57CE;&#x5E02;&#x5EFA;&#x7B51;&#x7684;&#x5927;&#x95E8;&#x65CB;&#x8F6C;&#x6B21;&#x6570;&#x4E00;&#x4E2A;&#x6708;&#x5185;&#x7684;&#x8BB0;&#x5F55;&#x6570;&#x636E;&#xFF0C;&#x8BB0;&#x5F55;&#x6570;&#x636E;&#x6BCF;&#x5C0F;&#x65F6;&#x8BB0;&#x5F55;&#x4E00;&#x6B21;&#xFF0C;&#x4E00;&#x5929;&#x8BB0;&#x5F55; 24 &#x6B21;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x6587;&#x6863;&#x603B;&#x6761;&#x76EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">&gt; db.data.find().count()
+31</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x4E00;&#x5929; 24 &#x5C0F;&#x65F6;&#x4E2D;&#x6BCF;&#x4E00;&#x5C0F;&#x65F6;&#x65CB;&#x8F6C;&#x6728;&#x7684;&#x8F6C;&#x52A8;&#x6B21;&#x6570;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">&gt; db.data.findOne()
+{
+	&quot;_id&quot; : ObjectId(&quot;5b3c0d4a55593f76b5a9417f&quot;),
+	&quot;day&quot; : 0,
+	&quot;turnstile&quot; : [
+		{
+			&quot;hour&quot; : 0,
+			&quot;count&quot; : 314
+		},
+		{
+			&quot;hour&quot; : 1,
+			&quot;count&quot; : &quot;XFERR1101&quot;
+		},
+		{
+			&quot;hour&quot; : 2,
+			&quot;count&quot; : &quot;XFERR1101&quot;
+		},
+		{
+			&quot;hour&quot; : 3,
+			&quot;count&quot; : 395
+		},
+		{
+			&quot;hour&quot; : 4,
+			&quot;count&quot; : 751
+		},
+		{
+			&quot;hour&quot; : 5,
+			&quot;count&quot; : 184
+		},
+		{
+			&quot;hour&quot; : 6,
+			&quot;count&quot; : 891
+		},
+		{
+			&quot;hour&quot; : 7,
+			&quot;count&quot; : 243
+		},
+		{
+			&quot;hour&quot; : 8,
+			&quot;count&quot; : 344
+		},
+		{
+			&quot;hour&quot; : 9,
+			&quot;count&quot; : 253
+		},
+		{
+			&quot;hour&quot; : 10,
+			&quot;count&quot; : 351
+		},
+		{
+			&quot;hour&quot; : 11,
+			&quot;count&quot; : 438
+		},
+		{
+			&quot;hour&quot; : 12,
+			&quot;count&quot; : 868.6595978655923
+		},
+		{
+			&quot;hour&quot; : 13,
+			&quot;error&quot; : 631
+		},
+		{
+			&quot;hour&quot; : 14,
+			&quot;count&quot; : 456
+		},
+		{
+			&quot;hour&quot; : 15,
+			&quot;count&quot; : 929
+		},
+		{
+			&quot;hour&quot; : 16,
+			&quot;count&quot; : 509
+		},
+		{
+			&quot;hour&quot; : 17,
+			&quot;error&quot; : &quot;XFERR1101&quot;
+		},
+		{
+			&quot;hour&quot; : 18,
+			&quot;error&quot; : 759.1292282785604
+		},
+		{
+			&quot;hour&quot; : 19,
+			&quot;count&quot; : 883
+		},
+		{
+			&quot;hour&quot; : 20,
+			&quot;count&quot; : 945.4712973582698
+		},
+		{
+			&quot;hour&quot; : 21,
+			&quot;count&quot; : 409
+		},
+		{
+			&quot;hour&quot; : 22,
+			&quot;count&quot; : &quot;XFERR1101&quot;
+		},
+		{
+			&quot;hour&quot; : 23,
+			&quot;count&quot; : 205
+		}
+	]
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+count &#x6570;&#x636E;&#x7C7B;&#x578B;&#x4E0D;&#x5168;&#x662F; int32&#xFF0C;&#x8FD8;&#x53EF;&#x80FD;&#x662F; string, double, &#x6216; undefined&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p><strong>&#x76EE;&#x7684;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x8BA1;&#x7B97;&#x4E2D; count &#x7684;&#x603B;&#x6570;&#xFF0C;&#x4E14;&#x9700;&#x8981;&#x5FFD;&#x7565;&#x9519;&#x8BEF;&#x7684;&#x5B57;&#x6BB5;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x7B54;&#x6848;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">&gt; db.data.aggregate([
+  {
+    &quot;$unwind&quot;: &quot;$turnstile&quot;
+  },
+  {
+    &quot;$group&quot;: {
+      &quot;_id&quot;: 0,
+      &quot;sum&quot;: {
+        &quot;$sum&quot;: {
+          &quot;$convert&quot;: {
+            &quot;input&quot;: &quot;$turnstile.count&quot;,
+            &quot;to&quot;: &quot;int&quot;,
+            &quot;onError&quot;: 0,
+            &quot;onNull&quot;: 0
+          }
+        }
+      }
+    }
+  }
+])
+
+{ &quot;_id&quot; : 0, &quot;sum&quot; : 281245 }</code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 示例">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"sum","level":"1.4.1","depth":2,"previous":{"title":"示例","level":"1.4","depth":1,"path":"examples/README.adoc","ref":"examples/README.adoc","articles":[{"title":"sum","level":"1.4.1","depth":2,"path":"examples/aggregation-sum.adoc","ref":"examples/aggregation-sum.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"examples/aggregation-sum.adoc","mtime":"2019-03-24T16:00:00.443Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-24T16:01:44.765Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
