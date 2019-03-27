@@ -143,6 +143,36 @@ mongodb-compass-1.17.0-1.el7.x86_64
 ...
 ----
 
+=== Mac Pro 上安装 mongodb-enterprise-server
+
+* 访问 MongoDB Server 下载页面 https://www.mongodb.com/download-center/enterprise
+* 选择对应的操作系统和软件版本，点击下载。
+
+[source, text]
+.*本地安装*
+----
+$ tar -xvf mongodb-osx-x86_64-enterprise-4.0.7.tgz
+----
+
+[source, text] 
+.*创建~/.bash_profile 文件，内容如下*
+----
+export PATH="~/work/mongo/mongodb-osx-x86_64-enterprise-4.0.7/bin:$PATH"
+----
+
+=== Mac Pro 上安装 mongodb-compass
+
+* 访问 MongoDB Compass 下载页面 https://www.mongodb.com/download-center/compass
+* 选择对应的操作系统和软件版本，点击下载。
+
+[source, text]
+.*本地安装*
+----
+$ sudo hdiutil attach mongodb-compass-1.17.0-darwin-x64.dmg
+$ sudo cp -R /Volumes/MongoDB\ Compass/MongoDB\ Compass.app ~/Applications/
+$ sudo hdiutil unmount /Volumes/MongoDB\ Compass/
+----
+
 == Atlas 实践
 
 === 创建 Atlas Sandbox 集群
@@ -618,4 +648,333 @@ MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.reviews.find().count()
 16
 ----
 
+== 高级查询
+
+=== Comparison Operators
+
+[source, text]
+.*1. 查看所有电影的总数*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.count()
+2295
+----
+
+[source, text]
+.*2. 查询所有长度大于 90 分钟的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({runtime: {$gt: 90}}, {_id: 0, title: 1, runtime: 1})
+{ "title" : "Once Upon a Time in the West", "runtime" : 175 }
+{ "title" : "A Million Ways to Die in the West", "runtime" : 116 }
+{ "title" : "Wild Wild West", "runtime" : 106 }
+{ "title" : "West Side Story", "runtime" : 152 }
+{ "title" : "Red Rock West", "runtime" : 98 }
+{ "title" : "How the West Was Won", "runtime" : 164 }
+{ "title" : "Journey to the West", "runtime" : 110 }
+{ "title" : "West of Memphis", "runtime" : 147 }
+{ "title" : "Star Wars: Episode IV - A New Hope", "runtime" : 121 }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back", "runtime" : 124 }
+{ "title" : "Star Wars: Episode VI - Return of the Jedi", "runtime" : 131 }
+{ "title" : "Star Wars: Episode I - The Phantom Menace", "runtime" : 136 }
+{ "title" : "Star Wars: Episode III - Revenge of the Sith", "runtime" : 140 }
+{ "title" : "Star Trek", "runtime" : 127 }
+{ "title" : "Star Wars: Episode II - Attack of the Clones", "runtime" : 142 }
+{ "title" : "Star Trek Into Darkness", "runtime" : 132 }
+{ "title" : "Star Trek: First Contact", "runtime" : 111 }
+{ "title" : "Star Trek II: The Wrath of Khan", "runtime" : 113 }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "runtime" : 95 }
+{ "title" : "Love Actually", "runtime" : 135 }
+Type "it" for more
+----
+
+[source, text]
+.*3. 查询所有长度大于 90 分钟且小于 120 分钟的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({runtime: {$gt: 90, $lt: 120}}, {_id: 0, title: 1, runtime: 1})
+{ "title" : "A Million Ways to Die in the West", "runtime" : 116 }
+{ "title" : "Wild Wild West", "runtime" : 106 }
+{ "title" : "Red Rock West", "runtime" : 98 }
+{ "title" : "Journey to the West", "runtime" : 110 }
+{ "title" : "Star Trek: First Contact", "runtime" : 111 }
+{ "title" : "Star Trek II: The Wrath of Khan", "runtime" : 113 }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "runtime" : 95 }
+{ "title" : "I Love You, Man", "runtime" : 105 }
+{ "title" : "Love & Other Drugs", "runtime" : 112 }
+{ "title" : "Punch-Drunk Love", "runtime" : 95 }
+{ "title" : "From Paris with Love", "runtime" : 92 }
+{ "title" : "From Russia with Love", "runtime" : 115 }
+{ "title" : "I Love You Phillip Morris", "runtime" : 98 }
+{ "title" : "Zathura: A Space Adventure", "runtime" : 101 }
+{ "title" : "Turks in Space", "runtime" : 110 }
+{ "title" : "2001: A Space Travesty", "runtime" : 99 }
+{ "title" : "The Adventures of Tintin", "runtime" : 107 }
+{ "title" : "The Adventures of Robin Hood", "runtime" : 102 }
+{ "title" : "The Adventures of Priscilla, Queen of the Desert", "runtime" : 104 }
+{ "title" : "Adventures in Babysitting", "runtime" : 102 }
+Type "it" for more
+----
+
+[source, text]
+.*4. 查询所有长度大于或等于 90 分钟且小于或等于 120 分钟的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({runtime: {$gte: 90, $lte: 120}}, {_id: 0, title: 1, runtime: 1})
+{ "title" : "A Million Ways to Die in the West", "runtime" : 116 }
+{ "title" : "Wild Wild West", "runtime" : 106 }
+{ "title" : "Red Rock West", "runtime" : 98 }
+{ "title" : "Journey to the West", "runtime" : 110 }
+{ "title" : "Star Trek: First Contact", "runtime" : 111 }
+{ "title" : "Star Trek II: The Wrath of Khan", "runtime" : 113 }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "runtime" : 95 }
+{ "title" : "I Love You, Man", "runtime" : 105 }
+{ "title" : "Love & Other Drugs", "runtime" : 112 }
+{ "title" : "Punch-Drunk Love", "runtime" : 95 }
+{ "title" : "From Paris with Love", "runtime" : 92 }
+{ "title" : "From Russia with Love", "runtime" : 115 }
+{ "title" : "I Love You Phillip Morris", "runtime" : 98 }
+{ "title" : "Zathura: A Space Adventure", "runtime" : 101 }
+{ "title" : "Turks in Space", "runtime" : 110 }
+{ "title" : "2001: A Space Travesty", "runtime" : 99 }
+{ "title" : "The Adventures of Tintin", "runtime" : 107 }
+{ "title" : "The Adventures of Robin Hood", "runtime" : 102 }
+{ "title" : "The Adventures of Priscilla, Queen of the Desert", "runtime" : 104 }
+{ "title" : "Adventures in Babysitting", "runtime" : 102 }
+Type "it" for more
+----
+
+[source, text]
+.*5. 查询所有长度大于或等于 180 分钟且烂番茄网站评分大于或等于 95 分的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({runtime: {$gte: 180}, "tomato.meter": {$gte: 95}}, {_id: 0, title: 1, runtime: 1})
+{ "title" : "Lagaan: Once Upon a Time in India", "runtime" : 224 }
+{ "title" : "The Godfather: Part II", "runtime" : 202 }
+----
+
+[source, text]
+.*6. 查看所有被标记了的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({rated: {$ne: "UNRATED"}}, {_id: 0, title: 1, rated: 1})
+{ "title" : "Once Upon a Time in the West", "rated" : "PG-13" }
+{ "title" : "A Million Ways to Die in the West", "rated" : "R" }
+{ "title" : "Wild Wild West", "rated" : "PG-13" }
+{ "title" : "Slow West", "rated" : "R" }
+{ "title" : "An American Tail: Fievel Goes West", "rated" : "G" }
+{ "title" : "Red Rock West", "rated" : "R" }
+{ "title" : "How the West Was Won", "rated" : "APPROVED" }
+{ "title" : "Journey to the West", "rated" : "PG-13" }
+{ "title" : "West of Memphis", "rated" : "R" }
+{ "title" : "Star Wars: Episode IV - A New Hope", "rated" : "PG" }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back", "rated" : "PG" }
+{ "title" : "Star Wars: Episode VI - Return of the Jedi", "rated" : "PG" }
+{ "title" : "Star Wars: Episode I - The Phantom Menace", "rated" : "PG" }
+{ "title" : "Star Wars: Episode III - Revenge of the Sith", "rated" : "PG-13" }
+{ "title" : "Star Trek", "rated" : "PG-13" }
+{ "title" : "Star Wars: Episode II - Attack of the Clones", "rated" : "PG" }
+{ "title" : "Star Trek Into Darkness", "rated" : "PG-13" }
+{ "title" : "Star Trek: First Contact", "rated" : "PG-13" }
+{ "title" : "Star Trek II: The Wrath of Khan", "rated" : "PG" }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "rated" : "PG" }
+Type "it" for more
+----
+
+[source, text]
+.*7. 查看所有被标记了 G 和 PG 的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({rated: {$in: ["G", "PG"]}}, {_id: 0, title: 1, rated: 1})
+{ "title" : "An American Tail: Fievel Goes West", "rated" : "G" }
+{ "title" : "Star Wars: Episode IV - A New Hope", "rated" : "PG" }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back", "rated" : "PG" }
+{ "title" : "Star Wars: Episode VI - Return of the Jedi", "rated" : "PG" }
+{ "title" : "Star Wars: Episode I - The Phantom Menace", "rated" : "PG" }
+{ "title" : "Star Wars: Episode II - Attack of the Clones", "rated" : "PG" }
+{ "title" : "Star Trek II: The Wrath of Khan", "rated" : "PG" }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "rated" : "PG" }
+{ "title" : "2001: A Space Odyssey", "rated" : "G" }
+{ "title" : "Zathura: A Space Adventure", "rated" : "PG" }
+{ "title" : "Muppets from Space", "rated" : "G" }
+{ "title" : "Space Chimps", "rated" : "G" }
+{ "title" : "The Adventures of Tintin", "rated" : "PG" }
+{ "title" : "The Adventures of Baron Munchausen", "rated" : "PG" }
+{ "title" : "The Adventures of Robin Hood", "rated" : "PG" }
+{ "title" : "The Many Adventures of Winnie the Pooh", "rated" : "G" }
+{ "title" : "The Adventures of Sharkboy and Lavagirl 3-D", "rated" : "PG" }
+{ "title" : "The Adventures of Buckaroo Banzai Across the 8th Dimension", "rated" : "PG" }
+{ "title" : "The Adventures of Rocky & Bullwinkle", "rated" : "PG" }
+{ "title" : "The Extraordinary Adventures of Adèle Blanc-Sec", "rated" : "PG" }
+Type "it" for more
+----
+
+[source, text]
+.*8. 查看电影的写作者是 Ethan Coen 或 Joel Coen 的电影的总数*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({writers: {$in: ["Ethan Coen", "Joel Coen"]}}).count()
+3
+----
+
+=== Element Operators
+
+[source, text]
+.*1. 查看烂番茄上存在评论的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({"tomato.consensus": {$exists: true}}, {_id: 0, title: 1})
+{ "title" : "Once Upon a Time in the West" }
+{ "title" : "A Million Ways to Die in the West" }
+{ "title" : "Wild Wild West" }
+{ "title" : "Slow West" }
+{ "title" : "Journey to the West" }
+{ "title" : "West of Memphis" }
+{ "title" : "Star Wars: Episode IV - A New Hope" }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back" }
+{ "title" : "Star Wars: Episode VI - Return of the Jedi" }
+{ "title" : "Star Wars: Episode III - Revenge of the Sith" }
+{ "title" : "Star Trek" }
+{ "title" : "Star Wars: Episode II - Attack of the Clones" }
+{ "title" : "Star Trek Into Darkness" }
+{ "title" : "Star Trek: First Contact" }
+{ "title" : "Star Trek II: The Wrath of Khan" }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb" }
+{ "title" : "Love Actually" }
+{ "title" : "Shakespeare in Love" }
+{ "title" : "I Love You, Man" }
+{ "title" : "Love & Other Drugs" }
+Type "it" for more
+----
+
+[source, text]
+.*2. 查看烂番茄上不存在评论的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({"tomato.consensus": {$exists: false}}, {_id: 0, title: 1})
+{ "title" : "West Side Story" }
+{ "title" : "An American Tail: Fievel Goes West" }
+{ "title" : "Red Rock West" }
+{ "title" : "How the West Was Won" }
+{ "title" : "Star Wars: Episode I - The Phantom Menace" }
+{ "title" : "P.S. I Love You" }
+{ "title" : "From Russia with Love" }
+{ "title" : "Plan 9 from Outer Space" }
+{ "title" : "Muppets from Space" }
+{ "title" : "Turks in Space" }
+{ "title" : "2001: A Space Travesty" }
+{ "title" : "Adventures in Babysitting" }
+{ "title" : "The Many Adventures of Winnie the Pooh" }
+{ "title" : "The Adventures of Buckaroo Banzai Across the 8th Dimension" }
+{ "title" : "The Extraordinary Adventures of Adèle Blanc-Sec" }
+{ "title" : "The Last Picture Show" }
+{ "title" : "The Greatest Show on Earth" }
+{ "title" : "There's No Business Like Show Business" }
+{ "title" : "Show Boat" }
+{ "title" : "Show People" }
+Type "it" for more
+----
+
+[source, text]
+.*3. 查看 metacritic 类型为 Double 的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({metacritic: {$type: "double"}}, {_id: 0, title: 1})
+{ "title" : "Once Upon a Time in the West" }
+{ "title" : "A Million Ways to Die in the West" }
+{ "title" : "Wild Wild West" }
+{ "title" : "Slow West" }
+{ "title" : "Journey to the West" }
+{ "title" : "West of Memphis" }
+{ "title" : "Star Wars: Episode IV - A New Hope" }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back" }
+{ "title" : "Star Wars: Episode VI - Return of the Jedi" }
+{ "title" : "Star Wars: Episode I - The Phantom Menace" }
+{ "title" : "Star Wars: Episode III - Revenge of the Sith" }
+{ "title" : "Star Trek" }
+{ "title" : "Star Wars: Episode II - Attack of the Clones" }
+{ "title" : "Star Trek Into Darkness" }
+{ "title" : "Star Trek: First Contact" }
+{ "title" : "Star Trek II: The Wrath of Khan" }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb" }
+{ "title" : "Love Actually" }
+{ "title" : "Shakespeare in Love" }
+{ "title" : "I Love You, Man" }
+Type "it" for more
+----
+
+=== TODO
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
 
