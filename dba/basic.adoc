@@ -892,43 +892,132 @@ MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({metacritic: {$
 Type "it" for more
 ----
 
-=== TODO
+=== Logical Operators
 
 [source, text]
-.**
+.*1. 查找烂番茄上评分大于 95 分或 metacritic 评分大于 88 分的电影*
 ----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({$or: [{"tomato.meter": {$gt: 95}}, {"metacritic": {$gt: 88}}]}, {_id: 0, title: 1, "tomato.meter": 1, metacritic: 1})
+{ "title" : "Once Upon a Time in the West", "tomato" : { "meter" : 98 }, "metacritic" : 80 }
+{ "title" : "Star Wars: Episode IV - A New Hope", "tomato" : { "meter" : 94 }, "metacritic" : 92 }
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "tomato" : { "meter" : 99 }, "metacritic" : 96 }
+{ "title" : "2001: A Space Odyssey", "tomato" : { "meter" : 96 }, "metacritic" : 86 }
+{ "title" : "The Adventures of Robin Hood", "tomato" : { "meter" : 100 }, "metacritic" : 97 }
+{ "title" : "The Truman Show", "tomato" : { "meter" : 94 }, "metacritic" : 90 }
+{ "title" : "Quiz Show", "tomato" : { "meter" : 96 }, "metacritic" : 88 }
+{ "title" : "Evil Dead II", "tomato" : { "meter" : 98 }, "metacritic" : 69 }
+{ "title" : "Alien", "tomato" : { "meter" : 97 }, "metacritic" : 83 }
+{ "title" : "The Kid with a Bike", "tomato" : { "meter" : 96 }, "metacritic" : 87 }
+{ "title" : "Drugstore Cowboy", "tomato" : { "meter" : 100 }, "metacritic" : 82 }
+{ "title" : "Raiders of the Lost Ark", "tomato" : { "meter" : 96 }, "metacritic" : 90 }
+{ "title" : "Lost in Translation", "tomato" : { "meter" : 95 }, "metacritic" : 89 }
+{ "title" : "Big", "tomato" : { "meter" : 97 }, "metacritic" : 72 }
+{ "title" : "Groundhog Day", "tomato" : { "meter" : 96 }, "metacritic" : 72 }
+{ "title" : "The Night of the Hunter", "tomato" : { "meter" : 98 }, "metacritic" : 99 }
+{ "title" : "Toy Story", "tomato" : { "meter" : 100 }, "metacritic" : 92 }
+{ "title" : "Toy Story 3", "tomato" : { "meter" : 99 }, "metacritic" : 92 }
+{ "title" : "Toy Story 2", "tomato" : { "meter" : 100 }, "metacritic" : 88 }
+{ "title" : "The Straight Story", "tomato" : { "meter" : 96 }, "metacritic" : 86 }
+Type "it" for more
 ----
 
 [source, text]
-.**
+.*2. 查找烂番茄上评分大于 95 分并且 metacritic 评分大于 88 分的电影*
+----
+{ "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "tomato" : { "meter" : 99 }, "metacritic" : 96 }
+{ "title" : "The Adventures of Robin Hood", "tomato" : { "meter" : 100 }, "metacritic" : 97 }
+{ "title" : "Raiders of the Lost Ark", "tomato" : { "meter" : 96 }, "metacritic" : 90 }
+{ "title" : "The Night of the Hunter", "tomato" : { "meter" : 98 }, "metacritic" : 99 }
+{ "title" : "Toy Story", "tomato" : { "meter" : 100 }, "metacritic" : 92 }
+{ "title" : "Toy Story 3", "tomato" : { "meter" : 99 }, "metacritic" : 92 }
+{ "title" : "The Wizard of Oz", "tomato" : { "meter" : 99 }, "metacritic" : 100 }
+{ "title" : "L.A. Confidential", "tomato" : { "meter" : 99 }, "metacritic" : 90 }
+{ "title" : "La Dolce Vita", "tomato" : { "meter" : 96 }, "metacritic" : 93 }
+{ "title" : "E.T. the Extra-Terrestrial", "tomato" : { "meter" : 98 }, "metacritic" : 94 }
+{ "title" : "Au Hasard Balthazar", "tomato" : { "meter" : 100 }, "metacritic" : 100 }
+{ "title" : "Toy Story 3", "tomato" : { "meter" : 99 }, "metacritic" : 92 }
 ----
 
+=== Array Operators
+
+[source, text]
+.*1. $all - 数组中满足包含的所有给出的元素*
 ----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({genres: {$all: ["Comedy", "Crime", "Drama"]}}, {_id: 0, title: 1, genres: 1})
+{ "title" : "Down by Law", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "Tod den Hippies!! Es lebe der Punk!", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "Mr. Brooks", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "Brødrene Dal og mysteriet med Karl XIIs gamasjer", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "O.K. Garage", "genres" : [ "Comedy", "Drama", "Crime" ] }
+{ "title" : "The Ax", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "Ex Drummer", "genres" : [ "Comedy", "Crime", "Drama" ] }
+{ "title" : "Au revoir Taipei", "genres" : [ "Comedy", "Crime", "Drama" ] }
+----
+
+[source, text]
+.*2. $size - 数组中满足元素的个为特定数量*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({countries: {$size: 5}}, {_id: 0, title: 1, countries: 1})
+{ "title" : "AVP: Alien vs. Predator", "countries" : [ "USA", "UK", "Czech Republic", "Canada", "Germany" ] }
+{ "title" : "Where the Trail Ends", "countries" : [ "Argentina", "Canada", "China", "Nepal", "USA" ] }
+{ "title" : "Outside the Law", "countries" : [ "France", "Algeria", "Belgium", "Tunisia", "Italy" ] }
+{ "title" : "Night on Earth", "countries" : [ "France", "UK", "Germany", "USA", "Japan" ] }
+{ "title" : "Os Canibais", "countries" : [ "Portugal", "France", "West Germany", "Italy", "Switzerland" ] }
+{ "title" : "Ae Fond Kiss...", "countries" : [ "UK", "Italy", "Germany", "Spain", "Belgium" ] }
+{ "title" : "Tesko je biti fin", "countries" : [ "UK", "Slovenia", "Serbia", "Germany", "Bosnia and Herzegovina" ] }
+----
+
+[source, text]
+.*3. $elemMatch - 数组中某个元素满足特定的值*
+----
+martian = db.movieDetails.findOne({title: "The Martian"})
+martian
+delete martian._id;
+martian
+martian.boxOffice = [
+    {"country": "USA", "revenue": 228.4},
+    {"country": "Australia", "revenue": 19.6},
+    {"country": "UK", "revenue": 33.9},
+    {"country": "Germany", "revenue": 16.2},
+    {"country": "France", "revenue": 19.8}
+]
+db.movieDetails.insertOne(martian);
+
+db.movieDetails.find({boxOffice: {$elemMatch: {"country": "Germany", "revenue": {$gt: 17}}}})
+
+db.movieDetails.find({boxOffice: {$elemMatch: {"country": "Germany", "revenue": {$gt: 16}}}})
+----
+
+=== 正则表达式匹配
+
+[source, text]
+.*1. 获奖文字以 Won 开头的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({"awards.text": {$regex: /^Won.*/}}, {_id: 0, title: 1, "awards.text": 1})
+{ "title" : "West Side Story", "awards" : { "text" : "Won 10 Oscars. Another 18 wins & 11 nominations." } }
+{ "title" : "How the West Was Won", "awards" : { "text" : "Won 3 Oscars. Another 7 wins & 5 nominations." } }
+{ "title" : "Star Wars: Episode IV - A New Hope", "awards" : { "text" : "Won 6 Oscars. Another 38 wins & 27 nominations." } }
+{ "title" : "Star Wars: Episode V - The Empire Strikes Back", "awards" : { "text" : "Won 1 Oscar. Another 15 wins & 17 nominations." } }
+{ "title" : "Star Trek", "awards" : { "text" : "Won 1 Oscar. Another 22 wins & 77 nominations." } }
+{ "title" : "Shakespeare in Love", "awards" : { "text" : "Won 7 Oscars. Another 55 wins & 85 nominations." } }
+{ "title" : "2001: A Space Odyssey", "awards" : { "text" : "Won 1 Oscar. Another 13 wins & 7 nominations." } }
+{ "title" : "The Adventures of Robin Hood", "awards" : { "text" : "Won 3 Oscars. Another 2 wins & 2 nominations." } }
+{ "title" : "The Adventures of Priscilla, Queen of the Desert", "awards" : { "text" : "Won 1 Oscar. Another 9 wins & 16 nominations." } }
+{ "title" : "The Last Picture Show", "awards" : { "text" : "Won 2 Oscars. Another 16 wins & 22 nominations." } }
+{ "title" : "The Greatest Show on Earth", "awards" : { "text" : "Won 2 Oscars. Another 4 wins & 5 nominations." } }
+{ "title" : "Pirates of the Caribbean: Dead Man's Chest", "awards" : { "text" : "Won 1 Oscar. Another 41 wins & 48 nominations." } }
+{ "title" : "Dead Poets Society", "awards" : { "text" : "Won 1 Oscar. Another 17 wins & 18 nominations." } }
+{ "title" : "Alien", "awards" : { "text" : "Won 1 Oscar. Another 15 wins & 19 nominations." } }
+{ "title" : "Butch Cassidy and the Sundance Kid", "awards" : { "text" : "Won 4 Oscars. Another 16 wins & 14 nominations." } }
+{ "title" : "All Quiet on the Western Front", "awards" : { "text" : "Won 2 Oscars. Another 5 wins & 2 nominations." } }
+{ "title" : "All Quiet on the Western Front", "awards" : { "text" : "Won 1 Golden Globe. Another 1 win & 6 nominations." } }
+{ "title" : "Midnight Cowboy", "awards" : { "text" : "Won 3 Oscars. Another 24 wins & 15 nominations." } }
+{ "title" : "The Cowboy and the Lady", "awards" : { "text" : "Won 1 Oscar. Another 2 nominations." } }
+{ "title" : "Top Gun", "awards" : { "text" : "Won 1 Oscar. Another 9 wins & 5 nominations." } }
+Type "it" for more
+----
+
+== TODO
 
 [source, text]
 .**
