@@ -778,9 +778,9 @@ MongoDB server version: 3.6.11
 [source, text]
 .*7. 创建一个应用用户可以对 applicationData 数据库进行读写操作*
 ----
-MongoDB Enterprise > use applicationData
-switched to db applicationData
-MongoDB Enterprise > show users
+MongoDB Enterprise > use admin
+switched to db admin
+
 MongoDB Enterprise > db.createUser({user: "m103-application-user", pwd: "m103-application-pass", roles: [{db: "applicationData", role: "readWrite"}]})
 Successfully added user: {
 	"user" : "m103-application-user",
@@ -791,15 +791,39 @@ Successfully added user: {
 		}
 	]
 }
+
+MongoDB Enterprise > show users
+{
+	"_id" : "admin.m103-admin",
+	"user" : "m103-admin",
+	"db" : "admin",
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
+{
+	"_id" : "admin.m103-application-user",
+	"user" : "m103-application-user",
+	"db" : "admin",
+	"roles" : [
+		{
+			"role" : "readWrite",
+			"db" : "applicationData"
+		}
+	]
+}
 ----
 
 [source, text]
 .*8. 使用应用帐号连接 Mongo Shell*
 ----
-$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass
+$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin
 MongoDB shell version v3.6.11
-connecting to: mongodb://127.0.0.1:27000/applicationData?gssapiServiceName=mongodb
-Implicit session: session { "id" : UUID("2fb69f0c-5e8c-4c48-9f2a-2656a2372a1c") }
+connecting to: mongodb://127.0.0.1:27000/applicationData?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("2731cd1d-0137-4c29-a771-6d6657387465") }
 MongoDB server version: 3.6.11
 ----
 
@@ -845,7 +869,7 @@ $ ls -l products.json
 [source, text]
 .*2. mongoimport 批量导入*
 ----
-$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --file products.json 
+$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --authenticationDatabase admin --file products.json 
 2019-03-16T16:19:11.249+0000	no collection specified
 2019-03-16T16:19:11.249+0000	using filename 'products' as collection
 2019-03-16T16:19:11.262+0000	connected to: localhost:27000

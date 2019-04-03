@@ -327,7 +327,7 @@ image:img/mongodb-compass-connect.png[]
 
 image:img/mongodb-compass-analyze.png[]
 
-=== 单条数据插入
+=== 文档插入
 
 *1. 创建 Collection*
 
@@ -362,45 +362,43 @@ MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.find()
 { "_id" : ObjectId("5c92f14660e022ecdc660669"), "title" : "Fire", "year" : 1992, "imdb" : "tt0084726" }
 ----
 
-=== 多条数据插入 
-
 [source, text]
-.*1. 默认多条数据插入是按照顺序执行的，如果执行出错，跳过插入后面的数据*
+.*5. 默认多条数据插入是按照顺序执行的，如果执行出错，跳过插入后面的数据*
 ----
 MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.insertMany(
-...     [
-...         {
-...       "_id" : "tt0084726",
-...       "title" : "Star Trek II: The Wrath of Khan",
-...       "year" : 1982,
-...       "type" : "movie"
-...           },
-...           {
-...       "_id" : "tt0796366",
-...       "title" : "Star Trek",
-...       "year" : 2009,
-...       "type" : "movie"
-...           },
-...           {
-...       "_id" : "tt0084726",
-...       "title" : "Star Trek II: The Wrath of Khan",
-...       "year" : 1982,
-...       "type" : "movie"
-...           },
-...           {
-...       "_id" : "tt1408101",
-...       "title" : "Star Trek Into Darkness",
-...       "year" : 2013,
-...       "type" : "movie"
-...           },
-...           {
-...       "_id" : "tt0117731",
-...       "title" : "Star Trek: First Contact",
-...       "year" : 1996,
-...       "type" : "movie"
-...         }
-...     ]
-... );
+     [
+         {
+       "_id" : "tt0084726",
+       "title" : "Star Trek II: The Wrath of Khan",
+       "year" : 1982,
+       "type" : "movie"
+           },
+           {
+       "_id" : "tt0796366",
+       "title" : "Star Trek",
+       "year" : 2009,
+       "type" : "movie"
+           },
+           {
+       "_id" : "tt0084726",
+       "title" : "Star Trek II: The Wrath of Khan",
+       "year" : 1982,
+       "type" : "movie"
+           },
+           {
+       "_id" : "tt1408101",
+       "title" : "Star Trek Into Darkness",
+       "year" : 2013,
+       "type" : "movie"
+           },
+           {
+       "_id" : "tt0117731",
+       "title" : "Star Trek: First Contact",
+       "year" : 1996,
+       "type" : "movie"
+         }
+     ]
+ );
 2019-03-21T10:25:58.388+0800 E QUERY    [js] BulkWriteError: write error at item 2 in bulk operation :
 BulkWriteError({
 	"writeErrors" : [
@@ -429,7 +427,7 @@ BulkWriteError({
 可以看到顺序插入第三条数据时因为 _id 唯一性冲突导致插入失败。
 
 [source, text]
-.*2. 查看插入的数据*
+.*6. 查看插入的数据*
 ----
 MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.find()
 { "_id" : "tt0084726", "title" : "Star Trek II: The Wrath of Khan", "year" : 1982, "type" : "movie" }
@@ -437,45 +435,45 @@ MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.find()
 ----
 
 [source, text]
-.*3. 设定 order 为 false 可以指定插入不是按顺序执行，插入是如果遇到错误，会跳过错误继续执行插入*
+.*7. 设定 order 为 false 可以指定插入不是按顺序执行，插入是如果遇到错误，会跳过错误继续执行插入*
 ----
 MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.insertMany(
-...     [
-...         {
-...     "_id" : "tt0084726",
-...     "title" : "Star Trek II: The Wrath of Khan",
-...     "year" : 1982,
-...     "type" : "movie"
-...         },
-...         {
-...     "_id" : "tt0796366",
-...     "title" : "Star Trek",
-...     "year" : 2009,
-...     "type" : "movie"
-...         },
-...         {
-...     "_id" : "tt0084726",
-...     "title" : "Star Trek II: The Wrath of Khan",
-...     "year" : 1982,
-...     "type" : "movie"
-...         },
-...         {
-...     "_id" : "tt1408101",
-...     "title" : "Star Trek Into Darkness",
-...     "year" : 2013,
-...     "type" : "movie"
-...         },
-...         {
-...     "_id" : "tt0117731",
-...     "title" : "Star Trek: First Contact",
-...     "year" : 1996,
-...     "type" : "movie"
-...         }
-...     ],
-...     {
-...         "ordered": false 
-...     }
-... );
+     [
+         {
+     "_id" : "tt0084726",
+     "title" : "Star Trek II: The Wrath of Khan",
+     "year" : 1982,
+     "type" : "movie"
+         },
+         {
+     "_id" : "tt0796366",
+     "title" : "Star Trek",
+     "year" : 2009,
+     "type" : "movie"
+         },
+         {
+     "_id" : "tt0084726",
+     "title" : "Star Trek II: The Wrath of Khan",
+     "year" : 1982,
+     "type" : "movie"
+         },
+         {
+     "_id" : "tt1408101",
+     "title" : "Star Trek Into Darkness",
+     "year" : 2013,
+     "type" : "movie"
+         },
+         {
+     "_id" : "tt0117731",
+     "title" : "Star Trek: First Contact",
+     "year" : 1996,
+     "type" : "movie"
+         }
+     ],
+     {
+         "ordered": false 
+     }
+ );
 2019-03-21T10:28:21.868+0800 E QUERY    [js] BulkWriteError: 3 write errors in bulk operation :
 BulkWriteError({
 	"writeErrors" : [
@@ -526,7 +524,7 @@ BulkWriteError({
 可以看到，批量插入的前三条数据都遇到了 _id 唯一性冲突导致失败的问题，但继续插入了第四和第五条数据。
 
 [source, text]
-.*4. 查看插入的数据*
+.*8. 查看插入的数据*
 ----
 MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieScratch.find()
 { "_id" : "tt0084726", "title" : "Star Trek II: The Wrath of Khan", "year" : 1982, "type" : "movie" }
@@ -595,9 +593,354 @@ MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({"genres": "Fam
 === 文档更新
 
 [source, text]
-.*1. TODO*
+.*1. 查询 title 为 The Martian 的电影（没有 poster 属性）*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"year" : 2015,
+	"rated" : "PG-13",
+	"runtime" : 144,
+	"countries" : [
+		"USA",
+		"UK"
+	],
+	"genres" : [
+		"Adventure",
+		"Drama",
+		"Sci-Fi"
+	],
+	"director" : "Ridley Scott",
+	"writers" : [
+		"Drew Goddard",
+		"Andy Weir"
+	],
+	"actors" : [
+		"Matt Damon",
+		"Jessica Chastain",
+		"Kristen Wiig",
+		"Jeff Daniels"
+	],
+	"plot" : "During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.",
+	"imdb" : {
+		"id" : "tt3659388",
+		"rating" : 8.2,
+		"votes" : 187881
+	},
+	"tomato" : {
+		"meter" : 93,
+		"image" : "certified",
+		"rating" : 7.9,
+		"reviews" : 280,
+		"fresh" : 261,
+		"consensus" : "Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.",
+		"userMeter" : 92,
+		"userRating" : 4.3,
+		"userReviews" : 104999
+	},
+	"metacritic" : 80,
+	"type" : "movie"
+}
 ----
 
+[source, text]
+.*2. 执行文档更新，添加 poster 属性*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateOne({title: "The Martian"}, {$set: {poster: "http://ia.media-imdb.com/images/M/TTSSXFFFF"}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+----
+
+[source, text]
+.*3. 查询 title 为 The Martian 的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, poster: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"poster" : "http://ia.media-imdb.com/images/M/TTSSXFFFF"
+}
+----
+
+[source, text]
+.*4. 执行文档更新，添加 awards 文档*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateOne({title: "The Martian"}, {$set: {"awards": {"wins": 8, "nominations": 14, "text": "Nominated for 3 Golden Globes"}}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+----
+
+[source, text]
+.*5. 查询 title 为 The Martian 的电影*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, poster: 1, awards: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"poster" : "http://ia.media-imdb.com/images/M/TTSSXFFFF",
+	"awards" : {
+		"wins" : 8,
+		"nominations" : 14,
+		"text" : "Nominated for 3 Golden Globes"
+	}
+}
+----
+
+[source, text]
+.*6. 增加 tomato 的 review 次数 3，userReviews 25*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, tomato: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"tomato" : {
+		"meter" : 93,
+		"image" : "certified",
+		"rating" : 7.9,
+		"reviews" : 280,
+		"fresh" : 261,
+		"consensus" : "Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.",
+		"userMeter" : 92,
+		"userRating" : 4.3,
+		"userReviews" : 104999
+	}
+}
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateOne({title: "The Martian"}, {$inc: {"tomato.reviews": 3, "tomato.userReviews": 25}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, tomato: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"tomato" : {
+		"meter" : 93,
+		"image" : "certified",
+		"rating" : 7.9,
+		"reviews" : 283,
+		"fresh" : 261,
+		"consensus" : "Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.",
+		"userMeter" : 92,
+		"userRating" : 4.3,
+		"userReviews" : 105024
+	}
+}
+----
+
+[source, text]
+.*7. 添加一个 array 属性 reviews*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateOne({title: "The Martian"}, {$push: {"reviews": {"rating": 4.5, "date": ISODate("2019-04-02T09:00:00Z"), "reviewer": "Kylin Soong", "text": "This is sample Review"}}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, reviews: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"reviews" : [
+		{
+			"rating" : 4.5,
+			"date" : ISODate("2019-04-02T09:00:00Z"),
+			"reviewer" : "Kylin Soong",
+			"text" : "This is sample Review"
+		}
+	]
+}
+----
+
+[source, text]
+.*8. 添加多个 reviews*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateOne({title: "The Martian"}, {$push: {"reviews": {$each: [{"rating": 4.5, "date": ISODate("2019-04-02T09:01:00Z"), "reviewer": "Kylin Soong", "text": "Reviewer 2"},{"rating": 4.5, "date": ISODate("2019-04-02T09:03:00Z"), "reviewer": "Kylin Soong", "text": "Reviewer 3"},{"rating": 4.5, "date": ISODate("2019-04-02T09:04:00Z"), "reviewer": "Kylin Soong", "text": "Reviewer 4"}]}}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({title: "The Martian"}, {title: 1, reviews: 1}).pretty()
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b5ba8"),
+	"title" : "The Martian",
+	"reviews" : [
+		{
+			"rating" : 4.5,
+			"date" : ISODate("2019-04-02T09:00:00Z"),
+			"reviewer" : "Kylin Soong",
+			"text" : "This is sample Review"
+		},
+		{
+			"rating" : 4.5,
+			"date" : ISODate("2019-04-02T09:01:00Z"),
+			"reviewer" : "Kylin Soong",
+			"text" : "Reviewer 2"
+		},
+		{
+			"rating" : 4.5,
+			"date" : ISODate("2019-04-02T09:03:00Z"),
+			"reviewer" : "Kylin Soong",
+			"text" : "Reviewer 3"
+		},
+		{
+			"rating" : 4.5,
+			"date" : ISODate("2019-04-02T09:04:00Z"),
+			"reviewer" : "Kylin Soong",
+			"text" : "Reviewer 4"
+		}
+	]
+}
+----
+
+[source, text]
+.*9. 根系所有 rated 为空值的文档*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({rated: null}).count()
+1599
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.updateMany({rated: null}, {$unset: {rated: ""}})
+{ "acknowledged" : true, "matchedCount" : 1599, "modifiedCount" : 1599 }
+----
+
+=== 文档替换
+
+[source, text]
+.*1. 根据条件查询*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> let filter = {title: "House, M.D., Season Four: New Beginnings"}
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY>let  doc = db.movieDetails.findOne(filter);
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b58f6"),
+	"title" : "House, M.D., Season Four: New Beginnings",
+	"year" : 2008,
+	"runtime" : 26,
+	"countries" : [
+		"USA"
+	],
+	"genres" : [
+		"Documentary",
+		"Short"
+	],
+	"director" : null,
+	"writers" : [ ],
+	"actors" : [
+		"Cyrus Deboo",
+		"Lisa Edelstein",
+		"Omar Epps",
+		"Christopher Fairbanks"
+	],
+	"plot" : null,
+	"poster" : null,
+	"imdb" : {
+		"id" : "tt1329164",
+		"rating" : 8.7,
+		"votes" : 106
+	},
+	"awards" : {
+		"wins" : 0,
+		"nominations" : 0,
+		"text" : ""
+	},
+	"type" : "movie"
+}
+----
+
+[source, text]
+.*2. 设定 poster 值*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> doc.poster = "https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576"
+https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576
+----
+
+[source, text]
+.*3. 给 genres 中添加一个元素*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> doc.genres.push("TV Series")
+3
+----
+
+[source, text]
+.*4. 查看 doc 值*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> doc
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b58f6"),
+	"title" : "House, M.D., Season Four: New Beginnings",
+	"year" : 2008,
+	"runtime" : 26,
+	"countries" : [
+		"USA"
+	],
+	"genres" : [
+		"Documentary",
+		"Short",
+		"TV Series"
+	],
+	"director" : null,
+	"writers" : [ ],
+	"actors" : [
+		"Cyrus Deboo",
+		"Lisa Edelstein",
+		"Omar Epps",
+		"Christopher Fairbanks"
+	],
+	"plot" : null,
+	"poster" : "https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576",
+	"imdb" : {
+		"id" : "tt1329164",
+		"rating" : 8.7,
+		"votes" : 106
+	},
+	"awards" : {
+		"wins" : 0,
+		"nominations" : 0,
+		"text" : ""
+	},
+	"type" : "movie"
+}
+----
+
+[source, text]
+.*5. 执行文档替换*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.replaceOne(filter, doc);
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+----
+
+[source, text]
+.*6. 查询替换后的文档*
+----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.findOne(filter)
+{
+	"_id" : ObjectId("5ca3128f0ed7445cfc1b58f6"),
+	"title" : "House, M.D., Season Four: New Beginnings",
+	"year" : 2008,
+	"runtime" : 26,
+	"countries" : [
+		"USA"
+	],
+	"genres" : [
+		"Documentary",
+		"Short",
+		"TV Series"
+	],
+	"director" : null,
+	"writers" : [ ],
+	"actors" : [
+		"Cyrus Deboo",
+		"Lisa Edelstein",
+		"Omar Epps",
+		"Christopher Fairbanks"
+	],
+	"plot" : null,
+	"poster" : "https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576",
+	"imdb" : {
+		"id" : "tt1329164",
+		"rating" : 8.7,
+		"votes" : 106
+	},
+	"awards" : {
+		"wins" : 0,
+		"nominations" : 0,
+		"text" : ""
+	},
+	"type" : "movie"
+}
 ----
 
 === 文档删除
@@ -924,6 +1267,7 @@ Type "it" for more
 [source, text]
 .*2. 查找烂番茄上评分大于 95 分并且 metacritic 评分大于 88 分的电影*
 ----
+MongoDB Enterprise Sandbox-shard-0:PRIMARY> db.movieDetails.find({$and: [{"tomato.meter": {$gt: 95}}, {"metacritic": {$gt: 88}}]}, {_id: 0, title: 1, "tomato.meter": 1, metacritic: 1})
 { "title" : "Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb", "tomato" : { "meter" : 99 }, "metacritic" : 96 }
 { "title" : "The Adventures of Robin Hood", "tomato" : { "meter" : 100 }, "metacritic" : 97 }
 { "title" : "Raiders of the Lost Ark", "tomato" : { "meter" : 96 }, "metacritic" : 90 }
