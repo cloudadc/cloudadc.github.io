@@ -132,7 +132,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="../examples/">
+        <li class="chapter " data-level="1.4" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../examples/">
             
                 <a href="../examples/">
             
@@ -146,7 +159,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="../examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.5.1" data-path="../examples/aggregation-sum.html">
             
                 <a href="../examples/aggregation-sum.html">
             
@@ -228,10 +241,10 @@
 <li><a href="#_mongo_shell_atlas_sandbox">Mongo Shell &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</a></li>
 <li><a href="#_atlas_sandbox">Atlas Sandbox &#x96C6;&#x7FA4;&#x4E2D;&#x5BFC;&#x5165;&#x6570;&#x636E;</a></li>
 <li><a href="#_mongo_compass_atlas_sandbox">Mongo Compass &#x8FDE;&#x63A5; Atlas Sandbox &#x96C6;&#x7FA4;</a></li>
-<li><a href="#___2">&#x5355;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</a></li>
-<li><a href="#___3">&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</a></li>
-<li><a href="#___4">&#x6587;&#x6863;&#x67E5;&#x8BE2;</a></li>
-<li><a href="#___5">&#x6587;&#x6863;&#x66F4;&#x65B0;</a></li>
+<li><a href="#___2">&#x6587;&#x6863;&#x63D2;&#x5165;</a></li>
+<li><a href="#___3">&#x6587;&#x6863;&#x67E5;&#x8BE2;</a></li>
+<li><a href="#___4">&#x6587;&#x6863;&#x66F4;&#x65B0;</a></li>
+<li><a href="#___5">&#x6587;&#x6863;&#x66FF;&#x6362;</a></li>
 <li><a href="#___6">&#x6587;&#x6863;&#x5220;&#x9664;</a></li>
 </ul>
 </li>
@@ -239,9 +252,12 @@
 <ul class="sectlevel2">
 <li><a href="#_comparison_operators">Comparison Operators</a></li>
 <li><a href="#_element_operators">Element Operators</a></li>
-<li><a href="#_todo">TODO</a></li>
+<li><a href="#_logical_operators">Logical Operators</a></li>
+<li><a href="#_array_operators">Array Operators</a></li>
+<li><a href="#___8">&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x5339;&#x914D;</a></li>
 </ul>
 </li>
+<li><a href="#_todo">TODO</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -676,7 +692,7 @@ movieDetails</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="___2">&#x5355;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</h3>
+<h3 id="___2">&#x6587;&#x6863;&#x63D2;&#x5165;</h3>
 <div class="paragraph">
 <p><strong>1. &#x521B;&#x5EFA; Collection</strong></p>
 </div>
@@ -717,46 +733,43 @@ movieDetails</code></pre>
 { &quot;_id&quot; : ObjectId(&quot;5c92f14660e022ecdc660669&quot;), &quot;title&quot; : &quot;Fire&quot;, &quot;year&quot; : 1992, &quot;imdb&quot; : &quot;tt0084726&quot; }</code></pre>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="___3">&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;</h3>
 <div class="listingblock">
-<div class="title"><strong>1. &#x9ED8;&#x8BA4;&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;&#x662F;&#x6309;&#x7167;&#x987A;&#x5E8F;&#x6267;&#x884C;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x6267;&#x884C;&#x51FA;&#x9519;&#xFF0C;&#x8DF3;&#x8FC7;&#x63D2;&#x5165;&#x540E;&#x9762;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="title"><strong>5. &#x9ED8;&#x8BA4;&#x591A;&#x6761;&#x6570;&#x636E;&#x63D2;&#x5165;&#x662F;&#x6309;&#x7167;&#x987A;&#x5E8F;&#x6267;&#x884C;&#x7684;&#xFF0C;&#x5982;&#x679C;&#x6267;&#x884C;&#x51FA;&#x9519;&#xFF0C;&#x8DF3;&#x8FC7;&#x63D2;&#x5165;&#x540E;&#x9762;&#x7684;&#x6570;&#x636E;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.insertMany(
-...     [
-...         {
-...       &quot;_id&quot; : &quot;tt0084726&quot;,
-...       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
-...       &quot;year&quot; : 1982,
-...       &quot;type&quot; : &quot;movie&quot;
-...           },
-...           {
-...       &quot;_id&quot; : &quot;tt0796366&quot;,
-...       &quot;title&quot; : &quot;Star Trek&quot;,
-...       &quot;year&quot; : 2009,
-...       &quot;type&quot; : &quot;movie&quot;
-...           },
-...           {
-...       &quot;_id&quot; : &quot;tt0084726&quot;,
-...       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
-...       &quot;year&quot; : 1982,
-...       &quot;type&quot; : &quot;movie&quot;
-...           },
-...           {
-...       &quot;_id&quot; : &quot;tt1408101&quot;,
-...       &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
-...       &quot;year&quot; : 2013,
-...       &quot;type&quot; : &quot;movie&quot;
-...           },
-...           {
-...       &quot;_id&quot; : &quot;tt0117731&quot;,
-...       &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
-...       &quot;year&quot; : 1996,
-...       &quot;type&quot; : &quot;movie&quot;
-...         }
-...     ]
-... );
+     [
+         {
+       &quot;_id&quot; : &quot;tt0084726&quot;,
+       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+       &quot;year&quot; : 1982,
+       &quot;type&quot; : &quot;movie&quot;
+           },
+           {
+       &quot;_id&quot; : &quot;tt0796366&quot;,
+       &quot;title&quot; : &quot;Star Trek&quot;,
+       &quot;year&quot; : 2009,
+       &quot;type&quot; : &quot;movie&quot;
+           },
+           {
+       &quot;_id&quot; : &quot;tt0084726&quot;,
+       &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+       &quot;year&quot; : 1982,
+       &quot;type&quot; : &quot;movie&quot;
+           },
+           {
+       &quot;_id&quot; : &quot;tt1408101&quot;,
+       &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
+       &quot;year&quot; : 2013,
+       &quot;type&quot; : &quot;movie&quot;
+           },
+           {
+       &quot;_id&quot; : &quot;tt0117731&quot;,
+       &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
+       &quot;year&quot; : 1996,
+       &quot;type&quot; : &quot;movie&quot;
+         }
+     ]
+ );
 2019-03-21T10:25:58.388+0800 E QUERY    [js] BulkWriteError: write error at item 2 in bulk operation :
 BulkWriteError({
 	&quot;writeErrors&quot; : [
@@ -786,7 +799,7 @@ BulkWriteError({
 <p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x987A;&#x5E8F;&#x63D2;&#x5165;&#x7B2C;&#x4E09;&#x6761;&#x6570;&#x636E;&#x65F6;&#x56E0;&#x4E3A; _id &#x552F;&#x4E00;&#x6027;&#x51B2;&#x7A81;&#x5BFC;&#x81F4;&#x63D2;&#x5165;&#x5931;&#x8D25;&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.find()
 { &quot;_id&quot; : &quot;tt0084726&quot;, &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;, &quot;year&quot; : 1982, &quot;type&quot; : &quot;movie&quot; }
@@ -794,45 +807,45 @@ BulkWriteError({
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>3. &#x8BBE;&#x5B9A; order &#x4E3A; false &#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x63D2;&#x5165;&#x4E0D;&#x662F;&#x6309;&#x987A;&#x5E8F;&#x6267;&#x884C;&#xFF0C;&#x63D2;&#x5165;&#x662F;&#x5982;&#x679C;&#x9047;&#x5230;&#x9519;&#x8BEF;&#xFF0C;&#x4F1A;&#x8DF3;&#x8FC7;&#x9519;&#x8BEF;&#x7EE7;&#x7EED;&#x6267;&#x884C;&#x63D2;&#x5165;</strong></div>
+<div class="title"><strong>7. &#x8BBE;&#x5B9A; order &#x4E3A; false &#x53EF;&#x4EE5;&#x6307;&#x5B9A;&#x63D2;&#x5165;&#x4E0D;&#x662F;&#x6309;&#x987A;&#x5E8F;&#x6267;&#x884C;&#xFF0C;&#x63D2;&#x5165;&#x662F;&#x5982;&#x679C;&#x9047;&#x5230;&#x9519;&#x8BEF;&#xFF0C;&#x4F1A;&#x8DF3;&#x8FC7;&#x9519;&#x8BEF;&#x7EE7;&#x7EED;&#x6267;&#x884C;&#x63D2;&#x5165;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.insertMany(
-...     [
-...         {
-...     &quot;_id&quot; : &quot;tt0084726&quot;,
-...     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
-...     &quot;year&quot; : 1982,
-...     &quot;type&quot; : &quot;movie&quot;
-...         },
-...         {
-...     &quot;_id&quot; : &quot;tt0796366&quot;,
-...     &quot;title&quot; : &quot;Star Trek&quot;,
-...     &quot;year&quot; : 2009,
-...     &quot;type&quot; : &quot;movie&quot;
-...         },
-...         {
-...     &quot;_id&quot; : &quot;tt0084726&quot;,
-...     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
-...     &quot;year&quot; : 1982,
-...     &quot;type&quot; : &quot;movie&quot;
-...         },
-...         {
-...     &quot;_id&quot; : &quot;tt1408101&quot;,
-...     &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
-...     &quot;year&quot; : 2013,
-...     &quot;type&quot; : &quot;movie&quot;
-...         },
-...         {
-...     &quot;_id&quot; : &quot;tt0117731&quot;,
-...     &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
-...     &quot;year&quot; : 1996,
-...     &quot;type&quot; : &quot;movie&quot;
-...         }
-...     ],
-...     {
-...         &quot;ordered&quot;: false
-...     }
-... );
+     [
+         {
+     &quot;_id&quot; : &quot;tt0084726&quot;,
+     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+     &quot;year&quot; : 1982,
+     &quot;type&quot; : &quot;movie&quot;
+         },
+         {
+     &quot;_id&quot; : &quot;tt0796366&quot;,
+     &quot;title&quot; : &quot;Star Trek&quot;,
+     &quot;year&quot; : 2009,
+     &quot;type&quot; : &quot;movie&quot;
+         },
+         {
+     &quot;_id&quot; : &quot;tt0084726&quot;,
+     &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;,
+     &quot;year&quot; : 1982,
+     &quot;type&quot; : &quot;movie&quot;
+         },
+         {
+     &quot;_id&quot; : &quot;tt1408101&quot;,
+     &quot;title&quot; : &quot;Star Trek Into Darkness&quot;,
+     &quot;year&quot; : 2013,
+     &quot;type&quot; : &quot;movie&quot;
+         },
+         {
+     &quot;_id&quot; : &quot;tt0117731&quot;,
+     &quot;title&quot; : &quot;Star Trek: First Contact&quot;,
+     &quot;year&quot; : 1996,
+     &quot;type&quot; : &quot;movie&quot;
+         }
+     ],
+     {
+         &quot;ordered&quot;: false
+     }
+ );
 2019-03-21T10:28:21.868+0800 E QUERY    [js] BulkWriteError: 3 write errors in bulk operation :
 BulkWriteError({
 	&quot;writeErrors&quot; : [
@@ -884,7 +897,7 @@ BulkWriteError({
 <p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x6279;&#x91CF;&#x63D2;&#x5165;&#x7684;&#x524D;&#x4E09;&#x6761;&#x6570;&#x636E;&#x90FD;&#x9047;&#x5230;&#x4E86; _id &#x552F;&#x4E00;&#x6027;&#x51B2;&#x7A81;&#x5BFC;&#x81F4;&#x5931;&#x8D25;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x4F46;&#x7EE7;&#x7EED;&#x63D2;&#x5165;&#x4E86;&#x7B2C;&#x56DB;&#x548C;&#x7B2C;&#x4E94;&#x6761;&#x6570;&#x636E;&#x3002;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>4. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="title"><strong>8. &#x67E5;&#x770B;&#x63D2;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieScratch.find()
 { &quot;_id&quot; : &quot;tt0084726&quot;, &quot;title&quot; : &quot;Star Trek II: The Wrath of Khan&quot;, &quot;year&quot; : 1982, &quot;type&quot; : &quot;movie&quot; }
@@ -895,7 +908,7 @@ BulkWriteError({
 </div>
 </div>
 <div class="sect2">
-<h3 id="___4">&#x6587;&#x6863;&#x67E5;&#x8BE2;</h3>
+<h3 id="___3">&#x6587;&#x6863;&#x67E5;&#x8BE2;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x540C;&#x65F6;&#x6EE1;&#x8DB3;&#x4E24;&#x6B21;&#x83B7;&#x5956;&#xFF0C;&#x4E24;&#x6B21;&#x63D0;&#x540D;&#x7684;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x4E2A;&#x6570;</strong></div>
 <div class="content">
@@ -953,11 +966,357 @@ BulkWriteError({
 </div>
 </div>
 <div class="sect2">
-<h3 id="___5">&#x6587;&#x6863;&#x66F4;&#x65B0;</h3>
+<h3 id="___4">&#x6587;&#x6863;&#x66F4;&#x65B0;</h3>
 <div class="listingblock">
-<div class="title"><strong>1. TODO</strong></div>
+<div class="title"><strong>1. &#x67E5;&#x8BE2; title &#x4E3A; The Martian &#x7684;&#x7535;&#x5F71;&#xFF08;&#x6CA1;&#x6709; poster &#x5C5E;&#x6027;&#xFF09;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;year&quot; : 2015,
+	&quot;rated&quot; : &quot;PG-13&quot;,
+	&quot;runtime&quot; : 144,
+	&quot;countries&quot; : [
+		&quot;USA&quot;,
+		&quot;UK&quot;
+	],
+	&quot;genres&quot; : [
+		&quot;Adventure&quot;,
+		&quot;Drama&quot;,
+		&quot;Sci-Fi&quot;
+	],
+	&quot;director&quot; : &quot;Ridley Scott&quot;,
+	&quot;writers&quot; : [
+		&quot;Drew Goddard&quot;,
+		&quot;Andy Weir&quot;
+	],
+	&quot;actors&quot; : [
+		&quot;Matt Damon&quot;,
+		&quot;Jessica Chastain&quot;,
+		&quot;Kristen Wiig&quot;,
+		&quot;Jeff Daniels&quot;
+	],
+	&quot;plot&quot; : &quot;During a manned mission to Mars, Astronaut Mark Watney is presumed dead after a fierce storm and left behind by his crew. But Watney has survived and finds himself stranded and alone on the hostile planet. With only meager supplies, he must draw upon his ingenuity, wit and spirit to subsist and find a way to signal to Earth that he is alive.&quot;,
+	&quot;imdb&quot; : {
+		&quot;id&quot; : &quot;tt3659388&quot;,
+		&quot;rating&quot; : 8.2,
+		&quot;votes&quot; : 187881
+	},
+	&quot;tomato&quot; : {
+		&quot;meter&quot; : 93,
+		&quot;image&quot; : &quot;certified&quot;,
+		&quot;rating&quot; : 7.9,
+		&quot;reviews&quot; : 280,
+		&quot;fresh&quot; : 261,
+		&quot;consensus&quot; : &quot;Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.&quot;,
+		&quot;userMeter&quot; : 92,
+		&quot;userRating&quot; : 4.3,
+		&quot;userReviews&quot; : 104999
+	},
+	&quot;metacritic&quot; : 80,
+	&quot;type&quot; : &quot;movie&quot;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C;&#x6587;&#x6863;&#x66F4;&#x65B0;&#xFF0C;&#x6DFB;&#x52A0; poster &#x5C5E;&#x6027;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateOne({title: &quot;The Martian&quot;}, {$set: {poster: &quot;http://ia.media-imdb.com/images/M/TTSSXFFFF&quot;}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x8BE2; title &#x4E3A; The Martian &#x7684;&#x7535;&#x5F71;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, poster: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;poster&quot; : &quot;http://ia.media-imdb.com/images/M/TTSSXFFFF&quot;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6267;&#x884C;&#x6587;&#x6863;&#x66F4;&#x65B0;&#xFF0C;&#x6DFB;&#x52A0; awards &#x6587;&#x6863;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateOne({title: &quot;The Martian&quot;}, {$set: {&quot;awards&quot;: {&quot;wins&quot;: 8, &quot;nominations&quot;: 14, &quot;text&quot;: &quot;Nominated for 3 Golden Globes&quot;}}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x8BE2; title &#x4E3A; The Martian &#x7684;&#x7535;&#x5F71;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, poster: 1, awards: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;poster&quot; : &quot;http://ia.media-imdb.com/images/M/TTSSXFFFF&quot;,
+	&quot;awards&quot; : {
+		&quot;wins&quot; : 8,
+		&quot;nominations&quot; : 14,
+		&quot;text&quot; : &quot;Nominated for 3 Golden Globes&quot;
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x589E;&#x52A0; tomato &#x7684; review &#x6B21;&#x6570; 3&#xFF0C;userReviews 25</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, tomato: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;tomato&quot; : {
+		&quot;meter&quot; : 93,
+		&quot;image&quot; : &quot;certified&quot;,
+		&quot;rating&quot; : 7.9,
+		&quot;reviews&quot; : 280,
+		&quot;fresh&quot; : 261,
+		&quot;consensus&quot; : &quot;Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.&quot;,
+		&quot;userMeter&quot; : 92,
+		&quot;userRating&quot; : 4.3,
+		&quot;userReviews&quot; : 104999
+	}
+}
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateOne({title: &quot;The Martian&quot;}, {$inc: {&quot;tomato.reviews&quot;: 3, &quot;tomato.userReviews&quot;: 25}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, tomato: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;tomato&quot; : {
+		&quot;meter&quot; : 93,
+		&quot;image&quot; : &quot;certified&quot;,
+		&quot;rating&quot; : 7.9,
+		&quot;reviews&quot; : 283,
+		&quot;fresh&quot; : 261,
+		&quot;consensus&quot; : &quot;Smart, thrilling, and surprisingly funny, The Martian offers a faithful adaptation of the bestselling book that brings out the best in leading man Matt Damon and director Ridley Scott.&quot;,
+		&quot;userMeter&quot; : 92,
+		&quot;userRating&quot; : 4.3,
+		&quot;userReviews&quot; : 105024
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x6DFB;&#x52A0;&#x4E00;&#x4E2A; array &#x5C5E;&#x6027; reviews</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateOne({title: &quot;The Martian&quot;}, {$push: {&quot;reviews&quot;: {&quot;rating&quot;: 4.5, &quot;date&quot;: ISODate(&quot;2019-04-02T09:00:00Z&quot;), &quot;reviewer&quot;: &quot;Kylin Soong&quot;, &quot;text&quot;: &quot;This is sample Review&quot;}}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, reviews: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;reviews&quot; : [
+		{
+			&quot;rating&quot; : 4.5,
+			&quot;date&quot; : ISODate(&quot;2019-04-02T09:00:00Z&quot;),
+			&quot;reviewer&quot; : &quot;Kylin Soong&quot;,
+			&quot;text&quot; : &quot;This is sample Review&quot;
+		}
+	]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x6DFB;&#x52A0;&#x591A;&#x4E2A; reviews</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateOne({title: &quot;The Martian&quot;}, {$push: {&quot;reviews&quot;: {$each: [{&quot;rating&quot;: 4.5, &quot;date&quot;: ISODate(&quot;2019-04-02T09:01:00Z&quot;), &quot;reviewer&quot;: &quot;Kylin Soong&quot;, &quot;text&quot;: &quot;Reviewer 2&quot;},{&quot;rating&quot;: 4.5, &quot;date&quot;: ISODate(&quot;2019-04-02T09:03:00Z&quot;), &quot;reviewer&quot;: &quot;Kylin Soong&quot;, &quot;text&quot;: &quot;Reviewer 3&quot;},{&quot;rating&quot;: 4.5, &quot;date&quot;: ISODate(&quot;2019-04-02T09:04:00Z&quot;), &quot;reviewer&quot;: &quot;Kylin Soong&quot;, &quot;text&quot;: &quot;Reviewer 4&quot;}]}}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({title: &quot;The Martian&quot;}, {title: 1, reviews: 1}).pretty()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b5ba8&quot;),
+	&quot;title&quot; : &quot;The Martian&quot;,
+	&quot;reviews&quot; : [
+		{
+			&quot;rating&quot; : 4.5,
+			&quot;date&quot; : ISODate(&quot;2019-04-02T09:00:00Z&quot;),
+			&quot;reviewer&quot; : &quot;Kylin Soong&quot;,
+			&quot;text&quot; : &quot;This is sample Review&quot;
+		},
+		{
+			&quot;rating&quot; : 4.5,
+			&quot;date&quot; : ISODate(&quot;2019-04-02T09:01:00Z&quot;),
+			&quot;reviewer&quot; : &quot;Kylin Soong&quot;,
+			&quot;text&quot; : &quot;Reviewer 2&quot;
+		},
+		{
+			&quot;rating&quot; : 4.5,
+			&quot;date&quot; : ISODate(&quot;2019-04-02T09:03:00Z&quot;),
+			&quot;reviewer&quot; : &quot;Kylin Soong&quot;,
+			&quot;text&quot; : &quot;Reviewer 3&quot;
+		},
+		{
+			&quot;rating&quot; : 4.5,
+			&quot;date&quot; : ISODate(&quot;2019-04-02T09:04:00Z&quot;),
+			&quot;reviewer&quot; : &quot;Kylin Soong&quot;,
+			&quot;text&quot; : &quot;Reviewer 4&quot;
+		}
+	]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x6839;&#x7CFB;&#x6240;&#x6709; rated &#x4E3A;&#x7A7A;&#x503C;&#x7684;&#x6587;&#x6863;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({rated: null}).count()
+1599
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.updateMany({rated: null}, {$unset: {rated: &quot;&quot;}})
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1599, &quot;modifiedCount&quot; : 1599 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x6587;&#x6863;&#x66FF;&#x6362;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6839;&#x636E;&#x6761;&#x4EF6;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; let filter = {title: &quot;House, M.D., Season Four: New Beginnings&quot;}
+
+MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt;let  doc = db.movieDetails.findOne(filter);
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b58f6&quot;),
+	&quot;title&quot; : &quot;House, M.D., Season Four: New Beginnings&quot;,
+	&quot;year&quot; : 2008,
+	&quot;runtime&quot; : 26,
+	&quot;countries&quot; : [
+		&quot;USA&quot;
+	],
+	&quot;genres&quot; : [
+		&quot;Documentary&quot;,
+		&quot;Short&quot;
+	],
+	&quot;director&quot; : null,
+	&quot;writers&quot; : [ ],
+	&quot;actors&quot; : [
+		&quot;Cyrus Deboo&quot;,
+		&quot;Lisa Edelstein&quot;,
+		&quot;Omar Epps&quot;,
+		&quot;Christopher Fairbanks&quot;
+	],
+	&quot;plot&quot; : null,
+	&quot;poster&quot; : null,
+	&quot;imdb&quot; : {
+		&quot;id&quot; : &quot;tt1329164&quot;,
+		&quot;rating&quot; : 8.7,
+		&quot;votes&quot; : 106
+	},
+	&quot;awards&quot; : {
+		&quot;wins&quot; : 0,
+		&quot;nominations&quot; : 0,
+		&quot;text&quot; : &quot;&quot;
+	},
+	&quot;type&quot; : &quot;movie&quot;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8BBE;&#x5B9A; poster &#x503C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; doc.poster = &quot;https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576&quot;
+https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x7ED9; genres &#x4E2D;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x5143;&#x7D20;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; doc.genres.push(&quot;TV Series&quot;)
+3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; doc &#x503C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; doc
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b58f6&quot;),
+	&quot;title&quot; : &quot;House, M.D., Season Four: New Beginnings&quot;,
+	&quot;year&quot; : 2008,
+	&quot;runtime&quot; : 26,
+	&quot;countries&quot; : [
+		&quot;USA&quot;
+	],
+	&quot;genres&quot; : [
+		&quot;Documentary&quot;,
+		&quot;Short&quot;,
+		&quot;TV Series&quot;
+	],
+	&quot;director&quot; : null,
+	&quot;writers&quot; : [ ],
+	&quot;actors&quot; : [
+		&quot;Cyrus Deboo&quot;,
+		&quot;Lisa Edelstein&quot;,
+		&quot;Omar Epps&quot;,
+		&quot;Christopher Fairbanks&quot;
+	],
+	&quot;plot&quot; : null,
+	&quot;poster&quot; : &quot;https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576&quot;,
+	&quot;imdb&quot; : {
+		&quot;id&quot; : &quot;tt1329164&quot;,
+		&quot;rating&quot; : 8.7,
+		&quot;votes&quot; : 106
+	},
+	&quot;awards&quot; : {
+		&quot;wins&quot; : 0,
+		&quot;nominations&quot; : 0,
+		&quot;text&quot; : &quot;&quot;
+	},
+	&quot;type&quot; : &quot;movie&quot;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x6267;&#x884C;&#x6587;&#x6863;&#x66FF;&#x6362;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.replaceOne(filter, doc);
+{ &quot;acknowledged&quot; : true, &quot;matchedCount&quot; : 1, &quot;modifiedCount&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x8BE2;&#x66FF;&#x6362;&#x540E;&#x7684;&#x6587;&#x6863;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.findOne(filter)
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca3128f0ed7445cfc1b58f6&quot;),
+	&quot;title&quot; : &quot;House, M.D., Season Four: New Beginnings&quot;,
+	&quot;year&quot; : 2008,
+	&quot;runtime&quot; : 26,
+	&quot;countries&quot; : [
+		&quot;USA&quot;
+	],
+	&quot;genres&quot; : [
+		&quot;Documentary&quot;,
+		&quot;Short&quot;,
+		&quot;TV Series&quot;
+	],
+	&quot;director&quot; : null,
+	&quot;writers&quot; : [ ],
+	&quot;actors&quot; : [
+		&quot;Cyrus Deboo&quot;,
+		&quot;Lisa Edelstein&quot;,
+		&quot;Omar Epps&quot;,
+		&quot;Christopher Fairbanks&quot;
+	],
+	&quot;plot&quot; : null,
+	&quot;poster&quot; : &quot;https://www.imdb.com/title/tt1329164/mediaviewer/rm2619416576&quot;,
+	&quot;imdb&quot; : {
+		&quot;id&quot; : &quot;tt1329164&quot;,
+		&quot;rating&quot; : 8.7,
+		&quot;votes&quot; : 106
+	},
+	&quot;awards&quot; : {
+		&quot;wins&quot; : 0,
+		&quot;nominations&quot; : 0,
+		&quot;text&quot; : &quot;&quot;
+	},
+	&quot;type&quot; : &quot;movie&quot;
+}</code></pre>
 </div>
 </div>
 </div>
@@ -1260,7 +1619,139 @@ Type &quot;it&quot; for more</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_todo">TODO</h3>
+<h3 id="_logical_operators">Logical Operators</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x627E;&#x70C2;&#x756A;&#x8304;&#x4E0A;&#x8BC4;&#x5206;&#x5927;&#x4E8E; 95 &#x5206;&#x6216; metacritic &#x8BC4;&#x5206;&#x5927;&#x4E8E; 88 &#x5206;&#x7684;&#x7535;&#x5F71;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({$or: [{&quot;tomato.meter&quot;: {$gt: 95}}, {&quot;metacritic&quot;: {$gt: 88}}]}, {_id: 0, title: 1, &quot;tomato.meter&quot;: 1, metacritic: 1})
+{ &quot;title&quot; : &quot;Once Upon a Time in the West&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 98 }, &quot;metacritic&quot; : 80 }
+{ &quot;title&quot; : &quot;Star Wars: Episode IV - A New Hope&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 94 }, &quot;metacritic&quot; : 92 }
+{ &quot;title&quot; : &quot;Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 96 }
+{ &quot;title&quot; : &quot;2001: A Space Odyssey&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 86 }
+{ &quot;title&quot; : &quot;The Adventures of Robin Hood&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 97 }
+{ &quot;title&quot; : &quot;The Truman Show&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 94 }, &quot;metacritic&quot; : 90 }
+{ &quot;title&quot; : &quot;Quiz Show&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 88 }
+{ &quot;title&quot; : &quot;Evil Dead II&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 98 }, &quot;metacritic&quot; : 69 }
+{ &quot;title&quot; : &quot;Alien&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 97 }, &quot;metacritic&quot; : 83 }
+{ &quot;title&quot; : &quot;The Kid with a Bike&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 87 }
+{ &quot;title&quot; : &quot;Drugstore Cowboy&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 82 }
+{ &quot;title&quot; : &quot;Raiders of the Lost Ark&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 90 }
+{ &quot;title&quot; : &quot;Lost in Translation&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 95 }, &quot;metacritic&quot; : 89 }
+{ &quot;title&quot; : &quot;Big&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 97 }, &quot;metacritic&quot; : 72 }
+{ &quot;title&quot; : &quot;Groundhog Day&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 72 }
+{ &quot;title&quot; : &quot;The Night of the Hunter&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 98 }, &quot;metacritic&quot; : 99 }
+{ &quot;title&quot; : &quot;Toy Story&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 92 }
+{ &quot;title&quot; : &quot;Toy Story 3&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 92 }
+{ &quot;title&quot; : &quot;Toy Story 2&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 88 }
+{ &quot;title&quot; : &quot;The Straight Story&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 86 }
+Type &quot;it&quot; for more</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x627E;&#x70C2;&#x756A;&#x8304;&#x4E0A;&#x8BC4;&#x5206;&#x5927;&#x4E8E; 95 &#x5206;&#x5E76;&#x4E14; metacritic &#x8BC4;&#x5206;&#x5927;&#x4E8E; 88 &#x5206;&#x7684;&#x7535;&#x5F71;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({$and: [{&quot;tomato.meter&quot;: {$gt: 95}}, {&quot;metacritic&quot;: {$gt: 88}}]}, {_id: 0, title: 1, &quot;tomato.meter&quot;: 1, metacritic: 1})
+{ &quot;title&quot; : &quot;Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 96 }
+{ &quot;title&quot; : &quot;The Adventures of Robin Hood&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 97 }
+{ &quot;title&quot; : &quot;Raiders of the Lost Ark&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 90 }
+{ &quot;title&quot; : &quot;The Night of the Hunter&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 98 }, &quot;metacritic&quot; : 99 }
+{ &quot;title&quot; : &quot;Toy Story&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 92 }
+{ &quot;title&quot; : &quot;Toy Story 3&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 92 }
+{ &quot;title&quot; : &quot;The Wizard of Oz&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 100 }
+{ &quot;title&quot; : &quot;L.A. Confidential&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 90 }
+{ &quot;title&quot; : &quot;La Dolce Vita&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 96 }, &quot;metacritic&quot; : 93 }
+{ &quot;title&quot; : &quot;E.T. the Extra-Terrestrial&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 98 }, &quot;metacritic&quot; : 94 }
+{ &quot;title&quot; : &quot;Au Hasard Balthazar&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 100 }, &quot;metacritic&quot; : 100 }
+{ &quot;title&quot; : &quot;Toy Story 3&quot;, &quot;tomato&quot; : { &quot;meter&quot; : 99 }, &quot;metacritic&quot; : 92 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_array_operators">Array Operators</h3>
+<div class="listingblock">
+<div class="title"><strong>1. $all - &#x6570;&#x7EC4;&#x4E2D;&#x6EE1;&#x8DB3;&#x5305;&#x542B;&#x7684;&#x6240;&#x6709;&#x7ED9;&#x51FA;&#x7684;&#x5143;&#x7D20;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({genres: {$all: [&quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot;]}}, {_id: 0, title: 1, genres: 1})
+{ &quot;title&quot; : &quot;Down by Law&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;Tod den Hippies!! Es lebe der Punk!&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;Mr. Brooks&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;Br&#xF8;drene Dal og mysteriet med Karl XIIs gamasjer&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;O.K. Garage&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Drama&quot;, &quot;Crime&quot; ] }
+{ &quot;title&quot; : &quot;The Ax&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;Ex Drummer&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }
+{ &quot;title&quot; : &quot;Au revoir Taipei&quot;, &quot;genres&quot; : [ &quot;Comedy&quot;, &quot;Crime&quot;, &quot;Drama&quot; ] }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. $size - &#x6570;&#x7EC4;&#x4E2D;&#x6EE1;&#x8DB3;&#x5143;&#x7D20;&#x7684;&#x4E2A;&#x4E3A;&#x7279;&#x5B9A;&#x6570;&#x91CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({countries: {$size: 5}}, {_id: 0, title: 1, countries: 1})
+{ &quot;title&quot; : &quot;AVP: Alien vs. Predator&quot;, &quot;countries&quot; : [ &quot;USA&quot;, &quot;UK&quot;, &quot;Czech Republic&quot;, &quot;Canada&quot;, &quot;Germany&quot; ] }
+{ &quot;title&quot; : &quot;Where the Trail Ends&quot;, &quot;countries&quot; : [ &quot;Argentina&quot;, &quot;Canada&quot;, &quot;China&quot;, &quot;Nepal&quot;, &quot;USA&quot; ] }
+{ &quot;title&quot; : &quot;Outside the Law&quot;, &quot;countries&quot; : [ &quot;France&quot;, &quot;Algeria&quot;, &quot;Belgium&quot;, &quot;Tunisia&quot;, &quot;Italy&quot; ] }
+{ &quot;title&quot; : &quot;Night on Earth&quot;, &quot;countries&quot; : [ &quot;France&quot;, &quot;UK&quot;, &quot;Germany&quot;, &quot;USA&quot;, &quot;Japan&quot; ] }
+{ &quot;title&quot; : &quot;Os Canibais&quot;, &quot;countries&quot; : [ &quot;Portugal&quot;, &quot;France&quot;, &quot;West Germany&quot;, &quot;Italy&quot;, &quot;Switzerland&quot; ] }
+{ &quot;title&quot; : &quot;Ae Fond Kiss...&quot;, &quot;countries&quot; : [ &quot;UK&quot;, &quot;Italy&quot;, &quot;Germany&quot;, &quot;Spain&quot;, &quot;Belgium&quot; ] }
+{ &quot;title&quot; : &quot;Tesko je biti fin&quot;, &quot;countries&quot; : [ &quot;UK&quot;, &quot;Slovenia&quot;, &quot;Serbia&quot;, &quot;Germany&quot;, &quot;Bosnia and Herzegovina&quot; ] }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. $elemMatch - &#x6570;&#x7EC4;&#x4E2D;&#x67D0;&#x4E2A;&#x5143;&#x7D20;&#x6EE1;&#x8DB3;&#x7279;&#x5B9A;&#x7684;&#x503C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">martian = db.movieDetails.findOne({title: &quot;The Martian&quot;})
+martian
+delete martian._id;
+martian
+martian.boxOffice = [
+    {&quot;country&quot;: &quot;USA&quot;, &quot;revenue&quot;: 228.4},
+    {&quot;country&quot;: &quot;Australia&quot;, &quot;revenue&quot;: 19.6},
+    {&quot;country&quot;: &quot;UK&quot;, &quot;revenue&quot;: 33.9},
+    {&quot;country&quot;: &quot;Germany&quot;, &quot;revenue&quot;: 16.2},
+    {&quot;country&quot;: &quot;France&quot;, &quot;revenue&quot;: 19.8}
+]
+db.movieDetails.insertOne(martian);
+
+db.movieDetails.find({boxOffice: {$elemMatch: {&quot;country&quot;: &quot;Germany&quot;, &quot;revenue&quot;: {$gt: 17}}}})
+
+db.movieDetails.find({boxOffice: {$elemMatch: {&quot;country&quot;: &quot;Germany&quot;, &quot;revenue&quot;: {$gt: 16}}}})</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">&#x6B63;&#x5219;&#x8868;&#x8FBE;&#x5F0F;&#x5339;&#x914D;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x83B7;&#x5956;&#x6587;&#x5B57;&#x4EE5; Won &#x5F00;&#x5934;&#x7684;&#x7535;&#x5F71;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise Sandbox-shard-0:PRIMARY&gt; db.movieDetails.find({&quot;awards.text&quot;: {$regex: /^Won.*/}}, {_id: 0, title: 1, &quot;awards.text&quot;: 1})
+{ &quot;title&quot; : &quot;West Side Story&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 10 Oscars. Another 18 wins &amp; 11 nominations.&quot; } }
+{ &quot;title&quot; : &quot;How the West Was Won&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 3 Oscars. Another 7 wins &amp; 5 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Star Wars: Episode IV - A New Hope&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 6 Oscars. Another 38 wins &amp; 27 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Star Wars: Episode V - The Empire Strikes Back&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 15 wins &amp; 17 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Star Trek&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 22 wins &amp; 77 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Shakespeare in Love&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 7 Oscars. Another 55 wins &amp; 85 nominations.&quot; } }
+{ &quot;title&quot; : &quot;2001: A Space Odyssey&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 13 wins &amp; 7 nominations.&quot; } }
+{ &quot;title&quot; : &quot;The Adventures of Robin Hood&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 3 Oscars. Another 2 wins &amp; 2 nominations.&quot; } }
+{ &quot;title&quot; : &quot;The Adventures of Priscilla, Queen of the Desert&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 9 wins &amp; 16 nominations.&quot; } }
+{ &quot;title&quot; : &quot;The Last Picture Show&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 2 Oscars. Another 16 wins &amp; 22 nominations.&quot; } }
+{ &quot;title&quot; : &quot;The Greatest Show on Earth&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 2 Oscars. Another 4 wins &amp; 5 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Pirates of the Caribbean: Dead Man&apos;s Chest&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 41 wins &amp; 48 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Dead Poets Society&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 17 wins &amp; 18 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Alien&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 15 wins &amp; 19 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Butch Cassidy and the Sundance Kid&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 4 Oscars. Another 16 wins &amp; 14 nominations.&quot; } }
+{ &quot;title&quot; : &quot;All Quiet on the Western Front&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 2 Oscars. Another 5 wins &amp; 2 nominations.&quot; } }
+{ &quot;title&quot; : &quot;All Quiet on the Western Front&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Golden Globe. Another 1 win &amp; 6 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Midnight Cowboy&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 3 Oscars. Another 24 wins &amp; 15 nominations.&quot; } }
+{ &quot;title&quot; : &quot;The Cowboy and the Lady&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 2 nominations.&quot; } }
+{ &quot;title&quot; : &quot;Top Gun&quot;, &quot;awards&quot; : { &quot;text&quot; : &quot;Won 1 Oscar. Another 9 wins &amp; 5 nominations.&quot; } }
+Type &quot;it&quot; for more</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_todo">TODO</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -1307,43 +1798,6 @@ Type &quot;it&quot; for more</code></pre>
 <div class="title">**</div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -1390,7 +1844,7 @@ Type &quot;it&quot; for more</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-03-27T15:54:31.149Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-27T16:04:08.832Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"基础","level":"1.2","depth":1,"next":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"previous":{"title":"MongoDB","level":"1.1","depth":1,"path":"README.adoc","ref":"README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/basic.adoc","mtime":"2019-04-03T02:50:03.776Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-04T10:00:09.178Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

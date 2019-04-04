@@ -1326,6 +1326,79 @@ tcp        0      0 192.168.103.100:50659   192.168.103.100:27001   ESTABLISHED 
 tcp        0      0 192.168.103.100:41969   192.168.103.100:27002   ESTABLISHED 2232/mongod      keepalive (106.08/0/0)
 ----
 
+=== 节点配置更新
+
+本部分在上面 *3 节点集群复制配制* 基础上进行对其中一个节点的配置进行修改，修改 IP 地址。
+
+[source, text]
+.*1. 查看当前复制子集的元素*
+----
+MongoDB Enterprise m103-repl:PRIMARY> var cfg = rs.conf()
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members
+[
+	{
+		"_id" : 0,
+		"host" : "192.168.103.100:27001",
+		"arbiterOnly" : false,
+		"buildIndexes" : true,
+		"hidden" : false,
+		"priority" : 1,
+		"tags" : {
+			
+		},
+		"slaveDelay" : NumberLong(0),
+		"votes" : 1
+	},
+	{
+		"_id" : 1,
+		"host" : "192.168.103.100:27002",
+		"arbiterOnly" : false,
+		"buildIndexes" : true,
+		"hidden" : false,
+		"priority" : 1,
+		"tags" : {
+			
+		},
+		"slaveDelay" : NumberLong(0),
+		"votes" : 1
+	},
+	{
+		"_id" : 2,
+		"host" : "192.168.103.100:27003",
+		"arbiterOnly" : false,
+		"buildIndexes" : true,
+		"hidden" : false,
+		"priority" : 1,
+		"tags" : {
+			
+		},
+		"slaveDelay" : NumberLong(0),
+		"votes" : 1
+	}
+]
+----
+
+[source, text]
+.*2. 修改节点 3 的 IP 地址为域名*
+----
+MongoDB Enterprise m103-repl:PRIMARY> cfg.members[2].host = "m103:27003"
+m103:27003
+
+MongoDB Enterprise m103-repl:PRIMARY> rs.reconfig(cfg)
+{
+	"ok" : 1,
+	"operationTime" : Timestamp(1554298617, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1554298617, 1),
+		"signature" : {
+			"hash" : BinData(0,"2aAhut/JLz1cCOJYOxPVEs05a1E="),
+			"keyId" : NumberLong("6675593429663088642")
+		}
+	}
+}
+----
+
+
 === 添加和删除节点
 
 本部分在上面 *3 节点集群复制配制* 基础上进行添加和删除节点。
@@ -2859,33 +2932,375 @@ MongoDB Enterprise mongos> db.adminCommand({shardCollection: "m103.products", ke
 }
 ----
 
-[source, text]
 .*19. 查看分片结果*
+
+[cols="5a"]
+|===
+|分区结果查询
+
+|
+[source, text]
+.*mongos 上查询*
 ----
 $ mongo m103 --host "192.168.103.100:26000" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
 516784
+----
 
+|
+[source, text]
+.*分区一上查询*
+----
 $ mongo m103 --host "m103-repl/192.168.103.100:27001" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
 217885
+----
 
+|
+[source, text]
+.*分区二上查*
+----
 $ mongo m103 --host "m103-repl-2/192.168.103.100:27004" -u "m103-admin" -p "m103-pass" --authenticationDatabase "admin" --eval 'db.products.find().count()'
 298899
 ----
 
+|===
+
 NOTE: 可以看到 mongos 查询结果为导入文档的总数。分片一和分片二文档数相加就等于导入的文档总数。
 
-=== TODO
+*20. 查看分片统计数据（config 数据库）*
+
+[cols="5a"]
+|===
+|统计数据
+
+|
+[source, text]
+.*查看数据列表*
+----
+MongoDB Enterprise mongos> db.databases.find()
+{ "_id" : "applicationData", "primary" : "m103-repl", "partitioned" : false }
+{ "_id" : "testDatabase", "primary" : "m103-repl", "partitioned" : false }
+{ "_id" : "m103", "primary" : "m103-repl-2", "partitioned" : true }
+----
+
+共有三个数据库，m103 是分区的，主分区是 m103-repl-2。
+
+|
+[source, text]
+.*查看分区的 collection*
+----
+MongoDB Enterprise mongos> db.collections.find().pretty()
+{
+	"_id" : "config.system.sessions",
+	"lastmodEpoch" : ObjectId("5ca5880eacc7277f703c5306"),
+	"lastmod" : ISODate("1970-02-19T17:02:47.296Z"),
+	"dropped" : false,
+	"key" : {
+		"_id" : 1
+	},
+	"unique" : false,
+	"uuid" : UUID("eeed2e7c-4490-460b-a193-1ae37908ca65")
+}
+{
+	"_id" : "m103.products",
+	"lastmodEpoch" : ObjectId("5ca59a95acc7277f703ca679"),
+	"lastmod" : ISODate("1970-02-19T17:02:47.298Z"),
+	"dropped" : false,
+	"key" : {
+		"sku" : 1
+	},
+	"unique" : false,
+	"uuid" : UUID("f5422be9-e213-4a6a-96ea-4f7ed7c44002")
+}
+----
+
+m103.products 的 key 用来用来分片。
+
+|
+[source, text]
+.*查看分区列表*
+----
+MongoDB Enterprise mongos> db.shards.find().pretty()
+{
+	"_id" : "m103-repl",
+	"host" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",
+	"state" : 1
+}
+{
+	"_id" : "m103-repl-2",
+	"host" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",
+	"state" : 1
+}
+----
+
+可以看到有两个分区，分别是 m103-repl 和 m103-repl-2
+
+|
+[source, text]
+.*查看 chunks*
+----
+MongoDB Enterprise mongos> db.chunks.find().pretty()
+{
+	"_id" : "config.system.sessions-_id_MinKey",
+	"ns" : "config.system.sessions",
+	"min" : {
+		"_id" : { "$minKey" : 1 }
+	},
+	"max" : {
+		"_id" : { "$maxKey" : 1 }
+	},
+	"shard" : "m103-repl",
+	"lastmod" : Timestamp(1, 0),
+	"lastmodEpoch" : ObjectId("5ca5880eacc7277f703c5306")
+}
+{
+	"_id" : "m103.products-sku_MinKey",
+	"lastmod" : Timestamp(2, 0),
+	"lastmodEpoch" : ObjectId("5ca59a95acc7277f703ca679"),
+	"ns" : "m103.products",
+	"min" : {
+		"sku" : { "$minKey" : 1 }
+	},
+	"max" : {
+		"sku" : 23153496
+	},
+	"shard" : "m103-repl"
+}
+{
+	"_id" : "m103.products-sku_23153496",
+	"lastmod" : Timestamp(2, 1),
+	"lastmodEpoch" : ObjectId("5ca59a95acc7277f703ca679"),
+	"ns" : "m103.products",
+	"min" : {
+		"sku" : 23153496
+	},
+	"max" : {
+		"sku" : 28928914
+	},
+	"shard" : "m103-repl-2"
+}
+{
+	"_id" : "m103.products-sku_28928914",
+	"ns" : "m103.products",
+	"min" : {
+		"sku" : 28928914
+	},
+	"max" : {
+		"sku" : { "$maxKey" : 1 }
+	},
+	"shard" : "m103-repl-2",
+	"lastmod" : Timestamp(1, 2),
+	"lastmodEpoch" : ObjectId("5ca59a95acc7277f703ca679")
+}
+----
+
+可以看到 m103.products 有三个 chunks，sku 的范围分别是：
+
+* 最小 sku  -  23153496
+* 23153496  -  28928914
+* 28928914  -  最大 sku
+
+三个 chunks 的 ID 分别为：`m103.products-sku_MinKey`, `m103.products-sku_23153496`, `m103.products-sku_28928914`。
+|===
+
+=== Routed Queries 和 Scatter Gather
+
+如果查询基于 shard key 时则 mongos 会直接路由相应请求到对应的分区；反之则请求发送到所有分区，本部分对比两种查询。
 
 [source, text]
-.**
+.*1. 查看 shard key*
 ----
-
+MongoDB Enterprise mongos> sh.status()
+--- Sharding Status --- 
+  sharding version: {
+  	"_id" : 1,
+  	"minCompatibleVersion" : 5,
+  	"currentVersion" : 6,
+  	"clusterId" : ObjectId("5ca584b4acc7277f703c4657")
+  }
+  shards:
+        {  "_id" : "m103-repl",  "host" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",  "state" : 1 }
+        {  "_id" : "m103-repl-2",  "host" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",  "state" : 1 }
+  active mongoses:
+        "3.6.11" : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours: 
+                1 : Success
+  databases:
+        {  "_id" : "m103",  "primary" : "m103-repl-2",  "partitioned" : true }
+                m103.products
+                        shard key: { "sku" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-repl	1
+                                m103-repl-2	2
+                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : 23153496 } on : m103-repl Timestamp(2, 0) 
+                        { "sku" : 23153496 } -->> { "sku" : 28928914 } on : m103-repl-2 Timestamp(2, 1) 
+                        { "sku" : 28928914 } -->> { "sku" : { "$maxKey" : 1 } } on : m103-repl-2 Timestamp(1, 2) 
+        {  "_id" : "testDatabase",  "primary" : "m103-repl",  "partitioned" : false }
 ----
 
 [source, text]
-.**
+.*2. Routed Queries*
+----
+MongoDB Enterprise mongos> db.products.find({"sku" : 28928914 }).explain()
+{
+	"queryPlanner" : {
+		"mongosPlannerVersion" : 1,
+		"winningPlan" : {
+			"stage" : "SINGLE_SHARD",
+			"shards" : [
+				{
+					"shardName" : "m103-repl-2",
+					"connectionString" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",
+					"serverInfo" : {
+						"host" : "m103",
+						"port" : 27004,
+						"version" : "3.6.11",
+						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "m103.products",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"sku" : {
+							"$eq" : 28928914
+						}
+					},
+					"winningPlan" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "SHARDING_FILTER",
+							"inputStage" : {
+								"stage" : "IXSCAN",
+								"keyPattern" : {
+									"sku" : 1
+								},
+								"indexName" : "sku_1",
+								"isMultiKey" : false,
+								"multiKeyPaths" : {
+									"sku" : [ ]
+								},
+								"isUnique" : false,
+								"isSparse" : false,
+								"isPartial" : false,
+								"indexVersion" : 2,
+								"direction" : "forward",
+								"indexBounds" : {
+									"sku" : [
+										"[28928914.0, 28928914.0]"
+									]
+								}
+							}
+						}
+					},
+					"rejectedPlans" : [ ]
+				}
+			]
+		}
+	},
+	"ok" : 1,
+	"operationTime" : Timestamp(1554362195, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1554362200, 3),
+		"signature" : {
+			"hash" : BinData(0,"q/PKCNK4dzZPGKPfGyWO+/vkkA8="),
+			"keyId" : NumberLong("6675887931275608090")
+		}
+	}
+}
 ----
 
+[source, text]
+.*3. Scatter Gather*
+----
+MongoDB Enterprise mongos> db.products.find({"name" : "Symphony No.4 - Romantic - CD" }).explain()
+{
+	"queryPlanner" : {
+		"mongosPlannerVersion" : 1,
+		"winningPlan" : {
+			"stage" : "SHARD_MERGE",
+			"shards" : [
+				{
+					"shardName" : "m103-repl-2",
+					"connectionString" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",
+					"serverInfo" : {
+						"host" : "m103",
+						"port" : 27004,
+						"version" : "3.6.11",
+						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "m103.products",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"name" : {
+							"$eq" : "Symphony No.4 - Romantic - CD"
+						}
+					},
+					"winningPlan" : {
+						"stage" : "SHARDING_FILTER",
+						"inputStage" : {
+							"stage" : "COLLSCAN",
+							"filter" : {
+								"name" : {
+									"$eq" : "Symphony No.4 - Romantic - CD"
+								}
+							},
+							"direction" : "forward"
+						}
+					},
+					"rejectedPlans" : [ ]
+				},
+				{
+					"shardName" : "m103-repl",
+					"connectionString" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",
+					"serverInfo" : {
+						"host" : "m103",
+						"port" : 27001,
+						"version" : "3.6.11",
+						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+					},
+					"plannerVersion" : 1,
+					"namespace" : "m103.products",
+					"indexFilterSet" : false,
+					"parsedQuery" : {
+						"name" : {
+							"$eq" : "Symphony No.4 - Romantic - CD"
+						}
+					},
+					"winningPlan" : {
+						"stage" : "SHARDING_FILTER",
+						"inputStage" : {
+							"stage" : "COLLSCAN",
+							"filter" : {
+								"name" : {
+									"$eq" : "Symphony No.4 - Romantic - CD"
+								}
+							},
+							"direction" : "forward"
+						}
+					},
+					"rejectedPlans" : [ ]
+				}
+			]
+		}
+	},
+	"ok" : 1,
+	"operationTime" : Timestamp(1554362215, 1),
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1554362222, 2),
+		"signature" : {
+			"hash" : BinData(0,"vK/5Wzl1SaNxntKt9mBX7asuplI="),
+			"keyId" : NumberLong("6675887931275608090")
+		}
+	}
+}
 ----
 
 [source, text]

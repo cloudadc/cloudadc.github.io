@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../examples/" />
+    <link rel="next" href="perf.html" />
     
     
     <link rel="prev" href="basic.html" />
@@ -132,7 +132,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="../examples/">
+        <li class="chapter " data-level="1.4" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../examples/">
             
                 <a href="../examples/">
             
@@ -146,7 +159,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="../examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.5.1" data-path="../examples/aggregation-sum.html">
             
                 <a href="../examples/aggregation-sum.html">
             
@@ -230,18 +243,19 @@
 <li><a href="#__replication">&#x590D;&#x5236;(Replication)&#x7BA1;&#x7406;</a>
 <ul class="sectlevel2">
 <li><a href="#_3">3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</a></li>
-<li><a href="#___9">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</a></li>
-<li><a href="#___10">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</a></li>
-<li><a href="#___11">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</a></li>
+<li><a href="#___9">&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x66F4;&#x65B0;</a></li>
+<li><a href="#___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</a></li>
+<li><a href="#___11">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</a></li>
+<li><a href="#___12">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</a></li>
 <li><a href="#_writeconcern">writeConcern</a></li>
 <li><a href="#_readconcern">readConcern</a></li>
 </ul>
 </li>
 <li><a href="#__sharding">&#x5206;&#x7247;(Sharding)&#x7BA1;&#x7406;</a>
 <ul class="sectlevel2">
-<li><a href="#___12">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
-<li><a href="#___13">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</a></li>
-<li><a href="#_todo">TODO</a></li>
+<li><a href="#___13">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
+<li><a href="#___14">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</a></li>
+<li><a href="#_routed_queries_scatter_gather">Routed Queries &#x548C; Scatter Gather</a></li>
 </ul>
 </li>
 </ul>
@@ -1055,9 +1069,9 @@ MongoDB server version: 3.6.11</code></pre>
 <div class="listingblock">
 <div class="title"><strong>7. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5E94;&#x7528;&#x7528;&#x6237;&#x53EF;&#x4EE5;&#x5BF9; applicationData &#x6570;&#x636E;&#x5E93;&#x8FDB;&#x884C;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use applicationData
-switched to db applicationData
-MongoDB Enterprise &gt; show users
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; use admin
+switched to db admin
+
 MongoDB Enterprise &gt; db.createUser({user: &quot;m103-application-user&quot;, pwd: &quot;m103-application-pass&quot;, roles: [{db: &quot;applicationData&quot;, role: &quot;readWrite&quot;}]})
 Successfully added user: {
 	&quot;user&quot; : &quot;m103-application-user&quot;,
@@ -1067,16 +1081,40 @@ Successfully added user: {
 			&quot;role&quot; : &quot;readWrite&quot;
 		}
 	]
+}
+
+MongoDB Enterprise &gt; show users
+{
+	&quot;_id&quot; : &quot;admin.m103-admin&quot;,
+	&quot;user&quot; : &quot;m103-admin&quot;,
+	&quot;db&quot; : &quot;admin&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;role&quot; : &quot;root&quot;,
+			&quot;db&quot; : &quot;admin&quot;
+		}
+	]
+}
+{
+	&quot;_id&quot; : &quot;admin.m103-application-user&quot;,
+	&quot;user&quot; : &quot;m103-application-user&quot;,
+	&quot;db&quot; : &quot;admin&quot;,
+	&quot;roles&quot; : [
+		{
+			&quot;role&quot; : &quot;readWrite&quot;,
+			&quot;db&quot; : &quot;applicationData&quot;
+		}
+	]
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>8. &#x4F7F;&#x7528;&#x5E94;&#x7528;&#x5E10;&#x53F7;&#x8FDE;&#x63A5; Mongo Shell</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo applicationData --host 127.0.0.1:27000 -u m103-application-user -p m103-application-pass --authenticationDatabase admin
 MongoDB shell version v3.6.11
-connecting to: mongodb://127.0.0.1:27000/applicationData?gssapiServiceName=mongodb
-Implicit session: session { &quot;id&quot; : UUID(&quot;2fb69f0c-5e8c-4c48-9f2a-2656a2372a1c&quot;) }
+connecting to: mongodb://127.0.0.1:27000/applicationData?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;2731cd1d-0137-4c29-a771-6d6657387465&quot;) }
 MongoDB server version: 3.6.11</code></pre>
 </div>
 </div>
@@ -1124,7 +1162,7 @@ bye</code></pre>
 <div class="listingblock">
 <div class="title"><strong>2. mongoimport &#x6279;&#x91CF;&#x5BFC;&#x5165;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --file products.json
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db applicationData --port 27000 --username m103-application-user --password m103-application-pass --authenticationDatabase admin --file products.json
 2019-03-16T16:19:11.249+0000	no collection specified
 2019-03-16T16:19:11.249+0000	using filename &apos;products&apos; as collection
 2019-03-16T16:19:11.262+0000	connected to: localhost:27000
@@ -1604,7 +1642,81 @@ tcp        0      0 192.168.103.100:41969   192.168.103.100:27002   ESTABLISHED 
 </div>
 </div>
 <div class="sect2">
-<h3 id="___9">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</h3>
+<h3 id="___9">&#x8282;&#x70B9;&#x914D;&#x7F6E;&#x66F4;&#x65B0;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x57FA;&#x7840;&#x4E0A;&#x8FDB;&#x884C;&#x5BF9;&#x5176;&#x4E2D;&#x4E00;&#x4E2A;&#x8282;&#x70B9;&#x7684;&#x914D;&#x7F6E;&#x8FDB;&#x884C;&#x4FEE;&#x6539;&#xFF0C;&#x4FEE;&#x6539; IP &#x5730;&#x5740;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x5F53;&#x524D;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x7684;&#x5143;&#x7D20;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; var cfg = rs.conf()
+MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members
+[
+	{
+		&quot;_id&quot; : 0,
+		&quot;host&quot; : &quot;192.168.103.100:27001&quot;,
+		&quot;arbiterOnly&quot; : false,
+		&quot;buildIndexes&quot; : true,
+		&quot;hidden&quot; : false,
+		&quot;priority&quot; : 1,
+		&quot;tags&quot; : {
+
+		},
+		&quot;slaveDelay&quot; : NumberLong(0),
+		&quot;votes&quot; : 1
+	},
+	{
+		&quot;_id&quot; : 1,
+		&quot;host&quot; : &quot;192.168.103.100:27002&quot;,
+		&quot;arbiterOnly&quot; : false,
+		&quot;buildIndexes&quot; : true,
+		&quot;hidden&quot; : false,
+		&quot;priority&quot; : 1,
+		&quot;tags&quot; : {
+
+		},
+		&quot;slaveDelay&quot; : NumberLong(0),
+		&quot;votes&quot; : 1
+	},
+	{
+		&quot;_id&quot; : 2,
+		&quot;host&quot; : &quot;192.168.103.100:27003&quot;,
+		&quot;arbiterOnly&quot; : false,
+		&quot;buildIndexes&quot; : true,
+		&quot;hidden&quot; : false,
+		&quot;priority&quot; : 1,
+		&quot;tags&quot; : {
+
+		},
+		&quot;slaveDelay&quot; : NumberLong(0),
+		&quot;votes&quot; : 1
+	}
+]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4FEE;&#x6539;&#x8282;&#x70B9; 3 &#x7684; IP &#x5730;&#x5740;&#x4E3A;&#x57DF;&#x540D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise m103-repl:PRIMARY&gt; cfg.members[2].host = &quot;m103:27003&quot;
+m103:27003
+
+MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
+{
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1554298617, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1554298617, 1),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;2aAhut/JLz1cCOJYOxPVEs05a1E=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6675593429663088642&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___10">&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x57FA;&#x7840;&#x4E0A;&#x8FDB;&#x884C;&#x6DFB;&#x52A0;&#x548C;&#x5220;&#x9664;&#x8282;&#x70B9;&#x3002;</p>
 </div>
@@ -1850,7 +1962,7 @@ MongoDB Enterprise m103-repl:PRIMARY&gt; rs.reconfig(cfg)
 </div>
 </div>
 <div class="sect2">
-<h3 id="___10">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</h3>
+<h3 id="___11">&#x96C6;&#x7FA4;&#x4E2D;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230; PRIMARY &#x8282;&#x70B9;</strong></div>
 <div class="content">
@@ -2076,7 +2188,7 @@ MongoDB Enterprise m103-repl:SECONDARY&gt;</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="___11">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</h3>
+<h3 id="___12">&#x6545;&#x969C;&#x8F6C;&#x79FB;&#x53CA;&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230;&#x4E3B;&#x8282;&#x70B9;</strong></div>
 <div class="content">
@@ -2259,7 +2371,7 @@ switched to db applicationData</code></pre>
 <h2 id="__sharding">&#x5206;&#x7247;(Sharding)&#x7BA1;&#x7406;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___12">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</h3>
+<h3 id="___13">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762; <strong>3 &#x8282;&#x70B9;&#x96C6;&#x7FA4;&#x590D;&#x5236;&#x914D;&#x5236;</strong> &#x7684;&#x57FA;&#x7840;&#x4E0A;&#xFF0C;&#x914D;&#x5236;&#x4E00;&#x4E2A; 3 &#x8282;&#x70B9;&#x7684; Config Server&#xFF0C;&#x53CA;&#x4E00;&#x4E2A; mongos&#xFF0C;&#x6784;&#x6210;&#x4E00;&#x4E2A;&#x6700;&#x5C0F;&#x5316;&#x7684;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#x3002;</p>
 </div>
@@ -2804,7 +2916,7 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl/192.168.103.100:27002&
 </div>
 </div>
 <div class="sect2">
-<h3 id="___13">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</h3>
+<h3 id="___14">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x524D;&#x9762;<code>Config Server &#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#xFF0C;<code>&#x5206;&#x7247;&#x4E00;&#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#xFF0C;<code>mongos</code> &#x7684;&#x57FA;&#x7840;&#x4E0A;&#x6DFB;&#x52A0;<code>&#x5206;&#x7247;&#x4E8C;&#x590D;&#x5236;&#x5B50;&#x96C6;</code>&#x3002;</p>
 </div>
@@ -3216,19 +3328,46 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl-2/192.168.103.100:2700
 }</code></pre>
 </div>
 </div>
-<div class="listingblock">
-<div class="title"><strong>19. &#x67E5;&#x770B;&#x5206;&#x7247;&#x7ED3;&#x679C;</strong></div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>19. &#x67E5;&#x770B;&#x5206;&#x7247;&#x7ED3;&#x679C;</strong></caption>
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x5206;&#x533A;&#x7ED3;&#x679C;&#x67E5;&#x8BE2;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>mongos &#x4E0A;&#x67E5;&#x8BE2;</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text">$ mongo m103 --host &quot;192.168.103.100:26000&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
-516784
-
-$ mongo m103 --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
-217885
-
-$ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
+516784</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x5206;&#x533A;&#x4E00;&#x4E0A;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo m103 --host &quot;m103-repl/192.168.103.100:27001&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
+217885</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x5206;&#x533A;&#x4E8C;&#x4E0A;&#x67E5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-admin&quot; -p &quot;m103-pass&quot; --authenticationDatabase &quot;admin&quot; --eval &apos;db.products.find().count()&apos;
 298899</code></pre>
 </div>
-</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -3241,19 +3380,369 @@ $ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-
 </tr>
 </table>
 </div>
+<div class="paragraph">
+<p><strong>20. &#x67E5;&#x770B;&#x5206;&#x7247;&#x7EDF;&#x8BA1;&#x6570;&#x636E;&#xFF08;config &#x6570;&#x636E;&#x5E93;&#xFF09;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 100%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x7EDF;&#x8BA1;&#x6570;&#x636E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x6570;&#x636E;&#x5217;&#x8868;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.databases.find()
+{ &quot;_id&quot; : &quot;applicationData&quot;, &quot;primary&quot; : &quot;m103-repl&quot;, &quot;partitioned&quot; : false }
+{ &quot;_id&quot; : &quot;testDatabase&quot;, &quot;primary&quot; : &quot;m103-repl&quot;, &quot;partitioned&quot; : false }
+{ &quot;_id&quot; : &quot;m103&quot;, &quot;primary&quot; : &quot;m103-repl-2&quot;, &quot;partitioned&quot; : true }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5171;&#x6709;&#x4E09;&#x4E2A;&#x6570;&#x636E;&#x5E93;&#xFF0C;m103 &#x662F;&#x5206;&#x533A;&#x7684;&#xFF0C;&#x4E3B;&#x5206;&#x533A;&#x662F; m103-repl-2&#x3002;</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x5206;&#x533A;&#x7684; collection</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.collections.find().pretty()
+{
+	&quot;_id&quot; : &quot;config.system.sessions&quot;,
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca5880eacc7277f703c5306&quot;),
+	&quot;lastmod&quot; : ISODate(&quot;1970-02-19T17:02:47.296Z&quot;),
+	&quot;dropped&quot; : false,
+	&quot;key&quot; : {
+		&quot;_id&quot; : 1
+	},
+	&quot;unique&quot; : false,
+	&quot;uuid&quot; : UUID(&quot;eeed2e7c-4490-460b-a193-1ae37908ca65&quot;)
+}
+{
+	&quot;_id&quot; : &quot;m103.products&quot;,
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca59a95acc7277f703ca679&quot;),
+	&quot;lastmod&quot; : ISODate(&quot;1970-02-19T17:02:47.298Z&quot;),
+	&quot;dropped&quot; : false,
+	&quot;key&quot; : {
+		&quot;sku&quot; : 1
+	},
+	&quot;unique&quot; : false,
+	&quot;uuid&quot; : UUID(&quot;f5422be9-e213-4a6a-96ea-4f7ed7c44002&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>m103.products &#x7684; key &#x7528;&#x6765;&#x7528;&#x6765;&#x5206;&#x7247;&#x3002;</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B;&#x5206;&#x533A;&#x5217;&#x8868;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.shards.find().pretty()
+{
+	&quot;_id&quot; : &quot;m103-repl&quot;,
+	&quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,
+	&quot;state&quot; : 1
+}
+{
+	&quot;_id&quot; : &quot;m103-repl-2&quot;,
+	&quot;host&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,
+	&quot;state&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x6709;&#x4E24;&#x4E2A;&#x5206;&#x533A;&#xFF0C;&#x5206;&#x522B;&#x662F; m103-repl &#x548C; m103-repl-2</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x67E5;&#x770B; chunks</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.chunks.find().pretty()
+{
+	&quot;_id&quot; : &quot;config.system.sessions-_id_MinKey&quot;,
+	&quot;ns&quot; : &quot;config.system.sessions&quot;,
+	&quot;min&quot; : {
+		&quot;_id&quot; : { &quot;$minKey&quot; : 1 }
+	},
+	&quot;max&quot; : {
+		&quot;_id&quot; : { &quot;$maxKey&quot; : 1 }
+	},
+	&quot;shard&quot; : &quot;m103-repl&quot;,
+	&quot;lastmod&quot; : Timestamp(1, 0),
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca5880eacc7277f703c5306&quot;)
+}
+{
+	&quot;_id&quot; : &quot;m103.products-sku_MinKey&quot;,
+	&quot;lastmod&quot; : Timestamp(2, 0),
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca59a95acc7277f703ca679&quot;),
+	&quot;ns&quot; : &quot;m103.products&quot;,
+	&quot;min&quot; : {
+		&quot;sku&quot; : { &quot;$minKey&quot; : 1 }
+	},
+	&quot;max&quot; : {
+		&quot;sku&quot; : 23153496
+	},
+	&quot;shard&quot; : &quot;m103-repl&quot;
+}
+{
+	&quot;_id&quot; : &quot;m103.products-sku_23153496&quot;,
+	&quot;lastmod&quot; : Timestamp(2, 1),
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca59a95acc7277f703ca679&quot;),
+	&quot;ns&quot; : &quot;m103.products&quot;,
+	&quot;min&quot; : {
+		&quot;sku&quot; : 23153496
+	},
+	&quot;max&quot; : {
+		&quot;sku&quot; : 28928914
+	},
+	&quot;shard&quot; : &quot;m103-repl-2&quot;
+}
+{
+	&quot;_id&quot; : &quot;m103.products-sku_28928914&quot;,
+	&quot;ns&quot; : &quot;m103.products&quot;,
+	&quot;min&quot; : {
+		&quot;sku&quot; : 28928914
+	},
+	&quot;max&quot; : {
+		&quot;sku&quot; : { &quot;$maxKey&quot; : 1 }
+	},
+	&quot;shard&quot; : &quot;m103-repl-2&quot;,
+	&quot;lastmod&quot; : Timestamp(1, 2),
+	&quot;lastmodEpoch&quot; : ObjectId(&quot;5ca59a95acc7277f703ca679&quot;)
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230; m103.products &#x6709;&#x4E09;&#x4E2A; chunks&#xFF0C;sku &#x7684;&#x8303;&#x56F4;&#x5206;&#x522B;&#x662F;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6700;&#x5C0F; sku  -  23153496</p>
+</li>
+<li>
+<p>23153496  -  28928914</p>
+</li>
+<li>
+<p>28928914  -  &#x6700;&#x5927; sku</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x4E09;&#x4E2A; chunks &#x7684; ID &#x5206;&#x522B;&#x4E3A;&#xFF1A;<code>m103.products-sku_MinKey</code>, <code>m103.products-sku_23153496</code>, <code>m103.products-sku_28928914</code>&#x3002;</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="sect2">
-<h3 id="_todo">TODO</h3>
+<h3 id="_routed_queries_scatter_gather">Routed Queries &#x548C; Scatter Gather</h3>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x57FA;&#x4E8E; shard key &#x65F6;&#x5219; mongos &#x4F1A;&#x76F4;&#x63A5;&#x8DEF;&#x7531;&#x76F8;&#x5E94;&#x8BF7;&#x6C42;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x5206;&#x533A;&#xFF1B;&#x53CD;&#x4E4B;&#x5219;&#x8BF7;&#x6C42;&#x53D1;&#x9001;&#x5230;&#x6240;&#x6709;&#x5206;&#x533A;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x5BF9;&#x6BD4;&#x4E24;&#x79CD;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>1. &#x67E5;&#x770B; shard key</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.status()
+--- Sharding Status ---
+  sharding version: {
+  	&quot;_id&quot; : 1,
+  	&quot;minCompatibleVersion&quot; : 5,
+  	&quot;currentVersion&quot; : 6,
+  	&quot;clusterId&quot; : ObjectId(&quot;5ca584b4acc7277f703c4657&quot;)
+  }
+  shards:
+        {  &quot;_id&quot; : &quot;m103-repl&quot;,  &quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,  &quot;state&quot; : 1 }
+        {  &quot;_id&quot; : &quot;m103-repl-2&quot;,  &quot;host&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,  &quot;state&quot; : 1 }
+  active mongoses:
+        &quot;3.6.11&quot; : 1
+  autosplit:
+        Currently enabled: yes
+  balancer:
+        Currently enabled:  yes
+        Currently running:  no
+        Failed balancer rounds in last 5 attempts:  0
+        Migration Results for the last 24 hours:
+                1 : Success
+  databases:
+        {  &quot;_id&quot; : &quot;m103&quot;,  &quot;primary&quot; : &quot;m103-repl-2&quot;,  &quot;partitioned&quot; : true }
+                m103.products
+                        shard key: { &quot;sku&quot; : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                m103-repl	1
+                                m103-repl-2	2
+                        { &quot;sku&quot; : { &quot;$minKey&quot; : 1 } } --&gt;&gt; { &quot;sku&quot; : 23153496 } on : m103-repl Timestamp(2, 0)
+                        { &quot;sku&quot; : 23153496 } --&gt;&gt; { &quot;sku&quot; : 28928914 } on : m103-repl-2 Timestamp(2, 1)
+                        { &quot;sku&quot; : 28928914 } --&gt;&gt; { &quot;sku&quot; : { &quot;$maxKey&quot; : 1 } } on : m103-repl-2 Timestamp(1, 2)
+        {  &quot;_id&quot; : &quot;testDatabase&quot;,  &quot;primary&quot; : &quot;m103-repl&quot;,  &quot;partitioned&quot; : false }</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. Routed Queries</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.products.find({&quot;sku&quot; : 28928914 }).explain()
+{
+	&quot;queryPlanner&quot; : {
+		&quot;mongosPlannerVersion&quot; : 1,
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;SINGLE_SHARD&quot;,
+			&quot;shards&quot; : [
+				{
+					&quot;shardName&quot; : &quot;m103-repl-2&quot;,
+					&quot;connectionString&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,
+					&quot;serverInfo&quot; : {
+						&quot;host&quot; : &quot;m103&quot;,
+						&quot;port&quot; : 27004,
+						&quot;version&quot; : &quot;3.6.11&quot;,
+						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+					},
+					&quot;plannerVersion&quot; : 1,
+					&quot;namespace&quot; : &quot;m103.products&quot;,
+					&quot;indexFilterSet&quot; : false,
+					&quot;parsedQuery&quot; : {
+						&quot;sku&quot; : {
+							&quot;$eq&quot; : 28928914
+						}
+					},
+					&quot;winningPlan&quot; : {
+						&quot;stage&quot; : &quot;FETCH&quot;,
+						&quot;inputStage&quot; : {
+							&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
+							&quot;inputStage&quot; : {
+								&quot;stage&quot; : &quot;IXSCAN&quot;,
+								&quot;keyPattern&quot; : {
+									&quot;sku&quot; : 1
+								},
+								&quot;indexName&quot; : &quot;sku_1&quot;,
+								&quot;isMultiKey&quot; : false,
+								&quot;multiKeyPaths&quot; : {
+									&quot;sku&quot; : [ ]
+								},
+								&quot;isUnique&quot; : false,
+								&quot;isSparse&quot; : false,
+								&quot;isPartial&quot; : false,
+								&quot;indexVersion&quot; : 2,
+								&quot;direction&quot; : &quot;forward&quot;,
+								&quot;indexBounds&quot; : {
+									&quot;sku&quot; : [
+										&quot;[28928914.0, 28928914.0]&quot;
+									]
+								}
+							}
+						}
+					},
+					&quot;rejectedPlans&quot; : [ ]
+				}
+			]
+		}
+	},
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1554362195, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1554362200, 3),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;q/PKCNK4dzZPGKPfGyWO+/vkkA8=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6675887931275608090&quot;)
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. Scatter Gather</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.products.find({&quot;name&quot; : &quot;Symphony No.4 - Romantic - CD&quot; }).explain()
+{
+	&quot;queryPlanner&quot; : {
+		&quot;mongosPlannerVersion&quot; : 1,
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;SHARD_MERGE&quot;,
+			&quot;shards&quot; : [
+				{
+					&quot;shardName&quot; : &quot;m103-repl-2&quot;,
+					&quot;connectionString&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,
+					&quot;serverInfo&quot; : {
+						&quot;host&quot; : &quot;m103&quot;,
+						&quot;port&quot; : 27004,
+						&quot;version&quot; : &quot;3.6.11&quot;,
+						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+					},
+					&quot;plannerVersion&quot; : 1,
+					&quot;namespace&quot; : &quot;m103.products&quot;,
+					&quot;indexFilterSet&quot; : false,
+					&quot;parsedQuery&quot; : {
+						&quot;name&quot; : {
+							&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
+						}
+					},
+					&quot;winningPlan&quot; : {
+						&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
+						&quot;inputStage&quot; : {
+							&quot;stage&quot; : &quot;COLLSCAN&quot;,
+							&quot;filter&quot; : {
+								&quot;name&quot; : {
+									&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
+								}
+							},
+							&quot;direction&quot; : &quot;forward&quot;
+						}
+					},
+					&quot;rejectedPlans&quot; : [ ]
+				},
+				{
+					&quot;shardName&quot; : &quot;m103-repl&quot;,
+					&quot;connectionString&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,
+					&quot;serverInfo&quot; : {
+						&quot;host&quot; : &quot;m103&quot;,
+						&quot;port&quot; : 27001,
+						&quot;version&quot; : &quot;3.6.11&quot;,
+						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+					},
+					&quot;plannerVersion&quot; : 1,
+					&quot;namespace&quot; : &quot;m103.products&quot;,
+					&quot;indexFilterSet&quot; : false,
+					&quot;parsedQuery&quot; : {
+						&quot;name&quot; : {
+							&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
+						}
+					},
+					&quot;winningPlan&quot; : {
+						&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
+						&quot;inputStage&quot; : {
+							&quot;stage&quot; : &quot;COLLSCAN&quot;,
+							&quot;filter&quot; : {
+								&quot;name&quot; : {
+									&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
+								}
+							},
+							&quot;direction&quot; : &quot;forward&quot;
+						}
+					},
+					&quot;rejectedPlans&quot; : [ ]
+				}
+			]
+		}
+	},
+	&quot;ok&quot; : 1,
+	&quot;operationTime&quot; : Timestamp(1554362215, 1),
+	&quot;$clusterTime&quot; : {
+		&quot;clusterTime&quot; : Timestamp(1554362222, 2),
+		&quot;signature&quot; : {
+			&quot;hash&quot; : BinData(0,&quot;vK/5Wzl1SaNxntKt9mBX7asuplI=&quot;),
+			&quot;keyId&quot; : NumberLong(&quot;6675887931275608090&quot;)
+		}
+	}
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
@@ -3350,7 +3839,7 @@ $ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-
                 </a>
                 
                 
-                <a href="../examples/" class="navigation navigation-next " aria-label="Next page: 示例">
+                <a href="perf.html" class="navigation navigation-next " aria-label="Next page: 性能调优">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -3361,7 +3850,7 @@ $ mongo m103 --host &quot;m103-repl-2/192.168.103.100:27004&quot; -u &quot;m103-
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"next":{"title":"示例","level":"1.4","depth":1,"path":"examples/README.adoc","ref":"examples/README.adoc","articles":[{"title":"sum","level":"1.4.1","depth":2,"path":"examples/aggregation-sum.adoc","ref":"examples/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-03-27T08:20:04.484Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-03-27T16:04:08.832Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.3","depth":1,"next":{"title":"性能调优","level":"1.4","depth":1,"path":"dba/perf.adoc","ref":"dba/perf.adoc","articles":[]},"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-04-04T07:39:37.033Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-04T10:00:09.178Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
