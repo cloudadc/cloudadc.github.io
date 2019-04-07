@@ -4,5 +4,6 @@
 . link:dba/basic.adoc[基础]
 . link:dba/cluster-admin.adoc[集群管理]
 . link:dba/perf.adoc[性能调优]
+. link:dba/troubleshooting.adoc[Troubleshooting]
 . link:examples/README.adoc[示例]
 .. link:examples/aggregation-sum.adoc[sum] 

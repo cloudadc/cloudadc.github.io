@@ -1,0 +1,87 @@
+= TroubleShooting
+:toc: manual
+
+== 工具简介
+
+[cols="2,5a"]
+|===
+|名称 |功能描述
+
+|mongostat
+|
+
+|mongotop
+|
+
+|mongoreplay
+|
+
+|mongo
+|
+基本功能：
+
+* 执行基本管理命令、查询分析、基本调优、数据库配置
+* 执行 JavaScript
+
+[source, text]
+.*currentOp 查找当前运行的操作，killOp 强制终止当前操作*
+----
+db.currentOp()
+
+db.killOp(opid)
+----
+
+[source, text]
+.*db.serverStatus()*
+----
+db.serverStatus()
+db.serverStatus().opcounters
+db.serverStatus().host
+db.serverStatus().version
+db.serverStatus().process
+db.serverStatus().pid
+db.serverStatus().connection
+
+db.serverStatus().locks
+
+db.serverStatus().metrics
+db.serverStatus().metrics.document
+db.serverStatus().metrics.storage
+----
+
+|profiler
+|
+打开 profiler 会将信息记录到 system.profiler 中。
+
+|compass
+|
+
+|mtools
+|
+* 日志分析及可视化展示
+* https://github.com/rueckstiess/mtools
+|===
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----

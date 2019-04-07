@@ -1,2 +1,1757 @@
-= 性能调优：
+= 性能调优
 :toc: manual
+
+== 索引的基本使用与创建
+
+=== 准备数据库
+
+本部分准备一个测试数据库，用来实践索引的基本使用与创建。
+
+[source, text]
+.*1. 准备配置文件，内容如下*
+----
+storage:
+  dbPath: /var/mongodb/db-index/
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db-index/mongod.log
+
+net:
+  port: 27017
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+operationProfiling:
+  slowOpThresholdMs: 50
+
+security:
+  authorization: enabled
+----
+
+[source, text]
+.*2. 创建数据存储目录*
+----
+$ mkdir -p /var/mongodb/db-index/
+----
+
+[source, text]
+.*3. 启动数据库*
+----
+$ mongod -f index-mongod.conf 
+----
+
+[source, text]
+.*4.创建管理用户*
+----
+$ mongo admin --host 127.0.0.1:27017 --eval 'db.createUser({user: "root", pwd: "mongodb", roles: [{role: "root", db: "admin"}]})'
+----
+
+[source, text]
+.*5.导入数据*
+----
+$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/people.json 
+2019-04-05T10:01:53.857+0000	no collection specified
+2019-04-05T10:01:53.857+0000	using filename 'people' as collection
+2019-04-05T10:01:53.872+0000	connected to: localhost
+2019-04-05T10:01:55.553+0000	imported 50474 documents
+----
+
+[source, text]
+.*6. mongo shell 登录，查看导入的数据*
+----
+$ mongo -u root -p mongodb --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("4454bf09-0797-429e-88e8-39993e6f39be") }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise > use m201
+switched to db m201
+
+MongoDB Enterprise > db.people.count()
+50474
+
+MongoDB Enterprise > db.people.findOne()
+{
+	"_id" : ObjectId("57d7a121fa937f710a7d486f"),
+	"last_name" : "Nelson",
+	"quote" : "Quis sed tenetur eius illo.",
+	"job" : "Conservator, furniture",
+	"ssn" : "671-16-1433",
+	"address" : {
+		"city" : "Nicholsbury",
+		"state" : "Indiana",
+		"street" : "699 Ryan Branch Apt. 371",
+		"zip" : "52277"
+	},
+	"first_name" : "Mary",
+	"company_id" : ObjectId("57d7a121fa937f710a7d486d"),
+	"employer" : "Terry and Sons",
+	"birthday" : ISODate("2015-11-25T17:26:40Z"),
+	"email" : "cindy93@gmail.com"
+}
+----
+
+=== 索引查询对比
+
+本部分对比有索引和无索引条件下的执行计划。
+
+[source, text]
+.*1. 无索引执行计划*
+----
+MongoDB Enterprise > db.people.find({"ssn": "720-38-5636"}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"ssn" : {
+				"$eq" : "720-38-5636"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"ssn" : {
+					"$eq" : "720-38-5636"
+				}
+			},
+			"direction" : "forward"
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 1,
+		"executionTimeMillis" : 21,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 50474,
+		"executionStages" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"ssn" : {
+					"$eq" : "720-38-5636"
+				}
+			},
+			"nReturned" : 1,
+			"executionTimeMillisEstimate" : 10,
+			"works" : 50476,
+			"advanced" : 1,
+			"needTime" : 50474,
+			"needYield" : 0,
+			"saveState" : 394,
+			"restoreState" : 394,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"direction" : "forward",
+			"docsExamined" : 50474
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: queryPlanner 部分 winningPlan stage 为 COLLSCAN，即查询是通过全集合扫描完成；executionStats 部分 nReturned 显示查询结果返回文档总数为 1，totalDocsExamined 属性显示扫描文档的总数为 50474，即执行了全集合扫描。
+
+[source, text]
+.*2. 创建索引*
+----
+MongoDB Enterprise > db.people.createIndex({ssn: 1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+----
+
+[source, text]
+.*3. 有索引执行计划*
+----
+MongoDB Enterprise > db.people.find({"ssn": "720-38-5636"}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"ssn" : {
+				"$eq" : "720-38-5636"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"720-38-5636\", \"720-38-5636\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 1,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 1,
+		"totalDocsExamined" : 1,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 1,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 2,
+			"advanced" : 1,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 1,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 1,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 2,
+				"advanced" : 1,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"720-38-5636\", \"720-38-5636\"]"
+					]
+				},
+				"keysExamined" : 1,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: queryPlanner 部分 winningPlan stage 为 FETCH，而 inputStage 的 stage 为 IXSCAN，即查询是通过索引完成；executionStats 部分 nReturned 显示查询结果返回文档总数为 1，totalDocsExamined 属性显示扫描文档的总数为 1，即通过索引获取。
+
+[source, text]
+.*4. 查询一定范围内多个文档，查看执行计划是否命中索引*
+----
+MongoDB Enterprise > db.people.find({"ssn": {$gte: "555-00-0000", $lt: "556-00-0000"}}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"ssn" : {
+						"$lt" : "556-00-0000"
+					}
+				},
+				{
+					"ssn" : {
+						"$gte" : "555-00-0000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"555-00-0000\", \"556-00-0000\")"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 49,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 49,
+		"totalDocsExamined" : 49,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 49,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 50,
+			"advanced" : 49,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 49,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 49,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 50,
+				"advanced" : 49,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"555-00-0000\", \"556-00-0000\")"
+					]
+				},
+				"keysExamined" : 49,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+[source, text]
+.*5. 查询一个集合内多个文档，查看执行计划是否命中索引*
+----
+MongoDB Enterprise > db.people.find({"ssn": {$in: ["001-29-9184", "177-45-0950", "265-67-9973"]}}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"ssn" : {
+				"$in" : [
+					"001-29-9184",
+					"177-45-0950",
+					"265-67-9973"
+				]
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"001-29-9184\", \"001-29-9184\"]",
+						"[\"177-45-0950\", \"177-45-0950\"]",
+						"[\"265-67-9973\", \"265-67-9973\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 3,
+		"executionTimeMillis" : 2,
+		"totalKeysExamined" : 6,
+		"totalDocsExamined" : 3,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 3,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 6,
+			"advanced" : 3,
+			"needTime" : 2,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 3,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 3,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 6,
+				"advanced" : 3,
+				"needTime" : 2,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"001-29-9184\", \"001-29-9184\"]",
+						"[\"177-45-0950\", \"177-45-0950\"]",
+						"[\"265-67-9973\", \"265-67-9973\"]"
+					]
+				},
+				"keysExamined" : 6,
+				"seeks" : 3,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+[source, text]
+.*6. 查询一个集合内多个文档，及多个其他属性，查看执行计划是否命中索引*
+----
+MongoDB Enterprise > db.people.find({"ssn": {$in: ["001-29-9184", "177-45-0950", "265-67-9973"]}, last_name: {$gte: "H"}}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"last_name" : {
+						"$gte" : "H"
+					}
+				},
+				{
+					"ssn" : {
+						"$in" : [
+							"001-29-9184",
+							"177-45-0950",
+							"265-67-9973"
+						]
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"last_name" : {
+					"$gte" : "H"
+				}
+			},
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"001-29-9184\", \"001-29-9184\"]",
+						"[\"177-45-0950\", \"177-45-0950\"]",
+						"[\"265-67-9973\", \"265-67-9973\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 2,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 6,
+		"totalDocsExamined" : 3,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"last_name" : {
+					"$gte" : "H"
+				}
+			},
+			"nReturned" : 2,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 6,
+			"advanced" : 2,
+			"needTime" : 3,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 3,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 3,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 6,
+				"advanced" : 3,
+				"needTime" : 2,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"ssn" : 1
+				},
+				"indexName" : "ssn_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"ssn" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"ssn" : [
+						"[\"001-29-9184\", \"001-29-9184\"]",
+						"[\"177-45-0950\", \"177-45-0950\"]",
+						"[\"265-67-9973\", \"265-67-9973\"]"
+					]
+				},
+				"keysExamined" : 6,
+				"seeks" : 3,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+=== 排序中使用索引属性
+
+[source, text]
+.*1. 查看集合的索引*
+----
+MongoDB Enterprise > db.people.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "m201.people"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"ssn" : 1
+		},
+		"name" : "ssn_1",
+		"ns" : "m201.people"
+	}
+]
+----
+
+可以看到 ssh 属性上创建了索引。
+
+[source, text]
+.*2. 以索引的属性进行升序排序，并查看执行计划，预期结果，排序使用了索引排序*
+----
+MongoDB Enterprise > db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			
+		},
+		"winningPlan" : {
+			"stage" : "PROJECTION",
+			"transformBy" : {
+				"_id" : 0,
+				"last_name" : 1,
+				"first_name" : 1,
+				"ssn" : 1
+			},
+			"inputStage" : {
+				"stage" : "FETCH",
+				"inputStage" : {
+					"stage" : "IXSCAN",
+					"keyPattern" : {
+						"ssn" : 1
+					},
+					"indexName" : "ssn_1",
+					"isMultiKey" : false,
+					"multiKeyPaths" : {
+						"ssn" : [ ]
+					},
+					"isUnique" : false,
+					"isSparse" : false,
+					"isPartial" : false,
+					"indexVersion" : 2,
+					"direction" : "forward",
+					"indexBounds" : {
+						"ssn" : [
+							"[MinKey, MaxKey]"
+						]
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 50474,
+		"executionTimeMillis" : 189,
+		"totalKeysExamined" : 50474,
+		"totalDocsExamined" : 50474,
+		"executionStages" : {
+			"stage" : "PROJECTION",
+			"nReturned" : 50474,
+			"executionTimeMillisEstimate" : 180,
+			"works" : 50475,
+			"advanced" : 50474,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 394,
+			"restoreState" : 394,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"transformBy" : {
+				"_id" : 0,
+				"last_name" : 1,
+				"first_name" : 1,
+				"ssn" : 1
+			},
+			"inputStage" : {
+				"stage" : "FETCH",
+				"nReturned" : 50474,
+				"executionTimeMillisEstimate" : 180,
+				"works" : 50475,
+				"advanced" : 50474,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 394,
+				"restoreState" : 394,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"docsExamined" : 50474,
+				"alreadyHasObj" : 0,
+				"inputStage" : {
+					"stage" : "IXSCAN",
+					"nReturned" : 50474,
+					"executionTimeMillisEstimate" : 0,
+					"works" : 50475,
+					"advanced" : 50474,
+					"needTime" : 0,
+					"needYield" : 0,
+					"saveState" : 394,
+					"restoreState" : 394,
+					"isEOF" : 1,
+					"invalidates" : 0,
+					"keyPattern" : {
+						"ssn" : 1
+					},
+					"indexName" : "ssn_1",
+					"isMultiKey" : false,
+					"multiKeyPaths" : {
+						"ssn" : [ ]
+					},
+					"isUnique" : false,
+					"isSparse" : false,
+					"isPartial" : false,
+					"indexVersion" : 2,
+					"direction" : "forward",
+					"indexBounds" : {
+						"ssn" : [
+							"[MinKey, MaxKey]"
+						]
+					},
+					"keysExamined" : 50474,
+					"seeks" : 1,
+					"dupsTested" : 0,
+					"dupsDropped" : 0,
+					"seenInvalidated" : 0
+				}
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+[source, text]
+.*3. 删除索引*
+----
+MongoDB Enterprise > db.people.dropIndex({ssn: 1})
+{ "nIndexesWas" : 2, "ok" : 1 }
+----
+
+[source, text]
+.*4. 以非索引的属性进行升序排序，并查看执行计划，预期结果，排序使用了内存排序*
+----
+MongoDB Enterprise > db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			
+		},
+		"winningPlan" : {
+			"stage" : "PROJECTION",
+			"transformBy" : {
+				"_id" : 0,
+				"last_name" : 1,
+				"first_name" : 1,
+				"ssn" : 1
+			},
+			"inputStage" : {
+				"stage" : "SORT",
+				"sortPattern" : {
+					"ssn" : 1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "COLLSCAN",
+						"direction" : "forward"
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 50474,
+		"executionTimeMillis" : 151,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 50474,
+		"executionStages" : {
+			"stage" : "PROJECTION",
+			"nReturned" : 50474,
+			"executionTimeMillisEstimate" : 132,
+			"works" : 100952,
+			"advanced" : 50474,
+			"needTime" : 50477,
+			"needYield" : 0,
+			"saveState" : 789,
+			"restoreState" : 789,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"transformBy" : {
+				"_id" : 0,
+				"last_name" : 1,
+				"first_name" : 1,
+				"ssn" : 1
+			},
+			"inputStage" : {
+				"stage" : "SORT",
+				"nReturned" : 50474,
+				"executionTimeMillisEstimate" : 92,
+				"works" : 100952,
+				"advanced" : 50474,
+				"needTime" : 50477,
+				"needYield" : 0,
+				"saveState" : 789,
+				"restoreState" : 789,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"sortPattern" : {
+					"ssn" : 1
+				},
+				"memUsage" : 19977871,
+				"memLimit" : 33554432,
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"nReturned" : 50474,
+					"executionTimeMillisEstimate" : 31,
+					"works" : 50477,
+					"advanced" : 50474,
+					"needTime" : 2,
+					"needYield" : 0,
+					"saveState" : 789,
+					"restoreState" : 789,
+					"isEOF" : 1,
+					"invalidates" : 0,
+					"inputStage" : {
+						"stage" : "COLLSCAN",
+						"nReturned" : 50474,
+						"executionTimeMillisEstimate" : 10,
+						"works" : 50476,
+						"advanced" : 50474,
+						"needTime" : 1,
+						"needYield" : 0,
+						"saveState" : 789,
+						"restoreState" : 789,
+						"isEOF" : 1,
+						"invalidates" : 0,
+						"direction" : "forward",
+						"docsExamined" : 50474
+					}
+				}
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+=== 复合索引
+
+复合索引即索引项是由多个属性构成。
+
+[source, text]
+.*1. 根据名字查询，并查看执行计划*
+----
+MongoDB Enterprise > db.people.find({last_name: "Frazier", first_name: "Jasmine"}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"first_name" : {
+						"$eq" : "Jasmine"
+					}
+				},
+				{
+					"last_name" : {
+						"$eq" : "Frazier"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"$and" : [
+					{
+						"first_name" : {
+							"$eq" : "Jasmine"
+						}
+					},
+					{
+						"last_name" : {
+							"$eq" : "Frazier"
+						}
+					}
+				]
+			},
+			"direction" : "forward"
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 1,
+		"executionTimeMillis" : 22,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 50474,
+		"executionStages" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"$and" : [
+					{
+						"first_name" : {
+							"$eq" : "Jasmine"
+						}
+					},
+					{
+						"last_name" : {
+							"$eq" : "Frazier"
+						}
+					}
+				]
+			},
+			"nReturned" : 1,
+			"executionTimeMillisEstimate" : 10,
+			"works" : 50476,
+			"advanced" : 1,
+			"needTime" : 50474,
+			"needYield" : 0,
+			"saveState" : 394,
+			"restoreState" : 394,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"direction" : "forward",
+			"docsExamined" : 50474
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 可以看到，复合条件的文档只有一个，查找这个文档执行了全集合扫描，totalDocsExamined 属性值为 50474。
+
+[source, text]
+.*2. 创建复合索引*
+----
+MongoDB Enterprise > db.people.createIndex({last_name: 1, first_name: 1})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+----
+
+[source, text]
+.*3. 根据名字查询，并查看执行计划*
+----
+MongoDB Enterprise > db.people.find({last_name: "Frazier", first_name: "Jasmine"}).explain("executionStats")
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.people",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"first_name" : {
+						"$eq" : "Jasmine"
+					}
+				},
+				{
+					"last_name" : {
+						"$eq" : "Frazier"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"last_name" : 1,
+					"first_name" : 1
+				},
+				"indexName" : "last_name_1_first_name_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"last_name" : [ ],
+					"first_name" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"last_name" : [
+						"[\"Frazier\", \"Frazier\"]"
+					],
+					"first_name" : [
+						"[\"Jasmine\", \"Jasmine\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 1,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 1,
+		"totalDocsExamined" : 1,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 1,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 2,
+			"advanced" : 1,
+			"needTime" : 0,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 1,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 1,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 2,
+				"advanced" : 1,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"last_name" : 1,
+					"first_name" : 1
+				},
+				"indexName" : "last_name_1_first_name_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"last_name" : [ ],
+					"first_name" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"last_name" : [
+						"[\"Frazier\", \"Frazier\"]"
+					],
+					"first_name" : [
+						"[\"Jasmine\", \"Jasmine\"]"
+					]
+				},
+				"keysExamined" : 1,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+=== 使用索引前缀查询
+
+本部分创建复合索引 `{job: 1, employer: 1, last_name: 1, frist_name: 1}`，基于此索引进行查询。
+
+[source, text]
+.*1. 查看索引*
+----
+MongoDB Enterprise > db.people.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "m201.people"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"job" : 1,
+			"employer" : 1,
+			"last_name" : 1,
+			"frist_name" : 1
+		},
+		"name" : "job_1_employer_1_last_name_1_frist_name_1",
+		"ns" : "m201.people"
+	}
+]
+----
+
+[source, text]
+.*2. 依次执行下列查询，查看执行计划，并统计执行结果*
+----
+db.people.find({job: "Jewellery designer"}).explain("executionStats")
+db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols"}).explain("executionStats")
+db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols", last_name: "Cook"}).explain("executionStats")
+db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols", last_name: "Cook", first_name: "Sara"}).explain("executionStats")
+db.people.find({employer: "Baldwin-Nichols", last_name: "Cook", first_name: "Sara"}).explain("executionStats")
+db.people.find({job: "Jewellery designer", first_name: "Sara",  last_name: "Cook"}).explain("executionStats")
+----
+
+统计结果
+
+|===
+|queryPlanner.winningPlan.stage |queryPlanner.winningPlan.inputStage |executionStats.nReturned |executionStats.totalKeysExamined |executionStats.totalDocsExamined
+
+|FETCH
+|IXSCAN
+|83
+|83
+|83
+
+|FETCH
+|IXSCAN
+|5
+|5
+|5
+
+|FETCH
+|IXSCAN
+|1
+|1
+|1
+
+|FETCH
+|IXSCAN
+|1
+|1
+|1
+
+|COLLSCAN
+|
+|1
+|0
+|50474
+
+|FETCH
+|IXSCAN
+|1
+|74
+|1
+|===
+
+=== 排序中使用复合索引属性
+
+[source, text]
+.*1. 查看索引*
+----
+MongoDB Enterprise > db.people.getIndexes()
+[       
+        {       
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "m201.people"
+        },      
+        {       
+                "v" : 2,
+                "key" : {
+                        "job" : 1, 
+                        "employer" : 1,
+                        "last_name" : 1,
+                        "frist_name" : 1
+                },
+                "name" : "job_1_employer_1_last_name_1_frist_name_1",
+                "ns" : "m201.people"
+        }
+]
+----
+
+[source, text]
+.*2. 依次执行下列查询，查看执行计划，并统计执行结果*
+----
+db.people.find().sort({job: 1}).explain("executionStats")
+db.people.find().sort({job: 1, employer: 1}).explain("executionStats")
+db.people.find().sort({employer: 1}).explain("executionStats")
+db.people.find({email: "jenniferfreeman@hotmail.com"}).sort({job: 1, employer: 1}).explain("executionStats")
+db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols"}).sort({last_name: 1}).explain("executionStats")
+db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols"}).sort({first_name: 1}).explain("executionStats")
+----
+
+统计结果
+
+|===
+|queryPlanner.winningPlan.stage |queryPlanner.winningPlan.inputStage
+
+|FETCH
+|IXSCAN
+
+|FETCH
+|IXSCAN
+
+|SORT
+|SORT_KEY_GENERATOR
+
+|FETCH
+|IXSCAN
+
+|FETCH
+|IXSCAN
+
+|SORT
+|SORT_KEY_GENERATOR
+|===
+
+=== 多 key 复合索引
+
+如果一个 JSON 文档中嵌入了 Array 或 JSON 文档时，创建索引就可能是多 key 复合索引。
+
+[source, text]
+.*1. 准备数据*
+----
+db.products.insert({
+  productName: "MongoDB Short Sleeve T-Shirt",
+  categories: ["T-Shirts", "Clothing", "Apparel"],
+  stock: { size: "L", color: "green", quantity: 100 }
+});
+----
+
+[source, text]
+.*2. 创建索引*
+----
+db.products.createIndex({ "stock.quantity": 1})
+----
+
+[source, text]
+.*3. 执行查询，并查看执行计划*
+----
+MongoDB Enterprise > db.products.find({ "stock.quantity": 100 }).explain()
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.products",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"stock.quantity" : {
+				"$eq" : 100
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"stock.quantity" : 1
+				},
+				"indexName" : "stock.quantity_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"stock.quantity" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"stock.quantity" : [
+						"[100.0, 100.0]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 可以看到查询命中索引，IXSCAN 获取文档，isMultiKey 为 false。
+
+[source, text]
+.*4. 创建另外一条数据，quantity 在数组中*
+----
+db.products.insert({
+  productName: "MongoDB Long Sleeve T-Shirt",
+  categories: ["T-Shirts", "Clothing", "Apparel"],
+  stock: [
+    { size: "S", color: "red", quantity: 25 },
+    { size: "S", color: "blue", quantity: 10 },
+    { size: "M", color: "blue", quantity: 50 }
+  ]
+});
+----
+
+[source, text]
+.*5. 执行查询，并查看执行计划*
+----
+MongoDB Enterprise > db.products.find({ "stock.quantity": 100 }).explain()
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "m201.products",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"stock.quantity" : {
+				"$eq" : 100
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"stock.quantity" : 1
+				},
+				"indexName" : "stock.quantity_1",
+				"isMultiKey" : true,
+				"multiKeyPaths" : {
+					"stock.quantity" : [
+						"stock"
+					]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"stock.quantity" : [
+						"[100.0, 100.0]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "m103",
+		"port" : 27017,
+		"version" : "3.6.11",
+		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 可以看到查询命中索引，IXSCAN 获取文档，isMultiKey 为 true，即只有嵌入的 key 在一个数组或文档中时，才触发了多 key 查询。
+
+[source, text]
+.*6. 创建一个多 key 复合索引*
+----
+MongoDB Enterprise > db.products.createIndex({ categories: 1, "stock.quantity": 1 })
+{
+	"ok" : 0,
+	"errmsg" : "cannot index parallel arrays [stock] [categories]",
+	"code" : 171,
+	"codeName" : "CannotIndexParallelArrays"
+}
+----
+
+NOTE: 如果两个 key 都属于嵌入的数组或文档，则索引创建失败。
+
+[source, text]
+.*7. 创建一个多 key 复合索引*
+----
+MongoDB Enterprise > db.products.createIndex({ productName: 1, "stock.quantity": 1 })
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 2,
+	"numIndexesAfter" : 3,
+	"ok" : 1
+}
+----
+
+[source, text]
+.*8. 如果 stock 不是一个数组，productName 可以是一个数组*
+----
+MongoDB Enterprise > db.products.insert({productName: ["MongoDB Short Sleeve T-Shirt", "MongoDB Short Sleeve Shirt"], categories: ["T-Shirts", "Clothing", "Apparel"], stock: { size: "L", color: "green", quantity: 100 }});
+WriteResult({ "nInserted" : 1 })
+----
+
+[source, text]
+.*9. 如果 stock 和 productName 都是数组，则插入会失败*
+----
+MongoDB Enterprise > db.products.insert({productName: ["MongoDB Short Sleeve T-Shirt", "MongoDB Short Sleeve Shirt"], categories: ["T-Shirts", "Clothing", "Apparel"], stock: [{ size: "S", color: "red", quantity: 25 }, { size: "S", color: "blue", quantity: 10 }, { size: "M", color: "blue", quantity: 50 }]});
+WriteResult({
+	"nInserted" : 0,
+	"writeError" : {
+		"code" : 171,
+		"errmsg" : "cannot index parallel arrays [stock] [productName]"
+	}
+})
+----
+
+== 创建索引
+
+=== 数据导入
+
+[source, text]
+.*1. 导入数据*
+----
+$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/restaurants.json
+2019-04-05T13:28:45.088+0000	no collection specified
+2019-04-05T13:28:45.088+0000	using filename 'restaurants' as collection
+2019-04-05T13:28:45.100+0000	connected to: localhost
+2019-04-05T13:28:48.090+0000	[###.....................] m201.restaurants	23.6MB/144MB (16.4%)
+2019-04-05T13:28:51.090+0000	[#######.................] m201.restaurants	46.6MB/144MB (32.4%)
+2019-04-05T13:28:54.090+0000	[###########.............] m201.restaurants	69.4MB/144MB (48.3%)
+2019-04-05T13:28:57.090+0000	[###############.........] m201.restaurants	91.8MB/144MB (63.9%)
+2019-04-05T13:29:00.090+0000	[###################.....] m201.restaurants	115MB/144MB (79.9%)
+2019-04-05T13:29:03.090+0000	[#######################.] m201.restaurants	138MB/144MB (96.1%)
+2019-04-05T13:29:03.798+0000	[########################] m201.restaurants	144MB/144MB (100.0%)
+2019-04-05T13:29:03.799+0000	imported 1000000 documents
+----
+
+[source, text]
+.*2. mongo shell 登录并查看数据*
+----
+$ mongo --username root --password mongodb --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("fa203fbf-c07a-47ad-8c5c-126dad5b0146") }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise > use m201
+switched to db m201
+
+MongoDB Enterprise > db.restaurants.count()
+1000000
+
+MongoDB Enterprise > db.restaurants.findOne()
+{
+	"_id" : ObjectId("5ca7580df8858899e8a535ab"),
+	"name" : "Perry Street Brasserie",
+	"cuisine" : "French",
+	"stars" : 0.3,
+	"address" : {
+		"street" : "959 Iveno Square",
+		"city" : "Fokemlid",
+		"state" : "AL",
+		"zipcode" : "18882"
+	}
+}
+----
+
+=== 创建 background 索引
+
+[source, text]
+.*1. 创建 background 索引*
+----
+MongoDB Enterprise > db.restaurants.createIndex({cuisine: 1, name: 1, "address.zipcode": 1}, {background: true})
+{
+	"createdCollectionAutomatically" : false,
+	"numIndexesBefore" : 1,
+	"numIndexesAfter" : 2,
+	"ok" : 1
+}
+----
+
+[source, text]
+.*2. 查看创建的索引*
+----
+MongoDB Enterprise > db.restaurants.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
+		},
+		"name" : "_id_",
+		"ns" : "m201.restaurants"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"cuisine" : 1,
+			"name" : 1,
+			"address.zipcode" : 1
+		},
+		"name" : "cuisine_1_name_1_address.zipcode_1",
+		"ns" : "m201.restaurants",
+		"background" : true
+	}
+]
+----
+
+== TODO
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+[source, text]
+.**
+----
+
+----
+
+
+
