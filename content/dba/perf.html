@@ -61,10 +61,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../examples/" />
+    <link rel="next" href="troubleshooting.html" />
     
     
-    <link rel="prev" href="cluster-admin.html" />
+    <link rel="prev" href="security.html" />
     
 
     </head>
@@ -132,7 +132,20 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4" data-path="perf.html">
+        <li class="chapter " data-level="1.4" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.5" data-path="perf.html">
             
                 <a href="perf.html">
             
@@ -145,7 +158,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5" data-path="../examples/">
+        <li class="chapter " data-level="1.6" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    Troubleshooting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../examples/">
             
                 <a href="../examples/">
             
@@ -159,7 +185,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.5.1" data-path="../examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.7.1" data-path="../examples/aggregation-sum.html">
             
                 <a href="../examples/aggregation-sum.html">
             
@@ -222,8 +248,1906 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x6027;&#x80FD;&#x8C03;&#x4F18;&#xFF1A;">&#x6027;&#x80FD;&#x8C03;&#x4F18;&#xFF1A;</h1>
+                                <h1 id="&#x6027;&#x80FD;&#x8C03;&#x4F18;">&#x6027;&#x80FD;&#x8C03;&#x4F18;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x51C6;&#x5907;&#x6570;&#x636E;&#x5E93;</a></li>
+<li><a href="#___3">&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#x5BF9;&#x6BD4;</a></li>
+<li><a href="#___4">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</a></li>
+<li><a href="#___5">&#x590D;&#x5408;&#x7D22;&#x5F15;</a></li>
+<li><a href="#___6">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</a></li>
+<li><a href="#___7">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</a></li>
+<li><a href="#__key">&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;</a></li>
+</ul>
+</li>
+<li><a href="#___8">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</a>
+<ul class="sectlevel2">
+<li><a href="#___9">&#x6570;&#x636E;&#x5BFC;&#x5165;</a></li>
+<li><a href="#__background">&#x521B;&#x5EFA; background &#x7D22;&#x5F15;</a></li>
+</ul>
+</li>
+<li><a href="#_todo">TODO</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x51C6;&#x5907;&#x6570;&#x636E;&#x5E93;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x51C6;&#x5907;&#x4E00;&#x4E2A;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x7528;&#x6765;&#x5B9E;&#x8DF5;&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x51C6;&#x5907;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">storage:
+  dbPath: /var/mongodb/db-index/
 
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/mongodb/db-index/mongod.log
+
+net:
+  port: 27017
+  bindIp: localhost,192.168.103.100
+
+processManagement:
+  fork: true
+
+operationProfiling:
+  slowOpThresholdMs: 50
+
+security:
+  authorization: enabled</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir -p /var/mongodb/db-index/</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;&#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f index-mongod.conf</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4.&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --host 127.0.0.1:27017 --eval &apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongodb&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})&apos;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5.&#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/people.json
+2019-04-05T10:01:53.857+0000	no collection specified
+2019-04-05T10:01:53.857+0000	using filename &apos;people&apos; as collection
+2019-04-05T10:01:53.872+0000	connected to: localhost
+2019-04-05T10:01:55.553+0000	imported 50474 documents</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. mongo shell &#x767B;&#x5F55;&#xFF0C;&#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo -u root -p mongodb --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;4454bf09-0797-429e-88e8-39993e6f39be&quot;) }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise &gt; use m201
+switched to db m201
+
+MongoDB Enterprise &gt; db.people.count()
+50474
+
+MongoDB Enterprise &gt; db.people.findOne()
+{
+	&quot;_id&quot; : ObjectId(&quot;57d7a121fa937f710a7d486f&quot;),
+	&quot;last_name&quot; : &quot;Nelson&quot;,
+	&quot;quote&quot; : &quot;Quis sed tenetur eius illo.&quot;,
+	&quot;job&quot; : &quot;Conservator, furniture&quot;,
+	&quot;ssn&quot; : &quot;671-16-1433&quot;,
+	&quot;address&quot; : {
+		&quot;city&quot; : &quot;Nicholsbury&quot;,
+		&quot;state&quot; : &quot;Indiana&quot;,
+		&quot;street&quot; : &quot;699 Ryan Branch Apt. 371&quot;,
+		&quot;zip&quot; : &quot;52277&quot;
+	},
+	&quot;first_name&quot; : &quot;Mary&quot;,
+	&quot;company_id&quot; : ObjectId(&quot;57d7a121fa937f710a7d486d&quot;),
+	&quot;employer&quot; : &quot;Terry and Sons&quot;,
+	&quot;birthday&quot; : ISODate(&quot;2015-11-25T17:26:40Z&quot;),
+	&quot;email&quot; : &quot;cindy93@gmail.com&quot;
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#x5BF9;&#x6BD4;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5BF9;&#x6BD4;&#x6709;&#x7D22;&#x5F15;&#x548C;&#x65E0;&#x7D22;&#x5F15;&#x6761;&#x4EF6;&#x4E0B;&#x7684;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x65E0;&#x7D22;&#x5F15;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: &quot;720-38-5636&quot;}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;ssn&quot; : {
+				&quot;$eq&quot; : &quot;720-38-5636&quot;
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;COLLSCAN&quot;,
+			&quot;filter&quot; : {
+				&quot;ssn&quot; : {
+					&quot;$eq&quot; : &quot;720-38-5636&quot;
+				}
+			},
+			&quot;direction&quot; : &quot;forward&quot;
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 1,
+		&quot;executionTimeMillis&quot; : 21,
+		&quot;totalKeysExamined&quot; : 0,
+		&quot;totalDocsExamined&quot; : 50474,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;COLLSCAN&quot;,
+			&quot;filter&quot; : {
+				&quot;ssn&quot; : {
+					&quot;$eq&quot; : &quot;720-38-5636&quot;
+				}
+			},
+			&quot;nReturned&quot; : 1,
+			&quot;executionTimeMillisEstimate&quot; : 10,
+			&quot;works&quot; : 50476,
+			&quot;advanced&quot; : 1,
+			&quot;needTime&quot; : 50474,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 394,
+			&quot;restoreState&quot; : 394,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;direction&quot; : &quot;forward&quot;,
+			&quot;docsExamined&quot; : 50474
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+queryPlanner &#x90E8;&#x5206; winningPlan stage &#x4E3A; COLLSCAN&#xFF0C;&#x5373;&#x67E5;&#x8BE2;&#x662F;&#x901A;&#x8FC7;&#x5168;&#x96C6;&#x5408;&#x626B;&#x63CF;&#x5B8C;&#x6210;&#xFF1B;executionStats &#x90E8;&#x5206; nReturned &#x663E;&#x793A;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x8FD4;&#x56DE;&#x6587;&#x6863;&#x603B;&#x6570;&#x4E3A; 1&#xFF0C;totalDocsExamined &#x5C5E;&#x6027;&#x663E;&#x793A;&#x626B;&#x63CF;&#x6587;&#x6863;&#x7684;&#x603B;&#x6570;&#x4E3A; 50474&#xFF0C;&#x5373;&#x6267;&#x884C;&#x4E86;&#x5168;&#x96C6;&#x5408;&#x626B;&#x63CF;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.createIndex({ssn: 1})
+{
+	&quot;createdCollectionAutomatically&quot; : false,
+	&quot;numIndexesBefore&quot; : 1,
+	&quot;numIndexesAfter&quot; : 2,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6709;&#x7D22;&#x5F15;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: &quot;720-38-5636&quot;}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;ssn&quot; : {
+				&quot;$eq&quot; : &quot;720-38-5636&quot;
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 1,
+		&quot;executionTimeMillis&quot; : 0,
+		&quot;totalKeysExamined&quot; : 1,
+		&quot;totalDocsExamined&quot; : 1,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;nReturned&quot; : 1,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 2,
+			&quot;advanced&quot; : 1,
+			&quot;needTime&quot; : 0,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;docsExamined&quot; : 1,
+			&quot;alreadyHasObj&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;nReturned&quot; : 1,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 2,
+				&quot;advanced&quot; : 1,
+				&quot;needTime&quot; : 0,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;
+					]
+				},
+				&quot;keysExamined&quot; : 1,
+				&quot;seeks&quot; : 1,
+				&quot;dupsTested&quot; : 0,
+				&quot;dupsDropped&quot; : 0,
+				&quot;seenInvalidated&quot; : 0
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+queryPlanner &#x90E8;&#x5206; winningPlan stage &#x4E3A; FETCH&#xFF0C;&#x800C; inputStage &#x7684; stage &#x4E3A; IXSCAN&#xFF0C;&#x5373;&#x67E5;&#x8BE2;&#x662F;&#x901A;&#x8FC7;&#x7D22;&#x5F15;&#x5B8C;&#x6210;&#xFF1B;executionStats &#x90E8;&#x5206; nReturned &#x663E;&#x793A;&#x67E5;&#x8BE2;&#x7ED3;&#x679C;&#x8FD4;&#x56DE;&#x6587;&#x6863;&#x603B;&#x6570;&#x4E3A; 1&#xFF0C;totalDocsExamined &#x5C5E;&#x6027;&#x663E;&#x793A;&#x626B;&#x63CF;&#x6587;&#x6863;&#x7684;&#x603B;&#x6570;&#x4E3A; 1&#xFF0C;&#x5373;&#x901A;&#x8FC7;&#x7D22;&#x5F15;&#x83B7;&#x53D6;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x8BE2;&#x4E00;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$gte: &quot;555-00-0000&quot;, $lt: &quot;556-00-0000&quot;}}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;$and&quot; : [
+				{
+					&quot;ssn&quot; : {
+						&quot;$lt&quot; : &quot;556-00-0000&quot;
+					}
+				},
+				{
+					&quot;ssn&quot; : {
+						&quot;$gte&quot; : &quot;555-00-0000&quot;
+					}
+				}
+			]
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 49,
+		&quot;executionTimeMillis&quot; : 0,
+		&quot;totalKeysExamined&quot; : 49,
+		&quot;totalDocsExamined&quot; : 49,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;nReturned&quot; : 49,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 50,
+			&quot;advanced&quot; : 49,
+			&quot;needTime&quot; : 0,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;docsExamined&quot; : 49,
+			&quot;alreadyHasObj&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;nReturned&quot; : 49,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 50,
+				&quot;advanced&quot; : 49,
+				&quot;needTime&quot; : 0,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;
+					]
+				},
+				&quot;keysExamined&quot; : 49,
+				&quot;seeks&quot; : 1,
+				&quot;dupsTested&quot; : 0,
+				&quot;dupsDropped&quot; : 0,
+				&quot;seenInvalidated&quot; : 0
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x8BE2;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$in: [&quot;001-29-9184&quot;, &quot;177-45-0950&quot;, &quot;265-67-9973&quot;]}}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;ssn&quot; : {
+				&quot;$in&quot; : [
+					&quot;001-29-9184&quot;,
+					&quot;177-45-0950&quot;,
+					&quot;265-67-9973&quot;
+				]
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
+						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
+						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 3,
+		&quot;executionTimeMillis&quot; : 2,
+		&quot;totalKeysExamined&quot; : 6,
+		&quot;totalDocsExamined&quot; : 3,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;nReturned&quot; : 3,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 6,
+			&quot;advanced&quot; : 3,
+			&quot;needTime&quot; : 2,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;docsExamined&quot; : 3,
+			&quot;alreadyHasObj&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;nReturned&quot; : 3,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 6,
+				&quot;advanced&quot; : 3,
+				&quot;needTime&quot; : 2,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
+						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
+						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
+					]
+				},
+				&quot;keysExamined&quot; : 6,
+				&quot;seeks&quot; : 3,
+				&quot;dupsTested&quot; : 0,
+				&quot;dupsDropped&quot; : 0,
+				&quot;seenInvalidated&quot; : 0
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x8BE2;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x53CA;&#x591A;&#x4E2A;&#x5176;&#x4ED6;&#x5C5E;&#x6027;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$in: [&quot;001-29-9184&quot;, &quot;177-45-0950&quot;, &quot;265-67-9973&quot;]}, last_name: {$gte: &quot;H&quot;}}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;$and&quot; : [
+				{
+					&quot;last_name&quot; : {
+						&quot;$gte&quot; : &quot;H&quot;
+					}
+				},
+				{
+					&quot;ssn&quot; : {
+						&quot;$in&quot; : [
+							&quot;001-29-9184&quot;,
+							&quot;177-45-0950&quot;,
+							&quot;265-67-9973&quot;
+						]
+					}
+				}
+			]
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;filter&quot; : {
+				&quot;last_name&quot; : {
+					&quot;$gte&quot; : &quot;H&quot;
+				}
+			},
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
+						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
+						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 2,
+		&quot;executionTimeMillis&quot; : 0,
+		&quot;totalKeysExamined&quot; : 6,
+		&quot;totalDocsExamined&quot; : 3,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;filter&quot; : {
+				&quot;last_name&quot; : {
+					&quot;$gte&quot; : &quot;H&quot;
+				}
+			},
+			&quot;nReturned&quot; : 2,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 6,
+			&quot;advanced&quot; : 2,
+			&quot;needTime&quot; : 3,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;docsExamined&quot; : 3,
+			&quot;alreadyHasObj&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;nReturned&quot; : 3,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 6,
+				&quot;advanced&quot; : 3,
+				&quot;needTime&quot; : 2,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keyPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;ssn_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;ssn&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;ssn&quot; : [
+						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
+						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
+						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
+					]
+				},
+				&quot;keysExamined&quot; : 6,
+				&quot;seeks&quot; : 3,
+				&quot;dupsTested&quot; : 0,
+				&quot;dupsDropped&quot; : 0,
+				&quot;seenInvalidated&quot; : 0
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x96C6;&#x5408;&#x7684;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.getIndexes()
+[
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;_id&quot; : 1
+		},
+		&quot;name&quot; : &quot;_id_&quot;,
+		&quot;ns&quot; : &quot;m201.people&quot;
+	},
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;ssn&quot; : 1
+		},
+		&quot;name&quot; : &quot;ssn_1&quot;,
+		&quot;ns&quot; : &quot;m201.people&quot;
+	}
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230; ssh &#x5C5E;&#x6027;&#x4E0A;&#x521B;&#x5EFA;&#x4E86;&#x7D22;&#x5F15;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4EE5;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x7D22;&#x5F15;&#x6392;&#x5E8F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;PROJECTION&quot;,
+			&quot;transformBy&quot; : {
+				&quot;_id&quot; : 0,
+				&quot;last_name&quot; : 1,
+				&quot;first_name&quot; : 1,
+				&quot;ssn&quot; : 1
+			},
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;FETCH&quot;,
+				&quot;inputStage&quot; : {
+					&quot;stage&quot; : &quot;IXSCAN&quot;,
+					&quot;keyPattern&quot; : {
+						&quot;ssn&quot; : 1
+					},
+					&quot;indexName&quot; : &quot;ssn_1&quot;,
+					&quot;isMultiKey&quot; : false,
+					&quot;multiKeyPaths&quot; : {
+						&quot;ssn&quot; : [ ]
+					},
+					&quot;isUnique&quot; : false,
+					&quot;isSparse&quot; : false,
+					&quot;isPartial&quot; : false,
+					&quot;indexVersion&quot; : 2,
+					&quot;direction&quot; : &quot;forward&quot;,
+					&quot;indexBounds&quot; : {
+						&quot;ssn&quot; : [
+							&quot;[MinKey, MaxKey]&quot;
+						]
+					}
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 50474,
+		&quot;executionTimeMillis&quot; : 189,
+		&quot;totalKeysExamined&quot; : 50474,
+		&quot;totalDocsExamined&quot; : 50474,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;PROJECTION&quot;,
+			&quot;nReturned&quot; : 50474,
+			&quot;executionTimeMillisEstimate&quot; : 180,
+			&quot;works&quot; : 50475,
+			&quot;advanced&quot; : 50474,
+			&quot;needTime&quot; : 0,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 394,
+			&quot;restoreState&quot; : 394,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;transformBy&quot; : {
+				&quot;_id&quot; : 0,
+				&quot;last_name&quot; : 1,
+				&quot;first_name&quot; : 1,
+				&quot;ssn&quot; : 1
+			},
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;FETCH&quot;,
+				&quot;nReturned&quot; : 50474,
+				&quot;executionTimeMillisEstimate&quot; : 180,
+				&quot;works&quot; : 50475,
+				&quot;advanced&quot; : 50474,
+				&quot;needTime&quot; : 0,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 394,
+				&quot;restoreState&quot; : 394,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;docsExamined&quot; : 50474,
+				&quot;alreadyHasObj&quot; : 0,
+				&quot;inputStage&quot; : {
+					&quot;stage&quot; : &quot;IXSCAN&quot;,
+					&quot;nReturned&quot; : 50474,
+					&quot;executionTimeMillisEstimate&quot; : 0,
+					&quot;works&quot; : 50475,
+					&quot;advanced&quot; : 50474,
+					&quot;needTime&quot; : 0,
+					&quot;needYield&quot; : 0,
+					&quot;saveState&quot; : 394,
+					&quot;restoreState&quot; : 394,
+					&quot;isEOF&quot; : 1,
+					&quot;invalidates&quot; : 0,
+					&quot;keyPattern&quot; : {
+						&quot;ssn&quot; : 1
+					},
+					&quot;indexName&quot; : &quot;ssn_1&quot;,
+					&quot;isMultiKey&quot; : false,
+					&quot;multiKeyPaths&quot; : {
+						&quot;ssn&quot; : [ ]
+					},
+					&quot;isUnique&quot; : false,
+					&quot;isSparse&quot; : false,
+					&quot;isPartial&quot; : false,
+					&quot;indexVersion&quot; : 2,
+					&quot;direction&quot; : &quot;forward&quot;,
+					&quot;indexBounds&quot; : {
+						&quot;ssn&quot; : [
+							&quot;[MinKey, MaxKey]&quot;
+						]
+					},
+					&quot;keysExamined&quot; : 50474,
+					&quot;seeks&quot; : 1,
+					&quot;dupsTested&quot; : 0,
+					&quot;dupsDropped&quot; : 0,
+					&quot;seenInvalidated&quot; : 0
+				}
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5220;&#x9664;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.dropIndex({ssn: 1})
+{ &quot;nIndexesWas&quot; : 2, &quot;ok&quot; : 1 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x4EE5;&#x975E;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x5185;&#x5B58;&#x6392;&#x5E8F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;PROJECTION&quot;,
+			&quot;transformBy&quot; : {
+				&quot;_id&quot; : 0,
+				&quot;last_name&quot; : 1,
+				&quot;first_name&quot; : 1,
+				&quot;ssn&quot; : 1
+			},
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;SORT&quot;,
+				&quot;sortPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;inputStage&quot; : {
+					&quot;stage&quot; : &quot;SORT_KEY_GENERATOR&quot;,
+					&quot;inputStage&quot; : {
+						&quot;stage&quot; : &quot;COLLSCAN&quot;,
+						&quot;direction&quot; : &quot;forward&quot;
+					}
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 50474,
+		&quot;executionTimeMillis&quot; : 151,
+		&quot;totalKeysExamined&quot; : 0,
+		&quot;totalDocsExamined&quot; : 50474,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;PROJECTION&quot;,
+			&quot;nReturned&quot; : 50474,
+			&quot;executionTimeMillisEstimate&quot; : 132,
+			&quot;works&quot; : 100952,
+			&quot;advanced&quot; : 50474,
+			&quot;needTime&quot; : 50477,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 789,
+			&quot;restoreState&quot; : 789,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;transformBy&quot; : {
+				&quot;_id&quot; : 0,
+				&quot;last_name&quot; : 1,
+				&quot;first_name&quot; : 1,
+				&quot;ssn&quot; : 1
+			},
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;SORT&quot;,
+				&quot;nReturned&quot; : 50474,
+				&quot;executionTimeMillisEstimate&quot; : 92,
+				&quot;works&quot; : 100952,
+				&quot;advanced&quot; : 50474,
+				&quot;needTime&quot; : 50477,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 789,
+				&quot;restoreState&quot; : 789,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;sortPattern&quot; : {
+					&quot;ssn&quot; : 1
+				},
+				&quot;memUsage&quot; : 19977871,
+				&quot;memLimit&quot; : 33554432,
+				&quot;inputStage&quot; : {
+					&quot;stage&quot; : &quot;SORT_KEY_GENERATOR&quot;,
+					&quot;nReturned&quot; : 50474,
+					&quot;executionTimeMillisEstimate&quot; : 31,
+					&quot;works&quot; : 50477,
+					&quot;advanced&quot; : 50474,
+					&quot;needTime&quot; : 2,
+					&quot;needYield&quot; : 0,
+					&quot;saveState&quot; : 789,
+					&quot;restoreState&quot; : 789,
+					&quot;isEOF&quot; : 1,
+					&quot;invalidates&quot; : 0,
+					&quot;inputStage&quot; : {
+						&quot;stage&quot; : &quot;COLLSCAN&quot;,
+						&quot;nReturned&quot; : 50474,
+						&quot;executionTimeMillisEstimate&quot; : 10,
+						&quot;works&quot; : 50476,
+						&quot;advanced&quot; : 50474,
+						&quot;needTime&quot; : 1,
+						&quot;needYield&quot; : 0,
+						&quot;saveState&quot; : 789,
+						&quot;restoreState&quot; : 789,
+						&quot;isEOF&quot; : 1,
+						&quot;invalidates&quot; : 0,
+						&quot;direction&quot; : &quot;forward&quot;,
+						&quot;docsExamined&quot; : 50474
+					}
+				}
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x590D;&#x5408;&#x7D22;&#x5F15;</h3>
+<div class="paragraph">
+<p>&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5373;&#x7D22;&#x5F15;&#x9879;&#x662F;&#x7531;&#x591A;&#x4E2A;&#x5C5E;&#x6027;&#x6784;&#x6210;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6839;&#x636E;&#x540D;&#x5B57;&#x67E5;&#x8BE2;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({last_name: &quot;Frazier&quot;, first_name: &quot;Jasmine&quot;}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;$and&quot; : [
+				{
+					&quot;first_name&quot; : {
+						&quot;$eq&quot; : &quot;Jasmine&quot;
+					}
+				},
+				{
+					&quot;last_name&quot; : {
+						&quot;$eq&quot; : &quot;Frazier&quot;
+					}
+				}
+			]
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;COLLSCAN&quot;,
+			&quot;filter&quot; : {
+				&quot;$and&quot; : [
+					{
+						&quot;first_name&quot; : {
+							&quot;$eq&quot; : &quot;Jasmine&quot;
+						}
+					},
+					{
+						&quot;last_name&quot; : {
+							&quot;$eq&quot; : &quot;Frazier&quot;
+						}
+					}
+				]
+			},
+			&quot;direction&quot; : &quot;forward&quot;
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 1,
+		&quot;executionTimeMillis&quot; : 22,
+		&quot;totalKeysExamined&quot; : 0,
+		&quot;totalDocsExamined&quot; : 50474,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;COLLSCAN&quot;,
+			&quot;filter&quot; : {
+				&quot;$and&quot; : [
+					{
+						&quot;first_name&quot; : {
+							&quot;$eq&quot; : &quot;Jasmine&quot;
+						}
+					},
+					{
+						&quot;last_name&quot; : {
+							&quot;$eq&quot; : &quot;Frazier&quot;
+						}
+					}
+				]
+			},
+			&quot;nReturned&quot; : 1,
+			&quot;executionTimeMillisEstimate&quot; : 10,
+			&quot;works&quot; : 50476,
+			&quot;advanced&quot; : 1,
+			&quot;needTime&quot; : 50474,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 394,
+			&quot;restoreState&quot; : 394,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;direction&quot; : &quot;forward&quot;,
+			&quot;docsExamined&quot; : 50474
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#xFF0C;&#x590D;&#x5408;&#x6761;&#x4EF6;&#x7684;&#x6587;&#x6863;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#xFF0C;&#x67E5;&#x627E;&#x8FD9;&#x4E2A;&#x6587;&#x6863;&#x6267;&#x884C;&#x4E86;&#x5168;&#x96C6;&#x5408;&#x626B;&#x63CF;&#xFF0C;totalDocsExamined &#x5C5E;&#x6027;&#x503C;&#x4E3A; 50474&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x590D;&#x5408;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.createIndex({last_name: 1, first_name: 1})
+{
+	&quot;createdCollectionAutomatically&quot; : false,
+	&quot;numIndexesBefore&quot; : 1,
+	&quot;numIndexesAfter&quot; : 2,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6839;&#x636E;&#x540D;&#x5B57;&#x67E5;&#x8BE2;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({last_name: &quot;Frazier&quot;, first_name: &quot;Jasmine&quot;}).explain(&quot;executionStats&quot;)
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.people&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;$and&quot; : [
+				{
+					&quot;first_name&quot; : {
+						&quot;$eq&quot; : &quot;Jasmine&quot;
+					}
+				},
+				{
+					&quot;last_name&quot; : {
+						&quot;$eq&quot; : &quot;Frazier&quot;
+					}
+				}
+			]
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;last_name&quot; : 1,
+					&quot;first_name&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;last_name_1_first_name_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;last_name&quot; : [ ],
+					&quot;first_name&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;last_name&quot; : [
+						&quot;[\&quot;Frazier\&quot;, \&quot;Frazier\&quot;]&quot;
+					],
+					&quot;first_name&quot; : [
+						&quot;[\&quot;Jasmine\&quot;, \&quot;Jasmine\&quot;]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 1,
+		&quot;executionTimeMillis&quot; : 0,
+		&quot;totalKeysExamined&quot; : 1,
+		&quot;totalDocsExamined&quot; : 1,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;nReturned&quot; : 1,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 2,
+			&quot;advanced&quot; : 1,
+			&quot;needTime&quot; : 0,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;docsExamined&quot; : 1,
+			&quot;alreadyHasObj&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;nReturned&quot; : 1,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 2,
+				&quot;advanced&quot; : 1,
+				&quot;needTime&quot; : 0,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keyPattern&quot; : {
+					&quot;last_name&quot; : 1,
+					&quot;first_name&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;last_name_1_first_name_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;last_name&quot; : [ ],
+					&quot;first_name&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;last_name&quot; : [
+						&quot;[\&quot;Frazier\&quot;, \&quot;Frazier\&quot;]&quot;
+					],
+					&quot;first_name&quot; : [
+						&quot;[\&quot;Jasmine\&quot;, \&quot;Jasmine\&quot;]&quot;
+					]
+				},
+				&quot;keysExamined&quot; : 1,
+				&quot;seeks&quot; : 1,
+				&quot;dupsTested&quot; : 0,
+				&quot;dupsDropped&quot; : 0,
+				&quot;seenInvalidated&quot; : 0
+			}
+		}
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x521B;&#x5EFA;&#x590D;&#x5408;&#x7D22;&#x5F15; <code>{job: 1, employer: 1, last_name: 1, frist_name: 1}</code>&#xFF0C;&#x57FA;&#x4E8E;&#x6B64;&#x7D22;&#x5F15;&#x8FDB;&#x884C;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.getIndexes()
+[
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;_id&quot; : 1
+		},
+		&quot;name&quot; : &quot;_id_&quot;,
+		&quot;ns&quot; : &quot;m201.people&quot;
+	},
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;job&quot; : 1,
+			&quot;employer&quot; : 1,
+			&quot;last_name&quot; : 1,
+			&quot;frist_name&quot; : 1
+		},
+		&quot;name&quot; : &quot;job_1_employer_1_last_name_1_frist_name_1&quot;,
+		&quot;ns&quot; : &quot;m201.people&quot;
+	}
+]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4F9D;&#x6B21;&#x6267;&#x884C;&#x4E0B;&#x5217;&#x67E5;&#x8BE2;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x6267;&#x884C;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db.people.find({job: &quot;Jewellery designer&quot;}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, employer: &quot;Baldwin-Nichols&quot;}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, employer: &quot;Baldwin-Nichols&quot;, last_name: &quot;Cook&quot;}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, employer: &quot;Baldwin-Nichols&quot;, last_name: &quot;Cook&quot;, first_name: &quot;Sara&quot;}).explain(&quot;executionStats&quot;)
+db.people.find({employer: &quot;Baldwin-Nichols&quot;, last_name: &quot;Cook&quot;, first_name: &quot;Sara&quot;}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, first_name: &quot;Sara&quot;,  last_name: &quot;Cook&quot;}).explain(&quot;executionStats&quot;)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7EDF;&#x8BA1;&#x7ED3;&#x679C;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">queryPlanner.winningPlan.stage</th>
+<th class="tableblock halign-left valign-top">queryPlanner.winningPlan.inputStage</th>
+<th class="tableblock halign-left valign-top">executionStats.nReturned</th>
+<th class="tableblock halign-left valign-top">executionStats.totalKeysExamined</th>
+<th class="tableblock halign-left valign-top">executionStats.totalDocsExamined</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">83</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">83</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">83</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">COLLSCAN</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">0</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">50474</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">74</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.getIndexes()
+[
+        {
+                &quot;v&quot; : 2,
+                &quot;key&quot; : {
+                        &quot;_id&quot; : 1
+                },
+                &quot;name&quot; : &quot;_id_&quot;,
+                &quot;ns&quot; : &quot;m201.people&quot;
+        },
+        {
+                &quot;v&quot; : 2,
+                &quot;key&quot; : {
+                        &quot;job&quot; : 1,
+                        &quot;employer&quot; : 1,
+                        &quot;last_name&quot; : 1,
+                        &quot;frist_name&quot; : 1
+                },
+                &quot;name&quot; : &quot;job_1_employer_1_last_name_1_frist_name_1&quot;,
+                &quot;ns&quot; : &quot;m201.people&quot;
+        }
+]</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4F9D;&#x6B21;&#x6267;&#x884C;&#x4E0B;&#x5217;&#x67E5;&#x8BE2;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x6267;&#x884C;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db.people.find().sort({job: 1}).explain(&quot;executionStats&quot;)
+db.people.find().sort({job: 1, employer: 1}).explain(&quot;executionStats&quot;)
+db.people.find().sort({employer: 1}).explain(&quot;executionStats&quot;)
+db.people.find({email: &quot;jenniferfreeman@hotmail.com&quot;}).sort({job: 1, employer: 1}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, employer: &quot;Baldwin-Nichols&quot;}).sort({last_name: 1}).explain(&quot;executionStats&quot;)
+db.people.find({job: &quot;Jewellery designer&quot;, employer: &quot;Baldwin-Nichols&quot;}).sort({first_name: 1}).explain(&quot;executionStats&quot;)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7EDF;&#x8BA1;&#x7ED3;&#x679C;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">queryPlanner.winningPlan.stage</th>
+<th class="tableblock halign-left valign-top">queryPlanner.winningPlan.inputStage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SORT_KEY_GENERATOR</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FETCH</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IXSCAN</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SORT</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SORT_KEY_GENERATOR</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="__key">&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;</h3>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x4E00;&#x4E2A; JSON &#x6587;&#x6863;&#x4E2D;&#x5D4C;&#x5165;&#x4E86; Array &#x6216; JSON &#x6587;&#x6863;&#x65F6;&#xFF0C;&#x521B;&#x5EFA;&#x7D22;&#x5F15;&#x5C31;&#x53EF;&#x80FD;&#x662F;&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x51C6;&#x5907;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db.products.insert({
+  productName: &quot;MongoDB Short Sleeve T-Shirt&quot;,
+  categories: [&quot;T-Shirts&quot;, &quot;Clothing&quot;, &quot;Apparel&quot;],
+  stock: { size: &quot;L&quot;, color: &quot;green&quot;, quantity: 100 }
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db.products.createIndex({ &quot;stock.quantity&quot;: 1})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C;&#x67E5;&#x8BE2;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.find({ &quot;stock.quantity&quot;: 100 }).explain()
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.products&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;stock.quantity&quot; : {
+				&quot;$eq&quot; : 100
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;stock.quantity&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;stock.quantity_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;stock.quantity&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;stock.quantity&quot; : [
+						&quot;[100.0, 100.0]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x67E5;&#x8BE2;&#x547D;&#x4E2D;&#x7D22;&#x5F15;&#xFF0C;IXSCAN &#x83B7;&#x53D6;&#x6587;&#x6863;&#xFF0C;isMultiKey &#x4E3A; false&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x53E6;&#x5916;&#x4E00;&#x6761;&#x6570;&#x636E;&#xFF0C;quantity &#x5728;&#x6570;&#x7EC4;&#x4E2D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">db.products.insert({
+  productName: &quot;MongoDB Long Sleeve T-Shirt&quot;,
+  categories: [&quot;T-Shirts&quot;, &quot;Clothing&quot;, &quot;Apparel&quot;],
+  stock: [
+    { size: &quot;S&quot;, color: &quot;red&quot;, quantity: 25 },
+    { size: &quot;S&quot;, color: &quot;blue&quot;, quantity: 10 },
+    { size: &quot;M&quot;, color: &quot;blue&quot;, quantity: 50 }
+  ]
+});</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x6267;&#x884C;&#x67E5;&#x8BE2;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.find({ &quot;stock.quantity&quot;: 100 }).explain()
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;m201.products&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;stock.quantity&quot; : {
+				&quot;$eq&quot; : 100
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;FETCH&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;IXSCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;stock.quantity&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;stock.quantity_1&quot;,
+				&quot;isMultiKey&quot; : true,
+				&quot;multiKeyPaths&quot; : {
+					&quot;stock.quantity&quot; : [
+						&quot;stock&quot;
+					]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;direction&quot; : &quot;forward&quot;,
+				&quot;indexBounds&quot; : {
+					&quot;stock.quantity&quot; : [
+						&quot;[100.0, 100.0]&quot;
+					]
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;m103&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;3.6.11&quot;,
+		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x67E5;&#x8BE2;&#x547D;&#x4E2D;&#x7D22;&#x5F15;&#xFF0C;IXSCAN &#x83B7;&#x53D6;&#x6587;&#x6863;&#xFF0C;isMultiKey &#x4E3A; true&#xFF0C;&#x5373;&#x53EA;&#x6709;&#x5D4C;&#x5165;&#x7684; key &#x5728;&#x4E00;&#x4E2A;&#x6570;&#x7EC4;&#x6216;&#x6587;&#x6863;&#x4E2D;&#x65F6;&#xFF0C;&#x624D;&#x89E6;&#x53D1;&#x4E86;&#x591A; key &#x67E5;&#x8BE2;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.createIndex({ categories: 1, &quot;stock.quantity&quot;: 1 })
+{
+	&quot;ok&quot; : 0,
+	&quot;errmsg&quot; : &quot;cannot index parallel arrays [stock] [categories]&quot;,
+	&quot;code&quot; : 171,
+	&quot;codeName&quot; : &quot;CannotIndexParallelArrays&quot;
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x679C;&#x4E24;&#x4E2A; key &#x90FD;&#x5C5E;&#x4E8E;&#x5D4C;&#x5165;&#x7684;&#x6570;&#x7EC4;&#x6216;&#x6587;&#x6863;&#xFF0C;&#x5219;&#x7D22;&#x5F15;&#x521B;&#x5EFA;&#x5931;&#x8D25;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.createIndex({ productName: 1, &quot;stock.quantity&quot;: 1 })
+{
+	&quot;createdCollectionAutomatically&quot; : false,
+	&quot;numIndexesBefore&quot; : 2,
+	&quot;numIndexesAfter&quot; : 3,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x5982;&#x679C; stock &#x4E0D;&#x662F;&#x4E00;&#x4E2A;&#x6570;&#x7EC4;&#xFF0C;productName &#x53EF;&#x4EE5;&#x662F;&#x4E00;&#x4E2A;&#x6570;&#x7EC4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.insert({productName: [&quot;MongoDB Short Sleeve T-Shirt&quot;, &quot;MongoDB Short Sleeve Shirt&quot;], categories: [&quot;T-Shirts&quot;, &quot;Clothing&quot;, &quot;Apparel&quot;], stock: { size: &quot;L&quot;, color: &quot;green&quot;, quantity: 100 }});
+WriteResult({ &quot;nInserted&quot; : 1 })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x5982;&#x679C; stock &#x548C; productName &#x90FD;&#x662F;&#x6570;&#x7EC4;&#xFF0C;&#x5219;&#x63D2;&#x5165;&#x4F1A;&#x5931;&#x8D25;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.products.insert({productName: [&quot;MongoDB Short Sleeve T-Shirt&quot;, &quot;MongoDB Short Sleeve Shirt&quot;], categories: [&quot;T-Shirts&quot;, &quot;Clothing&quot;, &quot;Apparel&quot;], stock: [{ size: &quot;S&quot;, color: &quot;red&quot;, quantity: 25 }, { size: &quot;S&quot;, color: &quot;blue&quot;, quantity: 10 }, { size: &quot;M&quot;, color: &quot;blue&quot;, quantity: 50 }]});
+WriteResult({
+	&quot;nInserted&quot; : 0,
+	&quot;writeError&quot; : {
+		&quot;code&quot; : 171,
+		&quot;errmsg&quot; : &quot;cannot index parallel arrays [stock] [productName]&quot;
+	}
+})</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___8">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___9">&#x6570;&#x636E;&#x5BFC;&#x5165;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/restaurants.json
+2019-04-05T13:28:45.088+0000	no collection specified
+2019-04-05T13:28:45.088+0000	using filename &apos;restaurants&apos; as collection
+2019-04-05T13:28:45.100+0000	connected to: localhost
+2019-04-05T13:28:48.090+0000	[###.....................] m201.restaurants	23.6MB/144MB (16.4%)
+2019-04-05T13:28:51.090+0000	[#######.................] m201.restaurants	46.6MB/144MB (32.4%)
+2019-04-05T13:28:54.090+0000	[###########.............] m201.restaurants	69.4MB/144MB (48.3%)
+2019-04-05T13:28:57.090+0000	[###############.........] m201.restaurants	91.8MB/144MB (63.9%)
+2019-04-05T13:29:00.090+0000	[###################.....] m201.restaurants	115MB/144MB (79.9%)
+2019-04-05T13:29:03.090+0000	[#######################.] m201.restaurants	138MB/144MB (96.1%)
+2019-04-05T13:29:03.798+0000	[########################] m201.restaurants	144MB/144MB (100.0%)
+2019-04-05T13:29:03.799+0000	imported 1000000 documents</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. mongo shell &#x767B;&#x5F55;&#x5E76;&#x67E5;&#x770B;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ mongo --username root --password mongodb --authenticationDatabase admin
+MongoDB shell version v3.6.11
+connecting to: mongodb://127.0.0.1:27017/?authSource=admin&amp;gssapiServiceName=mongodb
+Implicit session: session { &quot;id&quot; : UUID(&quot;fa203fbf-c07a-47ad-8c5c-126dad5b0146&quot;) }
+MongoDB server version: 3.6.11
+
+MongoDB Enterprise &gt; use m201
+switched to db m201
+
+MongoDB Enterprise &gt; db.restaurants.count()
+1000000
+
+MongoDB Enterprise &gt; db.restaurants.findOne()
+{
+	&quot;_id&quot; : ObjectId(&quot;5ca7580df8858899e8a535ab&quot;),
+	&quot;name&quot; : &quot;Perry Street Brasserie&quot;,
+	&quot;cuisine&quot; : &quot;French&quot;,
+	&quot;stars&quot; : 0.3,
+	&quot;address&quot; : {
+		&quot;street&quot; : &quot;959 Iveno Square&quot;,
+		&quot;city&quot; : &quot;Fokemlid&quot;,
+		&quot;state&quot; : &quot;AL&quot;,
+		&quot;zipcode&quot; : &quot;18882&quot;
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__background">&#x521B;&#x5EFA; background &#x7D22;&#x5F15;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; background &#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.restaurants.createIndex({cuisine: 1, name: 1, &quot;address.zipcode&quot;: 1}, {background: true})
+{
+	&quot;createdCollectionAutomatically&quot; : false,
+	&quot;numIndexesBefore&quot; : 1,
+	&quot;numIndexesAfter&quot; : 2,
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.restaurants.getIndexes()
+[
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;_id&quot; : 1
+		},
+		&quot;name&quot; : &quot;_id_&quot;,
+		&quot;ns&quot; : &quot;m201.restaurants&quot;
+	},
+	{
+		&quot;v&quot; : 2,
+		&quot;key&quot; : {
+			&quot;cuisine&quot; : 1,
+			&quot;name&quot; : 1,
+			&quot;address.zipcode&quot; : 1
+		},
+		&quot;name&quot; : &quot;cuisine_1_name_1_address.zipcode_1&quot;,
+		&quot;ns&quot; : &quot;m201.restaurants&quot;,
+		&quot;background&quot; : true
+	}
+]</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_todo">TODO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -250,12 +2174,12 @@
 
             
                 
-                <a href="cluster-admin.html" class="navigation navigation-prev " aria-label="Previous page: 集群管理">
+                <a href="security.html" class="navigation navigation-prev " aria-label="Previous page: 安全">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../examples/" class="navigation navigation-next " aria-label="Next page: 示例">
+                <a href="troubleshooting.html" class="navigation navigation-next " aria-label="Next page: Troubleshooting">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -266,7 +2190,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.4","depth":1,"next":{"title":"示例","level":"1.5","depth":1,"path":"examples/README.adoc","ref":"examples/README.adoc","articles":[{"title":"sum","level":"1.5.1","depth":2,"path":"examples/aggregation-sum.adoc","ref":"examples/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"集群管理","level":"1.3","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-04-04T07:51:10.001Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-04T10:00:09.178Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.5","depth":1,"next":{"title":"Troubleshooting","level":"1.6","depth":1,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"previous":{"title":"安全","level":"1.4","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-04-06T08:42:06.258Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-11T07:56:02.745Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
