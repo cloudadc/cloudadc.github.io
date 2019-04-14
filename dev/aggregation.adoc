@@ -1,0 +1,347 @@
+= Aggregation Framework
+:toc: manual
+
+== $match, $project
+
+=== 构建满足条件的 movies pipeline
+
+测试数据中所有电影的总数：
+
+[source, text]
+----
+db.movies.count()
+44497
+----
+
+一条电影记录的结构：
+
+[source, text]
+----
+db.movies.findOne()
+{
+	"_id" : ObjectId("573a1390f29313caabcd421c"),
+	"title" : "A Turn of the Century Illusionist",
+	"year" : 1899,
+	"runtime" : 1,
+	"cast" : [
+		"Georges M�li�s"
+	],
+	"lastupdated" : "2015-08-29 00:21:21.547000000",
+	"type" : "movie",
+	"directors" : [
+		"Georges M�li�s"
+	],
+	"imdb" : {
+		"rating" : 6.6,
+		"votes" : 580,
+		"id" : 246
+	},
+	"countries" : [
+		"France"
+	],
+	"genres" : [
+		"Short"
+	],
+	"tomatoes" : {
+		"viewer" : {
+			"rating" : 3.8,
+			"numReviews" : 32
+		},
+		"lastUpdated" : ISODate("2015-08-20T18:46:44Z")
+	}
+}
+----
+
+选择电影满足如下条件：
+
+* *imdb.rating* is at least 7
+* *genres* does not contain "Crime" or "Horror"
+* *rated* is either "PG" or "G"
+* *languages* contains "English" and "Japanese"
+
+[source, text]
+----
+var pipeline = [{$match: {$and: [{"imdb.rating": {$gte: 7}}, {"genres": {$nin: ["Crime", "Horror"]}}, {"rated": {$in: ["PG", "G"]}}, {"languages": {$all: ["English", "Japanese"]}}]}}];
+
+db.movies.aggregate(pipeline).itcount()
+23
+----
+
+增加条件，输出近显示 title 和 rated 属性：
+
+[source, text]
+----
+var pipeline = [{$match: {$and: [{"imdb.rating": {$gte: 7}}, {"genres": {$nin: ["Crime", "Horror"]}}, {"rated": {$in: ["PG", "G"]}}, {"languages": {$all: ["English", "Japanese"]}}]}}, {$project: {_id: 0, title: 1, rated: 1}}];
+
+db.movies.aggregate(pipeline)
+{ "title" : "Those Magnificent Men in Their Flying Machines or How I Flew from London to Paris in 25 hours 11 minutes", "rated" : "G" }
+{ "title" : "Red Sun", "rated" : "PG" }
+{ "title" : "Babies", "rated" : "PG" }
+{ "title" : "The Karate Kid", "rated" : "PG" }
+{ "title" : "Dragon Ball Z: Tree of Might", "rated" : "PG" }
+{ "title" : "Cars", "rated" : "G" }
+{ "title" : "Jack and the Beanstalk", "rated" : "G" }
+{ "title" : "The Transformers: The Movie", "rated" : "PG" }
+{ "title" : "Defending Your Life", "rated" : "PG" }
+{ "title" : "The Cat Returns", "rated" : "G" }
+{ "title" : "Hell in the Pacific", "rated" : "G" }
+{ "title" : "The Goodbye Girl", "rated" : "PG" }
+{ "title" : "Tora! Tora! Tora!", "rated" : "G" }
+{ "title" : "Local Hero", "rated" : "PG" }
+{ "title" : "Summer Wars", "rated" : "PG" }
+{ "title" : "The Secret World of Arrietty", "rated" : "G" }
+{ "title" : "Empire of the Sun", "rated" : "PG" }
+{ "title" : "Dreams", "rated" : "PG" }
+{ "title" : "Millennium Actress", "rated" : "PG" }
+{ "title" : "Whisper of the Heart", "rated" : "G" }
+----
+
+=== 选择电影中 title 仅为一个字的电影
+
+[source, text]
+----
+var pipeline = [{$project: {"titleWords": {$size: {$split: ["$title" , " "]}}}}, {$match: {"titleWords": 1}}];
+
+db.movies.aggregate(pipeline).itcount()
+8068
+----
+
+=== 查看同一个人即是 cast，又是 director，还是 writer
+
+[source, text]
+----
+var pipeline = [{$match: {"writers": {$elemMatch: {$exists: true}}, "cast": {$elemMatch: {$exists: true}}, "directors": {$elemMatch: {$exists: true}}}}, {$project: {"writers": {$map: {input: "$writers", as: "writer", in: {$arrayElemAt: [{$split: ["$$writer", " (" ]}, 0]}}}, "cast" : 1, "directors" : 1}}, {$project: {"laborOfLove": {$gt: [{$size: {$setIntersection: ["$writers", "$cast", "$directors"]}}, 0]}}}, {$match: {"laborOfLove": true}}];
+
+db.movies.aggregate(pipeline).itcount()
+1597
+----
+
+== $addFields, $skip, $limit, $count
+
+=== 添加字段
+
+查看 solarSystem 的 name，gravity，mass，radius，sma 字段
+
+[source, text]
+----
+var pipeline = [{$project: {_id: 0, name: 1, gravity: 1, mass: 1, radius:1, sma: 1}}];
+
+db.solarSystem.aggregate(pipeline).pretty()
+{
+	"name" : "Uranus",
+	"radius" : {
+		"value" : 25559,
+		"units" : "km"
+	},
+	"mass" : {
+		"value" : 8.6813e+25,
+		"units" : "kg"
+	},
+	"sma" : {
+		"value" : 2872460000,
+		"units" : "km"
+	},
+	"gravity" : {
+		"value" : 8.87,
+		"units" : "m/s^2"
+	}
+}
+----
+
+添加字段，抽取 value 字段
+
+[source, text]
+----
+var pipeline = [{$project: {_id: 0, name: 1, gravity: 1, mass: 1, radius:1, sma: 1}}, {$addFields: {gravity: "$gravity.value", radius: "$radius.value", mass: "$mass.value", sma: "$sma.value"}}];
+
+db.solarSystem.aggregate(pipeline).pretty()
+{
+	"name" : "Uranus",
+	"radius" : 25559,
+	"mass" : 8.6813e+25,
+	"sma" : 2872460000,
+	"gravity" : 8.87
+}
+----
+
+=== 限制、跳过、统计、排序文档记录
+
+仅输出 5 条记录
+
+[source, text]
+----
+var pipeline = [{$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$limit: 5}]
+
+db.solarSystem.aggregate(pipeline)
+{ "name" : "Uranus", "numberOfMoons" : 27 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Jupiter", "numberOfMoons" : 67 }
+{ "name" : "Venus", "numberOfMoons" : 0 }
+----
+
+跳过前四条记录
+
+[source, text]
+----
+var pipeline = [{$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$skip: 4}]
+
+db.solarSystem.aggregate(pipeline)
+{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Mars", "numberOfMoons" : 2 }
+{ "name" : "Sun", "numberOfMoons" : 0 }
+{ "name" : "Saturn", "numberOfMoons" : 62 }
+{ "name" : "Neptune", "numberOfMoons" : 14 }
+----
+
+统计类型为 Terrestrial planet 的文档总数
+
+[source, text]
+----
+var pipeline = [{$match: {type: "Terrestrial planet"}}, {$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$count: "Terrestrial planets"}]
+
+db.solarSystem.aggregate(pipeline)
+{ "Terrestrial planets" : 4 }
+----
+
+文档排序
+
+[source, text]
+----
+var pipeline = [{$match: {type: "Terrestrial planet"}}, {$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$sort: {numberOfMoons: -1}}]
+
+db.solarSystem.aggregate(pipeline)
+{ "name" : "Mars", "numberOfMoons" : 2 }
+{ "name" : "Earth", "numberOfMoons" : 1 }
+{ "name" : "Mercury", "numberOfMoons" : 0 }
+{ "name" : "Venus", "numberOfMoons" : 0 }
+----
+
+=== 查找拍序电影，并添加字段
+
+查找拍序电影，并添加字段使满足如下条件：
+
+* movies released in the USA 
+* tomatoes.viewer.rating greater than or equal to 3
+* calculate a new field called num_favs that represets how many favorites appear in the cast field of the movie
+* Sort your results by num_favs, tomatoes.viewer.rating, and title, all in descending order
+
+[source, text]
+----
+var favorites = [     "Sandra Bullock",     "Tom Hanks",     "Julia Roberts",     "Kevin Spacey",     "George Clooney" ];
+var pipeline = [     { $match : {             "tomatoes.viewer.rating" : { $gte : 3 },                 "cast" : { $exists : true }                 }         },         { $addFields : { "num_favs" : { $size : { $setIntersection : [ "$cast", favorites ] } } } },         { $sort : {             "num_favs" : -1,                 "tomatoes.viewer.rating" : -1,                 "title" : -1             },         },         { $skip : 25 } ];
+
+db.movies.aggregate(pipeline, { allowDiskUse : true })
+----
+
+查找电影：
+
+* Calculate an average rating for each movie in our collection where English is an available language
+* the minimum imdb.rating is at least 1
+* the minimum imdb.votes is at least 1, and it was released in 1990 or after. 
+
+[source, text]
+----
+var pipeline = [
+    { $match : {
+            "languages" : "English",
+            "imdb.rating" : { $gte : 1 },
+                "imdb.votes" : { $gte : 1 },
+                "year" : { $gte : 1990 }
+                }
+        },
+        { $addFields :
+            { "scaled_votes" :
+                { $add: [
+                1,
+                { $multiply: [
+                    9,
+                    { $divide: [
+                        { $subtract: [ "$imdb.votes" , 5] },
+                        { $subtract: [1521105, 5] }
+                    ]}
+                ]}
+                    ]}
+                }
+        },
+        { $addFields : { "normalized_rating" : { $avg : [ "$scaled_votes", "$imdb.rating" ] } } },
+        { $sort : { "normalized_rating" : 1 } }
+];
+----
+
+== TODO
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----
+
+[source, text]
+----
+
+----     

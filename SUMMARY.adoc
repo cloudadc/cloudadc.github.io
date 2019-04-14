@@ -2,6 +2,7 @@
 
 . link:README.adoc[MongoDB]
 . link:dba/basic.adoc[基础]
+. link:dev/aggregation.adoc[Aggregation]
 . link:dba/cluster-admin.adoc[集群管理]
 . link:dba/security.adoc[安全]
 . link:dba/perf.adoc[性能调优]
