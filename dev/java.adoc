@@ -1,0 +1,189 @@
+= Java
+:toc: manual
+
+== Driver
+
+MongoDB 提供的常见 Driver 如下表：
+
+[cols="2,5a"]
+|===
+|类型 |Maven 依赖
+
+|sync
+|
+[source, java]
+----
+<dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongodb-driver-sync</artifactId>
+    <version>3.10.1</version>
+</dependency>
+----
+
+|async
+|
+[source, java]
+----
+<dependency>
+    <groupId>org.mongodb</groupId>
+    <artifactId>mongodb-driver-async</artifactId>
+    <version>3.10.1</version>
+</dependency>
+----
+
+|===
+
+[source, java]
+.*1. 创建一个工程*
+----
+$ mvn archetype:generate -DgroupId=org.mongodb.sample -DartifactId=mongodb-client -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+----
+
+[source, xml]
+.*2. 编辑 pom.xml 添加驱动*
+----
+  <dependencies>
+    <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongodb-driver-sync</artifactId>
+        <version>3.10.1</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+----
+
+[source, java]
+.*3. 编译成功后导入到 IDE*
+----
+$ mvn clean install
+----
+
+== MongoClient, MongoDatabase, MongoCollection
+
+[source, java]
+.*1. 创建 MongoClient*
+----
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+
+        protected MongoClient mongoClientInstance() {
+		
+            String uri = "mongodb+srv://kylin:password@mflix-xxx.ooo.mongodb.net/mflix";
+		
+            ConnectionString connectionString = new ConnectionString(uri);
+	    MongoClientSettings clientSettings =
+	        MongoClientSettings.builder()
+	            .applyConnectionString(connectionString)
+	            .applicationName("mflix")
+	            .applyToConnectionPoolSettings(
+	                builder -> builder.maxWaitTime(1000, TimeUnit.MILLISECONDS))
+	            .build();
+	    
+	    MongoClient mongoClient = MongoClients.create(clientSettings);
+		
+            return mongoClient;
+        }
+----
+
+[source, java]
+.*2. 获取 MongoDatabase*
+----
+import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
+
+	protected void mongoDatabaseInstance() {
+	    
+	    MongoClient mongoClient = mongoClientInstance();
+	    
+	    MongoIterable<String> databaseIterable = mongoClient.listDatabaseNames();
+	    
+	    for (String name : databaseIterable) {
+	    	System.out.println(name);
+	    }
+	    
+	    MongoDatabase database = mongoClient.getDatabase("mflix");
+	    
+	    ReadPreference readPreference = database.getReadPreference();
+	    
+	    System.out.println(readPreference.getName());
+	    
+	    mongoClient.close();
+	}
+----
+
+[source, java]
+.*3. 获取 MongoCollection*
+----
+import org.bson.Document;
+import com.mongodb.client.MongoClients;
+
+	protected void mongoCollectionInstance() {
+		
+		MongoClient mongoClient = mongoClientInstance();
+		MongoDatabase database = mongoClient.getDatabase("mflix");
+		
+		MongoCollection<Document> collection = database.getCollection("movies");
+		MongoIterable<Document> cursor = collection.find().skip(10).limit(20);
+		List<Document> documents = new ArrayList<>();
+		cursor.into(documents);
+		
+		System.out.println(documents);
+		
+		mongoClient.close();
+	}
+----
+
+== TODO
+
+[source, java]
+----
+
+----
+
+[source, java]
+----
+
+----
+
+[source, java]
+----
+
+----
+
+[source, java]
+----
+
+----
+
+[source, java]
+----
+
+----
+
+[source, java]
+----
+
+----
