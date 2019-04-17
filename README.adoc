@@ -9,6 +9,276 @@ MongoDB 是一个数据平台，存储着各种现代业务系统的数据，从
 
 image:etc/img/mongodb-driver-github-tr.png[]
 
+== MongoDB智能操作数据平台
+
+当代数字化战略，数字化转型的核心是数据，数据平台是关键因素，MongoDB智能操作数据平台目的，就是让新型数字化应用开发更快、更简单；运行更可靠、客户体验更好；部署更容易，运维更简单。
+
+=== Best way to work with data(为快速开发而生)
+
+MongoDB 的诞生之初的目的就是为了帮助开发者快速开发，MongoDB是当前全球最受开发人员欢迎的的数据库。
+
+==== Easy(易用)
+
+任何开发，数据模型设计都是开发核心工作，MongoDB 的模型采用对象模式，让数据库模型可以和业务对象模型直接映射。
+
+1. 数据库中存储*文档记录*与开发代码中的*对象*天然匹配 - (JSON 文档数据库的由来、车联网等新业务中 OData4 标准、面向对象编程语言 ORM 框架)
+2. 能代表或抽象任意形式的数据
+3. 操作简单
+4. 20 种数据 JSON 数据类型
+5. 丰富的驱动生态
+
+[cols="5a,5a"]
+|===
+|NodeJS 中对象 |数据库中文档记
+
+|
+[source, json]
+----
+var doc1 = {
+    "name": "Alice Smith",
+    "balance": 99.99
+}
+db.easy.insertOne(doc1)
+----
+|
+[source, json]
+----
+> db.easy.findOne({ "name": "Alice Smith" })
+{
+	"_id" : ObjectId("5cb6dcdc0c8075db42407f90"),
+	"name" : "Alice Smith",
+	"balance" : 99.99
+}
+----
+
+|
+[source, json]
+----
+var doc2 = {
+    "name": "Bob Brown",
+    "balance": NumberDecimal(492.45),
+    "accountNo": 489275482,
+    "accountType": 2,
+    "phone": [ "555-3456325", "1800-mongodb" ],
+    "address": {
+       "building": "MongoDB HQ",
+       "city": "NYC",
+       "zip": 10036
+    }
+}
+db.easy.insertOne(doc2)
+----
+|
+[source, json]
+----
+> db.easy.findOne({ "name": "Bob Brown" })
+{
+	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"name" : "Bob Brown",
+	"balance" : NumberDecimal("492.450000000000"),
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+----
+
+|
+[source, json]
+----
+for (var i = 0; i < 1000; i++) {
+    db.easy.insertMany( [ doc1, doc2 ] )
+}
+----
+|
+[source, json]
+----
+> db.easy.find({"name": "Bob Brown", "address.city": "NYC"}).pretty()
+{
+	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"name" : "Bob Brown",
+	"balance" : NumberDecimal("492.450000000000"),
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+...
+----
+
+|
+[source, json]
+----
+doc = db.easy.findOne({"name": "Alice Smith"})
+db.easy.replaceOne ({"_id": doc._id}, {"name": 
+"Imposter", "balance": 10000000, "message": 
+"Nothing to see here!"})
+----
+|
+[source, json]
+----
+ > db.easy.findOne ({"_id": doc._id})
+{
+	"_id" : ObjectId("5cb6dcdc0c8075db42407f90"),
+	"name" : "Imposter",
+	"balance" : 10000000,
+	"message" : "Nothing to see here!"
+}
+----
+
+|
+[source, json]
+----
+doc = db.easy.findOne({"name": "Bob Brown"})
+db.easy.updateOne ({"_id": doc._id}, {$set: 
+{"balance": NumberDecimal(10000000)}})
+----
+|
+[source, json]
+----
+> db.easy.findOne ({"_id": doc._id})
+{
+	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"name" : "Bob Brown",
+	"balance" : NumberDecimal("10000000.0000000"),
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+----
+
+|
+[source, json]
+----
+db.easy.deleteMany ({"name": "Alice Smith"})
+----
+|
+[source, json]
+----
+> db.easy.findOne ({"name": "Alice Smith"})
+null
+----
+
+|===
+
+==== Flexible(灵活)
+
+在开发中，特别是新业务开发中，另一个很大的挑战，要不断调整数据模型来适应业务的变化，这个在传统关系数据库开发中，是非常耗时和复杂的操作，而 MongoDB 数据模型可灵活更改，应对业务变化轻而易举。
+
+无需改表就可实现模型变化，具体包括：
+
+* 添加字段，直接插入，无需改表
+* 同一个表中，可保存不同属性的记录
+* 不同版本数据，可以在表中和平共存
+
+比如，我做电商业务，开始只买画，产品表中的记录只有画的属性，名字、尺寸、颜色：
+
+[source, json]
+----
+> db.retail.findOne({product_name: "Acme Paint"}, {_id: 0})
+{
+	"product_name" : "Acme Paint",
+	"color" : [
+		"Red",
+		"Green"
+	],
+	"size_oz" : [
+		8,
+		32
+	],
+	"finish" : [
+		"satin",
+		"eggshell"
+	]
+}
+----
+
+之后，我开始卖衣服，需要有以衣服的尺寸、材料等新属性，无需修改表，可以将以衣服的记录，插入
+
+[source, json]
+----
+> db.retail.findOne({product_name: "T-shirt"}, {_id: 0})
+{
+	"product_name" : "T-shirt",
+	"size" : [
+		"S",
+		"M",
+		"L",
+		"XL"
+	],
+	"color" : [
+		"Heather Gray"
+	],
+	"material" : "100% cotton",
+	"wash" : "cold",
+	"dry" : "tumble dry low"
+}
+----
+
+然后，我又开始买自行车
+
+[source, json]
+----
+> db.retail.findOne({product_name: "Mountain Bike"}, {_id: 0})
+{
+	"product_name" : "Mountain Bike",
+	"brake_style" : "mechanical disc",
+	"color" : "grey",
+	"frame_material" : "aluminum",
+	"no_speeds" : 21,
+	"package_height" : "7.5x32.9x55",
+	"weight_lbs" : 44.05,
+	"suspension_type" : "dual",
+	"wheel_size_in" : 26
+}
+----
+
+这也就是为什么，几乎所有新型电商的产品库，都是采用的 MongoDB 的原因，这个特性也带了另一个好处，就是可以在一个表中，保持不同版本的数据，而且彼此互不影响，这个特点，在手机APP开发和物联网开发上，尤其重要因为手机 APP 和物联网，都会用很多版本的终端的运行，每个版本，都可能上传不同的数据结构，数据库必须能够支持多种数据版本，在同一个表中运行。
+
+
+==== Fast(高效)
+
+
+[source, json]
+----
+
+----
+
+==== Versatile(强大)
+
+[source, json]
+----
+
+----
+
+=== 为高效可靠运行而设计
+
+
+=== 为随处部署而建
+
+
 == MongoDB 助力 DevOps
 
 MongoDB 如何助力 DevOps 实施落地，主要从三个层面去延展：
@@ -19,9 +289,13 @@ MongoDB 如何助力 DevOps 实施落地，主要从三个层面去延展：
 
 第三，MongoDB + DevOps 实现快速开发、快速集成、快速部署。
 
-== TODO
+== Earnings Conference Call
 
-// TODO
+* FY19 Q4 - https://www.fool.com/earnings/call-transcripts/2019/03/14/mongodb-inc-mdb-q4-2018-earnings-conference-call-t.aspx
+* FY19 Q3 - https://www.fool.com/earnings/call-transcripts/2018/12/04/mongodb-inc-mdb-q3-2019-earnings-conference-call-t.aspx
+* FY19 Q2 - https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-second-quarter-fiscal-2019-financial
+* FY19 Q1 - https://www.fool.com/earnings/call-transcripts/2018/06/07/mongodb-inc-mdb-q1-2019-earnings-conference-call-t.aspx
+* FY18 Q4 - https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-fourth-quarter-and-full-year-fiscal-2018
 
 
 
