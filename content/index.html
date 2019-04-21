@@ -117,7 +117,52 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3" data-path="dba/cluster-admin.html">
+        <li class="chapter " data-level="1.3" data-path="dev/">
+            
+                <a href="dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="dev/aggregation.html">
+            
+                <a href="dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="dev/java.html">
+            
+                <a href="dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="dba/cluster-admin.html">
             
                 <a href="dba/cluster-admin.html">
             
@@ -130,7 +175,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4" data-path="dba/security.html">
+        <li class="chapter " data-level="1.5" data-path="dba/security.html">
             
                 <a href="dba/security.html">
             
@@ -143,7 +188,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.5" data-path="dba/perf.html">
+        <li class="chapter " data-level="1.6" data-path="dba/perf.html">
             
                 <a href="dba/perf.html">
             
@@ -156,7 +201,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.6" data-path="dba/troubleshooting.html">
+        <li class="chapter " data-level="1.7" data-path="dba/troubleshooting.html">
             
                 <a href="dba/troubleshooting.html">
             
@@ -169,7 +214,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" data-path="examples/">
+        <li class="chapter " data-level="1.8" data-path="examples/">
             
                 <a href="examples/">
             
@@ -183,7 +228,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.7.1" data-path="examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.8.1" data-path="examples/aggregation-sum.html">
             
                 <a href="examples/aggregation-sum.html">
             
@@ -251,8 +296,15 @@
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_mongodb">MongoDB &#x4F7F;&#x7528;&#x7684;&#x4E1A;&#x52A1;&#x573A;&#x666F;</a></li>
+<li><a href="#_mongodb_2">MongoDB&#x667A;&#x80FD;&#x64CD;&#x4F5C;&#x6570;&#x636E;&#x5E73;&#x53F0;</a>
+<ul class="sectlevel2">
+<li><a href="#_best_way_to_work_with_data">Best way to work with data(&#x4E3A;&#x5FEB;&#x901F;&#x5F00;&#x53D1;&#x800C;&#x751F;)</a></li>
+<li><a href="#__">&#x4E3A;&#x9AD8;&#x6548;&#x53EF;&#x9760;&#x8FD0;&#x884C;&#x800C;&#x8BBE;&#x8BA1;</a></li>
+<li><a href="#___2">&#x4E3A;&#x968F;&#x5904;&#x90E8;&#x7F72;&#x800C;&#x5EFA;</a></li>
+</ul>
+</li>
 <li><a href="#_mongodb_devops">MongoDB &#x52A9;&#x529B; DevOps</a></li>
-<li><a href="#_todo">TODO</a></li>
+<li><a href="#_earnings_conference_call">Earnings Conference Call</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -266,6 +318,696 @@
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="etc/img/mongodb-driver-github-tr.png" alt="mongodb driver github tr.png"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mongodb_2">MongoDB&#x667A;&#x80FD;&#x64CD;&#x4F5C;&#x6570;&#x636E;&#x5E73;&#x53F0;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x5F53;&#x4EE3;&#x6570;&#x5B57;&#x5316;&#x6218;&#x7565;&#xFF0C;&#x6570;&#x5B57;&#x5316;&#x8F6C;&#x578B;&#x7684;&#x6838;&#x5FC3;&#x662F;&#x6570;&#x636E;&#xFF0C;&#x6570;&#x636E;&#x5E73;&#x53F0;&#x662F;&#x5173;&#x952E;&#x56E0;&#x7D20;&#xFF0C;MongoDB&#x667A;&#x80FD;&#x64CD;&#x4F5C;&#x6570;&#x636E;&#x5E73;&#x53F0;&#x76EE;&#x7684;&#xFF0C;&#x5C31;&#x662F;&#x8BA9;&#x65B0;&#x578B;&#x6570;&#x5B57;&#x5316;&#x5E94;&#x7528;&#x5F00;&#x53D1;&#x66F4;&#x5FEB;&#x3001;&#x66F4;&#x7B80;&#x5355;&#xFF1B;&#x8FD0;&#x884C;&#x66F4;&#x53EF;&#x9760;&#x3001;&#x5BA2;&#x6237;&#x4F53;&#x9A8C;&#x66F4;&#x597D;&#xFF1B;&#x90E8;&#x7F72;&#x66F4;&#x5BB9;&#x6613;&#xFF0C;&#x8FD0;&#x7EF4;&#x66F4;&#x7B80;&#x5355;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="_best_way_to_work_with_data">Best way to work with data(&#x4E3A;&#x5FEB;&#x901F;&#x5F00;&#x53D1;&#x800C;&#x751F;)</h3>
+<div class="paragraph">
+<p>MongoDB &#x7684;&#x8BDE;&#x751F;&#x4E4B;&#x521D;&#x7684;&#x76EE;&#x7684;&#x5C31;&#x662F;&#x4E3A;&#x4E86;&#x5E2E;&#x52A9;&#x5F00;&#x53D1;&#x8005;&#x5FEB;&#x901F;&#x5F00;&#x53D1;&#xFF0C;MongoDB&#x662F;&#x5F53;&#x524D;&#x5168;&#x7403;&#x6700;&#x53D7;&#x5F00;&#x53D1;&#x4EBA;&#x5458;&#x6B22;&#x8FCE;&#x7684;&#x7684;&#x6570;&#x636E;&#x5E93;&#x3002;</p>
+</div>
+<div class="sect3">
+<h4 id="_easy">Easy(&#x6613;&#x7528;)</h4>
+<div class="paragraph">
+<p>&#x4EFB;&#x4F55;&#x5F00;&#x53D1;&#xFF0C;&#x6570;&#x636E;&#x6A21;&#x578B;&#x8BBE;&#x8BA1;&#x90FD;&#x662F;&#x5F00;&#x53D1;&#x6838;&#x5FC3;&#x5DE5;&#x4F5C;&#xFF0C;MongoDB &#x7684;&#x6A21;&#x578B;&#x91C7;&#x7528;&#x5BF9;&#x8C61;&#x6A21;&#x5F0F;&#xFF0C;&#x8BA9;&#x6570;&#x636E;&#x5E93;&#x6A21;&#x578B;&#x53EF;&#x4EE5;&#x548C;&#x4E1A;&#x52A1;&#x5BF9;&#x8C61;&#x6A21;&#x578B;&#x76F4;&#x63A5;&#x6620;&#x5C04;&#x3002;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x5B58;&#x50A8;<strong>&#x6587;&#x6863;&#x8BB0;&#x5F55;</strong>&#x4E0E;&#x5F00;&#x53D1;&#x4EE3;&#x7801;&#x4E2D;&#x7684;<strong>&#x5BF9;&#x8C61;</strong>&#x5929;&#x7136;&#x5339;&#x914D; - (JSON &#x6587;&#x6863;&#x6570;&#x636E;&#x5E93;&#x7684;&#x7531;&#x6765;&#x3001;&#x8F66;&#x8054;&#x7F51;&#x7B49;&#x65B0;&#x4E1A;&#x52A1;&#x4E2D; OData4 &#x6807;&#x51C6;&#x3001;&#x9762;&#x5411;&#x5BF9;&#x8C61;&#x7F16;&#x7A0B;&#x8BED;&#x8A00; ORM &#x6846;&#x67B6;)</p>
+</li>
+<li>
+<p>&#x80FD;&#x4EE3;&#x8868;&#x6216;&#x62BD;&#x8C61;&#x4EFB;&#x610F;&#x5F62;&#x5F0F;&#x7684;&#x6570;&#x636E;</p>
+</li>
+<li>
+<p>&#x64CD;&#x4F5C;&#x7B80;&#x5355;</p>
+</li>
+<li>
+<p>20 &#x79CD;&#x6570;&#x636E; JSON &#x6570;&#x636E;&#x7C7B;&#x578B;</p>
+</li>
+<li>
+<p>&#x4E30;&#x5BCC;&#x7684;&#x9A71;&#x52A8;&#x751F;&#x6001;</p>
+</li>
+</ol>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">NodeJS &#x4E2D;&#x5BF9;&#x8C61;</th>
+<th class="tableblock halign-left valign-top">&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x6587;&#x6863;&#x8BB0;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-keyword">var</span> doc1 = {
+    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alice Smith&quot;</span>,
+    <span class="hljs-string">&quot;balance&quot;</span>: <span class="hljs-number">99.99</span>
+}
+db.easy.insertOne(doc1)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.easy.findOne({ <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alice Smith&quot;</span> })
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5cb6dcdc0c8075db42407f90&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Alice Smith&quot;</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : <span class="hljs-number">99.99</span>
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-keyword">var</span> doc2 = {
+    <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Bob Brown&quot;</span>,
+    <span class="hljs-string">&quot;balance&quot;</span>: NumberDecimal(<span class="hljs-number">492.45</span>),
+    <span class="hljs-string">&quot;accountNo&quot;</span>: <span class="hljs-number">489275482</span>,
+    <span class="hljs-string">&quot;accountType&quot;</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-string">&quot;phone&quot;</span>: [ <span class="hljs-string">&quot;555-3456325&quot;</span>, <span class="hljs-string">&quot;1800-mongodb&quot;</span> ],
+    <span class="hljs-string">&quot;address&quot;</span>: {
+       <span class="hljs-string">&quot;building&quot;</span>: <span class="hljs-string">&quot;MongoDB HQ&quot;</span>,
+       <span class="hljs-string">&quot;city&quot;</span>: <span class="hljs-string">&quot;NYC&quot;</span>,
+       <span class="hljs-string">&quot;zip&quot;</span>: <span class="hljs-number">10036</span>
+    }
+}
+db.easy.insertOne(doc2)</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.easy.findOne({ <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Bob Brown&quot;</span> })
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5cb6dd320c8075db42407f91&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Bob Brown&quot;</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : NumberDecimal(<span class="hljs-string">&quot;492.450000000000&quot;</span>),
+	<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">489275482</span>,
+	<span class="hljs-string">&quot;accountType&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;phone&quot;</span> : [
+		<span class="hljs-string">&quot;555-3456325&quot;</span>,
+		<span class="hljs-string">&quot;1800-mongodb&quot;</span>
+	],
+	<span class="hljs-string">&quot;address&quot;</span> : {
+		<span class="hljs-string">&quot;building&quot;</span> : <span class="hljs-string">&quot;MongoDB HQ&quot;</span>,
+		<span class="hljs-string">&quot;city&quot;</span> : <span class="hljs-string">&quot;NYC&quot;</span>,
+		<span class="hljs-string">&quot;zip&quot;</span> : <span class="hljs-number">10036</span>
+	}
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">1000</span>; i++) {
+    db.easy.insertMany( [ doc1, doc2 ] )
+}</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.easy.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Bob Brown&quot;</span>, <span class="hljs-string">&quot;address.city&quot;</span>: <span class="hljs-string">&quot;NYC&quot;</span>}).pretty()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5cb6dd320c8075db42407f91&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Bob Brown&quot;</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : NumberDecimal(<span class="hljs-string">&quot;492.450000000000&quot;</span>),
+	<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">489275482</span>,
+	<span class="hljs-string">&quot;accountType&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;phone&quot;</span> : [
+		<span class="hljs-string">&quot;555-3456325&quot;</span>,
+		<span class="hljs-string">&quot;1800-mongodb&quot;</span>
+	],
+	<span class="hljs-string">&quot;address&quot;</span> : {
+		<span class="hljs-string">&quot;building&quot;</span> : <span class="hljs-string">&quot;MongoDB HQ&quot;</span>,
+		<span class="hljs-string">&quot;city&quot;</span> : <span class="hljs-string">&quot;NYC&quot;</span>,
+		<span class="hljs-string">&quot;zip&quot;</span> : <span class="hljs-number">10036</span>
+	}
+}
+...</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">doc = db.easy.findOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alice Smith&quot;</span>})
+db.easy.replaceOne ({<span class="hljs-string">&quot;_id&quot;</span>: doc._id}, {<span class="hljs-string">&quot;name&quot;</span>:
+<span class="hljs-string">&quot;Imposter&quot;</span>, <span class="hljs-string">&quot;balance&quot;</span>: <span class="hljs-number">10000000</span>, <span class="hljs-string">&quot;message&quot;</span>:
+<span class="hljs-string">&quot;Nothing to see here!&quot;</span>})</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"> &gt; db.easy.findOne ({<span class="hljs-string">&quot;_id&quot;</span>: doc._id})
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5cb6dcdc0c8075db42407f90&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Imposter&quot;</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : <span class="hljs-number">10000000</span>,
+	<span class="hljs-string">&quot;message&quot;</span> : <span class="hljs-string">&quot;Nothing to see here!&quot;</span>
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">doc = db.easy.findOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Bob Brown&quot;</span>})
+db.easy.updateOne ({<span class="hljs-string">&quot;_id&quot;</span>: doc._id}, {$set:
+{<span class="hljs-string">&quot;balance&quot;</span>: NumberDecimal(<span class="hljs-number">10000000</span>)}})</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.easy.findOne ({<span class="hljs-string">&quot;_id&quot;</span>: doc._id})
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5cb6dd320c8075db42407f91&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Bob Brown&quot;</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : NumberDecimal(<span class="hljs-string">&quot;10000000.0000000&quot;</span>),
+	<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">489275482</span>,
+	<span class="hljs-string">&quot;accountType&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;phone&quot;</span> : [
+		<span class="hljs-string">&quot;555-3456325&quot;</span>,
+		<span class="hljs-string">&quot;1800-mongodb&quot;</span>
+	],
+	<span class="hljs-string">&quot;address&quot;</span> : {
+		<span class="hljs-string">&quot;building&quot;</span> : <span class="hljs-string">&quot;MongoDB HQ&quot;</span>,
+		<span class="hljs-string">&quot;city&quot;</span> : <span class="hljs-string">&quot;NYC&quot;</span>,
+		<span class="hljs-string">&quot;zip&quot;</span> : <span class="hljs-number">10036</span>
+	}
+}</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.easy.deleteMany ({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alice Smith&quot;</span>})</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.easy.findOne ({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Alice Smith&quot;</span>})
+<span class="hljs-literal">null</span></code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_flexible">Flexible(&#x7075;&#x6D3B;)</h4>
+<div class="paragraph">
+<p>&#x5728;&#x5F00;&#x53D1;&#x4E2D;&#xFF0C;&#x7279;&#x522B;&#x662F;&#x65B0;&#x4E1A;&#x52A1;&#x5F00;&#x53D1;&#x4E2D;&#xFF0C;&#x53E6;&#x4E00;&#x4E2A;&#x5F88;&#x5927;&#x7684;&#x6311;&#x6218;&#xFF0C;&#x8981;&#x4E0D;&#x65AD;&#x8C03;&#x6574;&#x6570;&#x636E;&#x6A21;&#x578B;&#x6765;&#x9002;&#x5E94;&#x4E1A;&#x52A1;&#x7684;&#x53D8;&#x5316;&#xFF0C;&#x8FD9;&#x4E2A;&#x5728;&#x4F20;&#x7EDF;&#x5173;&#x7CFB;&#x6570;&#x636E;&#x5E93;&#x5F00;&#x53D1;&#x4E2D;&#xFF0C;&#x662F;&#x975E;&#x5E38;&#x8017;&#x65F6;&#x548C;&#x590D;&#x6742;&#x7684;&#x64CD;&#x4F5C;&#xFF0C;&#x800C; MongoDB &#x6570;&#x636E;&#x6A21;&#x578B;&#x53EF;&#x7075;&#x6D3B;&#x66F4;&#x6539;&#xFF0C;&#x5E94;&#x5BF9;&#x4E1A;&#x52A1;&#x53D8;&#x5316;&#x8F7B;&#x800C;&#x6613;&#x4E3E;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x65E0;&#x9700;&#x6539;&#x8868;&#x5C31;&#x53EF;&#x5B9E;&#x73B0;&#x6A21;&#x578B;&#x53D8;&#x5316;&#xFF0C;&#x5177;&#x4F53;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6DFB;&#x52A0;&#x5B57;&#x6BB5;&#xFF0C;&#x76F4;&#x63A5;&#x63D2;&#x5165;&#xFF0C;&#x65E0;&#x9700;&#x6539;&#x8868;</p>
+</li>
+<li>
+<p>&#x540C;&#x4E00;&#x4E2A;&#x8868;&#x4E2D;&#xFF0C;&#x53EF;&#x4FDD;&#x5B58;&#x4E0D;&#x540C;&#x5C5E;&#x6027;&#x7684;&#x8BB0;&#x5F55;</p>
+</li>
+<li>
+<p>&#x4E0D;&#x540C;&#x7248;&#x672C;&#x6570;&#x636E;&#xFF0C;&#x53EF;&#x4EE5;&#x5728;&#x8868;&#x4E2D;&#x548C;&#x5E73;&#x5171;&#x5B58;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x6BD4;&#x5982;&#xFF0C;&#x6211;&#x505A;&#x7535;&#x5546;&#x4E1A;&#x52A1;&#xFF0C;&#x5F00;&#x59CB;&#x53EA;&#x4E70;&#x753B;&#xFF0C;&#x4EA7;&#x54C1;&#x8868;&#x4E2D;&#x7684;&#x8BB0;&#x5F55;&#x53EA;&#x6709;&#x753B;&#x7684;&#x5C5E;&#x6027;&#xFF0C;&#x540D;&#x5B57;&#x3001;&#x5C3A;&#x5BF8;&#x3001;&#x989C;&#x8272;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.retail.findOne({product_name: <span class="hljs-string">&quot;Acme Paint&quot;</span>}, {_id: <span class="hljs-number">0</span>})
+{
+	<span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;Acme Paint&quot;</span>,
+	<span class="hljs-string">&quot;color&quot;</span> : [
+		<span class="hljs-string">&quot;Red&quot;</span>,
+		<span class="hljs-string">&quot;Green&quot;</span>
+	],
+	<span class="hljs-string">&quot;size_oz&quot;</span> : [
+		<span class="hljs-number">8</span>,
+		<span class="hljs-number">32</span>
+	],
+	<span class="hljs-string">&quot;finish&quot;</span> : [
+		<span class="hljs-string">&quot;satin&quot;</span>,
+		<span class="hljs-string">&quot;eggshell&quot;</span>
+	]
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x4E4B;&#x540E;&#xFF0C;&#x6211;&#x5F00;&#x59CB;&#x5356;&#x8863;&#x670D;&#xFF0C;&#x9700;&#x8981;&#x6709;&#x4EE5;&#x8863;&#x670D;&#x7684;&#x5C3A;&#x5BF8;&#x3001;&#x6750;&#x6599;&#x7B49;&#x65B0;&#x5C5E;&#x6027;&#xFF0C;&#x65E0;&#x9700;&#x4FEE;&#x6539;&#x8868;&#xFF0C;&#x53EF;&#x4EE5;&#x5C06;&#x4EE5;&#x8863;&#x670D;&#x7684;&#x8BB0;&#x5F55;&#xFF0C;&#x63D2;&#x5165;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.retail.findOne({product_name: <span class="hljs-string">&quot;T-shirt&quot;</span>}, {_id: <span class="hljs-number">0</span>})
+{
+	<span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;T-shirt&quot;</span>,
+	<span class="hljs-string">&quot;size&quot;</span> : [
+		<span class="hljs-string">&quot;S&quot;</span>,
+		<span class="hljs-string">&quot;M&quot;</span>,
+		<span class="hljs-string">&quot;L&quot;</span>,
+		<span class="hljs-string">&quot;XL&quot;</span>
+	],
+	<span class="hljs-string">&quot;color&quot;</span> : [
+		<span class="hljs-string">&quot;Heather Gray&quot;</span>
+	],
+	<span class="hljs-string">&quot;material&quot;</span> : <span class="hljs-string">&quot;100% cotton&quot;</span>,
+	<span class="hljs-string">&quot;wash&quot;</span> : <span class="hljs-string">&quot;cold&quot;</span>,
+	<span class="hljs-string">&quot;dry&quot;</span> : <span class="hljs-string">&quot;tumble dry low&quot;</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7136;&#x540E;&#xFF0C;&#x6211;&#x53C8;&#x5F00;&#x59CB;&#x4E70;&#x81EA;&#x884C;&#x8F66;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.retail.findOne({product_name: <span class="hljs-string">&quot;Mountain Bike&quot;</span>}, {_id: <span class="hljs-number">0</span>})
+{
+	<span class="hljs-string">&quot;product_name&quot;</span> : <span class="hljs-string">&quot;Mountain Bike&quot;</span>,
+	<span class="hljs-string">&quot;brake_style&quot;</span> : <span class="hljs-string">&quot;mechanical disc&quot;</span>,
+	<span class="hljs-string">&quot;color&quot;</span> : <span class="hljs-string">&quot;grey&quot;</span>,
+	<span class="hljs-string">&quot;frame_material&quot;</span> : <span class="hljs-string">&quot;aluminum&quot;</span>,
+	<span class="hljs-string">&quot;no_speeds&quot;</span> : <span class="hljs-number">21</span>,
+	<span class="hljs-string">&quot;package_height&quot;</span> : <span class="hljs-string">&quot;7.5x32.9x55&quot;</span>,
+	<span class="hljs-string">&quot;weight_lbs&quot;</span> : <span class="hljs-number">44.05</span>,
+	<span class="hljs-string">&quot;suspension_type&quot;</span> : <span class="hljs-string">&quot;dual&quot;</span>,
+	<span class="hljs-string">&quot;wheel_size_in&quot;</span> : <span class="hljs-number">26</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x8FD9;&#x4E5F;&#x5C31;&#x662F;&#x4E3A;&#x4EC0;&#x4E48;&#xFF0C;&#x51E0;&#x4E4E;&#x6240;&#x6709;&#x65B0;&#x578B;&#x7535;&#x5546;&#x7684;&#x4EA7;&#x54C1;&#x5E93;&#xFF0C;&#x90FD;&#x662F;&#x91C7;&#x7528;&#x7684; MongoDB &#x7684;&#x539F;&#x56E0;&#xFF0C;&#x8FD9;&#x4E2A;&#x7279;&#x6027;&#x4E5F;&#x5E26;&#x4E86;&#x53E6;&#x4E00;&#x4E2A;&#x597D;&#x5904;&#xFF0C;&#x5C31;&#x662F;&#x53EF;&#x4EE5;&#x5728;&#x4E00;&#x4E2A;&#x8868;&#x4E2D;&#xFF0C;&#x4FDD;&#x6301;&#x4E0D;&#x540C;&#x7248;&#x672C;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x800C;&#x4E14;&#x5F7C;&#x6B64;&#x4E92;&#x4E0D;&#x5F71;&#x54CD;&#xFF0C;&#x8FD9;&#x4E2A;&#x7279;&#x70B9;&#xFF0C;&#x5728;&#x624B;&#x673A;APP&#x5F00;&#x53D1;&#x548C;&#x7269;&#x8054;&#x7F51;&#x5F00;&#x53D1;&#x4E0A;&#xFF0C;&#x5C24;&#x5176;&#x91CD;&#x8981;&#x56E0;&#x4E3A;&#x624B;&#x673A; APP &#x548C;&#x7269;&#x8054;&#x7F51;&#xFF0C;&#x90FD;&#x4F1A;&#x7528;&#x5F88;&#x591A;&#x7248;&#x672C;&#x7684;&#x7EC8;&#x7AEF;&#x7684;&#x8FD0;&#x884C;&#xFF0C;&#x6BCF;&#x4E2A;&#x7248;&#x672C;&#xFF0C;&#x90FD;&#x53EF;&#x80FD;&#x4E0A;&#x4F20;&#x4E0D;&#x540C;&#x7684;&#x6570;&#x636E;&#x7ED3;&#x6784;&#xFF0C;&#x6570;&#x636E;&#x5E93;&#x5FC5;&#x987B;&#x80FD;&#x591F;&#x652F;&#x6301;&#x591A;&#x79CD;&#x6570;&#x636E;&#x7248;&#x672C;&#xFF0C;&#x5728;&#x540C;&#x4E00;&#x4E2A;&#x8868;&#x4E2D;&#x8FD0;&#x884C;&#x3002;</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fast">Fast(&#x9AD8;&#x6548;)</h4>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x901A;&#x8FC7; mongod&#x3001;mongo&#x3001;compass &#x7B49;&#x7EC4;&#x4EF6;&#x8BF4;&#x660E; MongoDB &#x652F;&#x6301;&#x66F4;&#x5927;&#x7684;&#x6570;&#x636E;&#x91CF;&#x5904;&#x7406;&#x80FD;&#x529B;&#xFF0C;&#x4E3A;&#x5E94;&#x7528;&#x63D0;&#x4F9B;&#x66F4;&#x4F73;&#x6027;&#x80FD;&#xFF0C;&#x652F;&#x6301; <strong>PB</strong> &#x7EA7;&#x6570;&#x636E;&#x5904;&#x7406;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8; mongod &#x521B;&#x5EFA;&#x7528;&#x6237;&#x540D;&#x5BC6;&#x7801;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">db.createUser({user: <span class="hljs-string">&quot;root&quot;</span>, pwd: <span class="hljs-string">&quot;root123&quot;</span>, roles: [<span class="hljs-string">&quot;root&quot;</span>]})
+db.auth(<span class="hljs-string">&quot;root&quot;</span>, <span class="hljs-string">&quot;root123&quot;</span>)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8FD0;&#x884C; <a href="etc/files/insert_accounts_one.py">insert_accounts_one.py</a> &#x63D2;&#x5165; 1m &#x6761;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">$ ./insert_accounts_one.py
+<span class="hljs-number">1000000</span> records inserted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>3. &#x67E5;&#x770B;&#x6027;&#x80FD;&#x6307;&#x6807;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="etc/img/iodp-fast-insert-one.png" alt="iodp fast insert one.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x8FD0;&#x884C; <a href="etc/files/insert_accounts_bulk.py">insert_accounts_bulk.py</a> &#x6279;&#x91CF;&#x63D2;&#x5165; 1m &#x6761;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">$ ./insert_accounts_bulk.py
+<span class="hljs-number">1000000</span> records inserted</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>5. &#x67E5;&#x770B;&#x6027;&#x80FD;&#x6307;&#x6807;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="etc/img/iodp-fast-inset-bulk.png" alt="iodp fast inset bulk.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x5341;&#x51E0;&#x79D2;&#x65F6;&#x95F4;&#x5185;&#x4E00;&#x6761;&#x4E00;&#x6761;&#x63D2;&#x5165; 1m &#x6761;&#x6570;&#x636E;(400 MB)&#x5B8C;&#x6210;&#xFF0C;&#x6279;&#x91CF;&#x63D2;&#x5165;&#x6570;&#x79D2;&#x5B8C;&#x6210;&#x63D2;&#x5165;&#xFF0C;&#x4E14;&#x4E24;&#x79CD;&#x63D2;&#x5165;&#x6027;&#x80FD;&#x6307;&#x6807;&#x53D8;&#x5316;&#x4E0D;&#x5927;&#xFF0C;&#x8BF4;&#x660E; <strong>MongoDB &#x80FD;&#x591F;&#x8F7B;&#x677E;&#x5E94;&#x5BF9;&#x767E;&#x4E07;&#x7EA7;&#x522B;&#x7684;&#x6570;&#x636E;&#x63D2;&#x5165;&#x64CD;&#x4F5C;</strong>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x5168;&#x8868;&#x626B;&#x63CF;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-python" data-lang="python">&gt; db.customers.explain(<span class="hljs-number">1</span>).count({manager:<span class="hljs-string">&quot;Barry Mongo&quot;</span>})
+{
+	<span class="hljs-string">&quot;queryPlanner&quot;</span> : {
+		<span class="hljs-string">&quot;plannerVersion&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;namespace&quot;</span> : <span class="hljs-string">&quot;bankdata.customers&quot;</span>,
+		<span class="hljs-string">&quot;indexFilterSet&quot;</span> : false,
+		<span class="hljs-string">&quot;parsedQuery&quot;</span> : {
+			<span class="hljs-string">&quot;manager&quot;</span> : {
+				<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
+			}
+		},
+		<span class="hljs-string">&quot;winningPlan&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT&quot;</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COLLSCAN&quot;</span>,
+				<span class="hljs-string">&quot;filter&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : {
+						<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
+					}
+				},
+				<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>
+			}
+		},
+		<span class="hljs-string">&quot;rejectedPlans&quot;</span> : [ ]
+	},
+	<span class="hljs-string">&quot;executionStats&quot;</span> : {
+		<span class="hljs-string">&quot;executionSuccess&quot;</span> : true,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">383</span>,
+		<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">1000001</span>,
+		<span class="hljs-string">&quot;executionStages&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">309</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">1000003</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">1000002</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">7820</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">7820</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;nCounted&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;nSkipped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COLLSCAN&quot;</span>,
+				<span class="hljs-string">&quot;filter&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : {
+						<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
+					}
+				},
+				<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">286</span>,
+				<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">1000003</span>,
+				<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">1000001</span>,
+				<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">7820</span>,
+				<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">7820</span>,
+				<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+				<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">1000001</span>
+			}
+		},
+		<span class="hljs-string">&quot;allPlansExecution&quot;</span> : [ ]
+	},
+	<span class="hljs-string">&quot;serverInfo&quot;</span> : {
+		<span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;Kylins-MacBook-Pro.local&quot;</span>,
+		<span class="hljs-string">&quot;port&quot;</span> : <span class="hljs-number">27017</span>,
+		<span class="hljs-string">&quot;version&quot;</span> : <span class="hljs-string">&quot;4.0.7&quot;</span>,
+		<span class="hljs-string">&quot;gitVersion&quot;</span> : <span class="hljs-string">&quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;</span>
+	},
+	<span class="hljs-string">&quot;ok&quot;</span> : <span class="hljs-number">1</span>
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x5168;&#x8868;&#x626B;&#x63CF; 1m &#x6761;&#x6570;&#x636E;&#x82B1;&#x8D39;&#x4E86; 383 &#x6BEB;&#x79D2;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x7D22;&#x5F15;&#x540E;&#x6267;&#x884C;&#x540C;&#x6837;&#x67E5;&#x770B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">&gt; db.customers.createIndex( { manager: 1 } )
+&gt; db.customers.explain(1).count({manager:&quot;Barry Mongo&quot;})
+{
+	&quot;queryPlanner&quot; : {
+		&quot;plannerVersion&quot; : 1,
+		&quot;namespace&quot; : &quot;bankdata.customers&quot;,
+		&quot;indexFilterSet&quot; : false,
+		&quot;parsedQuery&quot; : {
+			&quot;manager&quot; : {
+				&quot;$eq&quot; : &quot;Barry Mongo&quot;
+			}
+		},
+		&quot;winningPlan&quot; : {
+			&quot;stage&quot; : &quot;COUNT&quot;,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;COUNT_SCAN&quot;,
+				&quot;keyPattern&quot; : {
+					&quot;manager&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;manager_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;manager&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;indexBounds&quot; : {
+					&quot;startKey&quot; : {
+						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					},
+					&quot;startKeyInclusive&quot; : true,
+					&quot;endKey&quot; : {
+						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					},
+					&quot;endKeyInclusive&quot; : true
+				}
+			}
+		},
+		&quot;rejectedPlans&quot; : [ ]
+	},
+	&quot;executionStats&quot; : {
+		&quot;executionSuccess&quot; : true,
+		&quot;nReturned&quot; : 0,
+		&quot;executionTimeMillis&quot; : 0,
+		&quot;totalKeysExamined&quot; : 2,
+		&quot;totalDocsExamined&quot; : 0,
+		&quot;executionStages&quot; : {
+			&quot;stage&quot; : &quot;COUNT&quot;,
+			&quot;nReturned&quot; : 0,
+			&quot;executionTimeMillisEstimate&quot; : 0,
+			&quot;works&quot; : 2,
+			&quot;advanced&quot; : 0,
+			&quot;needTime&quot; : 1,
+			&quot;needYield&quot; : 0,
+			&quot;saveState&quot; : 0,
+			&quot;restoreState&quot; : 0,
+			&quot;isEOF&quot; : 1,
+			&quot;invalidates&quot; : 0,
+			&quot;nCounted&quot; : 1,
+			&quot;nSkipped&quot; : 0,
+			&quot;inputStage&quot; : {
+				&quot;stage&quot; : &quot;COUNT_SCAN&quot;,
+				&quot;nReturned&quot; : 1,
+				&quot;executionTimeMillisEstimate&quot; : 0,
+				&quot;works&quot; : 2,
+				&quot;advanced&quot; : 1,
+				&quot;needTime&quot; : 0,
+				&quot;needYield&quot; : 0,
+				&quot;saveState&quot; : 0,
+				&quot;restoreState&quot; : 0,
+				&quot;isEOF&quot; : 1,
+				&quot;invalidates&quot; : 0,
+				&quot;keysExamined&quot; : 2,
+				&quot;keyPattern&quot; : {
+					&quot;manager&quot; : 1
+				},
+				&quot;indexName&quot; : &quot;manager_1&quot;,
+				&quot;isMultiKey&quot; : false,
+				&quot;multiKeyPaths&quot; : {
+					&quot;manager&quot; : [ ]
+				},
+				&quot;isUnique&quot; : false,
+				&quot;isSparse&quot; : false,
+				&quot;isPartial&quot; : false,
+				&quot;indexVersion&quot; : 2,
+				&quot;indexBounds&quot; : {
+					&quot;startKey&quot; : {
+						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					},
+					&quot;startKeyInclusive&quot; : true,
+					&quot;endKey&quot; : {
+						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					},
+					&quot;endKeyInclusive&quot; : true
+				}
+			}
+		},
+		&quot;allPlansExecution&quot; : [ ]
+	},
+	&quot;serverInfo&quot; : {
+		&quot;host&quot; : &quot;Kylins-MacBook-Pro.local&quot;,
+		&quot;port&quot; : 27017,
+		&quot;version&quot; : &quot;4.0.7&quot;,
+		&quot;gitVersion&quot; : &quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;
+	},
+	&quot;ok&quot; : 1
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x770B;&#x5230;&#x7D22;&#x5F15;&#x547D;&#x4E2D;&#x67E5;&#x8BE2; 1m &#x6761;&#x6570;&#x636E;&#x82B1;&#x8D39;&#x7684;&#x65F6;&#x95F4;&#x5C0F;&#x4E8E; 1 &#x6BEB;&#x79D2;&#xFF0C;&#x7EFC;&#x4E0A;<strong>MongoDB &#x80FD;&#x591F;&#x8F7B;&#x677E;&#x5E94;&#x5BF9;&#x767E;&#x4E07;&#x7EA7;&#x522B;&#x7684;&#x6570;&#x636E;&#x8BFB;&#x64CD;&#x4F5C;</strong>&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_versatile">Versatile(&#x5F3A;&#x5927;)</h4>
+<div class="paragraph">
+<p>MongoDB &#x63D0;&#x4F9B;&#x4E30;&#x5BCC;&#x7684;&#x529F;&#x80FD;&#x8BA9;&#x5F00;&#x53D1;&#x8005;&#x5728;&#x4E00;&#x4E2A;&#x5E73;&#x53F0;&#x89E3;&#x51B3;&#x7EDD;&#x5927;&#x90E8;&#x5206;&#x95EE;&#x9898;&#xFF0C;&#x9664;&#x4E86;&#x5E38;&#x89C1;&#x805A;&#x5408;&#x67E5;&#x8BE2;&#xFF0C;&#x73B0;&#x4EE3;&#x6570;&#x636E;&#x5206;&#x6790;&#x6570;&#x7EC4;&#x67E5;&#x8BE2;&#x3001;&#x56FE;&#x641C;&#x7D22;&#x3001;&#x4F4D;&#x7F6E;&#x641C;&#x7D22;&#x3001;&#x5206;&#x6876;&#x67E5;&#x8BE2;&#x90FD;&#x53EF;&#x652F;&#x6301;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6267;&#x884C; <a href="etc/files/insert.py">insert.py</a> &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">$ ./insert.py
+
+Adding company and customer records - may take about <span class="hljs-number">30</span> seconds...
+
+<span class="hljs-number">50029</span> company records added
+
+<span class="hljs-number">50001</span> customer records added</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x8BE2; customers</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.customers.findOne({firstname: <span class="hljs-string">&apos;Mandy&apos;</span>, lastname: <span class="hljs-string">&apos;Morrison&apos;</span>})
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">123456</span>,
+	<span class="hljs-string">&quot;balance&quot;</span> : <span class="hljs-number">89788</span>,
+	<span class="hljs-string">&quot;lastname&quot;</span> : <span class="hljs-string">&quot;Morrison&quot;</span>,
+	<span class="hljs-string">&quot;pending_transactions&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;amount&quot;</span> : <span class="hljs-number">6423</span>,
+			<span class="hljs-string">&quot;to_party&quot;</span> : <span class="hljs-string">&quot;Atlantic Ltd&quot;</span>
+		},
+		{
+			<span class="hljs-string">&quot;amount&quot;</span> : <span class="hljs-number">7582</span>,
+			<span class="hljs-string">&quot;to_party&quot;</span> : <span class="hljs-string">&quot;Lewis Group PLC&quot;</span>
+		}
+	],
+	<span class="hljs-string">&quot;firstname&quot;</span> : <span class="hljs-string">&quot;Mandy&quot;</span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x8BE2; companies</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.companies.find({_id: <span class="hljs-string">&apos;Atlantic Ltd&apos;</span>}).pretty()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;Atlantic Ltd&quot;</span>,
+	<span class="hljs-string">&quot;part_of&quot;</span> : <span class="hljs-string">&quot;Pacific Co&quot;</span>,
+	<span class="hljs-string">&quot;watch&quot;</span> : <span class="hljs-literal">false</span>,
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Atlantic Ltd&quot;</span>
+}
+
+&gt; db.companies.find({_id: <span class="hljs-string">&apos;Antartic LLP&apos;</span>}).pretty()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;Antartic LLP&quot;</span>,
+	<span class="hljs-string">&quot;part_of&quot;</span> : <span class="hljs-string">&quot;&quot;</span>,
+	<span class="hljs-string">&quot;watch&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Antartic LLP&quot;</span>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x8FD0;&#x884C;&#x805A;&#x5408;&#x6D41;&#x6C34;&#x7EBF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-keyword">var</span> cust_id = <span class="hljs-number">123456</span>
+
+db.customers.aggregate([
+    {$match: {<span class="hljs-string">&apos;_id&apos;</span>: cust_id}},
+        {$graphLookup: {
+            <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;companies&apos;</span>,
+            startWith: <span class="hljs-string">&apos;$pending_transactions.to_party&apos;</span>,
+            connectFromField: <span class="hljs-string">&apos;part_of&apos;</span>,
+            connectToField: <span class="hljs-string">&apos;_id&apos;</span>,
+            depthField: <span class="hljs-string">&apos;depth&apos;</span>,
+            <span class="hljs-keyword">as</span>: <span class="hljs-string">&apos;org_hierarchy&apos;</span>
+        }}
+    ]).pretty()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8FD0;&#x884C;&#x805A;&#x5408;&#x6D41;&#x6C34;&#x7EBF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"><span class="hljs-keyword">var</span> cust_id = <span class="hljs-number">123456</span>
+
+db.customers.aggregate([
+    <span class="hljs-comment">// Look at specific customer account only</span>
+    {$match: {<span class="hljs-string">&apos;_id&apos;</span>: cust_id}},
+
+    <span class="hljs-comment">// Build list of ancestor companies for each pending transaction in the account</span>
+    {$graphLookup: {
+        <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;companies&apos;</span>,
+        startWith: <span class="hljs-string">&apos;$pending_transactions.to_party&apos;</span>,
+        connectFromField: <span class="hljs-string">&apos;part_of&apos;</span>,
+        connectToField: <span class="hljs-string">&apos;_id&apos;</span>,
+        depthField: <span class="hljs-string">&apos;depth&apos;</span>,
+        <span class="hljs-keyword">as</span>: <span class="hljs-string">&apos;org_hierarchy&apos;</span>
+    }},
+
+    <span class="hljs-comment">// Expand the companies array to show each found company as a separate line item</span>
+    {$unwind: <span class="hljs-string">&apos;$org_hierarchy&apos;</span>},
+
+    <span class="hljs-comment">// Filter out any company line items that don&apos;t have a watch flag set</span>
+    {$match: {<span class="hljs-string">&apos;org_hierarchy.watch&apos;</span>: <span class="hljs-literal">true</span>}},
+
+    <span class="hljs-comment">// Group together summary information with all the flagged companies held in an array</span>
+    {$group: {
+        _id: <span class="hljs-string">&apos;$_id&apos;</span>,
+        firstname: {$first: <span class="hljs-string">&apos;$firstname&apos;</span>},
+        lastname: {$first: <span class="hljs-string">&apos;$lastname&apos;</span>},
+        watch_flag_company_alerts: {$push: <span class="hljs-string">&quot;$org_hierarchy._id&quot;</span>}
+    }}
+]).pretty()</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">&#x4E3A;&#x9AD8;&#x6548;&#x53EF;&#x9760;&#x8FD0;&#x884C;&#x800C;&#x8BBE;&#x8BA1;</h3>
+
+</div>
+<div class="sect2">
+<h3 id="___2">&#x4E3A;&#x968F;&#x5904;&#x90E8;&#x7F72;&#x800C;&#x5EFA;</h3>
+
 </div>
 </div>
 </div>
@@ -287,9 +1029,27 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="_todo">TODO</h2>
+<h2 id="_earnings_conference_call">Earnings Conference Call</h2>
 <div class="sectionbody">
-
+<div class="ulist">
+<ul>
+<li>
+<p>FY19 Q4 - <a href="https://www.fool.com/earnings/call-transcripts/2019/03/14/mongodb-inc-mdb-q4-2018-earnings-conference-call-t.aspx" class="bare" target="_blank">https://www.fool.com/earnings/call-transcripts/2019/03/14/mongodb-inc-mdb-q4-2018-earnings-conference-call-t.aspx</a></p>
+</li>
+<li>
+<p>FY19 Q3 - <a href="https://www.fool.com/earnings/call-transcripts/2018/12/04/mongodb-inc-mdb-q3-2019-earnings-conference-call-t.aspx" class="bare" target="_blank">https://www.fool.com/earnings/call-transcripts/2018/12/04/mongodb-inc-mdb-q3-2019-earnings-conference-call-t.aspx</a></p>
+</li>
+<li>
+<p>FY19 Q2 - <a href="https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-second-quarter-fiscal-2019-financial" class="bare" target="_blank">https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-second-quarter-fiscal-2019-financial</a></p>
+</li>
+<li>
+<p>FY19 Q1 - <a href="https://www.fool.com/earnings/call-transcripts/2018/06/07/mongodb-inc-mdb-q1-2019-earnings-conference-call-t.aspx" class="bare" target="_blank">https://www.fool.com/earnings/call-transcripts/2018/06/07/mongodb-inc-mdb-q1-2019-earnings-conference-call-t.aspx</a></p>
+</li>
+<li>
+<p>FY18 Q4 - <a href="https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-fourth-quarter-and-full-year-fiscal-2018" class="bare" target="_blank">https://investors.mongodb.com/news-releases/news-release-details/mongodb-inc-announces-fourth-quarter-and-full-year-fiscal-2018</a></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
                                 
@@ -330,7 +1090,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-04-02T01:11:10.496Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-11T07:56:02.745Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-04-21T13:42:11.142Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-21T13:44:43.158Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

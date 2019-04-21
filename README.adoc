@@ -260,17 +260,348 @@ null
 
 ==== Fast(高效)
 
+本部分通过 mongod、mongo、compass 等组件说明 MongoDB 支持更大的数据量处理能力，为应用提供更佳性能，支持 *PB* 级数据处理。 
 
-[source, json]
+[source, python]
+.*1. 启动 mongod 创建用户名密码*
+----
+db.createUser({user: "root", pwd: "root123", roles: ["root"]})
+db.auth("root", "root123")
 ----
 
+[source, python]
+.*2. 运行 link:etc/files/insert_accounts_one.py[insert_accounts_one.py] 插入 1m 条数据*
 ----
+$ ./insert_accounts_one.py 
+1000000 records inserted
+----
+
+*3. 查看性能指标*
+
+image:etc/img/iodp-fast-insert-one.png[]
+
+[source, python]
+.*4. 运行 link:etc/files/insert_accounts_bulk.py[insert_accounts_bulk.py] 批量插入 1m 条数据*
+----
+$ ./insert_accounts_bulk.py
+1000000 records inserted
+----
+
+*5. 查看性能指标*
+
+image:etc/img/iodp-fast-inset-bulk.png[]
+
+NOTE: 可以看到十几秒时间内一条一条插入 1m 条数据(400 MB)完成，批量插入数秒完成插入，且两种插入性能指标变化不大，说明 *MongoDB 能够轻松应对百万级别的数据插入操作*。
+
+[source, python]
+.*6. 全表扫描查询*
+----
+> db.customers.explain(1).count({manager:"Barry Mongo"})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "bankdata.customers",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"manager" : {
+				"$eq" : "Barry Mongo"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "COUNT",
+			"inputStage" : {
+				"stage" : "COLLSCAN",
+				"filter" : {
+					"manager" : {
+						"$eq" : "Barry Mongo"
+					}
+				},
+				"direction" : "forward"
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 0,
+		"executionTimeMillis" : 383,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 1000001,
+		"executionStages" : {
+			"stage" : "COUNT",
+			"nReturned" : 0,
+			"executionTimeMillisEstimate" : 309,
+			"works" : 1000003,
+			"advanced" : 0,
+			"needTime" : 1000002,
+			"needYield" : 0,
+			"saveState" : 7820,
+			"restoreState" : 7820,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"nCounted" : 1,
+			"nSkipped" : 0,
+			"inputStage" : {
+				"stage" : "COLLSCAN",
+				"filter" : {
+					"manager" : {
+						"$eq" : "Barry Mongo"
+					}
+				},
+				"nReturned" : 1,
+				"executionTimeMillisEstimate" : 286,
+				"works" : 1000003,
+				"advanced" : 1,
+				"needTime" : 1000001,
+				"needYield" : 0,
+				"saveState" : 7820,
+				"restoreState" : 7820,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"direction" : "forward",
+				"docsExamined" : 1000001
+			}
+		},
+		"allPlansExecution" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "Kylins-MacBook-Pro.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 可以看到全表扫描 1m 条数据花费了 383 毫秒。
+
+[source, text]
+.*7. 创建索引后执行同样查看*
+----
+> db.customers.createIndex( { manager: 1 } )
+> db.customers.explain(1).count({manager:"Barry Mongo"})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "bankdata.customers",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"manager" : {
+				"$eq" : "Barry Mongo"
+			}
+		},
+		"winningPlan" : {
+			"stage" : "COUNT",
+			"inputStage" : {
+				"stage" : "COUNT_SCAN",
+				"keyPattern" : {
+					"manager" : 1
+				},
+				"indexName" : "manager_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"manager" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"indexBounds" : {
+					"startKey" : {
+						"manager" : "Barry Mongo"
+					},
+					"startKeyInclusive" : true,
+					"endKey" : {
+						"manager" : "Barry Mongo"
+					},
+					"endKeyInclusive" : true
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 0,
+		"executionTimeMillis" : 0,
+		"totalKeysExamined" : 2,
+		"totalDocsExamined" : 0,
+		"executionStages" : {
+			"stage" : "COUNT",
+			"nReturned" : 0,
+			"executionTimeMillisEstimate" : 0,
+			"works" : 2,
+			"advanced" : 0,
+			"needTime" : 1,
+			"needYield" : 0,
+			"saveState" : 0,
+			"restoreState" : 0,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"nCounted" : 1,
+			"nSkipped" : 0,
+			"inputStage" : {
+				"stage" : "COUNT_SCAN",
+				"nReturned" : 1,
+				"executionTimeMillisEstimate" : 0,
+				"works" : 2,
+				"advanced" : 1,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 0,
+				"restoreState" : 0,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keysExamined" : 2,
+				"keyPattern" : {
+					"manager" : 1
+				},
+				"indexName" : "manager_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"manager" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"indexBounds" : {
+					"startKey" : {
+						"manager" : "Barry Mongo"
+					},
+					"startKeyInclusive" : true,
+					"endKey" : {
+						"manager" : "Barry Mongo"
+					},
+					"endKeyInclusive" : true
+				}
+			}
+		},
+		"allPlansExecution" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "Kylins-MacBook-Pro.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 可以看到索引命中查询 1m 条数据花费的时间小于 1 毫秒，综上*MongoDB 能够轻松应对百万级别的数据读操作*。
 
 ==== Versatile(强大)
 
+MongoDB 提供丰富的功能让开发者在一个平台解决绝大部分问题，除了常见聚合查询，现代数据分析数组查询、图搜索、位置搜索、分桶查询都可支持。
+
 [source, json]
+.*1. 执行 link:etc/files/insert.py[insert.py] 导入数据*
+----
+$ ./insert.py 
+
+Adding company and customer records - may take about 30 seconds...
+
+50029 company records added
+
+50001 customer records added
 ----
 
+[source, json]
+.*2. 查询 customers*
+----
+> db.customers.findOne({firstname: 'Mandy', lastname: 'Morrison'})
+{
+	"_id" : 123456,
+	"balance" : 89788,
+	"lastname" : "Morrison",
+	"pending_transactions" : [
+		{
+			"amount" : 6423,
+			"to_party" : "Atlantic Ltd"
+		},
+		{
+			"amount" : 7582,
+			"to_party" : "Lewis Group PLC"
+		}
+	],
+	"firstname" : "Mandy"
+}
+
+----
+
+[source, json]
+.*3. 查询 companies*
+----
+> db.companies.find({_id: 'Atlantic Ltd'}).pretty()
+{
+	"_id" : "Atlantic Ltd",
+	"part_of" : "Pacific Co",
+	"watch" : false,
+	"name" : "Atlantic Ltd"
+}
+
+> db.companies.find({_id: 'Antartic LLP'}).pretty()
+{
+	"_id" : "Antartic LLP",
+	"part_of" : "",
+	"watch" : true,
+	"name" : "Antartic LLP"
+}
+----
+
+[source, json]
+.*4. 运行聚合流水线*
+----
+var cust_id = 123456
+
+db.customers.aggregate([
+    {$match: {'_id': cust_id}},
+        {$graphLookup: {
+            from: 'companies',
+            startWith: '$pending_transactions.to_party',
+            connectFromField: 'part_of',
+            connectToField: '_id',
+            depthField: 'depth',
+            as: 'org_hierarchy'
+        }}
+    ]).pretty()
+----
+
+[source, json]
+.*5. 运行聚合流水线*
+----
+var cust_id = 123456
+
+db.customers.aggregate([
+    // Look at specific customer account only
+    {$match: {'_id': cust_id}},
+
+    // Build list of ancestor companies for each pending transaction in the account
+    {$graphLookup: {
+        from: 'companies',
+        startWith: '$pending_transactions.to_party',
+        connectFromField: 'part_of',
+        connectToField: '_id',
+        depthField: 'depth',
+        as: 'org_hierarchy'
+    }},
+
+    // Expand the companies array to show each found company as a separate line item
+    {$unwind: '$org_hierarchy'},
+
+    // Filter out any company line items that don't have a watch flag set
+    {$match: {'org_hierarchy.watch': true}},
+
+    // Group together summary information with all the flagged companies held in an array
+    {$group: {
+        _id: '$_id',
+        firstname: {$first: '$firstname'},
+        lastname: {$first: '$lastname'},
+        watch_flag_company_alerts: {$push: "$org_hierarchy._id"}
+    }}
+]).pretty()
 ----
 
 === 为高效可靠运行而设计
