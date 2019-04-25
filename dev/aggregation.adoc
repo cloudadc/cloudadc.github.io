@@ -1,7 +1,102 @@
 = Aggregation Framework
 :toc: manual
 
+== 测试数据
+
+=== solarSystem(太阳系)
+
+image:img/solar-system.png[]
+
+solarSystem collection 中包括太阳系中所有恒星和行星的的信息，每个星球包含的具体属性有名称、类型、半径，重量，距离太阳的距离等。
+
+[source, text]
+.*示例：查询地球的详细信息*
+----
+> db.solarSystem.find({"name" : "Earth"}).pretty()
+{
+	"_id" : ObjectId("59a06674c8df9f3cd2ee7d54"),
+	"name" : "Earth",
+	"type" : "Terrestrial planet",
+	"orderFromSun" : 3,
+	"radius" : {
+		"value" : 6378.137,
+		"units" : "km"
+	},
+	"mass" : {
+		"value" : 5.9723e+24,
+		"units" : "kg"
+	},
+	"sma" : {
+		"value" : 149600000,
+		"units" : "km"
+	},
+	"orbitalPeriod" : {
+		"value" : 1,
+		"units" : "years"
+	},
+	"eccentricity" : 0.0167,
+	"meanOrbitalVelocity" : {
+		"value" : 29.78,
+		"units" : "km/sec"
+	},
+	"rotationPeriod" : {
+		"value" : 1,
+		"units" : "days"
+	},
+	"inclinationOfAxis" : {
+		"value" : 23.45,
+		"units" : "degrees"
+	},
+	"meanTemperature" : 15,
+	"gravity" : {
+		"value" : 9.8,
+		"units" : "m/s^2"
+	},
+	"escapeVelocity" : {
+		"value" : 11.18,
+		"units" : "km/sec"
+	},
+	"meanDensity" : 5.52,
+	"atmosphericComposition" : "N2+O2",
+	"numberOfMoons" : 1,
+	"hasRings" : false,
+	"hasMagneticField" : true
+}
+----
+
 == $match, $project
+
+=== 查询太阳系中不是恒星的星球，并统计总数
+
+[source, sql]
+----
+db.solarSystem.aggregate([{
+   $match: {
+     type: {$ne: "Star"}
+     }
+   }, {
+   $count: "planets"
+   }
+])
+----
+
+=== 查询太阳系中满足大气层中有氧气，地表平均温度 -40 到 40 之间，且有月亮的星球
+
+[source, sql]
+----
+db.solarSystem.aggregate([{
+  "$match": {
+    "atmosphericComposition": { "$in": [/O2/] },
+    "meanTemperature": { $gte: -40, "$lte": 40 }
+  }
+}, {
+  "$project": {
+    "_id": 0,
+    "name": 1,
+    "hasMoons": { "$gt": ["$numberOfMoons", 0] }
+  }
+}], { "allowDiskUse": true});
+----
 
 === 构建满足条件的 movies pipeline
 
