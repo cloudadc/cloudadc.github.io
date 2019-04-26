@@ -9,10 +9,10 @@ image:img/solar-system.png[]
 
 solarSystem collection 中包括太阳系中所有恒星和行星的的信息，每个星球包含的具体属性有名称、类型、半径，重量，距离太阳的距离等。
 
-[source, text]
+[source, json]
 .*示例：查询地球的详细信息*
 ----
-> db.solarSystem.find({"name" : "Earth"}).pretty()
+db.solarSystem.find({"name" : "Earth"}).pretty()
 {
 	"_id" : ObjectId("59a06674c8df9f3cd2ee7d54"),
 	"name" : "Earth",
@@ -64,53 +64,23 @@ solarSystem collection 中包括太阳系中所有恒星和行星的的信息，
 }
 ----
 
-== $match, $project
+=== movies(电影)
 
-=== 查询太阳系中不是恒星的星球，并统计总数
+image:img/hero_poster.jpg[]
 
-[source, sql]
-----
-db.solarSystem.aggregate([{
-   $match: {
-     type: {$ne: "Star"}
-     }
-   }, {
-   $count: "planets"
-   }
-])
-----
+movies collection 中包括电影的信息，如下所示
 
-=== 查询太阳系中满足大气层中有氧气，地表平均温度 -40 到 40 之间，且有月亮的星球
+* title - 电影的名称
+* year - 上映的年代
+* cast - 主演
+* type - 类型
+* directors - 导演
+* imdb - imdb 的评分
+* countries - 国家
+* genres - 体裁
+* tomatoes - 烂番茄评分
 
-[source, sql]
-----
-db.solarSystem.aggregate([{
-  "$match": {
-    "atmosphericComposition": { "$in": [/O2/] },
-    "meanTemperature": { $gte: -40, "$lte": 40 }
-  }
-}, {
-  "$project": {
-    "_id": 0,
-    "name": 1,
-    "hasMoons": { "$gt": ["$numberOfMoons", 0] }
-  }
-}], { "allowDiskUse": true});
-----
-
-=== 构建满足条件的 movies pipeline
-
-测试数据中所有电影的总数：
-
-[source, text]
-----
-db.movies.count()
-44497
-----
-
-一条电影记录的结构：
-
-[source, text]
+[source, json]
 ----
 db.movies.findOne()
 {
@@ -147,169 +117,440 @@ db.movies.findOne()
 }
 ----
 
-选择电影满足如下条件：
+=== nycFacilities(纽约市公共设施)
 
-* *imdb.rating* is at least 7
-* *genres* does not contain "Crime" or "Horror"
-* *rated* is either "PG" or "G"
-* *languages* contains "English" and "Japanese"
+nycFacilities collection 中包括纽约市的公共设施，具体包括：
 
-[source, text]
+* name - 名称
+* address - 地址
+* borough - 区
+* location - 地址
+
+[source, json]
 ----
-var pipeline = [{$match: {$and: [{"imdb.rating": {$gte: 7}}, {"genres": {$nin: ["Crime", "Horror"]}}, {"rated": {$in: ["PG", "G"]}}, {"languages": {$all: ["English", "Japanese"]}}]}}];
-
-db.movies.aggregate(pipeline).itcount()
-23
-----
-
-增加条件，输出近显示 title 和 rated 属性：
-
-[source, text]
-----
-var pipeline = [{$match: {$and: [{"imdb.rating": {$gte: 7}}, {"genres": {$nin: ["Crime", "Horror"]}}, {"rated": {$in: ["PG", "G"]}}, {"languages": {$all: ["English", "Japanese"]}}]}}, {$project: {_id: 0, title: 1, rated: 1}}];
-
-db.movies.aggregate(pipeline)
-{ "title" : "Those Magnificent Men in Their Flying Machines or How I Flew from London to Paris in 25 hours 11 minutes", "rated" : "G" }
-{ "title" : "Red Sun", "rated" : "PG" }
-{ "title" : "Babies", "rated" : "PG" }
-{ "title" : "The Karate Kid", "rated" : "PG" }
-{ "title" : "Dragon Ball Z: Tree of Might", "rated" : "PG" }
-{ "title" : "Cars", "rated" : "G" }
-{ "title" : "Jack and the Beanstalk", "rated" : "G" }
-{ "title" : "The Transformers: The Movie", "rated" : "PG" }
-{ "title" : "Defending Your Life", "rated" : "PG" }
-{ "title" : "The Cat Returns", "rated" : "G" }
-{ "title" : "Hell in the Pacific", "rated" : "G" }
-{ "title" : "The Goodbye Girl", "rated" : "PG" }
-{ "title" : "Tora! Tora! Tora!", "rated" : "G" }
-{ "title" : "Local Hero", "rated" : "PG" }
-{ "title" : "Summer Wars", "rated" : "PG" }
-{ "title" : "The Secret World of Arrietty", "rated" : "G" }
-{ "title" : "Empire of the Sun", "rated" : "PG" }
-{ "title" : "Dreams", "rated" : "PG" }
-{ "title" : "Millennium Actress", "rated" : "PG" }
-{ "title" : "Whisper of the Heart", "rated" : "G" }
-----
-
-=== 选择电影中 title 仅为一个字的电影
-
-[source, text]
-----
-var pipeline = [{$project: {"titleWords": {$size: {$split: ["$title" , " "]}}}}, {$match: {"titleWords": 1}}];
-
-db.movies.aggregate(pipeline).itcount()
-8068
-----
-
-=== 查看同一个人即是 cast，又是 director，还是 writer
-
-[source, text]
-----
-var pipeline = [{$match: {"writers": {$elemMatch: {$exists: true}}, "cast": {$elemMatch: {$exists: true}}, "directors": {$elemMatch: {$exists: true}}}}, {$project: {"writers": {$map: {input: "$writers", as: "writer", in: {$arrayElemAt: [{$split: ["$$writer", " (" ]}, 0]}}}, "cast" : 1, "directors" : 1}}, {$project: {"laborOfLove": {$gt: [{$size: {$setIntersection: ["$writers", "$cast", "$directors"]}}, 0]}}}, {$match: {"laborOfLove": true}}];
-
-db.movies.aggregate(pipeline).itcount()
-1597
-----
-
-== $addFields, $skip, $limit, $count
-
-=== 添加字段
-
-查看 solarSystem 的 name，gravity，mass，radius，sma 字段
-
-[source, text]
-----
-var pipeline = [{$project: {_id: 0, name: 1, gravity: 1, mass: 1, radius:1, sma: 1}}];
-
-db.solarSystem.aggregate(pipeline).pretty()
+db.nycFacilities.findOne()
 {
-	"name" : "Uranus",
-	"radius" : {
-		"value" : 25559,
-		"units" : "km"
+	"_id" : ObjectId("59a57f72ea2da4c51ef35c5e"),
+	"name" : "Joan Of Arc Park",
+	"address" : {
+		"number" : "",
+		"street" : "",
+		"city" : "New York",
+		"zipcode" : "10024"
 	},
-	"mass" : {
-		"value" : 8.6813e+25,
-		"units" : "kg"
+	"borough" : "Manhattan",
+	"location" : {
+		"type" : "Point",
+		"coordinates" : [
+			-73.976521,
+			40.79415
+		]
 	},
-	"sma" : {
-		"value" : 2872460000,
-		"units" : "km"
-	},
-	"gravity" : {
-		"value" : 8.87,
-		"units" : "m/s^2"
-	}
+	"domain" : "Parks, Gardens, and Historical Sites",
+	"group" : "Parks and Plazas",
+	"specialty" : "Streetscapes, Plazas, and Malls",
+	"type" : "Triangle/Plaza"
 }
+---- 
+
+== $match, $project
+
+=== 查询太阳系中不是恒星的星球，并统计总数
+
+[source, sql]
+----
+db.solarSystem.aggregate([{
+   $match: {
+     type: {$ne: "Star"}
+     }
+   }, {
+   $count: "planets"
+   }
+])
 ----
 
-添加字段，抽取 value 字段
+=== 查询太阳系中满足大气层中有氧气，地表平均温度 -40 到 40 之间，且有月亮的星球
 
-[source, text]
+[source, sql]
 ----
-var pipeline = [{$project: {_id: 0, name: 1, gravity: 1, mass: 1, radius:1, sma: 1}}, {$addFields: {gravity: "$gravity.value", radius: "$radius.value", mass: "$mass.value", sma: "$sma.value"}}];
-
-db.solarSystem.aggregate(pipeline).pretty()
-{
-	"name" : "Uranus",
-	"radius" : 25559,
-	"mass" : 8.6813e+25,
-	"sma" : 2872460000,
-	"gravity" : 8.87
-}
+db.solarSystem.aggregate([{
+  "$match": {
+    "atmosphericComposition": { "$in": [/O2/] },
+    "meanTemperature": { $gte: -40, "$lte": 40 }
+  }
+}, {
+  "$project": {
+    "_id": 0,
+    "name": 1,
+    "hasMoons": { "$gt": ["$numberOfMoons", 0] }
+  }
+}], { "allowDiskUse": true});
 ----
 
-=== 限制、跳过、统计、排序文档记录
+=== 查询太阳系中所有的星球，只显示星球的名称和引力的大小
 
-仅输出 5 条记录
-
-[source, text]
+[source, javaScript]
 ----
-var pipeline = [{$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$limit: 5}]
+var pipeline = [
+  {
+    $project: {_id: 0, name: 1, "gravity.value": 1}
+  }
+];
+
+db.solarSystem.aggregate(pipeline);
+{ "name" : "Uranus", "gravity" : { "value" : 8.87 } }
+{ "name" : "Mercury", "gravity" : { "value" : 3.24 } }
+{ "name" : "Earth", "gravity" : { "value" : 9.8 } }
+{ "name" : "Jupiter", "gravity" : { "value" : 24.79 } }
+{ "name" : "Venus", "gravity" : { "value" : 8.87 } }
+{ "name" : "Mars", "gravity" : { "value" : 3.71 } }
+{ "name" : "Sun", "gravity" : { "value" : 274 } }
+{ "name" : "Saturn", "gravity" : { "value" : 10.44 } }
+{ "name" : "Neptune", "gravity" : { "value" : 11.15 } }
+----
+
+=== 查询太阳系中所有的星球，只显示星球的名称和引力的大小，并且格式化输出为一个属性
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $project: {_id: 0, name: 1, gravity: "$gravity.value"}
+  }
+];
+
+db.solarSystem.aggregate(pipeline);
+{ "name" : "Uranus", "gravity" : 8.87 }
+{ "name" : "Mercury", "gravity" : 3.24 }
+{ "name" : "Earth", "gravity" : 9.8 }
+{ "name" : "Jupiter", "gravity" : 24.79 }
+{ "name" : "Venus", "gravity" : 8.87 }
+{ "name" : "Mars", "gravity" : 3.71 }
+{ "name" : "Sun", "gravity" : 274 }
+{ "name" : "Saturn", "gravity" : 10.44 }
+{ "name" : "Neptune", "gravity" : 11.15 }
+----
+
+=== 查询太阳系中所有的星球，只显示星球的名称、引力的大小、重量、半径及距离太阳的距离，并且格式化以一个属性输出
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $project: {
+      _id: 0, 
+      name: 1, 
+      gravity: "$gravity.value",
+      "mass": "$mass.value",
+      "radius": "$radius.value",
+      "sma": "$sma.value"
+    }
+  }
+];
 
 db.solarSystem.aggregate(pipeline)
-{ "name" : "Uranus", "numberOfMoons" : 27 }
-{ "name" : "Mercury", "numberOfMoons" : 0 }
-{ "name" : "Earth", "numberOfMoons" : 1 }
-{ "name" : "Jupiter", "numberOfMoons" : 67 }
-{ "name" : "Venus", "numberOfMoons" : 0 }
+{ "name" : "Uranus", "gravity" : 8.87, "mass" : 8.6813e+25, "radius" : 25559, "sma" : 2872460000 }
+{ "name" : "Mercury", "gravity" : 3.24, "mass" : 3.3e+23, "radius" : 4879, "sma" : 57910000 }
+{ "name" : "Earth", "gravity" : 9.8, "mass" : 5.9723e+24, "radius" : 6378.137, "sma" : 149600000 }
+{ "name" : "Jupiter", "gravity" : 24.79, "mass" : 1.89819e+27, "radius" : 71492, "sma" : 778570000 }
+{ "name" : "Venus", "gravity" : 8.87, "mass" : 4.8675e+24, "radius" : 6051.8, "sma" : 108210000 }
+{ "name" : "Mars", "gravity" : 3.71, "mass" : 6.4171e+23, "radius" : 3396.2, "sma" : 227920000 }
+{ "name" : "Sun", "gravity" : 274, "mass" : 1.9885e+30, "radius" : 695700, "sma" : 0 }
+{ "name" : "Saturn", "gravity" : 10.44, "mass" : 5.6834e+26, "radius" : 60268, "sma" : 1433530000 }
+{ "name" : "Neptune", "gravity" : 11.15, "mass" : 1.02413e+26, "radius" : 24765, "sma" : 4495060000 }
 ----
 
-跳过前四条记录
+=== 查找电影中满足 imdb 评分至少为 7，体裁不是 "Crime" 或 "Horror"，评级是 "PG" 或 "G"，且语言包括 "English" 和 "Japanese"
 
-[source, text]
+[source, javaScript]
 ----
-var pipeline = [{$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$skip: 4}]
+var pipeline = [
+    { $match :
+            { $and : [
+                    { "imdb.rating" : { $gte : 7 }},
+                        { "genres" :
+                            { $nin :[ "Crime", "Horror" ]}
+                        },
+                        { "rated" :
+                                { $in : [ "PG", "G" ]}
+                        },
+                        { "languages" :
+                                { $all : [ "English", "Japanese" ]}
+                        }
+                ]}
+        }
+];
+
+var count = db.movies.aggregate(pipeline).itcount();
+print("Documents fetched by the pipeline: " + count);
+----
+
+=== 查找电影中满足 imdb 评分至少为 7，体裁不是 "Crime" 或 "Horror"，评级是 "PG" 或 "G"，且语言包括 "English" 和 "Japanese"，输出仅显示 title 和 rated 属性 
+
+[source, javaScript]
+----
+var pipeline = [
+    { $match :
+            { $and : [
+                    { "imdb.rating" : { $gte : 7 }},
+                        { "genres" :
+                            { $nin :[ "Crime", "Horror" ]}
+                        },
+                        { "rated" :
+                                { $in : [ "PG", "G" ]}
+                        },
+                        { "languages" :
+                                { $all : [ "English", "Japanese" ]}
+                        }
+                ]}
+        },
+        { $project : { "_id" : 0, "title" : 1, "rated" : 1}}
+];
+
+var count = db.movies.aggregate(pipeline).itcount();
+print("Documents fetched by the pipeline: " + count);
+----
+
+=== 查找电影中满足 title 仅为一个字的电影
+
+[source, javaScript]
+----
+var pipeline = [
+        { $project :
+        { "titleWords" :
+                    { $size :
+                            { $split : [ "$title" , " " ] }
+                        }
+                }
+        },
+    { $match : { "titleWords" : {$eq: 1}} }
+];
+
+db.movies.aggregate(pipeline).itcount()
+----
+
+=== 查找电影中满足同一个人即是 cast，又是 director，还是 writer
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $match: {
+      "writers": {$elemMatch: {$exists: true}},
+      "cast": {$elemMatch: {$exists: true}},
+      "directors": {$elemMatch: {$exists: true}}
+    }
+  },
+  {
+    $project: {
+      "writers": {
+        $map: {
+          input: "$writers", 
+          as: "writer",
+          in: {
+            $arrayElemAt: [{$split: ["$$writer", " ("]}, 0]
+          }
+        }
+      },
+      "cast": 1,
+      "directors" : 1
+    }
+  },
+  {
+    $project: {
+      "laborOfLove": {
+        $gt: [{$size: {$setIntersection: ["$writers", "$cast", "$directors"]}}, 0]
+      }
+    }
+  },
+  {
+    $match: {
+      "laborOfLove" : {$eq: true}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline).itcount()
+----
+
+== $addFields, $geoNear
+
+=== 查询太阳系中所有的星球，只显示星球的名称、引力的大小、重量、半径及距离太阳的距离，并且格式化以一个属性输出
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      gravity: 1, 
+      mass: 1, 
+      radius:1, 
+      sma: 1
+    }
+  },
+  {
+    $addFields: {
+      "gravity": "$gravity.value",
+      "mass": "$mass.value",
+      "radius": "$radius.value",
+      "sma": "$sma.value"
+    }
+  }
+];
 
 db.solarSystem.aggregate(pipeline)
-{ "name" : "Venus", "numberOfMoons" : 0 }
-{ "name" : "Mars", "numberOfMoons" : 2 }
-{ "name" : "Sun", "numberOfMoons" : 0 }
-{ "name" : "Saturn", "numberOfMoons" : 62 }
-{ "name" : "Neptune", "numberOfMoons" : 14 }
+{ "name" : "Uranus", "radius" : 25559, "mass" : 8.6813e+25, "sma" : 2872460000, "gravity" : 8.87 }
+{ "name" : "Mercury", "radius" : 4879, "mass" : 3.3e+23, "sma" : 57910000, "gravity" : 3.24 }
+{ "name" : "Earth", "radius" : 6378.137, "mass" : 5.9723e+24, "sma" : 149600000, "gravity" : 9.8 }
+{ "name" : "Jupiter", "radius" : 71492, "mass" : 1.89819e+27, "sma" : 778570000, "gravity" : 24.79 }
+{ "name" : "Venus", "radius" : 6051.8, "mass" : 4.8675e+24, "sma" : 108210000, "gravity" : 8.87 }
+{ "name" : "Mars", "radius" : 3396.2, "mass" : 6.4171e+23, "sma" : 227920000, "gravity" : 3.71 }
+{ "name" : "Sun", "radius" : 695700, "mass" : 1.9885e+30, "sma" : 0, "gravity" : 274 }
+{ "name" : "Saturn", "radius" : 60268, "mass" : 5.6834e+26, "sma" : 1433530000, "gravity" : 10.44 }
+{ "name" : "Neptune", "radius" : 24765, "mass" : 1.02413e+26, "sma" : 4495060000, "gravity" : 11.15 }
 ----
 
-统计类型为 Terrestrial planet 的文档总数
+=== 查询纽约时代广场附近的公共设施
 
-[source, text]
+[source, javaScript]
 ----
-var pipeline = [{$match: {type: "Terrestrial planet"}}, {$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$count: "Terrestrial planets"}]
+var pipeline = [
+  {
+    $geoNear: {
+      "near": {
+        "type": "Point",
+        "coordinates": [-73.98769766092299, 40.757345233626594]
+      },
+      "distanceField": "distanceFromTimeSquire",
+      "spherical": true
+    }
+  }
+];
+
+db.nycFacilities.aggregate(pipeline).itcount()
+----
+
+=== 查询纽约时代广场附近的医院
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $geoNear: {
+      "near": {
+        "type": "Point",
+        "coordinates": [-73.98769766092299, 40.757345233626594]
+      },
+      "distanceField": "distanceFromTimeSquire",
+      "spherical": true,
+      "query": { type: "Hospital" },
+      "limit": 5
+    }
+  }
+];
+
+db.nycFacilities.aggregate(pipeline).itcount()
+----
+
+== $sort, $skip, $limit, $count
+
+=== 查询太阳系中所有的星球，只显示星球的名称、和附近的月球，仅输出 5 条记录
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      numberOfMoons: 1
+    }
+  },
+  {
+    $limit: 5
+  }
+];
 
 db.solarSystem.aggregate(pipeline)
-{ "Terrestrial planets" : 4 }
 ----
 
-文档排序
+=== 查询太阳系中所有的星球，只显示星球的名称、和附近的月球，且跳过前 5 条记录
 
-[source, text]
+[source, javaScript]
 ----
-var pipeline = [{$match: {type: "Terrestrial planet"}}, {$project: {_id: 0, name: 1, numberOfMoons: 1}}, {$sort: {numberOfMoons: -1}}]
+var pipeline = [
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      numberOfMoons: 1
+    }
+  },
+  {
+    $skip: 5
+  }
+];
 
 db.solarSystem.aggregate(pipeline)
-{ "name" : "Mars", "numberOfMoons" : 2 }
-{ "name" : "Earth", "numberOfMoons" : 1 }
-{ "name" : "Mercury", "numberOfMoons" : 0 }
-{ "name" : "Venus", "numberOfMoons" : 0 }
+----
+
+=== 查询太阳系中所有的行星，并统计行星的数量
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $match: {"type": {$eq: "Terrestrial planet"}}
+  },
+  {
+    $count: "terrestrial planets"
+  }
+]; 
+
+db.solarSystem.aggregate(pipeline)
+----
+
+=== 查询太阳系中所有的星球，只显示星球的名称、和附近的月球，并以月球的数量降序排序
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $project: {
+      _id: 0,
+      name: 1,
+      numberOfMoons: 1
+    }
+  },
+  {
+    $sort: {numberOfMoons: -1}
+  }
+];
+
+db.solarSystem.aggregate(pipeline)
+----
+
+=== 查询太阳系中所有的星球，只显示星球的名称、附近的月球、和是否有磁场，并以月球的数量和是否有磁场降序排序
+
+[source, javaScript]
+----
+var pipeline = [
+  {   
+    $project: {
+      _id: 0,
+      name: 1,
+      hasMagneticField: 1,
+      numberOfMoons: 1
+    }
+  },
+  {
+    $sort: {hasMagneticField: -1, numberOfMoons: -1}
+  }
+];
+
+db.solarSystem.aggregate(pipeline)
 ----
 
 === 查找拍序电影，并添加字段
@@ -321,10 +562,47 @@ db.solarSystem.aggregate(pipeline)
 * calculate a new field called num_favs that represets how many favorites appear in the cast field of the movie
 * Sort your results by num_favs, tomatoes.viewer.rating, and title, all in descending order
 
-[source, text]
+[source, javaScript]
 ----
-var favorites = [     "Sandra Bullock",     "Tom Hanks",     "Julia Roberts",     "Kevin Spacey",     "George Clooney" ];
-var pipeline = [     { $match : {             "tomatoes.viewer.rating" : { $gte : 3 },                 "cast" : { $exists : true }                 }         },         { $addFields : { "num_favs" : { $size : { $setIntersection : [ "$cast", favorites ] } } } },         { $sort : {             "num_favs" : -1,                 "tomatoes.viewer.rating" : -1,                 "title" : -1             },         },         { $skip : 25 } ];
+var favorites = [
+  "Sandra Bullock",
+  "Tom Hanks",
+  "Julia Roberts",
+  "Kevin Spacey",
+  "George Clooney" 
+];
+var pipeline = [
+  {
+    $match: {
+      "tomatoes.viewer.rating": {$gte: 3},
+      "cast": {$exists: true}
+    }
+  },
+  {
+    $addFields: {
+      "num_favs": {$size: {
+          $setIntersection: ["$cast", favorites]
+        }
+      }
+    }
+  },
+  {
+    $sort: {
+      "num_favs": -1,
+      "tomatoes.viewer.rating": -1,
+      "title": -1
+    }
+  },
+  {
+    $skip: 25
+  },
+  {
+    $project: {_id: 0, title: 1}
+  },
+  {
+    $limit: 3
+  }
+];
 
 db.movies.aggregate(pipeline, { allowDiskUse : true })
 ----
@@ -364,7 +642,7 @@ var pipeline = [
 ];
 ----
 
-== TODO
+== $group
 
 [source, text]
 ----
