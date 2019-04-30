@@ -763,114 +763,114 @@ db.auth(<span class="hljs-string">&quot;root&quot;</span>, <span class="hljs-str
 <div class="listingblock">
 <div class="title"><strong>7. &#x521B;&#x5EFA;&#x7D22;&#x5F15;&#x540E;&#x6267;&#x884C;&#x540C;&#x6837;&#x67E5;&#x770B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">&gt; db.customers.createIndex( { manager: 1 } )
-&gt; db.customers.explain(1).count({manager:&quot;Barry Mongo&quot;})
+<pre class="highlight"><code class="language-json" data-lang="json">&gt; db.customers.createIndex( { manager: <span class="hljs-number">1</span> } )
+&gt; db.customers.explain(<span class="hljs-number">1</span>).count({manager:<span class="hljs-string">&quot;Barry Mongo&quot;</span>})
 {
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;bankdata.customers&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;manager&quot; : {
-				&quot;$eq&quot; : &quot;Barry Mongo&quot;
+	<span class="hljs-string">&quot;queryPlanner&quot;</span> : {
+		<span class="hljs-string">&quot;plannerVersion&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;namespace&quot;</span> : <span class="hljs-string">&quot;bankdata.customers&quot;</span>,
+		<span class="hljs-string">&quot;indexFilterSet&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;parsedQuery&quot;</span> : {
+			<span class="hljs-string">&quot;manager&quot;</span> : {
+				<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
 			}
 		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;COUNT&quot;,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;COUNT_SCAN&quot;,
-				&quot;keyPattern&quot; : {
-					&quot;manager&quot; : 1
+		<span class="hljs-string">&quot;winningPlan&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT&quot;</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT_SCAN&quot;</span>,
+				<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-number">1</span>
 				},
-				&quot;indexName&quot; : &quot;manager_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;manager&quot; : [ ]
+				<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;manager_1&quot;</span>,
+				<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : [ ]
 				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;indexBounds&quot; : {
-					&quot;startKey&quot; : {
-						&quot;manager&quot; : &quot;Barry Mongo&quot;
+				<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+					<span class="hljs-string">&quot;startKey&quot;</span> : {
+						<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
 					},
-					&quot;startKeyInclusive&quot; : true,
-					&quot;endKey&quot; : {
-						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					<span class="hljs-string">&quot;startKeyInclusive&quot;</span> : <span class="hljs-literal">true</span>,
+					<span class="hljs-string">&quot;endKey&quot;</span> : {
+						<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
 					},
-					&quot;endKeyInclusive&quot; : true
+					<span class="hljs-string">&quot;endKeyInclusive&quot;</span> : <span class="hljs-literal">true</span>
 				}
 			}
 		},
-		&quot;rejectedPlans&quot; : [ ]
+		<span class="hljs-string">&quot;rejectedPlans&quot;</span> : [ ]
 	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 0,
-		&quot;executionTimeMillis&quot; : 0,
-		&quot;totalKeysExamined&quot; : 2,
-		&quot;totalDocsExamined&quot; : 0,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;COUNT&quot;,
-			&quot;nReturned&quot; : 0,
-			&quot;executionTimeMillisEstimate&quot; : 0,
-			&quot;works&quot; : 2,
-			&quot;advanced&quot; : 0,
-			&quot;needTime&quot; : 1,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 0,
-			&quot;restoreState&quot; : 0,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;nCounted&quot; : 1,
-			&quot;nSkipped&quot; : 0,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;COUNT_SCAN&quot;,
-				&quot;nReturned&quot; : 1,
-				&quot;executionTimeMillisEstimate&quot; : 0,
-				&quot;works&quot; : 2,
-				&quot;advanced&quot; : 1,
-				&quot;needTime&quot; : 0,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 0,
-				&quot;restoreState&quot; : 0,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;keysExamined&quot; : 2,
-				&quot;keyPattern&quot; : {
-					&quot;manager&quot; : 1
+	<span class="hljs-string">&quot;executionStats&quot;</span> : {
+		<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;executionStages&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;nCounted&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;nSkipped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COUNT_SCAN&quot;</span>,
+				<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-number">1</span>
 				},
-				&quot;indexName&quot; : &quot;manager_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;manager&quot; : [ ]
+				<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;manager_1&quot;</span>,
+				<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+					<span class="hljs-string">&quot;manager&quot;</span> : [ ]
 				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;indexBounds&quot; : {
-					&quot;startKey&quot; : {
-						&quot;manager&quot; : &quot;Barry Mongo&quot;
+				<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+					<span class="hljs-string">&quot;startKey&quot;</span> : {
+						<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
 					},
-					&quot;startKeyInclusive&quot; : true,
-					&quot;endKey&quot; : {
-						&quot;manager&quot; : &quot;Barry Mongo&quot;
+					<span class="hljs-string">&quot;startKeyInclusive&quot;</span> : <span class="hljs-literal">true</span>,
+					<span class="hljs-string">&quot;endKey&quot;</span> : {
+						<span class="hljs-string">&quot;manager&quot;</span> : <span class="hljs-string">&quot;Barry Mongo&quot;</span>
 					},
-					&quot;endKeyInclusive&quot; : true
+					<span class="hljs-string">&quot;endKeyInclusive&quot;</span> : <span class="hljs-literal">true</span>
 				}
 			}
 		},
-		&quot;allPlansExecution&quot; : [ ]
+		<span class="hljs-string">&quot;allPlansExecution&quot;</span> : [ ]
 	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;Kylins-MacBook-Pro.local&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;4.0.7&quot;,
-		&quot;gitVersion&quot; : &quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;
+	<span class="hljs-string">&quot;serverInfo&quot;</span> : {
+		<span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;Kylins-MacBook-Pro.local&quot;</span>,
+		<span class="hljs-string">&quot;port&quot;</span> : <span class="hljs-number">27017</span>,
+		<span class="hljs-string">&quot;version&quot;</span> : <span class="hljs-string">&quot;4.0.7&quot;</span>,
+		<span class="hljs-string">&quot;gitVersion&quot;</span> : <span class="hljs-string">&quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;</span>
 	},
-	&quot;ok&quot; : 1
+	<span class="hljs-string">&quot;ok&quot;</span> : <span class="hljs-number">1</span>
 }</code></pre>
 </div>
 </div>
@@ -1003,7 +1003,240 @@ db.customers.aggregate([
 </div>
 <div class="sect2">
 <h3 id="__">&#x4E3A;&#x9AD8;&#x6548;&#x53EF;&#x9760;&#x8FD0;&#x884C;&#x800C;&#x8BBE;&#x8BA1;</h3>
+<div class="sect3">
+<h4 id="_availability">Availability(&#x9AD8;&#x53EF;&#x7528;)</h4>
+<div class="paragraph">
+<p>MongoDB &#x7B80;&#x5355;&#x6613;&#x884C;&#xFF0C;&#x4E0E;&#x751F;&#x4FF1;&#x6765;&#x7684;&#x9AD8;&#x53EF;&#x7528;&#x67B6;&#x6784;&#x3002;&#x4E3A;&#x4FDD;&#x8BC1;&#x670D;&#x52A1;&#x7684;&#x53EF;&#x9760;&#x6027;&#xFF0C;MongoDB&#x91C7;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x67B6;&#x6784;&#xFF0C;&#x53EF;&#x4EE5;&#x8DE8;&#x670D;&#x52A1;&#x5668;&#x3001;&#x673A;&#x67B6;&#x3001;&#x533A;&#x57DF;&#x548C;&#x5927;&#x6D32;&#x7684;&#x90E8;&#x7F72;&#xFF0C;&#x6574;&#x4E2A;&#x67B6;&#x6784;&#xFF0C;&#x4E0D;&#x5B58;&#x5728;&#x4EFB;&#x4F55;&#x5355;&#x70B9;&#x6545;&#x969C;&#xFF0C;&#x548C;&#x4F20;&#x7EDF;&#x5173;&#x7CFB;&#x6570;&#x636E;&#x5E93;&#x6BD4;&#xFF0C;&#x6574;&#x4E2A;&#x9AD8;&#x53EF;&#x7528;&#x67B6;&#x6784;&#x65E0;&#x9700;&#x4EFB;&#x4F55;&#x989D;&#x5916;&#x914D;&#x7F6E;&#xFF0C;&#x9ED8;&#x8BA4;&#x90E8;&#x7F72;&#x5C31;&#x652F;&#x6301;&#x8282;&#x70B9;&#x4E92;&#x76F8;&#x63A5;&#x7BA1;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8;&#x4E00;&#x4E2A;&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x5B50;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 &gt; ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
 
+//&#x542F;&#x52A8;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/tmp/r<span class="hljs-variable">$i</span> --logpath ~/tmp/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
+
+//&#x521D;&#x59CB;&#x5316;
+$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+//&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C;&#x63D2;&#x5165; 2m &#x6761;&#x6570;&#x636E;(<a href="etc/files/insert_accounts_ha.py">insert_accounts_ha.py</a>)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ ./insert_accounts_ha.py</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x505C;&#x6B62;&#x4E3B;&#x8282;&#x70B9;&#x540E;&#x91CD;&#x542F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">$ kill -9 1501
+$ mongod --dbpath ~/tmp/r0 --logpath ~/tmp/r0/mongo.log --port 27000 --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_scalability">Scalability(&#x5206;&#x5E03;&#x5F0F;&#x7075;&#x6D3B;&#x6269;&#x5C55;)</h4>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8;&#x4E00;&#x4E2A;&#x4E24;&#x5206;&#x7247;&#x7684;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/tmp/ra{0,1,2}
+$ mkdir -p ~/tmp/rb{0,1,2}
+$ mkdir -p ~/tmp/cs{1,2,3}
+$ openssl rand -base64 755 &gt; ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//&#x542F;&#x52A8; ConfigServer&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --configsvr --dbpath ~/tmp/cs<span class="hljs-variable">$i</span> --logpath ~/tmp/cs<span class="hljs-variable">$i</span>/mongo.log --port 2600<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-cs ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 26000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+$ mongo admin --port 26000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+$ mongo admin --port 26000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:26001&quot;)&apos;</span>
+$ mongo admin --port 26000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:26002&quot;)&apos;</span>
+
+//&#x542F;&#x52A8; mongos&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;
+$ mongos --configdb <span class="hljs-string">&apos;repl-cs/localhost:26000,localhost:26001,localhost:26002&apos;</span> --logpath ~/tmp/mongos.log --port 27017 --fork --keyFile ~/tmp/keyfile
+
+$ mongo admin -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span>
+
+//&#x542F;&#x52A8;&#x5206;&#x7247;a&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x8D26;&#x6237;&#xFF0C;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --shardsvr --dbpath ~/tmp/ra<span class="hljs-variable">$i</span> --logpath ~/tmp/ra<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl<span class="hljs-_">-a</span> ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span>
+
+//&#x542F;&#x52A8;&#x5206;&#x7247;b&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x8D26;&#x6237;&#xFF0C;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --shardsvr --dbpath ~/tmp/rb<span class="hljs-variable">$i</span> --logpath ~/tmp/rb<span class="hljs-variable">$i</span>/mongo.log --port 2800<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-b ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 28000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+$ mongo admin --port 28000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+$ mongo admin --port 28000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:28001&quot;)&apos;</span>
+$ mongo admin --port 28000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:28002&quot;)&apos;</span>
+
+//&#x914D;&#x7F6E;&#x5206;&#x7247;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;
+$ mongo admin -u root -p mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;)&apos;</span>
+$ mongo admin -u root -p mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;)&apos;</span>
+
+$ mongo admin -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x5408;&#xFF0C;&#x5E76;&#x521B;&#x5EFA; shard key</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">use bankdata
+sh.enableSharding(<span class="hljs-string">&quot;bankdata&quot;</span>)
+sh.shardCollection(<span class="hljs-string">&quot;bankdata.accounts&quot;</span>, { accountNo: <span class="hljs-number">1</span> })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x63D2;&#x5165;&#x4E00;&#x4E9B;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> doc = {
+   <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;John Doe&quot;</span>,
+   <span class="hljs-string">&quot;balance&quot;</span>: <span class="hljs-number">99.99</span>
+}
+<span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">100000</span>; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
+}
+
+db.accounts.getShardDistribution()
+
+Shard repl-b at repl-b/localhost:<span class="hljs-number">28000</span>,localhost:<span class="hljs-number">28001</span>,localhost:<span class="hljs-number">28002</span>
+ data : <span class="hljs-number">7.34</span>MiB docs : <span class="hljs-number">100000</span> chunks : <span class="hljs-number">1</span>
+ estimated data per chunk : <span class="hljs-number">7.34</span>MiB
+ estimated docs per chunk : <span class="hljs-number">100000</span>
+
+Totals
+ data : <span class="hljs-number">7.34</span>MiB docs : <span class="hljs-number">100000</span> chunks : <span class="hljs-number">1</span>
+ Shard repl-b contains <span class="hljs-number">100</span>% data, <span class="hljs-number">100</span>% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : <span class="hljs-number">77</span>B</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6A21;&#x62DF;&#x5927;&#x91CF;&#x6570;&#x636E;&#x5BFC;&#x5165;&#xFF0C;&#x624B;&#x52A8;&#x521B;&#x5EFA;&#x591A;&#x4E2A; chunk(&#x9ED8;&#x8BA4;&#x53EA;&#x6709;&#x5F53; chunk &#x7684;&#x5927;&#x5C0F;&#x5927;&#x4E8E; 64 M &#x65F6;&#x624D;&#x5F00;&#x59CB;&#x79FB;&#x52A8;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.splitAt(<span class="hljs-string">&quot;bankdata.accounts&quot;</span>, {<span class="hljs-string">&quot;accountNo&quot;</span>: NumberLong(<span class="hljs-number">20000</span>)})
+sh.splitAt(<span class="hljs-string">&quot;bankdata.accounts&quot;</span>, {<span class="hljs-string">&quot;accountNo&quot;</span>: NumberLong(<span class="hljs-number">40000</span>)})
+sh.splitAt(<span class="hljs-string">&quot;bankdata.accounts&quot;</span>, {<span class="hljs-string">&quot;accountNo&quot;</span>: NumberLong(<span class="hljs-number">60000</span>)})
+sh.splitAt(<span class="hljs-string">&quot;bankdata.accounts&quot;</span>, {<span class="hljs-string">&quot;accountNo&quot;</span>: NumberLong(<span class="hljs-number">80000</span>)})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x4E0A;&#x4F1A;&#x521B;&#x5EFA; 5 &#x4E2A; chunk&#xFF0C;&#x4F1A;&#x89E6; Chunk &#x7684;&#x518D;&#x5E73;&#x8861;&#xFF0C;&#x6700;&#x7EC8;&#x7ED3;&#x679C;&#x662F;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x4E24;&#x4E2A; Chunks&#xFF0C;&#x53E6;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x4E09;&#x4E2A; Chunks&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x7EDF;&#x8BA1;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.accounts.getShardDistribution()
+
+Shard repl-a at repl-a/localhost:<span class="hljs-number">27000</span>,localhost:<span class="hljs-number">27001</span>,localhost:<span class="hljs-number">27002</span>
+ data : <span class="hljs-number">2.93</span>MiB docs : <span class="hljs-number">40000</span> chunks : <span class="hljs-number">2</span>
+ estimated data per chunk : <span class="hljs-number">1.46</span>MiB
+ estimated docs per chunk : <span class="hljs-number">20000</span>
+
+Shard repl-b at repl-b/localhost:<span class="hljs-number">28000</span>,localhost:<span class="hljs-number">28001</span>,localhost:<span class="hljs-number">28002</span>
+ data : <span class="hljs-number">4.4</span>MiB docs : <span class="hljs-number">60000</span> chunks : <span class="hljs-number">3</span>
+ estimated data per chunk : <span class="hljs-number">1.46</span>MiB
+ estimated docs per chunk : <span class="hljs-number">20000</span>
+
+Totals
+ data : <span class="hljs-number">7.34</span>MiB docs : <span class="hljs-number">100000</span> chunks : <span class="hljs-number">5</span>
+ Shard repl-a contains <span class="hljs-number">40</span>% data, <span class="hljs-number">40</span>% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : <span class="hljs-number">77</span>B
+ Shard repl-b contains <span class="hljs-number">60</span>% data, <span class="hljs-number">60</span>% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : <span class="hljs-number">77</span>B</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_workload_isolation">Workload Isolation(&#x8D1F;&#x8F7D;&#x9694;&#x79BB;)</h4>
+<div class="paragraph">
+<p>&#x8D1F;&#x8F7D;&#x9694;&#x79BB;&#x6307;&#x8BFB;&#x548C;&#x5199;&#x64CD;&#x4F5C;&#x8D1F;&#x8F7D;&#x9694;&#x79BB;&#xFF0C;&#x5B9E;&#x65F6;&#x64CD;&#x4F5C;&#x548C;&#x5B9E;&#x65F6;&#x5206;&#x6790;&#x9694;&#x79BB;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8;&#x4E00;&#x4E2A;&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x5B50;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/tmp/r{0,1,2,3,4}
+$ openssl rand -base64 755 &gt; ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//&#x542F;&#x52A8;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 3 4 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/tmp/r<span class="hljs-variable">$i</span> --logpath ~/tmp/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
+
+//&#x521D;&#x59CB;&#x5316;
+$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+//&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27003&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27004&quot;)&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E;&#x8D1F;&#x8F7D;&#x9694;&#x79BB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">cfg = rs.config();
+cfg.members[<span class="hljs-number">0</span>].priority=<span class="hljs-number">1</span>;
+cfg.members[<span class="hljs-number">0</span>].tags = {<span class="hljs-string">&quot;use&quot;</span>: <span class="hljs-string">&quot;op&quot;</span>};
+cfg.members[<span class="hljs-number">1</span>].priority=<span class="hljs-number">1</span>;
+cfg.members[<span class="hljs-number">1</span>].tags = {<span class="hljs-string">&quot;use&quot;</span>: <span class="hljs-string">&quot;op&quot;</span>};
+cfg.members[<span class="hljs-number">2</span>].priority=<span class="hljs-number">1</span>;
+cfg.members[<span class="hljs-number">2</span>].tags = {<span class="hljs-string">&quot;use&quot;</span>: <span class="hljs-string">&quot;op&quot;</span>};
+cfg.members[<span class="hljs-number">3</span>].priority=<span class="hljs-number">0</span>;
+cfg.members[<span class="hljs-number">3</span>].tags = {<span class="hljs-string">&quot;use&quot;</span>: <span class="hljs-string">&quot;analytics&quot;</span>};
+cfg.members[<span class="hljs-number">4</span>].priority=<span class="hljs-number">0</span>;
+cfg.members[<span class="hljs-number">4</span>].tags = {<span class="hljs-string">&quot;use&quot;</span>: <span class="hljs-string">&quot;analytics&quot;</span>};
+rs.reconfig(cfg);</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5206;&#x522B;&#x8FDB;&#x884C;&#x8BFB;&#x548C;&#x5199;&#x64CD;&#x4F5C;(<a href="etc/files/insert_data.py">insert_data.py</a>, <a href="etc/files/read_data.py">read_data.py</a>)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ./insert_data.py
+$ ./<span class="hljs-built_in">read</span>_data.py</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. mongostat &#x67E5;&#x770B;&#x8BFB;&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x6240;&#x5BF9;&#x5E94;&#x7684;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
+           host insert query update delete getmore <span class="hljs-built_in">command</span> dirty used flushes vsize   res qrw arw net_<span class="hljs-keyword">in</span> net_out conn    <span class="hljs-built_in">set</span> repl                time
+localhost:27000      2    *0     *0     *0      16    28|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  24.4k   83.8k   26 repl-1  PRI Apr 30 18:08:23.648
+
+           host insert query update delete getmore <span class="hljs-built_in">command</span> dirty used flushes vsize   res qrw arw net_<span class="hljs-keyword">in</span> net_out conn    <span class="hljs-built_in">set</span> repl                time
+localhost:27000      2    *0     *0     *0      16    33|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  25.5k   86.3k   26 repl-1  PRI Apr 30 18:08:24.645
+localhost:27001     *2    *0     *0     *0       0    13|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  1.61k   67.3k   12 repl-1  SEC Apr 30 18:08:23.711
+localhost:27002     *2    *0     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  1.41k   66.4k   12 repl-1  SEC Apr 30 18:08:23.714
+localhost:27003     *2     2     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  2.08k   68.3k   13 repl-1  SEC Apr 30 18:08:23.707
+localhost:27004     *2     3     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  2.41k   69.0k   13 repl-1  SEC Apr 30 18:08:23.708</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_locality">Locality(&#x672C;&#x5730;&#x8BFB;&#x53D6;)</h4>
+
+</div>
 </div>
 <div class="sect2">
 <h3 id="___2">&#x4E3A;&#x968F;&#x5904;&#x90E8;&#x7F72;&#x800C;&#x5EFA;</h3>
@@ -1090,7 +1323,7 @@ db.customers.aggregate([
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-04-21T13:42:11.142Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-21T13:47:35.458Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-04-30T10:09:02.040Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-30T10:13:00.493Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>

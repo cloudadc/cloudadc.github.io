@@ -376,7 +376,7 @@ NOTE: 可以看到十几秒时间内一条一条插入 1m 条数据(400 MB)完�
 
 NOTE: 可以看到全表扫描 1m 条数据花费了 383 毫秒。
 
-[source, text]
+[source, json]
 .*7. 创建索引后执行同样查看*
 ----
 > db.customers.createIndex( { manager: 1 } )
@@ -606,6 +606,231 @@ db.customers.aggregate([
 
 === 为高效可靠运行而设计
 
+==== Availability(高可用)
+
+MongoDB 简单易行，与生俱来的高可用架构。为保证服务的可靠性，MongoDB采用分布式架构，可以跨服务器、机架、区域和大洲的部署，整个架构，不存在任何单点故障，和传统关系数据库比，整个高可用架构无需任何额外配置，默认部署就支持节点互相接管。
+
+[source, bash]
+.*1. 启动一个三节点复制子集*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+----
+
+[source, text]
+.*2. 执行插入 2m 条数据(link:etc/files/insert_accounts_ha.py[insert_accounts_ha.py])*
+----
+$ ./insert_accounts_ha.py 
+----
+
+[source, text]
+.*3. 停止主节点后重启*
+----
+$ kill -9 1501
+$ mongod --dbpath ~/tmp/r0 --logpath ~/tmp/r0/mongo.log --port 27000 --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1
+----
+
+==== Scalability(分布式灵活扩展)
+
+[source, bash]
+.*1. 启动一个两分片的集群*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/ra{0,1,2}
+$ mkdir -p ~/tmp/rb{0,1,2}
+$ mkdir -p ~/tmp/cs{1,2,3}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动 ConfigServer，初始化，创建管理用户，并添加备节点
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/tmp/cs$i --logpath ~/tmp/cs$i/mongo.log --port 2600$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-cs ; done
+
+$ mongo admin --port 26000 --eval "rs.initiate()"
+
+$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("localhost:26001")'
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("localhost:26002")'
+
+//启动 mongos，并查看分片状态
+$ mongos --configdb 'repl-cs/localhost:26000,localhost:26001,localhost:26002' --logpath ~/tmp/mongos.log --port 27017 --fork --keyFile ~/tmp/keyfile
+
+$ mongo admin -u root -p mongo --eval 'sh.status()'
+
+//启动分片a，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/ra$i --logpath ~/tmp/ra$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-a ; done
+
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+//启动分片b，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/rb$i --logpath ~/tmp/rb$i/mongo.log --port 2800$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-b ; done
+
+$ mongo admin --port 28000 --eval "rs.initiate()"
+
+$ mongo admin --port 28000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 28000 -u "root" -p "mongo" --eval 'rs.add("localhost:28001")'
+$ mongo admin --port 28000 -u "root" -p "mongo" --eval 'rs.add("localhost:28002")'
+
+//配置分片，并查看分片状态
+$ mongo admin -u root -p mongo --eval 'sh.addShard("repl-a/localhost:27000,localhost:27001,localhost:27002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("repl-b/localhost:28000,localhost:28001,localhost:28002")'
+
+$ mongo admin -u root -p mongo --eval 'sh.status()'
+----
+
+[source, javascript]
+.*2. 创建一个分片集合，并创建 shard key*
+----
+use bankdata
+sh.enableSharding("bankdata")
+sh.shardCollection("bankdata.accounts", { accountNo: 1 })
+----
+
+[source, javascript]
+.*3. 插入一些数据*
+----
+var doc = {
+   "name": "John Doe",
+   "balance": 99.99
+}
+for (var i = 0; i < 100000; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
+}
+
+db.accounts.getShardDistribution()
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 1
+ estimated data per chunk : 7.34MiB
+ estimated docs per chunk : 100000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 1
+ Shard repl-b contains 100% data, 100% docs in cluster, avg obj size on shard : 77B
+----
+
+[source, javascript]
+.*4. 模拟大量数据导入，手动创建多个 chunk(默认只有当 chunk 的大小大于 64 M 时才开始移动)*
+----
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(20000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(40000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(60000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(80000)})
+----
+
+如上会创建 5 个 chunk，会触 Chunk 的再平衡，最终结果是一个分片两个 Chunks，另一个分片三个 Chunks。
+
+[source, javascript]
+.*5. 查看统计数据*
+----
+db.accounts.getShardDistribution()
+
+Shard repl-a at repl-a/localhost:27000,localhost:27001,localhost:27002
+ data : 2.93MiB docs : 40000 chunks : 2
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 4.4MiB docs : 60000 chunks : 3
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 5
+ Shard repl-a contains 40% data, 40% docs in cluster, avg obj size on shard : 77B
+ Shard repl-b contains 60% data, 60% docs in cluster, avg obj size on shard : 77B
+----
+
+==== Workload Isolation(负载隔离)
+
+负载隔离指读和写操作负载隔离，实时操作和实时分析隔离。
+
+[source, bash]
+.*1. 启动一个三节点复制子集*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2,3,4}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 3 4 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27003")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27004")'
+----
+
+[source, javascript]
+.*2. 配置负载隔离*
+----
+cfg = rs.config();
+cfg.members[0].priority=1;
+cfg.members[0].tags = {"use": "op"};
+cfg.members[1].priority=1;
+cfg.members[1].tags = {"use": "op"};
+cfg.members[2].priority=1;
+cfg.members[2].tags = {"use": "op"};
+cfg.members[3].priority=0;
+cfg.members[3].tags = {"use": "analytics"};
+cfg.members[4].priority=0;
+cfg.members[4].tags = {"use": "analytics"};
+rs.reconfig(cfg);
+----
+
+[source, bash]
+.*3. 分别进行读和写操作(link:etc/files/insert_data.py[insert_data.py], link:etc/files/read_data.py[read_data.py])*
+----
+$ ./insert_data.py
+$ ./read_data.py
+----
+
+[source, bash]
+.*4. mongostat 查看读写操作的所对应的节点*
+----
+$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
+           host insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn    set repl                time
+localhost:27000      2    *0     *0     *0      16    28|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  24.4k   83.8k   26 repl-1  PRI Apr 30 18:08:23.648
+
+           host insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn    set repl                time
+localhost:27000      2    *0     *0     *0      16    33|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  25.5k   86.3k   26 repl-1  PRI Apr 30 18:08:24.645
+localhost:27001     *2    *0     *0     *0       0    13|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  1.61k   67.3k   12 repl-1  SEC Apr 30 18:08:23.711
+localhost:27002     *2    *0     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  1.41k   66.4k   12 repl-1  SEC Apr 30 18:08:23.714
+localhost:27003     *2     2     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  2.08k   68.3k   13 repl-1  SEC Apr 30 18:08:23.707
+localhost:27004     *2     3     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  2.41k   69.0k   13 repl-1  SEC Apr 30 18:08:23.708
+----
+
+==== Locality(本地读取)
 
 === 为随处部署而建
 

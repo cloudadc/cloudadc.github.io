@@ -613,7 +613,7 @@ db.movies.aggregate(pipeline, { allowDiskUse : true })
 * the minimum imdb.rating is at least 1
 * the minimum imdb.votes is at least 1, and it was released in 1990 or after. 
 
-[source, text]
+[source, javaScript]
 ----
 var pipeline = [
     { $match : {
@@ -642,79 +642,248 @@ var pipeline = [
 ];
 ----
 
-== $group
+== $group, $sum, $avg
 
-[source, text]
+=== 查询电影，按年将电影分类，并统计每年的电影总数
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $group: {
+      _id: "$year",
+      "numFilmsThisYear": {$sum: 1}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+=== 查询电影，按年将电影分类，统计每年的电影总数，并按照每年电影总数由多到少排序
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $group: {
+      _id: "$year",
+      "numFilmsThisYear": {$sum: 1}
+    }
+  },
+  {
+    $sort: {"numFilmsThisYear": -1}
+  }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+=== 查询电影，按导演的数量将电影分类，统计电影的数量，并以导演的数量由多到少排序
+
+[source, javaScript]
+----
+var pipeline =  [
+  {
+    $group: {
+      _id: {
+        "numDirectors": {$cond: [{"$isArray": "$directors"}, {"$size": "$directors"}, 0]}
+      },
+      "numFilms": {$sum: 1},
+      "averageMetacritic": { "$avg": "$metacritic" }
+    }
+  },
+  {
+    $sort: {"_id.numDirectors": -1}
+  }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+=== 查询电影，至少获的一次Oscar奖，计算最高、最低、平均 imdb 评分
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $match: {"awards": {$regex: /Won \d+ Oscar/}}
+  },
+  {
+    $group: {
+      _id: null,
+      "highest_rating": {$max: "$imdb.rating"},
+      "lowest_rating": {$min: "$imdb.rating"},
+      "average_rating": {$avg: "$imdb.rating"},
+      "deviation": {$stdDevSamp: "$imdb.rating"}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+== $unwind 
+
+=== 查询电影，找出 2010 到 2015 年间 imdb 评分最高类型，且电影长度大于 90 分钟
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $match: {
+      "imdb.rating": {$gt: 0},
+      "year": {$gte: 2010, $lte: 2015},
+      "runtime": {$gte: 90}
+    }
+  },
+  {
+    $unwind: "$genres"
+  },
+  {
+    $group: {
+      _id: {
+        "year": "$year",
+        "genre": "$genres"
+      },
+      "average_rating": {
+        "$avg": "$imdb.rating"
+      }
+    }
+  },
+  {
+    $sort: {
+      "_id.year": -1, "average_rating": -1 
+    }
+  },
+  {
+    $group: {
+      "_id": "$_id.year",
+      "genre": { "$first": "$_id.genre" },
+      "average_rating": { "$first": "$average_rating" }
+    }
+  },
+  {
+    $sort: {_id: -1}
+  }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+=== 查询电影，找出所有英文电影中排名最高的演员，并计算参演的电影总数，及平均评分
+
+[source, javaScript]
+----
+var pipeline = [
+    { $unwind : "$cast" },
+        { $group: {
+            "_id" : "$cast",
+                "numFilms" : { $sum : 1 },
+                "average" : { $avg : "$imdb.rating" }
+                }
+        },
+        { $sort : { "numFilms" : -1 } },
+        { $limit : 1 }
+];
+
+db.movies.aggregate(pipeline)
+----
+
+== $lookup, $graphLookup
+
+=== 查询航空联盟，将航空联盟中航空公司属性替换成详细信息
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $lookup: {
+      from: "air_airlines",
+      localField: "airlines",
+      foreignField: "name",
+      as: "airlines"
+    }
+  }
+];
+
+db.air_alliances.aggregate(pipeline)
+----
+
+=== 查询航空联盟，查找出路径使用 Boeing 747 或 Airbus A380 的航空公司
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $unwind: "$airlines"
+  },
+  {
+    $lookup: {
+      from: "air_routes",
+      localField: "airlines",
+      foreignField: "airline.name",
+      as: "routes"
+    }
+  },
+  {
+    $unwind: "$routes"
+  },
+  {
+    $match: {
+      "routes.airplane": {$in: [ "747", "380" ]}
+    }
+  },
+  {
+    $group: {
+      "_id" : "$name",
+      "routes_count" : { $sum : 1 }
+    }
+  },
+  {
+    $sort : {"routes_count": -1 }
+  }
+];
+
+ db.air_alliances.aggregate(pipeline)
+----
+
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
+[source, javaScript]
 ----
 
 ----
 
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
-----
-
-----
-
-[source, text]
+[source, javaScript]
 ----
 
 ----     
