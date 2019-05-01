@@ -13,6 +13,8 @@ image:etc/img/mongodb-driver-github-tr.png[]
 
 当代数字化战略，数字化转型的核心是数据，数据平台是关键因素，MongoDB智能操作数据平台目的，就是让新型数字化应用开发更快、更简单；运行更可靠、客户体验更好；部署更容易，运维更简单。
 
+image:etc/img/iodp.png[]
+
 === Best way to work with data(为快速开发而生)
 
 MongoDB 的诞生之初的目的就是为了帮助开发者快速开发，MongoDB是当前全球最受开发人员欢迎的的数据库。
@@ -604,7 +606,7 @@ db.customers.aggregate([
 ]).pretty()
 ----
 
-=== 为高效可靠运行而设计
+=== Intelligently put data where you want it(为高效可靠运行而设计)
 
 ==== Availability(高可用)
 
@@ -832,7 +834,111 @@ localhost:27004     *2     3     *0     *0       0    12|0  0.0% 0.0%       0 4.
 
 ==== Locality(本地读取)
 
-=== 为随处部署而建
+MongoDB 支持读和写在不同的地理位置。
+
+[source, bash]
+.*1. 启动一个跨地理位置的分片集群*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/cluster/config/{c0,c1,c2}
+$ mkdir -p ~/tmp/cluster/EU/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/US/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/APAC/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/{s0,s1}
+
+$ openssl rand -base64 755 > ~/tmp/cluster/keyfile
+$ chmod 400 ~/tmp/cluster/keyfile
+
+//启动 EU 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/EU/m$i --logpath ~/tmp/cluster/EU/m$i/mongo.log --port 2400$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet EU ; done
+
+$ mongo admin --port 24000 --eval "rs.initiate()"
+
+$ mongo admin --port 24000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.add("localhost:24001")'
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.add("localhost:24002")'
+
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 US 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/US/m$i --logpath ~/tmp/cluster/US/m$i/mongo.log --port 2500$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet US ; done
+
+$ mongo admin --port 25000 --eval "rs.initiate()"
+
+$ mongo admin --port 25000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.add("localhost:25001")'
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.add("localhost:25002")'
+
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 APAC 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/APAC/m$i --logpath ~/tmp/cluster/APAC/m$i/mongo.log --port 2600$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet APAC ; done
+
+$ mongo admin --port 26000 --eval "rs.initiate()"
+
+$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.add("localhost:26001")'
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.add("localhost:26002")'
+
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 ConfigServer，初始化，创建管理用户，并添加备节点
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/tmp/cluster/config/c$i --logpath ~/tmp/cluster/config/c$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet configSvr ; done
+
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 mongos，配置分片
+$ mongos --configdb 'configSvr/localhost:27000,localhost:27001,localhost:27002' --logpath ~/tmp/cluster/s0/mongos.log --port 27017 --fork --keyFile ~/tmp/cluster/keyfile
+$ mongos --configdb 'configSvr/localhost:27000,localhost:27001,localhost:27002' --logpath ~/tmp/cluster/s1/mongos.log --port 27018 --fork --keyFile ~/tmp/cluster/keyfile
+
+$ mongo admin -u root -p mongo --eval 'sh.addShard("EU/localhost:24000,localhost:24001,localhost:24002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("US/localhost:25000,localhost:25001,localhost:25002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("APAC/localhost:26000,localhost:26001,localhost:26002")'
+
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
+----
+
+[source, bash]
+.*2. 初始化跨区分片*
+----
+$ mongo admin --port 27017 -u root -p mongo --eval '
+sh.addShardToZone("EU", "EU");
+sh.addShardToZone("US", "US");
+sh.addShardToZone("APAC", "APAC");
+sh.enableSharding("customers");
+sh.shardCollection("customers.users", { region_code: 1, _id: 1 });
+sh.updateZoneKeyRange("customers.users", { region_code: "EU", _id: MinKey},{ region_code: "EU", _id: MaxKey }, "EU");
+sh.updateZoneKeyRange("customers.users", { region_code: "US", _id: MinKey},{ region_code: "US", _id: MaxKey }, "US");
+sh.updateZoneKeyRange("customers.users", { region_code: "APAC", _id: MinKey},{ region_code: "APAC", _id: MaxKey }, "APAC");
+sh.status();
+'
+----
+
+[source, javascript]
+.*3. 插入数据*
+----
+use customers
+db.users.insert({firstName:"John", lastName:"Doe", region_code:"US"})
+db.users.insert({firstName:"Julien", lastName:"Dupont", region_code:"EU"})
+db.users.insert({firstName:"Kylin", lastName:"Soong", region_code:"APAC"})
+----
+
+=== Freedom to run anywhere(为随处部署而建)
 
 
 == MongoDB 助力 DevOps
