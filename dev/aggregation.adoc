@@ -153,6 +153,26 @@ db.nycFacilities.findOne()
 }
 ---- 
 
+=== parent_reference
+
+parent_reference 集合中保存的是 MongoDB 公司管理层信息，如下，reports_to 代表着对应的汇报关系。
+
+[source, json]
+----
+db.parent_reference.find()
+{ "_id" : 2, "name" : "Eliot", "title" : "CTO", "reports_to" : 1 }
+{ "_id" : 3, "name" : "Meagen", "title" : "CMO", "reports_to" : 1 }
+{ "_id" : 6, "name" : "Ron", "title" : "VP PM", "reports_to" : 2 }
+{ "_id" : 7, "name" : "Elyse", "title" : "COO", "reports_to" : 2 }
+{ "_id" : 4, "name" : "Carlos", "title" : "CRO", "reports_to" : 1 }
+{ "_id" : 1, "name" : "Dev", "title" : "CEO" }
+{ "_id" : 5, "name" : "Andrew", "title" : "VP Eng", "reports_to" : 2 }
+{ "_id" : 8, "name" : "Richard", "title" : "VP PS", "reports_to" : 1 }
+{ "_id" : 9, "name" : "Shannon", "title" : "VP Education", "reports_to" : 5 }
+{ "_id" : 10, "name" : "Dan", "title" : "VP Core Engineering", "reports_to" : 5 }
+{ "_id" : 11, "name" : "Cailin", "title" : "VP Cloud Engineering", "reports_to" : 5 }
+----
+
 == $match, $project
 
 === 查询太阳系中不是恒星的星球，并统计总数
@@ -848,25 +868,103 @@ var pipeline = [
  db.air_alliances.aggregate(pipeline)
 ----
 
-[source, javaScript]
-----
-
-----
+=== 查询 parent_reference，获取所有汇报给 Eliot 的人
 
 [source, javaScript]
 ----
+var pipeline = [
+  {
+    $match: {name: 'Eliot'}
+  },
+  {
+    $graphLookup: {
+      from: 'parent_reference',
+      startWith: '$_id',
+      connectFromField: '_id',
+      connectToField: 'reports_to',
+      as: 'all_reports'
+    }
+  }
+];
 
+db.parent_reference.aggregate(pipeline).pretty()
 ----
+
+=== 查询 parent_reference，获取 Shannon 的所有老板
 
 [source, javaScript]
 ----
+var pipeline = [
+  {
+    $match: {name: 'Shannon'}
+  },
+  {
+    $graphLookup: {
+      from: 'parent_reference',
+      startWith: '$reports_to',
+      connectFromField: 'reports_to',
+      connectToField: '_id',
+      as: 'bosses'
+    }
+  }
+];
 
+db.parent_reference.aggregate(pipeline).pretty()
 ----
+
+== $bucket, $bucketAuto, $sortByCount
+
+=== 查询电影，找出 imdb 评分为 0，5，8，及没有评分的电影总数
 
 [source, javaScript]
 ----
+var pipeline = [
+  {
+    $bucket: {
+      groupBy: "$imdb.rating",
+      boundaries: [0, 5, 8, Infinity],
+      default: "not rated"
+    }
+  }
+];
 
+db.movies.aggregate(pipeline)
 ----
+
+=== 查询电影，找出在imdb 评分最热前 10 和 metacritic 最热前 10 的电影 
+
+[source, javaScript]
+----
+var pipeline = [
+  {
+    $match: {
+      "imdb.rating": {$gt: 0},
+      "metacritic": {$gt: 0}
+    }
+  },
+  {
+    $facet: {
+      "topTenImdb": [{$sort: {"imdb.rating": -1}}, {$limit: 10}],
+      "topTenMetacritic": [{$sort: {"metacritic": -1 }}, {$limit: 10}]
+    }
+  },
+  {
+    $project: {
+      "commonTopFilms": {
+        $size: {$setIntersection: ["$topTenImdb", "$topTenMetacritic"]}
+      }
+    }
+  }
+];
+
+var result = db.movies.aggregate(pipeline);
+print("Result: ");
+while (result.hasNext()) {
+        printjson(result.next());
+}
+----
+
+== $redact, $out
 
 [source, javaScript]
 ----
