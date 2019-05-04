@@ -1,6 +1,127 @@
 = 安全
 :toc: manual
 
+== 依赖环境准备
+
+=== 自签名证书生成
+
+*0. openssl 配置文件说明*
+
+|===
+|文件 |说明
+
+|link:files/openssl-ca.cnf[openssl-ca.cnf]
+|设定默认 CN，OU 等名称
+
+|link:files/openssl-server.cnf[openssl-server.cnf]
+|设定默认 CN，OU 等名称，设定 Server DNS 名称为 `localhost`, `server.example.com`
+
+|link:files/openssl-client.cnf[openssl-client.cnf]
+|设定默认 CN，OU 等名称 
+
+|===
+
+[source, bash]
+.*1. 生成一个 CA 密钥文件*
+----
+$ openssl genrsa -out ca.key 4096
+----
+
+[source, bash]
+.*2. 使用 CA 密钥生成 CA 证书*
+----
+$ openssl req -new -x509 -days 3650 -key ca.key -out ca.crt -config openssl-ca.cnf 
+----
+
+NOTE: `Common Name` 需要输入一个名称，例如 localhost，其余部分使用配置文件中的默认名称 
+
+[source, bash]
+.*3. 生成一个密钥文件，用做中介密钥*
+----
+$ openssl genrsa -out ia.key 4096
+----
+
+[source, bash]
+.*4. 根据中介密钥生成一个证书签名请求文件*
+----
+$ openssl req -new -key ia.key -out ia.csr -config openssl-ca.cnf
+----
+
+NOTE: `Common Name` 需要输入一个名称，例如 localhost，其余部分使用配置文件中的默认名称
+
+[source, bash]
+.*5. 生成一个中介自签名证书*
+----
+$ openssl x509 -sha256 -req -days 3650 -in ia.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out ia.crt -extfile openssl-ca.cnf -extensions v3_ca
+----
+
+[source, bash]
+.*6. 创建 CA PEM 文件*
+----
+$ cat ca.crt ia.crt > ca.pem
+----
+
+[source, bash]
+.*7. 生成一个 Server 密钥文件*
+----
+$ openssl genrsa -out server.key 4096
+----
+
+[source, bash]
+.*8. 根据 Server 密钥生成一个证书签名请求文件*
+----
+$ openssl req -new -key server.key -out server.csr -config openssl-server.cnf
+----
+
+NOTE: `Common Name` 需要输入一个名称，例如 server.example.com，其余部分使用配置文件中的默认名称
+
+[source, bash]
+.*9. 根据中介密钥，中介证书，及 Server 证书签名请求文件生产 server 自签名证书*
+----
+$ openssl x509 -sha256 -req -days 3650 -in server.csr -CA ia.crt -CAkey ia.key -CAcreateserial -out server.crt -extfile openssl-server.cnf -extensions v3_req
+----
+
+[source, bash]
+.*10. 创建 server PEM 文件*
+----
+$ cat server.crt server.key > server.pem
+----
+
+[source, bash]
+.*11. 生成一个 Client 密钥文件*
+----
+$ openssl genrsa -out client.key 4096
+----
+
+[source, bash]
+.*12. 根据 Client 密钥生成一个证书签名请求文件*
+----
+$ openssl req -new -key client.key -out client.csr -config openssl-client.cnf
+----
+
+NOTE: `Common Name` 需要输入一个名称，例如 client.example.com，其余部分使用配置文件中的默认名称
+
+[source, bash]
+.*13. 根据中介密钥，中介证书，及 Client 证书签名请求文件生产 Client 自签名证书*
+----
+$ openssl x509 -sha256 -req -days 3650 -in client.csr -CA ia.crt -CAkey ia.key -CAcreateserial -out client.crt -extfile openssl-client.cnf -extensions v3_req
+----
+
+[source, bash]
+.14. *创建 server PEM 文件*
+----
+$ cat client.crt client.key > client.pem
+----
+
+[source, bash]
+.*15. 查看 PEM 文件subject*
+----
+$ for i in $(ls *.pem) ; do openssl x509 -in $i -inform PEM -subject -nameopt RFC2253 -noout ; done
+subject= CN=localhost,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN
+subject= CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN
+subject= CN=server.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN
+----
+
 == Authentication
 
 === 两种认证方法
@@ -11,119 +132,247 @@
 
 |1
 |
-[source, text]
+[source, bash]
 ----
-$ mongo admin -u kylin -p mongo
+$ mongo admin -u root -p mongo
 ----
 
 |2
 |
-[source, text]
+[source, bash]
 ----
-$ mongo -u kylin -p mongo --authenticationDatabase admin
+$ mongo -u root -p mongo --authenticationDatabase admin
 ----
 |===
 
-=== SCRAM-SHA-1
+=== SCRAM-SHA-1/SCRAM-SHA-256 认证
 
-[source, text]
-.*1. 无认证启动 mongod*
+[source, bash]
+.*1. 启动 mongod，并创建管理用户*
 ----
-$ sudo -p mkdir /data/db
-$ sudo chown vagrant:vagrant /data/db/
-$ mongod
-----
-
-[source, text]
-.*2. 创建用户*
-----
-$ mongo admin
-MongoDB Enterprise > db.createUser({user: "alice", pwd: "secret", roles: [{role: "root", db: "admin"}]})
+$ mkdir -p data/db
+$ mongod --dbpath data/db/ --logpath data/db/mongod.log --auth --fork
+$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
 ----
 
-[source, text]
-.*3. 有认证启动 mongod*
+[source, bash]
+.*2. 执行如下命令查看认证机制*
 ----
-$ mongod --auth
-----
-
-[source, text]
-.*4. 执行如下命令查看认证机制*
-----
-$ mongo admin -u alice -p secret --eval "db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
-MongoDB shell version: 3.2.22
-connecting to: admin
+db.runCommand({getParameter: 1, authenticationMechanisms: 1})
 {
 	"authenticationMechanisms" : [
-		"MONGODB-CR",
 		"MONGODB-X509",
-		"SCRAM-SHA-1"
+		"SCRAM-SHA-1",
+		"SCRAM-SHA-256"
 	],
 	"ok" : 1
 }
 ----
 
-[source, text]
-.*5. 执行如下命令查看认证机制*
+NOTE: 如下命令可正确从 Shell 执行：
+
+[source, bash]
 ----
-$ mongo admin --eval "db.auth('alice', 'secret');db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
-MongoDB shell version: 3.2.22
-connecting to: admin
+$ mongo admin -u root -p mongo --eval "db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
+
+$ mongo admin --eval "db.auth('root', 'mongo');db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
+
+$ mongo -u root -p mongo --eval "db=db.getSisterDB('admin');db.runCommand({getParameter: 1, authenticationMechanisms: 1})" --authenticationDatabase admin
+----
+
+[source, bash]
+.*3. 查看 SHA-1/SHA-256 加密串*
+----
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'db.system.users.find().pretty()'
+
 {
-	"authenticationMechanisms" : [
-		"MONGODB-CR",
-		"MONGODB-X509",
-		"SCRAM-SHA-1"
-	],
-	"ok" : 1
+	"_id" : "admin.root",
+	"user" : "root",
+	"db" : "admin",
+	"credentials" : {
+		"SCRAM-SHA-1" : {
+			"iterationCount" : 10000,
+			"salt" : "Qs62Os9tVFfOIJJ174tZNg==",
+			"storedKey" : "/WomvCioN6yJ4hIUzX5XQtN8+88=",
+			"serverKey" : "iTB0cfed0xxJQTZso9Tkwp8aMsE="
+		},
+		"SCRAM-SHA-256" : {
+			"iterationCount" : 15000,
+			"salt" : "iFPYDBm8xavWiMy8ny2+xt/0qdbbbhnexSR7hg==",
+			"storedKey" : "QlGZlLQYl7yG8e2wVd93uOx5yjjR5A7GJds3tbof73c=",
+			"serverKey" : "jxLe2eTZ+beB3cCiC5NC9LMbdupdXTqkS6yHvzxPJVE="
+		}
+	},
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
 }
 ----
 
-[source, text]
-.*6. 执行如下命令查看认证机制*
+=== X.509 认证
+
+*1. 根据`依赖环境准备` -> `自签名证书生成` 部分生成证书*
+
+[source, bash]
+.*2. 启动 mongod 服务*
 ----
-$ mongo -u alice -p secret --eval "db=db.getSisterDB('admin');db.runCommand({getParameter: 1, authenticationMechanisms: 1})" --authenticationDatabase admin
-MongoDB shell version: 3.2.22
-connecting to: test
+$ mongod --sslMode requireSSL --sslPEMKeyFile server.pem  --sslCAFile ca.pem --auth
+----
+
+[source, bash]
+.*3. mongo shell 连接认证*
+----
+$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27017
+
+> db.getSiblingDB("$external").runCommand({createUser: "CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN", roles: [{role: 'root', db: 'admin'}]});
+{ "ok" : 1 }
+
+> db.getSiblingDB("$external").auth({user: 'CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN', mechanism: 'MONGODB-X509'})
+1
+----
+
+[source, bash]
+.*4. 查看用户*
+----
+> db.system.users.find().pretty()
 {
-	"authenticationMechanisms" : [
-		"MONGODB-CR",
-		"MONGODB-X509",
-		"SCRAM-SHA-1"
-	],
-	"ok" : 1
+	"_id" : "$external.CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN",
+	"user" : "CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN",
+	"db" : "$external",
+	"credentials" : {
+		"external" : true
+	},
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
 }
 ----
 
-=== Authentication on a Running Replica Set
+=== Keyfile 内部认证
 
-[source, text]
-.**
+[source, bash]
+.*1. 生成 Keyfile，及数据库数据存储目录*
+----
+$ openssl rand -base64 755 > keyfile
+$ chmod 400 keyfile
+
+$ mkdir -p r{0,1,2}
 ----
 
+[source, bash]
+.*2. 启动复制子集，初始化，创建用户，并添加备节点*
+----
+$ for i in 0 1 2 ; do mongod --dbpath r$i --logpath r$i/mongo.log --port 2700$i --fork --auth --keyFile keyfile --replSet repl-1 ; done
+
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
-=== 内部使用 X.509 认证
+[source, javaScript]
+.*3. 查看复制子集成员，并输出成员名称*
+----
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval '
+var status = rs.status();
+var statuses = status.members.map((member) => (member.stateStr)).sort();
+print(JSON.stringify(statuses));
+'
 
-[source, text]
-.**
+["PRIMARY","SECONDARY","SECONDARY"]
 ----
 
+=== X.509 内部认证
+
+[source, bash]
+.*1. 生成数据存储目录*
+----
+$ mkdir -p r{0,1,2}
 ----
 
-[source, text]
-.**
+[source, bash]
+.*2. 启动复制子集，初始化，创建用户，并添加备节点*
+----
+$ for i in 0 1 2 ; do mongod --dbpath r$i --logpath r$i/mongo.log --port 2700$i --fork --auth --replSet repl-2 --sslMode requireSSL --clusterAuthMode x509 --sslPEMKeyFile server.pem --sslCAFile ca.pem; done
+
+$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27000 --eval "rs.initiate()"
+
+$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27000 
+
+> use $external
+> db.createUser({user:"CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN",roles:[{ role: "root", db: "admin" }]})
+> db.auth({user: 'CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN', mechanism: 'MONGODB-X509'})
+
+> rs.add("server.example.com:27001")
+> rs.add("server.example.com:27002")
 ----
 
+=== 升级 MONGODB-CR 到 SCRAM-SHA-1
+
+[source, json]
+.*1. 查看升级前用户*
+----
+$ mongo admin --eval 'db.system.users.find().pretty()'
+
+{       
+        "_id" : "admin.alice",
+        "user" : "alice",
+        "db" : "admin", 
+        "credentials" : {
+                "MONGODB-CR" : "b2d1852f112d209beb4b60a128da1bd2"
+        },
+        "roles" : [
+                {       
+                        "role" : "root",
+                        "db" : "admin"
+                }
+        ]
+}
 ----
 
-[source, text]
-.**
+[source, bash]
+.*2. 升级*
+----
+$ mongo admin --eval "db.adminCommand({authSchemaUpgrade: 1})"
 ----
 
+[source, bash]
+.*3. 查看升级后用户*
+----
+$ mongo admin --eval 'db.system.users.find().pretty()'
+
+{
+	"_id" : "admin.alice",
+	"user" : "alice",
+	"db" : "admin",
+	"credentials" : {
+		"SCRAM-SHA-1" : {
+			"iterationCount" : 10000,
+			"salt" : "gUOesIq6elvRPkOaTLZnlw==",
+			"storedKey" : "EVgfcW705Tq9ymvUm/XCDtHuE3Q=",
+			"serverKey" : "rXcgDeb5fstljhEWRO4/6hkAfT4="
+		}
+	},
+	"roles" : [
+		{
+			"role" : "root",
+			"db" : "admin"
+		}
+	]
+}
 ----
 
-[source, text]
+== TODO
+
+[source, bash]
 .**
 ----
 

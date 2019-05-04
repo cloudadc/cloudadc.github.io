@@ -297,25 +297,33 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_authentication">Authentication</a>
+<li><a href="#__">&#x4F9D;&#x8D56;&#x73AF;&#x5883;&#x51C6;&#x5907;</a>
 <ul class="sectlevel2">
-<li><a href="#__">&#x4E24;&#x79CD;&#x8BA4;&#x8BC1;&#x65B9;&#x6CD5;</a></li>
-<li><a href="#_scram_sha_1">SCRAM-SHA-1</a></li>
-<li><a href="#_authentication_on_a_running_replica_set">Authentication on a Running Replica Set</a></li>
-<li><a href="#__x_509">&#x5185;&#x90E8;&#x4F7F;&#x7528; X.509 &#x8BA4;&#x8BC1;</a></li>
+<li><a href="#___2">&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;&#x751F;&#x6210;</a></li>
 </ul>
 </li>
+<li><a href="#_authentication">Authentication</a>
+<ul class="sectlevel2">
+<li><a href="#___3">&#x4E24;&#x79CD;&#x8BA4;&#x8BC1;&#x65B9;&#x6CD5;</a></li>
+<li><a href="#_scram_sha_1_scram_sha_256">SCRAM-SHA-1/SCRAM-SHA-256 &#x8BA4;&#x8BC1;</a></li>
+<li><a href="#_x_509">X.509 &#x8BA4;&#x8BC1;</a></li>
+<li><a href="#_keyfile">Keyfile &#x5185;&#x90E8;&#x8BA4;&#x8BC1;</a></li>
+<li><a href="#_x_509_2">X.509 &#x5185;&#x90E8;&#x8BA4;&#x8BC1;</a></li>
+<li><a href="#__mongodb_cr_scram_sha_1">&#x5347;&#x7EA7; MONGODB-CR &#x5230; SCRAM-SHA-1</a></li>
+</ul>
+</li>
+<li><a href="#_todo">TODO</a></li>
 <li><a href="#_authorization">Authorization</a>
 <ul class="sectlevel2">
-<li><a href="#___2">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x7BA1;&#x7406;&#x7528;&#x6237;</a></li>
-<li><a href="#___3">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x5E94;&#x7528;&#x7528;&#x6237;</a></li>
-<li><a href="#___4">&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;</a></li>
+<li><a href="#___4">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x7BA1;&#x7406;&#x7528;&#x6237;</a></li>
+<li><a href="#___5">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x5E94;&#x7528;&#x7528;&#x6237;</a></li>
+<li><a href="#___6">&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;</a></li>
 </ul>
 </li>
 <li><a href="#_encryption">Encryption</a>
 <ul class="sectlevel2">
 <li><a href="#_tls">TLS &#x52A0;&#x5BC6;&#x590D;&#x5236;&#x5B50;&#x96C6;</a></li>
-<li><a href="#___5">&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x52A0;&#x5BC6;</a></li>
+<li><a href="#___7">&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x52A0;&#x5BC6;</a></li>
 <li><a href="#_kmip">KMIP &#x914D;&#x7F6E;</a></li>
 </ul>
 </li>
@@ -329,10 +337,188 @@
 </ul>
 </div>
 <div class="sect1">
+<h2 id="__">&#x4F9D;&#x8D56;&#x73AF;&#x5883;&#x51C6;&#x5907;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;&#x751F;&#x6210;</h3>
+<div class="paragraph">
+<p><strong>0. openssl &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x8BF4;&#x660E;</strong></p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x6587;&#x4EF6;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/openssl-ca.cnf">openssl-ca.cnf</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BBE;&#x5B9A;&#x9ED8;&#x8BA4; CN&#xFF0C;OU &#x7B49;&#x540D;&#x79F0;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/openssl-server.cnf">openssl-server.cnf</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BBE;&#x5B9A;&#x9ED8;&#x8BA4; CN&#xFF0C;OU &#x7B49;&#x540D;&#x79F0;&#xFF0C;&#x8BBE;&#x5B9A; Server DNS &#x540D;&#x79F0;&#x4E3A; <code>localhost</code>, <code>server.example.com</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="files/openssl-client.cnf">openssl-client.cnf</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x8BBE;&#x5B9A;&#x9ED8;&#x8BA4; CN&#xFF0C;OU &#x7B49;&#x540D;&#x79F0;</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x6210;&#x4E00;&#x4E2A; CA &#x5BC6;&#x94A5;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl genrsa -out ca.key 4096</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4F7F;&#x7528; CA &#x5BC6;&#x94A5;&#x751F;&#x6210; CA &#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl req -new -x509 -days 3650 -key ca.key -out ca.crt -config openssl-ca.cnf</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>Common Name</code> &#x9700;&#x8981;&#x8F93;&#x5165;&#x4E00;&#x4E2A;&#x540D;&#x79F0;&#xFF0C;&#x4F8B;&#x5982; localhost&#xFF0C;&#x5176;&#x4F59;&#x90E8;&#x5206;&#x4F7F;&#x7528;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x9ED8;&#x8BA4;&#x540D;&#x79F0;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x751F;&#x6210;&#x4E00;&#x4E2A;&#x5BC6;&#x94A5;&#x6587;&#x4EF6;&#xFF0C;&#x7528;&#x505A;&#x4E2D;&#x4ECB;&#x5BC6;&#x94A5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl genrsa -out ia.key 4096</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x6839;&#x636E;&#x4E2D;&#x4ECB;&#x5BC6;&#x94A5;&#x751F;&#x6210;&#x4E00;&#x4E2A;&#x8BC1;&#x4E66;&#x7B7E;&#x540D;&#x8BF7;&#x6C42;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl req -new -key ia.key -out ia.csr -config openssl-ca.cnf</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>Common Name</code> &#x9700;&#x8981;&#x8F93;&#x5165;&#x4E00;&#x4E2A;&#x540D;&#x79F0;&#xFF0C;&#x4F8B;&#x5982; localhost&#xFF0C;&#x5176;&#x4F59;&#x90E8;&#x5206;&#x4F7F;&#x7528;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x9ED8;&#x8BA4;&#x540D;&#x79F0;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x751F;&#x6210;&#x4E00;&#x4E2A;&#x4E2D;&#x4ECB;&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl x509 -sha256 -req -days 3650 -in ia.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out ia.crt -extfile openssl-ca.cnf -extensions v3_ca</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x521B;&#x5EFA; CA PEM &#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cat ca.crt ia.crt &gt; ca.pem</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x751F;&#x6210;&#x4E00;&#x4E2A; Server &#x5BC6;&#x94A5;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl genrsa -out server.key 4096</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x6839;&#x636E; Server &#x5BC6;&#x94A5;&#x751F;&#x6210;&#x4E00;&#x4E2A;&#x8BC1;&#x4E66;&#x7B7E;&#x540D;&#x8BF7;&#x6C42;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl req -new -key server.key -out server.csr -config openssl-server.cnf</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>Common Name</code> &#x9700;&#x8981;&#x8F93;&#x5165;&#x4E00;&#x4E2A;&#x540D;&#x79F0;&#xFF0C;&#x4F8B;&#x5982; server.example.com&#xFF0C;&#x5176;&#x4F59;&#x90E8;&#x5206;&#x4F7F;&#x7528;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x9ED8;&#x8BA4;&#x540D;&#x79F0;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x6839;&#x636E;&#x4E2D;&#x4ECB;&#x5BC6;&#x94A5;&#xFF0C;&#x4E2D;&#x4ECB;&#x8BC1;&#x4E66;&#xFF0C;&#x53CA; Server &#x8BC1;&#x4E66;&#x7B7E;&#x540D;&#x8BF7;&#x6C42;&#x6587;&#x4EF6;&#x751F;&#x4EA7; server &#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl x509 -sha256 -req -days 3650 -in server.csr -CA ia.crt -CAkey ia.key -CAcreateserial -out server.crt -extfile openssl-server.cnf -extensions v3_req</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x521B;&#x5EFA; server PEM &#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cat server.crt server.key &gt; server.pem</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x751F;&#x6210;&#x4E00;&#x4E2A; Client &#x5BC6;&#x94A5;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl genrsa -out client.key 4096</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x6839;&#x636E; Client &#x5BC6;&#x94A5;&#x751F;&#x6210;&#x4E00;&#x4E2A;&#x8BC1;&#x4E66;&#x7B7E;&#x540D;&#x8BF7;&#x6C42;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl req -new -key client.key -out client.csr -config openssl-client.cnf</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>Common Name</code> &#x9700;&#x8981;&#x8F93;&#x5165;&#x4E00;&#x4E2A;&#x540D;&#x79F0;&#xFF0C;&#x4F8B;&#x5982; client.example.com&#xFF0C;&#x5176;&#x4F59;&#x90E8;&#x5206;&#x4F7F;&#x7528;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x4E2D;&#x7684;&#x9ED8;&#x8BA4;&#x540D;&#x79F0;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. &#x6839;&#x636E;&#x4E2D;&#x4ECB;&#x5BC6;&#x94A5;&#xFF0C;&#x4E2D;&#x4ECB;&#x8BC1;&#x4E66;&#xFF0C;&#x53CA; Client &#x8BC1;&#x4E66;&#x7B7E;&#x540D;&#x8BF7;&#x6C42;&#x6587;&#x4EF6;&#x751F;&#x4EA7; Client &#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl x509 -sha256 -req -days 3650 -in client.csr -CA ia.crt -CAkey ia.key -CAcreateserial -out client.crt -extfile openssl-client.cnf -extensions v3_req</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">14. <strong>&#x521B;&#x5EFA; server PEM &#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cat client.crt client.key &gt; client.pem</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>15. &#x67E5;&#x770B; PEM &#x6587;&#x4EF6;subject</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> $(ls *.pem) ; <span class="hljs-keyword">do</span> openssl x509 -in <span class="hljs-variable">$i</span> -inform PEM -subject -nameopt RFC2253 -noout ; <span class="hljs-keyword">done</span>
+subject= CN=localhost,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN
+subject= CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN
+subject= CN=server.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_authentication">Authentication</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="__">&#x4E24;&#x79CD;&#x8BA4;&#x8BC1;&#x65B9;&#x6CD5;</h3>
+<h3 id="___3">&#x4E24;&#x79CD;&#x8BA4;&#x8BC1;&#x65B9;&#x6CD5;</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 28.5714%;">
@@ -349,7 +535,7 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin -u kylin -p mongo</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin -u root -p mongo</code></pre>
 </div>
 </div></div></td>
 </tr>
@@ -357,7 +543,7 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo -u kylin -p mongo --authenticationDatabase admin</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo -u root -p mongo --authenticationDatabase admin</code></pre>
 </div>
 </div></div></td>
 </tr>
@@ -365,88 +551,257 @@
 </table>
 </div>
 <div class="sect2">
-<h3 id="_scram_sha_1">SCRAM-SHA-1</h3>
+<h3 id="_scram_sha_1_scram_sha_256">SCRAM-SHA-1/SCRAM-SHA-256 &#x8BA4;&#x8BC1;</h3>
 <div class="listingblock">
-<div class="title"><strong>1. &#x65E0;&#x8BA4;&#x8BC1;&#x542F;&#x52A8; mongod</strong></div>
+<div class="title"><strong>1. &#x542F;&#x52A8; mongod&#xFF0C;&#x5E76;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ sudo -p mkdir /data/db
-$ sudo chown vagrant:vagrant /data/db/
-$ mongod</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7528;&#x6237;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin
-MongoDB Enterprise &gt; db.createUser({user: &quot;alice&quot;, pwd: &quot;secret&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mkdir -p data/db
+$ mongod --dbpath data/db/ --logpath data/db/mongod.log --auth --fork
+$ mongo admin --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})&apos;</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>3. &#x6709;&#x8BA4;&#x8BC1;&#x542F;&#x52A8; mongod</strong></div>
+<div class="title"><strong>2. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongod --auth</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin -u alice -p secret --eval &quot;db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;
-MongoDB shell version: 3.2.22
-connecting to: admin
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.runCommand({getParameter: 1, authenticationMechanisms: 1})
 {
-	&quot;authenticationMechanisms&quot; : [
-		&quot;MONGODB-CR&quot;,
-		&quot;MONGODB-X509&quot;,
-		&quot;SCRAM-SHA-1&quot;
+	<span class="hljs-string">&quot;authenticationMechanisms&quot;</span> : [
+		<span class="hljs-string">&quot;MONGODB-X509&quot;</span>,
+		<span class="hljs-string">&quot;SCRAM-SHA-1&quot;</span>,
+		<span class="hljs-string">&quot;SCRAM-SHA-256&quot;</span>
 	],
-	&quot;ok&quot; : 1
+	<span class="hljs-string">&quot;ok&quot;</span> : 1
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x53EF;&#x6B63;&#x786E;&#x4ECE; Shell &#x6267;&#x884C;&#xFF1A;
+</td>
+</tr>
+</table>
+</div>
 <div class="listingblock">
-<div class="title"><strong>5. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --eval &quot;db.auth(&apos;alice&apos;, &apos;secret&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;
-MongoDB shell version: 3.2.22
-connecting to: admin
-{
-	&quot;authenticationMechanisms&quot; : [
-		&quot;MONGODB-CR&quot;,
-		&quot;MONGODB-X509&quot;,
-		&quot;SCRAM-SHA-1&quot;
-	],
-	&quot;ok&quot; : 1
-}</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin -u root -p mongo --eval <span class="hljs-string">&quot;db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
+
+$ mongo admin --eval <span class="hljs-string">&quot;db.auth(&apos;root&apos;, &apos;mongo&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
+
+$ mongo -u root -p mongo --eval <span class="hljs-string">&quot;db=db.getSisterDB(&apos;admin&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span> --authenticationDatabase admin</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>6. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
+<div class="title"><strong>3. &#x67E5;&#x770B; SHA-1/SHA-256 &#x52A0;&#x5BC6;&#x4E32;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo -u alice -p secret --eval &quot;db=db.getSisterDB(&apos;admin&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot; --authenticationDatabase admin
-MongoDB shell version: 3.2.22
-connecting to: test
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;db.system.users.find().pretty()&apos;</span>
+
 {
-	&quot;authenticationMechanisms&quot; : [
-		&quot;MONGODB-CR&quot;,
-		&quot;MONGODB-X509&quot;,
-		&quot;SCRAM-SHA-1&quot;
-	],
-	&quot;ok&quot; : 1
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;admin.root&quot;</span>,
+	<span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+	<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>,
+	<span class="hljs-string">&quot;credentials&quot;</span> : {
+		<span class="hljs-string">&quot;SCRAM-SHA-1&quot;</span> : {
+			<span class="hljs-string">&quot;iterationCount&quot;</span> : 10000,
+			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;Qs62Os9tVFfOIJJ174tZNg==&quot;</span>,
+			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;/WomvCioN6yJ4hIUzX5XQtN8+88=&quot;</span>,
+			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;iTB0cfed0xxJQTZso9Tkwp8aMsE=&quot;</span>
+		},
+		<span class="hljs-string">&quot;SCRAM-SHA-256&quot;</span> : {
+			<span class="hljs-string">&quot;iterationCount&quot;</span> : 15000,
+			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;iFPYDBm8xavWiMy8ny2+xt/0qdbbbhnexSR7hg==&quot;</span>,
+			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;QlGZlLQYl7yG8e2wVd93uOx5yjjR5A7GJds3tbof73c=&quot;</span>,
+			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;jxLe2eTZ+beB3cCiC5NC9LMbdupdXTqkS6yHvzxPJVE=&quot;</span>
+		}
+	},
+	<span class="hljs-string">&quot;roles&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;role&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+			<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>
+		}
+	]
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_authentication_on_a_running_replica_set">Authentication on a Running Replica Set</h3>
+<h3 id="_x_509">X.509 &#x8BA4;&#x8BC1;</h3>
+<div class="paragraph">
+<p><strong>1. &#x6839;&#x636E;<code>&#x4F9D;&#x8D56;&#x73AF;&#x5883;&#x51C6;&#x5907;</code> &#x2192; <code>&#x81EA;&#x7B7E;&#x540D;&#x8BC1;&#x4E66;&#x751F;&#x6210;</code> &#x90E8;&#x5206;&#x751F;&#x6210;&#x8BC1;&#x4E66;</strong></p>
+</div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x542F;&#x52A8; mongod &#x670D;&#x52A1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongod --sslMode requireSSL --sslPEMKeyFile server.pem  --sslCAFile ca.pem --auth</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. mongo shell &#x8FDE;&#x63A5;&#x8BA4;&#x8BC1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27017
+
+&gt; db.getSiblingDB(<span class="hljs-string">&quot;<span class="hljs-variable">$external</span>&quot;</span>).runCommand({createUser: <span class="hljs-string">&quot;CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&quot;</span>, roles: [{role: <span class="hljs-string">&apos;root&apos;</span>, db: <span class="hljs-string">&apos;admin&apos;</span>}]});
+{ <span class="hljs-string">&quot;ok&quot;</span> : 1 }
+
+&gt; db.getSiblingDB(<span class="hljs-string">&quot;<span class="hljs-variable">$external</span>&quot;</span>).auth({user: <span class="hljs-string">&apos;CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&apos;</span>, mechanism: <span class="hljs-string">&apos;MONGODB-X509&apos;</span>})
+1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">&gt; db.system.users.find().<span class="hljs-function"><span class="hljs-title">pretty</span></span>()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;<span class="hljs-variable">$external</span>.CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&quot;</span>,
+	<span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&quot;</span>,
+	<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;<span class="hljs-variable">$external</span>&quot;</span>,
+	<span class="hljs-string">&quot;credentials&quot;</span> : {
+		<span class="hljs-string">&quot;external&quot;</span> : <span class="hljs-literal">true</span>
+	},
+	<span class="hljs-string">&quot;roles&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;role&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+			<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>
+		}
+	]
+}</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="__x_509">&#x5185;&#x90E8;&#x4F7F;&#x7528; X.509 &#x8BA4;&#x8BC1;</h3>
+<h3 id="_keyfile">Keyfile &#x5185;&#x90E8;&#x8BA4;&#x8BC1;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x6210; Keyfile&#xFF0C;&#x53CA;&#x6570;&#x636E;&#x5E93;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ openssl rand -base64 755 &gt; keyfile
+$ chmod 400 keyfile
+
+$ mkdir -p r{0,1,2}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8;&#x590D;&#x5236;&#x5B50;&#x96C6;&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7528;&#x6237;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath r<span class="hljs-variable">$i</span> --logpath r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x6210;&#x5458;&#xFF0C;&#x5E76;&#x8F93;&#x51FA;&#x6210;&#x5458;&#x540D;&#x79F0;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript">$ mongo admin --port 27000 -u &quot;root&quot; -p &quot;mongo&quot; --eval &apos;
+var status = rs.status();
+var statuses = status.members.map((member) =&gt; (member.stateStr)).sort();
+print(JSON.stringify(statuses));
+&apos;
+
+[&quot;PRIMARY&quot;,&quot;SECONDARY&quot;,&quot;SECONDARY&quot;]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_x_509_2">X.509 &#x5185;&#x90E8;&#x8BA4;&#x8BC1;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x751F;&#x6210;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mkdir -p r{0,1,2}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x542F;&#x52A8;&#x590D;&#x5236;&#x5B50;&#x96C6;&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7528;&#x6237;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath r<span class="hljs-variable">$i</span> --logpath r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --replSet repl-2 --sslMode requireSSL --clusterAuthMode x509 --sslPEMKeyFile server.pem --sslCAFile ca.pem; <span class="hljs-keyword">done</span>
+
+$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+$ mongo --ssl --sslPEMKeyFile client.pem  --sslCAFile ca.pem --host server.example.com:27000
+
+&gt; use <span class="hljs-variable">$external</span>
+&gt; db.createUser({user:<span class="hljs-string">&quot;CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&quot;</span>,roles:[{ role: <span class="hljs-string">&quot;root&quot;</span>, db: <span class="hljs-string">&quot;admin&quot;</span> }]})
+&gt; db.auth({user: <span class="hljs-string">&apos;CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN&apos;</span>, mechanism: <span class="hljs-string">&apos;MONGODB-X509&apos;</span>})
+
+&gt; rs.add(<span class="hljs-string">&quot;server.example.com:27001&quot;</span>)
+&gt; rs.add(<span class="hljs-string">&quot;server.example.com:27002&quot;</span>)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__mongodb_cr_scram_sha_1">&#x5347;&#x7EA7; MONGODB-CR &#x5230; SCRAM-SHA-1</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x5347;&#x7EA7;&#x524D;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">$ mongo admin --<span class="hljs-built_in">eval</span> <span class="hljs-string">&apos;db.system.users.find().pretty()&apos;</span>
+
+{
+        <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;admin.alice&quot;</span>,
+        <span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;alice&quot;</span>,
+        <span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>,
+        <span class="hljs-string">&quot;credentials&quot;</span> : {
+                <span class="hljs-string">&quot;MONGODB-CR&quot;</span> : <span class="hljs-string">&quot;b2d1852f112d209beb4b60a128da1bd2&quot;</span>
+        },
+        <span class="hljs-string">&quot;roles&quot;</span> : [
+                {
+                        <span class="hljs-string">&quot;role&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+                        <span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>
+                }
+        ]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5347;&#x7EA7;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin --eval <span class="hljs-string">&quot;db.adminCommand({authSchemaUpgrade: 1})&quot;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x5347;&#x7EA7;&#x540E;&#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin --eval <span class="hljs-string">&apos;db.system.users.find().pretty()&apos;</span>
+
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;admin.alice&quot;</span>,
+	<span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;alice&quot;</span>,
+	<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>,
+	<span class="hljs-string">&quot;credentials&quot;</span> : {
+		<span class="hljs-string">&quot;SCRAM-SHA-1&quot;</span> : {
+			<span class="hljs-string">&quot;iterationCount&quot;</span> : 10000,
+			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;gUOesIq6elvRPkOaTLZnlw==&quot;</span>,
+			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;EVgfcW705Tq9ymvUm/XCDtHuE3Q=&quot;</span>,
+			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;rXcgDeb5fstljhEWRO4/6hkAfT4=&quot;</span>
+		}
+	},
+	<span class="hljs-string">&quot;roles&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;role&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+			<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>
+		}
+	]
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_todo">TODO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -511,31 +866,6 @@ connecting to: test
 <div class="title">**</div>
 <div class="content">
 <pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text"></code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -544,7 +874,7 @@ connecting to: test
 <h2 id="_authorization">Authorization</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___2">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x7BA1;&#x7406;&#x7528;&#x6237;</h3>
+<h3 id="___4">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x7BA1;&#x7406;&#x7528;&#x6237;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x57FA;&#x4E8E; 3 &#x8282;&#x70B9;&#x7684;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x521B;&#x5EFA; 4 &#x4E2A;&#x7528;&#x6237;&#xFF0C;&#x4E14;&#x8FD9;&#x4E9B;&#x7528;&#x6237;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x6743;&#x9650;&#x3002;</p>
 </div>
@@ -608,7 +938,7 @@ $ mongo admin --port 31210 --username &quot;sysAdmin&quot; --password &quot;cabl
 </div>
 </div>
 <div class="sect2">
-<h3 id="___3">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x5E94;&#x7528;&#x7528;&#x6237;</h3>
+<h3 id="___5">&#x521B;&#x5EFA;&#x4E0D;&#x540C;&#x6743;&#x9650;&#x7684;&#x5E94;&#x7528;&#x7528;&#x6237;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x57FA;&#x4E8E; 3 &#x8282;&#x70B9;&#x7684;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x521B;&#x5EFA; 2 &#x4E2A;&#x5E94;&#x7528;&#x7528;&#x6237;&#xFF0C;&#x4E14;&#x8FD9;&#x4E9B;&#x7528;&#x6237;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x6743;&#x9650;&#x3002;</p>
 </div>
@@ -670,7 +1000,7 @@ $ mongo admin --port 31220 --username &quot;admin&quot; --password &quot;webscal
 </div>
 </div>
 <div class="sect2">
-<h3 id="___4">&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;</h3>
+<h3 id="___6">&#x521B;&#x5EFA;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x76EE;&#x5F55;</strong></div>
 <div class="content">
@@ -800,7 +1130,7 @@ $ mongo admin --port 31230 --eval &apos;db.createRole({
 </div>
 </div>
 <div class="sect2">
-<h3 id="___5">&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x52A0;&#x5BC6;</h3>
+<h3 id="___7">&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x52A0;&#x5BC6;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x57FA;&#x4E8E;&#x4E00;&#x4E2A;&#x8FD0;&#x884C;&#x7684;&#x672A;&#x52A0;&#x5BC6;&#x590D;&#x5236;&#x5B50;&#x96C6;&#x8FDB;&#x884C;&#xFF0C;&#x5BF9;&#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x8FDB;&#x884C;&#x52A0;&#x5BC6;&#x3002;</p>
 </div>
@@ -997,7 +1327,7 @@ $ mongo admin --port 31330 --eval &apos;rs.add(&quot;database.m310.mongodb.unive
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安全","level":"1.5","depth":1,"next":{"title":"性能调优","level":"1.6","depth":1,"path":"dba/perf.adoc","ref":"dba/perf.adoc","articles":[]},"previous":{"title":"集群管理","level":"1.4","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/security.adoc","mtime":"2019-04-11T07:55:50.938Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-04-30T10:13:00.493Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安全","level":"1.5","depth":1,"next":{"title":"性能调优","level":"1.6","depth":1,"path":"dba/perf.adoc","ref":"dba/perf.adoc","articles":[]},"previous":{"title":"集群管理","level":"1.4","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/security.adoc","mtime":"2019-05-04T13:12:09.966Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-05-04T13:22:06.142Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
