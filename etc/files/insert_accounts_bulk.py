@@ -6,7 +6,7 @@ import pymongo
 
 bulkSize= 500;
 record_amount = 1000000
-connection = pymongo.MongoClient('mongodb://root:root123@localhost:27017/')
+connection = pymongo.MongoClient('mongodb://root:mongo@localhost:27017/')
 db = connection['bankdata']
 db.customers.drop()
 
@@ -106,7 +106,7 @@ for count in xrange(record_amount/bulkSize):
         bulk.insert(new_record)
 
     bulk.execute()
-    print "bulk"
+    ##print "bulk"
 
 #
 # Summary

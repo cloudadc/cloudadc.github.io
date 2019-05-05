@@ -3,7 +3,7 @@ import random, time, pymongo
 from datetime import datetime
 from pprint import pprint
 
-connection = pymongo.MongoClient('mongodb://root:root123@localhost:27017/')
+connection = pymongo.MongoClient('mongodb://root:mongo@localhost:27017/')
 db = connection['bankdata']
 db.companies.drop()
 db.customers.drop()

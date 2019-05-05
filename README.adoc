@@ -5,7 +5,7 @@
 
 MongoDB 是一个数据平台，存储着各种现代业务系统的数据，从业务底层编程语言的角读看，任何数据如果要存储到 MongoDB，必须通过连接驱动来实现，本部分从 MongoDB 驱动(连接器)的社区活跃度看 MongoDB 究竟使用在什么业务场景。
 
-下图为 2019 年 3 月 MongoDB 社区统计的数据(link:etc/files/github-mongodb-trends.csv[mongodb-trends.csv])：
+下图为 2019 年 5 月 MongoDB 社区统计的数据(link:etc/files/github-mongodb-trends.csv[mongodb-trends.csv])：
 
 image:etc/img/mongodb-driver-github-tr.png[]
 
@@ -29,36 +29,49 @@ MongoDB 的诞生之初的目的就是为了帮助开发者快速开发，MongoD
 4. 20 种数据 JSON 数据类型
 5. 丰富的驱动生态
 
-[cols="5a,5a"]
-|===
-|NodeJS 中对象 |数据库中文档记
+[source, bash]
+.*0. 准备*
+----
+// 启动数据库，创建用户
+$ mongod --dbpath data/db --auth
 
-|
-[source, json]
+$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
+
+// 安装 nodejs 及驱动
+$ node -v
+v10.15.3
+
+$ npm install mongodb
+----
+
+[source, javaScript]
+.*1-A: 插入 NodeJS 中对象 doc1（link:etc/files/easy-insert-doc1.js[easy-insert-doc1.js]）*
 ----
 var doc1 = {
     "name": "Alice Smith",
     "balance": 99.99
 }
-db.easy.insertOne(doc1)
+
+$ node easy-insert-doc1.js
 ----
-|
+
 [source, json]
+.*1-B: 查看数据库中的对象*
 ----
-> db.easy.findOne({ "name": "Alice Smith" })
+db.easy.findOne({ "name": "Alice Smith"})
 {
-	"_id" : ObjectId("5cb6dcdc0c8075db42407f90"),
+	"_id" : ObjectId("5cce7a2d60aee811ef4dfc06"),
 	"name" : "Alice Smith",
 	"balance" : 99.99
 }
 ----
 
-|
-[source, json]
+[source, javaScript]
+.*2-A: 插入 NodeJS 中对象 doc2（link:etc/files/easy-insert-doc2.js[easy-insert-doc2.js]）*
 ----
 var doc2 = {
     "name": "Bob Brown",
-    "balance": NumberDecimal(492.45),
+    "balance": 492.45,
     "accountNo": 489275482,
     "accountType": 2,
     "phone": [ "555-3456325", "1800-mongodb" ],
@@ -68,16 +81,16 @@ var doc2 = {
        "zip": 10036
     }
 }
-db.easy.insertOne(doc2)
 ----
-|
+
 [source, json]
+.*2-B: 查看数据库中的对象*
 ----
-> db.easy.findOne({ "name": "Bob Brown" })
+db.easy.findOne({ "name": "Bob Brown"})
 {
-	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"_id" : ObjectId("5cce7c5c573f5412ad66a0ba"),
 	"name" : "Bob Brown",
-	"balance" : NumberDecimal("492.450000000000"),
+	"balance" : 492.45,
 	"accountNo" : 489275482,
 	"accountType" : 2,
 	"phone" : [
@@ -92,17 +105,16 @@ db.easy.insertOne(doc2)
 }
 ----
 
-|
+[source, javaScript]
+.*3-A:  插入 NodeJS 中多个对象（link:etc/files/easy-insert-multiple.js[easy-insert-multiple.js]）*
+----
+$ node easy-insert-multiple.js
+----
+
 [source, json]
+.*3-B: 查看数据库中的多个对象*
 ----
-for (var i = 0; i < 1000; i++) {
-    db.easy.insertMany( [ doc1, doc2 ] )
-}
-----
-|
-[source, json]
-----
-> db.easy.find({"name": "Bob Brown", "address.city": "NYC"}).pretty()
+db.easy.find({"name": "Bob Brown", "address.city": "NYC"}).pretty()
 {
 	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
 	"name" : "Bob Brown",
@@ -122,18 +134,17 @@ for (var i = 0; i < 1000; i++) {
 ...
 ----
 
-|
-[source, json]
+[source, javaScript]
+.*4-A: 查找并替换*
 ----
 doc = db.easy.findOne({"name": "Alice Smith"})
-db.easy.replaceOne ({"_id": doc._id}, {"name": 
-"Imposter", "balance": 10000000, "message": 
-"Nothing to see here!"})
+db.easy.replaceOne ({"_id": doc._id}, {"name": "Imposter", "balance": 10000000, "message": "Nothing to see here!"})
 ----
-|
+
 [source, json]
+.*4-B: 查看数据库中的对象*
 ----
- > db.easy.findOne ({"_id": doc._id})
+db.easy.findOne ({"_id": doc._id})
 {
 	"_id" : ObjectId("5cb6dcdc0c8075db42407f90"),
 	"name" : "Imposter",
@@ -142,17 +153,17 @@ db.easy.replaceOne ({"_id": doc._id}, {"name":
 }
 ----
 
-|
-[source, json]
+[source, javaScript]
+.*5-A: 查找并更新*
 ----
 doc = db.easy.findOne({"name": "Bob Brown"})
-db.easy.updateOne ({"_id": doc._id}, {$set: 
-{"balance": NumberDecimal(10000000)}})
+db.easy.updateOne ({"_id": doc._id}, {$set: {"balance": NumberDecimal(10000000)}})
 ----
-|
+
 [source, json]
+.*5-B: 查看数据库中的对象*
 ----
-> db.easy.findOne ({"_id": doc._id})
+db.easy.findOne ({"_id": doc._id})
 {
 	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
 	"name" : "Bob Brown",
@@ -171,19 +182,18 @@ db.easy.updateOne ({"_id": doc._id}, {$set:
 }
 ----
 
-|
-[source, json]
+[source, javaScript]
+.*6-A: 删除对象*
 ----
 db.easy.deleteMany ({"name": "Alice Smith"})
 ----
-|
+
 [source, json]
+.*6-B: 查看数据库中的对象*
 ----
-> db.easy.findOne ({"name": "Alice Smith"})
+db.easy.findOne ({"name": "Alice Smith"})
 null
 ----
-
-|===
 
 ==== Flexible(灵活)
 
@@ -199,8 +209,7 @@ null
 
 [source, json]
 ----
-> db.retail.findOne({product_name: "Acme Paint"}, {_id: 0})
-{
+var paintDoc = {
 	"product_name" : "Acme Paint",
 	"color" : [
 		"Red",
@@ -215,14 +224,16 @@ null
 		"eggshell"
 	]
 }
+
+db.retail.insertOne(paintDoc);
+db.retail.findOne({product_name: "Acme Paint"}, {_id: 0})
 ----
 
 之后，我开始卖衣服，需要有以衣服的尺寸、材料等新属性，无需修改表，可以将以衣服的记录，插入
 
 [source, json]
 ----
-> db.retail.findOne({product_name: "T-shirt"}, {_id: 0})
-{
+var shirtDoc = {
 	"product_name" : "T-shirt",
 	"size" : [
 		"S",
@@ -237,14 +248,16 @@ null
 	"wash" : "cold",
 	"dry" : "tumble dry low"
 }
+
+db.retail.insertOne(shirtDoc);
+db.retail.findOne({product_name: "T-shirt"}, {_id: 0})
 ----
 
 然后，我又开始买自行车
 
 [source, json]
 ----
-> db.retail.findOne({product_name: "Mountain Bike"}, {_id: 0})
-{
+var bikeDoc = {
 	"product_name" : "Mountain Bike",
 	"brake_style" : "mechanical disc",
 	"color" : "grey",
@@ -255,6 +268,9 @@ null
 	"suspension_type" : "dual",
 	"wheel_size_in" : 26
 }
+
+db.retail.insertOne(bikeDoc);
+db.retail.findOne({product_name: "Mountain Bike"}, {_id: 0})
 ----
 
 这也就是为什么，几乎所有新型电商的产品库，都是采用的 MongoDB 的原因，这个特性也带了另一个好处，就是可以在一个表中，保持不同版本的数据，而且彼此互不影响，这个特点，在手机APP开发和物联网开发上，尤其重要因为手机 APP 和物联网，都会用很多版本的终端的运行，每个版本，都可能上传不同的数据结构，数据库必须能够支持多种数据版本，在同一个表中运行。
@@ -267,8 +283,9 @@ null
 [source, python]
 .*1. 启动 mongod 创建用户名密码*
 ----
-db.createUser({user: "root", pwd: "root123", roles: ["root"]})
-db.auth("root", "root123")
+$ mongod --dbpath data/db --auth
+
+$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
 ----
 
 [source, python]
@@ -298,81 +315,13 @@ NOTE: 可以看到十几秒时间内一条一条插入 1m 条数据(400 MB)完�
 [source, python]
 .*6. 全表扫描查询*
 ----
-> db.customers.explain(1).count({manager:"Barry Mongo"})
+> var result = db.customers.explain(1).count({manager:"Barry Mongo"})
+> var extract = {"winningPlan": result.queryPlanner.winningPlan.inputStage.stage, "totalDocsExamined": result.executionStats.totalDocsExamined, "executionTimeMillis": result.executionStats.executionTimeMillis}
+> extract
 {
-	"queryPlanner" : {
-		"plannerVersion" : 1,
-		"namespace" : "bankdata.customers",
-		"indexFilterSet" : false,
-		"parsedQuery" : {
-			"manager" : {
-				"$eq" : "Barry Mongo"
-			}
-		},
-		"winningPlan" : {
-			"stage" : "COUNT",
-			"inputStage" : {
-				"stage" : "COLLSCAN",
-				"filter" : {
-					"manager" : {
-						"$eq" : "Barry Mongo"
-					}
-				},
-				"direction" : "forward"
-			}
-		},
-		"rejectedPlans" : [ ]
-	},
-	"executionStats" : {
-		"executionSuccess" : true,
-		"nReturned" : 0,
-		"executionTimeMillis" : 383,
-		"totalKeysExamined" : 0,
-		"totalDocsExamined" : 1000001,
-		"executionStages" : {
-			"stage" : "COUNT",
-			"nReturned" : 0,
-			"executionTimeMillisEstimate" : 309,
-			"works" : 1000003,
-			"advanced" : 0,
-			"needTime" : 1000002,
-			"needYield" : 0,
-			"saveState" : 7820,
-			"restoreState" : 7820,
-			"isEOF" : 1,
-			"invalidates" : 0,
-			"nCounted" : 1,
-			"nSkipped" : 0,
-			"inputStage" : {
-				"stage" : "COLLSCAN",
-				"filter" : {
-					"manager" : {
-						"$eq" : "Barry Mongo"
-					}
-				},
-				"nReturned" : 1,
-				"executionTimeMillisEstimate" : 286,
-				"works" : 1000003,
-				"advanced" : 1,
-				"needTime" : 1000001,
-				"needYield" : 0,
-				"saveState" : 7820,
-				"restoreState" : 7820,
-				"isEOF" : 1,
-				"invalidates" : 0,
-				"direction" : "forward",
-				"docsExamined" : 1000001
-			}
-		},
-		"allPlansExecution" : [ ]
-	},
-	"serverInfo" : {
-		"host" : "Kylins-MacBook-Pro.local",
-		"port" : 27017,
-		"version" : "4.0.7",
-		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
-	},
-	"ok" : 1
+	"winningPlan" : "EOF",
+	"totalDocsExamined" : 0,
+	"executionTimeMillis" : 0
 }
 ----
 
@@ -381,114 +330,14 @@ NOTE: 可以看到全表扫描 1m 条数据花费了 383 毫秒。
 [source, json]
 .*7. 创建索引后执行同样查看*
 ----
-> db.customers.createIndex( { manager: 1 } )
-> db.customers.explain(1).count({manager:"Barry Mongo"})
+> db.customers.createIndex({manager: 1})
+> var result = db.customers.explain(1).count({manager:"Barry Mongo"})
+> var extract = {"winningPlan": result.queryPlanner.winningPlan.inputStage.stage, "totalDocsExamined": result.executionStats.totalDocsExamined, "executionTimeMillis": result.executionStats.executionTimeMillis}
+> extract
 {
-	"queryPlanner" : {
-		"plannerVersion" : 1,
-		"namespace" : "bankdata.customers",
-		"indexFilterSet" : false,
-		"parsedQuery" : {
-			"manager" : {
-				"$eq" : "Barry Mongo"
-			}
-		},
-		"winningPlan" : {
-			"stage" : "COUNT",
-			"inputStage" : {
-				"stage" : "COUNT_SCAN",
-				"keyPattern" : {
-					"manager" : 1
-				},
-				"indexName" : "manager_1",
-				"isMultiKey" : false,
-				"multiKeyPaths" : {
-					"manager" : [ ]
-				},
-				"isUnique" : false,
-				"isSparse" : false,
-				"isPartial" : false,
-				"indexVersion" : 2,
-				"indexBounds" : {
-					"startKey" : {
-						"manager" : "Barry Mongo"
-					},
-					"startKeyInclusive" : true,
-					"endKey" : {
-						"manager" : "Barry Mongo"
-					},
-					"endKeyInclusive" : true
-				}
-			}
-		},
-		"rejectedPlans" : [ ]
-	},
-	"executionStats" : {
-		"executionSuccess" : true,
-		"nReturned" : 0,
-		"executionTimeMillis" : 0,
-		"totalKeysExamined" : 2,
-		"totalDocsExamined" : 0,
-		"executionStages" : {
-			"stage" : "COUNT",
-			"nReturned" : 0,
-			"executionTimeMillisEstimate" : 0,
-			"works" : 2,
-			"advanced" : 0,
-			"needTime" : 1,
-			"needYield" : 0,
-			"saveState" : 0,
-			"restoreState" : 0,
-			"isEOF" : 1,
-			"invalidates" : 0,
-			"nCounted" : 1,
-			"nSkipped" : 0,
-			"inputStage" : {
-				"stage" : "COUNT_SCAN",
-				"nReturned" : 1,
-				"executionTimeMillisEstimate" : 0,
-				"works" : 2,
-				"advanced" : 1,
-				"needTime" : 0,
-				"needYield" : 0,
-				"saveState" : 0,
-				"restoreState" : 0,
-				"isEOF" : 1,
-				"invalidates" : 0,
-				"keysExamined" : 2,
-				"keyPattern" : {
-					"manager" : 1
-				},
-				"indexName" : "manager_1",
-				"isMultiKey" : false,
-				"multiKeyPaths" : {
-					"manager" : [ ]
-				},
-				"isUnique" : false,
-				"isSparse" : false,
-				"isPartial" : false,
-				"indexVersion" : 2,
-				"indexBounds" : {
-					"startKey" : {
-						"manager" : "Barry Mongo"
-					},
-					"startKeyInclusive" : true,
-					"endKey" : {
-						"manager" : "Barry Mongo"
-					},
-					"endKeyInclusive" : true
-				}
-			}
-		},
-		"allPlansExecution" : [ ]
-	},
-	"serverInfo" : {
-		"host" : "Kylins-MacBook-Pro.local",
-		"port" : 27017,
-		"version" : "4.0.7",
-		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
-	},
-	"ok" : 1
+	"winningPlan" : "COUNT_SCAN",
+	"totalDocsExamined" : 0,
+	"executionTimeMillis" : 3
 }
 ----
 
