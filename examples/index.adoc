@@ -1,0 +1,146 @@
+= Indexes
+:toc: manual
+
+== Compound Indexes
+
+=== Create a Compound Index
+
+[source. json]
+.*1. Create products collection, sample 100k data*
+----
+var doc = {
+ "item": "Banana",
+ "category": ["food", "produce", "grocery"],
+ "location": "4th Street Store",
+ "stock": 4,
+ "type": "cases"
+}
+
+for (var i = 0; i < 100000; i++) {doc.itemNp = i ; db.products.insertOne( doc )}
+----
+
+[source. json]
+.*2. creates an ascending index on the item and stock fields*
+----
+db.products.createIndex({item: 1, stock: 1})
+----
+
+[source. json]
+.*3. Query with indexes files*
+----
+db.products.explain(1).find({item: "Banana"})
+db.products.explain(1).find({item: "Banana", stock: {$gt: 5 }})
+----
+
+[source. json]
+.*4. Create indexes on foo and test queries*
+----
+for (var i = 0 ; i < 100000 ; i ++) {db.foo.insertOne({a: i, b: i, c: i, d: i})}
+
+db.foo.createIndex({ a : 1, b : -1, c : -1, d: 1 })
+
+db.foo.explain(1).find({a : 100 } ).sort( { b : 1, c : 1 } )
+db.foo.explain(1).find({a : 200, b : { $lt : 100 } } ).sort( { b : 1 })
+----
+
+=== Sort Order
+
+[source. json]
+.*1. Create events collection, sample 100k data*
+----
+for (var i = 0 ; i < 100000 ; i ++) {db.events.insertOne({username: "user" + i, date: "date" + i})}
+----
+
+[source. json]
+.*2. create indexes*
+----
+db.events.createIndex({username: 1, date: -1})
+----
+
+[source. json]
+.*3. Execute Queries and sort results*
+----
+db.events.explain(1).find().sort({username: 1, date: -1})
+db.events.explain(1).find().sort({username: -1, date: 1})
+----
+
+=== Prefixes
+
+[source. json]
+.*1. Create stocks collection, sample 100k data*
+----
+for (var i = 0 ; i < 100000 ; i ++) {db.stocks.insertOne({item: "item" + i, location: "location" + i, stock: "stock" + i})}
+----
+
+[source. json]
+.*2. create compound indexes*
+----
+db.stocks.createIndex({"item": 1, "location": 1, "stock": 1})
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
+[source. json]
+.**
+----
+
+----
+
