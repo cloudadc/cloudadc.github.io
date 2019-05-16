@@ -370,60 +370,42 @@ $ mongo admin --eval 'db.system.users.find().pretty()'
 }
 ----
 
-== TODO
+=== 多种认证机制一起使用
 
 [source, bash]
-.**
+.*1. 生成 Keyfile，及数据库数据存储目录，启动数据库，并初始化*
 ----
+$ mkdir -p ~/tmp/{r0,r1,r2}
 
-----
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
 
-[source, text]
-.**
-----
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --replSet repl-1 --sslMode allowSSL --keyFile keyfile --sslCAFile ca.pem --sslPEMKeyFile server.pem; done
 
-----
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
 
-[source, text]
-.**
-----
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
 
-----
-
-[source, text]
-.**
-----
-
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
 [source, text]
-.**
+.*2. 创建一个外部账户*
 ----
+$ openssl x509 -in client.pem -inform PEM -subject -nameopt RFC2253 -noout
 
-----
+$ mongo admin --port 27000 -u root -p mongo
 
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
+use $external
+db.runCommand({
+  createUser: 'CN=client.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN',
+  roles: [{ role: 'userAdminAnyDatabase', db: 'admin' }],
+  writeConcern: { w: "majority" , wtimeout: 5000
+}});
 ----
 
 [source, text]
@@ -448,49 +430,69 @@ $ mongo admin --eval 'db.system.users.find().pretty()'
 
 === 创建不同权限的管理用户
 
-本部分基于 3 节点的复制子集创建 4 个用户，且这些用户有不同的权限。
+本部分基于 3 节点的复制子集创建 4 个用户，且这些用户有不同的权限，具体需要创建的用户和权限说明如下：
 
-[source, text]
-.*1. 创建数据库目录，生成 keyfile*
+|===
+|User |Password |Can |Cannot
+
+|userAdmin
+|mongo
+|create user on any database
+|run dbhash
+
+|sysAdmin
+|mongo
+|config replica set and add shards
+|run hostinfo
+
+|dbAdmin
+|mongo
+|create a collection on any database
+|run insert
+
+|dataLoader
+|mongo
+|insert data on any database
+|run validate
+|===
+
+[source, bash]
+.*1. 创建 3 节点复制集，创建超级管理员用户，初始化复制集*
 ----
-$ mkdir -p ~/M310-HW-2.1/r{0,1,2}
-$ openssl rand -base64 755 > ~/M310-HW-2.1/keyfile
-$ chmod 400 ~/M310-HW-2.1/keyfile
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
-[source, text]
-.*2. 启动 mongod 实例*
+[source, bash]
+.*2. 创建用户*
 ----
-$ for i in 0 1 2 ; do mongod --dbpath ~/M310-HW-2.1/r$i --logpath ~/M310-HW-2.1/r$i/mongo.log --port 3121$i --fork --auth --keyFile ~/M310-HW-2.1/keyfile --replSet HW-2.1 ; done
+$ mongo admin -u root -p mongo --port 27000
+
+db.createUser({user: "userAdmin", pwd: "mongo", roles: [{ role:"userAdminAnyDatabase", db: "admin" }]})
+db.createUser({user: "sysAdmin", pwd: "mongo", roles: [{ role:"clusterManager", db: "admin" }]})
+db.createUser({user: "dbAdmin", pwd: "mongo", roles: [{ role:"dbAdminAnyDatabase", db: "admin" }]})
+db.createUser({user: "dataLoader", pwd: "mongo", roles: [{ role:"readWriteAnyDatabase", db: "admin" }]})
 ----
 
-[source, text]
-.*3. 初始化复制子集*
+[source, json]
+.*3. 查看创建的用户*
 ----
-$ mongo admin --port 31210 --eval "rs.initiate()"
-----
-
-[source, text]
-.*4. 创建用户*
-----
-$ mongo admin --port 31210 --eval 'db.createUser({user: "userAdmin", pwd: "badges", roles: [{ role:"userAdminAnyDatabase", db: "admin" }]})'
-$ mongo admin --port 31210 --username "userAdmin" --password "badges" --eval 'db.createUser({user: "sysAdmin", pwd: "cables", roles: [{ role:"clusterManager", db: "admin" }]})'
-$ mongo admin --port 31210 --username "userAdmin" --password "badges" --eval 'db.createUser({user: "dbAdmin", pwd: "collections", roles: [{ role:"dbAdminAnyDatabase", db: "admin" }]})'
-$ mongo admin --port 31210 --username "userAdmin" --password "badges" --eval 'db.createUser({user: "dataLoader", pwd: "dumpin", roles: [{ role:"readWriteAnyDatabase", db: "admin" }]})'
-----
-
-[source, text]
-.*5. 将其他两个节点添加到复制子集*
-----
-$ mongo admin --port 31210 --username "sysAdmin" --password "cables" --eval 'rs.add("database.m310.mongodb.university:31211")'
-$ mongo admin --port 31210 --username "sysAdmin" --password "cables" --eval 'rs.add("database.m310.mongodb.university:31212")'
-----
-
-[source, text]
-.*6. 查看创建的用户*
-----
-$ mongo --quiet --port 31210 --eval "db = db.getSisterDB('admin');
-          db.auth('userAdmin', 'badges');
+$ mongo admin -u root -p mongo  --port 27000 --eval "db.auth('userAdmin', 'mongo');
           var users = db.system.users.find().toArray();
           var sortedUsers = users.map((user) => {
             return {
@@ -498,60 +500,56 @@ $ mongo --quiet --port 31210 --eval "db = db.getSisterDB('admin');
               roles: user.roles
             };
           }).sort((a, b) => (a.user > b.user));
-          db.auth('sysAdmin', 'cables');
+          db.auth('sysAdmin', 'mongo');
           var numMembers = rs.status().members.length;
           var obj = {
             users: sortedUsers,
             numMembers: numMembers
           };
           print(JSON.stringify(obj));"
-{"users":[{"user":"dataLoader","roles":[{"role":"readWriteAnyDatabase","db":"admin"}]},{"user":"dbAdmin","roles":[{"role":"dbAdminAnyDatabase","db":"admin"}]},{"user":"sysAdmin","roles":[{"role":"clusterManager","db":"admin"}]},{"user":"userAdmin","roles":[{"role":"userAdminAnyDatabase","db":"admin"}]}],"numMembers":3}
+
+{"users":[{"user":"dataLoader","roles":[{"role":"readWriteAnyDatabase","db":"admin"}]},{"user":"dbAdmin","roles":[{"role":"dbAdminAnyDatabase","db":"admin"}]},{"user":"root","roles":[{"role":"root","db":"admin"}]},{"user":"sysAdmin","roles":[{"role":"clusterManager","db":"admin"}]},{"user":"userAdmin","roles":[{"role":"userAdminAnyDatabase","db":"admin"}]}],"numMembers":3}
 ----
 
 === 创建不同权限的应用用户
 
-本部分基于 3 节点的复制子集创建 2 个应用用户，且这些用户有不同的权限。
+本部分基于 3 节点的复制子集创建 2 个应用用户，且这些用户有不同的权限。具体需要创建的用户和权限说明如下：
 
-[source, text]
-.*1. 创建数据库目录，生成 keyfile*
+[source, bash]
+.*1. 创建 3 节点复制集，创建超级管理员用户，初始化复制集*
 ----
-$ mkdir -p ~/M310-HW-2.2/r{0,1,2}
-$ openssl rand -base64 755 > ~/M310-HW-2.2/keyfile
-$ chmod 400 ~/M310-HW-2.2/keyfile
-----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
 
-[source, text]
-.*2. 启动 mongod 实例*
-----
-$ for i in 0 1 2 ; do mongod --dbpath ~/M310-HW-2.2/r$i --logpath ~/M310-HW-2.2/r$i/mongo.log --port 3122$i --fork --auth --keyFile ~/M310-HW-2.2/keyfile --replSet HW-2.2 ; done
-----
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
 
-[source, text]
-.*3. 初始化复制子集*
-----
-$ mongo admin --port 31220 --eval "rs.initiate()"
-----
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
 
-[source, text]
-.*4. 创建用户*
-----
-$ mongo admin --port 31220 --eval 'db.createUser({user: "admin", pwd: "webscale", roles: [{ role:"root", db: "admin" }]})'
-$ mongo admin --port 31220 --username "admin" --password "webscale" --eval 'db.createUser({user: "reader", pwd: "books", roles: [{ role:"read", db: "acme" }]})'
-$ mongo admin --port 31220 --username "admin" --password "webscale" --eval 'db.createUser({user: "writer", pwd: "typewriter", roles: [{ role:"readWrite", db: "acme" }]})'
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "admin", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "admin" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "admin" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
-[source, text]
-.*5. 将其他两个节点添加到复制子集*
+[source, bash]
+.*2. 创建用户*
 ----
-$ mongo admin --port 31220 --username "admin" --password "webscale" --eval 'rs.add("database.m310.mongodb.university:31221")'
-$ mongo admin --port 31220 --username "admin" --password "webscale" --eval 'rs.add("database.m310.mongodb.university:31222")'
+$ mongo admin -u admin -p mongo --port 27000
+
+db.createUser({user: "reader", pwd: "mongo", roles: [{ role:"read", db: "acme" }]})
+db.createUser({user: "writer", pwd: "mongo", roles: [{ role:"readWrite", db: "acme" }]})
 ----
 
-[source, text]
-.*6. 查看创建的用户*
+[source, json]
+.*3. 查看创建的用户*
 ----
-$ mongo --quiet --port 31220 --eval "db = db.getSisterDB('admin');
-          db.auth('admin', 'webscale');
+$ mongo admin --port 27000 -u admin -p mongo  --eval "db.auth('admin', 'webscale');
           var users = db.system.users.find().toArray();
           var sortedUsers = users.map((user) => {
             return {
@@ -570,22 +568,56 @@ $ mongo --quiet --port 31220 --eval "db = db.getSisterDB('admin');
 
 === 创建自定制角色
 
-[source, text]
-.*1. 创建数据库目录*
+创建如下自定制角色，满足如下特权：
+
+[cols="2,5a"]
+|===
+|Role 名称 |Privileges
+
+|HRDEPARTMENT
+|
+* Can find documents on any collection on the HR database
+* Can insert documents only on HR.employees collection
+* Can remove users from the HR database
+
+|MANAGEMENT
+|
+* Inherits the dbOwner role of the HR database
+
+|EMPLOYEEPORTAL
+|
+* Can find documents on HR.employees collection
+* Can update HR.employees documents
+|===
+
+[source, bash]
+.*1. 创建 3 节点复制集，创建超级管理员用户，初始化复制集*
 ----
-$ mkdir -p ~/M310-HW-2.3
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
-[source, text]
-.*2. 启动 mongod*
+[source, bash]
+.*2. 创建自定制角色*
 ----
-$ mongod --dbpath ~/M310-HW-2.3 --logpath ~/M310-HW-2.3/mongo.log --port 31230 --fork
-----
+$ mongo admin -u root -p mongo --port 27000 
 
-[source, text]
-.*3. 创建自定制角色*
-----
-$ mongo admin --port 31230 --eval 'db.createRole({
+db.createRole({
   role: "HRDEPARTMENT",
   privileges: [
     {
@@ -598,34 +630,29 @@ $ mongo admin --port 31230 --eval 'db.createRole({
   ],
   roles:[]
 })
-'
 
-$ mongo admin --port 31230 --eval 'db.createRole({
+db.createRole({
   role: "MANAGEMENT",
-  privileges: [{
-    resource: { db: "HR", collection: "" },
-    actions: [ "insert" ]
-  }],
+  privileges: [],
   roles:[{
     role: "dbOwner", db: "HR"
   }]
-})'
+})
 
-$ mongo admin --port 31230 --eval 'db.createRole({
+db.createRole({
   role: "EMPLOYEEPORTAL",
   privileges: [{
     resource: { db: "HR", collection: "employees" },
     actions: [ "find", "update" ]
   }],
   roles:[]
-})'
+})
 ----
 
-[source, text]
-.*4. 查看创建的角色*
+[source, json]
+.*3. 查看创建的角色*
 ----
-$ mongo --quiet --port 31230 --eval "db = db.getSisterDB('admin');
-          var roles = db.getRoles({showPrivileges: true});
+$ mongo admin --port 27000 -u root -p mongo  --eval "var roles = db.getRoles({showPrivileges: true});
           var sortedRoles = roles.map((role) => {
             return {
               role: role.role,
@@ -639,7 +666,8 @@ $ mongo --quiet --port 31230 --eval "db = db.getSisterDB('admin');
             };
           }).sort((a, b) => (a.role > b.role));
           print(JSON.stringify(sortedRoles));"
-[{"role":"EMPLOYEEPORTAL","inheritedRoles":[],"privileges":[{"resource":{"db":"HR","collection":"employees"},"actions":["find","update"]}]},{"role":"HRDEPARTMENT","inheritedRoles":[],"privileges":[{"resource":{"db":"HR","collection":""},"actions":["dropUser","find"]},{"resource":{"db":"HR","collection":"employees"},"actions":["insert"]}]},{"role":"MANAGEMENT","inheritedRoles":[{"role":"dbOwner","db":"HR"}],"privileges":[{"resource":{"db":"HR","collection":""},"actions":["insert"]}]}]
+
+[{"role":"EMPLOYEEPORTAL","inheritedRoles":[],"privileges":[{"resource":{"db":"HR","collection":"employees"},"actions":["find","update"]}]},{"role":"HRDEPARTMENT","inheritedRoles":[],"privileges":[{"resource":{"db":"HR","collection":""},"actions":["dropUser","find"]},{"resource":{"db":"HR","collection":"employees"},"actions":["insert"]}]},{"role":"MANAGEMENT","inheritedRoles":[{"role":"dbOwner","db":"HR"}],"privileges":[]}]
 ----
 
 == Encryption
@@ -649,32 +677,32 @@ $ mongo --quiet --port 31230 --eval "db = db.getSisterDB('admin');
 [source, text]
 .*1. 创建数据库目录*
 ----
-$ mkdir -p ~/M310-HW-2.4/r{0,1,2}
+$ mkdir -p ~/tmp/r{0,1,2}
 ----
 
 [source, text]
 .*2. 启动数据库*
 ----
-$ for i in 0 1 2 ; do mongod --port 3124$i --dbpath ~/M310-HW-2.4/r$i --logpath ~/M310-HW-2.4/r$i/mongo.log --fork --sslMode requireSSL --replSet HW-2.4 --sslCAFile ~/shared/certs/ca.pem --sslPEMKeyFile ~/shared/certs/server.pem ; done
+$ for i in 0 1 2 ; do mongod --port 2700$i --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --fork --sslMode requireSSL --replSet repl-1 --sslCAFile ca.pem --sslPEMKeyFile server.pem ; done
 ----
 
 [source, text]
 .*3. 初始化复制子集*
 ----
-$ mongo --port 31240 --host database.m310.mongodb.university --ssl --sslPEMKeyFile ~/shared/certs/client.pem --sslCAFile ~/shared/certs/ca.pem --eval 'rs.initiate({
-        "_id" : "HW-2.4",
+$ mongo --port 27000 --host localhost --ssl --sslPEMKeyFile client.pem --sslCAFile ca.pem --eval 'rs.initiate({
+        "_id" : "repl-1",
         "members" : [
     {
       "_id" : 0,
-      "host" : "database.m310.mongodb.university:31240"
+      "host" : "localhost:27000"
     },
     {
       "_id" : 1,
-      "host" : "database.m310.mongodb.university:31241"
+      "host" : "localhost:27001"
     },
     {
       "_id" : 2,
-      "host" : "database.m310.mongodb.university:31242"
+      "host" : "localhost:27002"
     }
   ]
 }
@@ -684,7 +712,7 @@ $ mongo --port 31240 --host database.m310.mongodb.university --ssl --sslPEMKeyFi
 [source, text]
 .*4. 客户端连接验证*
 ----
-$ mongo --quiet --port 31240 --host database.m310.mongodb.university --ssl --sslPEMKeyFile ~/shared/certs/client.pem --sslCAFile ~/shared/certs/ca.pem --eval "db = db.getSisterDB('admin');
+$ mongo --quiet --port 31240 --host localhost --ssl --sslPEMKeyFile client.pem --sslCAFile ca.pem --eval "db = db.getSisterDB('admin');
            var numMembers = rs.status().members.length;
            var obj = {
              numMembers: numMembers
@@ -695,49 +723,136 @@ $ mongo --quiet --port 31240 --host database.m310.mongodb.university --ssl --ssl
 
 === 存储引擎加密
 
-本部分基于一个运行的未加密复制子集进行，对存储引擎进行加密。
+启动一个三节点的 MongoDB 复制集，对存储引擎进行加密。
 
-[source, text]
-.*1. 生成加密文件*
+[source, bash]
+.*1. 生产存储引擎加密文件，启动 MongoDB 指向对应加密文件*
 ----
-$ openssl rand -base64 32 > ~/M310-HW-2.5/encryptionKeyFile
-$ chmod 400 ~/M310-HW-2.5/encryptionKeyFile
-----
+$ $ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 32 > ~/tmp/encryptionKeyFile
+$ chmod 400 ~/tmp/encryptionKeyFile
 
-[source, text]
-.*2. 备节点重启*
-----
-$ mongo admin --port 31251 --eval "db.shutdownServer()"
-$ rm -rf ~/M310-HW-2.5/r1/*
-$ mongod --dbpath ~/M310-HW-2.5/r1 --logpath ~/M310-HW-2.5/r1/mongo.log --port 31251 --replSet UNENCRYPTED --fork --enableEncryption --encryptionKeyFile ~/M310-HW-2.5/encryptionKeyFile
-----
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --enableEncryption --encryptionKeyFile ~/tmp/encryptionKeyFile --replSet repl-1 ; done
 
-[source, text]
-.*3. 备节点重启*
-----
-$ mongo admin --port 31252 --eval "db.shutdownServer()"
-$ rm -rf ~/M310-HW-2.5/r2/*
-$ mongod --dbpath ~/M310-HW-2.5/r2 --logpath ~/M310-HW-2.5/r2/mongo.log --port 31252 --replSet UNENCRYPTED --fork --enableEncryption --encryptionKeyFile ~/M310-HW-2.5/encryptionKeyFile
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
 ----
 
-[source, text]
-.*4. 主节点重启*
+[source, bash]
+.*2. 查看存储引擎加密信息*
 ----
-$ mongo admin --port 31250 --eval "rs.stepDown()"
-$ mongo admin --port 31250 --eval "db.shutdownServer()"
-$ rm -rf ~/M310-HW-2.5/r0/*
-$ mongod --dbpath ~/M310-HW-2.5/r0 --logpath ~/M310-HW-2.5/r0/mongo.log --port 31250 --replSet UNENCRYPTED --fork --enableEncryption --encryptionKeyFile ~/M310-HW-2.5/encryptionKeyFile
+$ mongo admin -u root -p mongo --port 27000
+
+db.runCommand({getCmdLineOpts: 1}).parsed.security
+{
+	"authorization" : "enabled",
+	"enableEncryption" : true,
+	"encryptionKeyFile" : "/Users/ksoong/tmp/encryptionKeyFile"
+}
+
 ----
 
-=== KMIP 配置
+=== KMIP 管理加密密钥
 
-[source, text]
-.*1. *
+[source, bash]
+.*1. 测试 KIMP 服务可达*
+----
+$ ping kmip.example.com -c3
 ----
 
+[source, bash]
+.*2. 启动 MongoDB*
+----
+$ mkdir -p ~/tmp/db 
+$ mongod --dbpath ~/tmp/db --logpath ~/tmp/db/mongo.log --enableEncryption --kmipServerName kmip.example.com --kmipServerCAFile ca.pem --kmipClientCertificateFile client.pem --fork --port 27017
 ----
 
 == Auditing
+
+=== 审计信息输出到文件
+
+[source, bash]
+.*1. 启动 mongod*
+----
+$ mongod --dbpath db/ --logpath db/mongod.log --fork --auth --auditDestination file --auditFormat JSON --auditPath auditLog.json
+----
+
+[source, bash]
+.*2. 执行如下操作*
+----
+$ mongo admin
+
+db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})
+db.auth('root', 'mongo')
+
+use sample
+db.sample.insertOne({name: "sample", desc: "description"})
+----
+
+[source, json]
+.*3. 查看审计日志*
+----
+{ "atype" : "authenticate", "ts" : { "$date" : "2019-05-16T17:47:20.936+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61454 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "user" : "root", "db" : "admin", "mechanism" : "SCRAM-SHA-256" }, "result" : 0 }
+{ "atype" : "createDatabase", "ts" : { "$date" : "2019-05-16T17:49:15.993+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61454 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "sample" }, "result" : 0 }
+{ "atype" : "createCollection", "ts" : { "$date" : "2019-05-16T17:49:15.994+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61454 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "sample.sample" }, "result" : 0 }
+----
+
+=== 审计信息输出到文件，并只过滤集合创建事件
+
+[source, bash]
+.*1. 启动 mongod*
+----
+$ mongod --dbpath db/ --logpath db/mongod.log --fork --auth --auditDestination file --auditFormat JSON --auditPath auditLog.json --auditFilter '{atype: {$in: ["createCollection", "dropCollection"]}}'
+----
+
+[source, bash]
+.*2. 执行如下操作*
+----
+db.auth('no-exist', 'mongo')
+db.auth('root', 'mongo')
+use test;
+db.test.insertOne({"name": "test"})
+db.test.drop()
+----
+
+[source, json]
+.*3. 查看审计日志*
+----
+{ "atype" : "createCollection", "ts" : { "$date" : "2019-05-16T18:05:28.580+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61585 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "test.test" }, "result" : 0 }
+{ "atype" : "dropCollection", "ts" : { "$date" : "2019-05-16T18:06:05.251+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61585 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "test.test" }, "result" : 0 }
+----
+
+=== 审计信息输出到文件，并只过滤给某一个数据库创建索引事件
+
+[source, bash]
+.*1. 启动 mongod*
+----
+$ mongod --dbpath db/ --logpath db/mongod.log --fork --auth --auditDestination file --auditFormat JSON --auditPath auditLog.json --auditFilter '{atype: "createIndex", "param.ns": /^my-application\./}'
+----
+
+[source, bash]
+.*2. 执行如下操作*
+----
+use test
+db.mycollection.createIndex({foo: 1})
+
+use my-application
+db.mycollection.createIndex({foo: 1})
+----
+
+[source, json]
+.*3. 查看审计日志*
+----
+{ "atype" : "createIndex", "ts" : { "$date" : "2019-05-16T18:31:59.479+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61943 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "my-application.mycollection", "indexName" : "foo_1", "indexSpec" : { "v" : 2, "key" : { "foo" : 1 }, "name" : "foo_1", "ns" : "my-application.mycollection" } }, "result" : 0 }
+----
 
 === 在一个复制子集中打开 Auditing 
 
