@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+import json
+from pymongo import MongoClient
+import time
+from datetime import datetime
+
+kylin = {
+      'name': 'Kylin Soong',
+      'website': 'ksoong.org',
+      'from': 'China',
+      'address': 'Xihuashi Road,Beijing',
+      'phone': '18611907049',
+      'occupation': 'MongoDB',
+      'university': 'China University of Geosciences'
+  }
+
+data = {}  
+data['people'] = []  
+
+
+for x in range(70000):
+  data['people'].append(kylin)
+
+#with open('data.json', 'w') as outfile:  
+#    json.dump(data, outfile)
+#json_data = json.dumps(data)
+#print(json_data)
+
+def main():
+    # Write some data
+    write_client = MongoClient(host = 'localhost:27000', username = 'root', password = 'mongo', replicaset = 'repl-1')
+    db = write_client.get_database("largeFiles")
+    coll = db.get_collection("data")
+    coll.insert_one(data)
+
+####
+# Main
+####
+if __name__ == '__main__':
+    main()
+

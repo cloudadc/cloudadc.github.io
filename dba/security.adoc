@@ -854,18 +854,43 @@ db.mycollection.createIndex({foo: 1})
 { "atype" : "createIndex", "ts" : { "$date" : "2019-05-16T18:31:59.479+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 61943 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "ns" : "my-application.mycollection", "indexName" : "foo_1", "indexSpec" : { "v" : 2, "key" : { "foo" : 1 }, "name" : "foo_1", "ns" : "my-application.mycollection" } }, "result" : 0 }
 ----
 
+=== 审计信息输出到文件，并过滤 DML 操作
+
+[source, bash]
+.*1. 启动 mongod*
+----
+$ mongod --dbpath db/ --logpath db/mongod.log --fork --auth --auditDestination file --auditFormat JSON --auditPath auditLog.json --setParameter auditAuthorizationSuccess=true
+----
+
+[source, bash]
+.*2. 执行如下操作*
+----
+use test
+db.sample.insertOne({foo: 1})
+db.sample.find({foo: 1})
+
+for(var i = 0; i < 10 ; i++) {db.sample.insert({foo: i})}
+----
+
+[source, json]
+.*3. 查看审计日志*
+----
+{ "atype" : "authCheck", "ts" : { "$date" : "2019-05-16T21:10:59.073+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 64583 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "command" : "insert", "ns" : "test.sample", "args" : { "insert" : "sample", "ordered" : true, "lsid" : { "id" : { "$binary" : "sI+T/bfsSgiS3jOL/b37hA==", "$type" : "04" } }, "$db" : "test", "documents" : [ { "_id" : { "$oid" : "5cdd616377635dff7f2c6b01" }, "foo" : 9 } ] } }, "result" : 0 }
+{ "atype" : "authCheck", "ts" : { "$date" : "2019-05-16T21:10:59.074+0800" }, "local" : { "ip" : "127.0.0.1", "port" : 27017 }, "remote" : { "ip" : "127.0.0.1", "port" : 64583 }, "users" : [ { "user" : "root", "db" : "admin" } ], "roles" : [ { "role" : "root", "db" : "admin" } ], "param" : { "command" : "isMaster", "ns" : "test", "args" : { "isMaster" : 1, "forShell" : 1, "$db" : "test" } }, "result" : 0 }
+----
+
 === 在一个复制子集中打开 Auditing 
 
 [source, text]
 .*1. 创建数据库存储目录*
 ----
-$ mkdir -p ~/M310-HW-3.1/r{0,1,2}
+$ mkdir -p ~/tmp/r{0,1,2}
 ----
 
 [source, text]
 .*2. 启动数据库*
 ----
-$ for i in 0 1 2 ; do mongod --dbpath ~/M310-HW-3.1/r$i --logpath ~/M310-HW-3.1/r$i/mongo.log --port 3131$i --fork --replSet HW-3.1 --auditDestination file --auditFormat JSON --auditPath ~/M310-HW-3.1/r$i/auditLog.json ; done
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 3131$i --fork --replSet HW-3.1 --auditDestination file --auditFormat JSON --auditPath ~/tmp/r$i/auditLog.json ; done
 ----
 
 [source, text]
@@ -877,8 +902,8 @@ $ mongo admin --port 31310 --eval "rs.initiate()"
 [source, text]
 .*4. 添加备节点*
 ----
-$ mongo admin --port 31310 --eval 'rs.add("database.m310.mongodb.university:31311")'
-$ mongo admin --port 31310 --eval 'rs.add("database.m310.mongodb.university:31312")'
+$ mongo admin --port 31310 --eval 'rs.add("localhost:31311")'
+$ mongo admin --port 31310 --eval 'rs.add("localhost:31312")'
 ----
 
 === 过滤某一特定用户的 audit 日志
@@ -886,32 +911,32 @@ $ mongo admin --port 31310 --eval 'rs.add("database.m310.mongodb.university:3131
 [source, text]
 .*1. 创建数据库存储目录*
 ----
-$ mkdir -p ~/M310-HW-3.2/r{0,1,2}
+$ mkdir -p ~/tmp/r{0,1,2}
 ----
 
 [source, text]
 .*2. 启动数据库*
 ----
-$ for i in 0 1 2 ; do mongod --dbpath ~/M310-HW-3.2/r$i --logpath ~/M310-HW-3.2/r$i/mongo.log --port 3132$i --fork --replSet HW-3.2 --auditDestination file --auditFormat JSON --auditPath ~/M310-HW-3.2/r$i/auditLog.json --auditFilter '{ "users.user": "steve" }' ; done
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 3132$i --fork --replSet HW-3.2 --auditDestination file --auditFormat JSON --auditPath ~/tmp/r$i/auditLog.json --auditFilter '{ "users.user": "steve" }' ; done
 ----
 
 [source, text]
 .*3. 初始化集群*
 ----
-$ mongo admin --port 31320 --eval "rs.initiate()"
+$ mongo admin --port 27000 --eval "rs.initiate()"
 ----
 
 [source, text]
 .*4. 添加备节点*
 ----
-$ mongo admin --port 31320 --eval 'rs.add("database.m310.mongodb.university:31321")'
-$ mongo admin --port 31320 --eval 'rs.add("database.m310.mongodb.university:31322")'
+$ mongo admin --port 27000 --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 --eval 'rs.add("localhost:27002")'
 ----
 
 [source, text]
 .*5. 创建用户*
 ----
-$ mongo admin --port 31320 --eval 'db.createUser({user: "steve", pwd: "secret", roles: ["root"]})'
+$ mongo admin --port 27000 --eval 'db.createUser({user: "steve", pwd: "secret", roles: ["root"]})'
 ----
 
 === 过滤 DML audit 日志
@@ -919,39 +944,28 @@ $ mongo admin --port 31320 --eval 'db.createUser({user: "steve", pwd: "secret", 
 [source, text]
 .*1. 创建数据库存储目录*
 ----
-$ mkdir -p ~/M310-HW-3.3/r{0,1,2}
+$ mkdir -p ~/tmp/r{0,1,2}
 ----
 
 [source, text]
 .*2. 启动数据库*
 ----
-$ for i in 0 1 2 ; do mongod --dbpath ~/M310-HW-3.3/r$i --logpath ~/M310-HW-3.3/r$i/mongo.log --port 3133$i --fork --replSet HW-3.3 --auditDestination file --auditFormat JSON --auditPath ~/M310-HW-3.3/r$i/auditLog.json --setParameter auditAuthorizationSuccess=true ; done
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --replSet repl-1 --auditDestination file --auditFormat JSON --auditPath ~/tmp/r$i/auditLog.json --setParameter auditAuthorizationSuccess=true ; done
 ----
 
 [source, text]
 .*3. 初始化集群*
 ----
-$ mongo admin --port 31330 --eval "rs.initiate()"
+$ mongo admin --port 27000 --eval "rs.initiate()"
 ----
 
 [source, text]
 .*4. 添加备节*
 ----
-$ mongo admin --port 31330 --eval 'rs.add("database.m310.mongodb.university:31331")'
-$ mongo admin --port 31330 --eval 'rs.add("database.m310.mongodb.university:31332")'
+$ mongo admin --port 27000 --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 --eval 'rs.add("localhost:27002")'
 ----
 
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
 
 
 

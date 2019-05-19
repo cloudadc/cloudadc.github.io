@@ -1,7 +1,9 @@
 = MongoDB Q & A
 :toc: manual
 
-== BSON Vs JSON
+== Q & A
+
+=== BSON Vs JSON
 
 *Q1: Why does MongoDB use BSON rather than JSON?* 
 
@@ -23,10 +25,12 @@ Replication
 * Decimal128
 
 ----
-All BSON Types: Double, String, Object, Array, Binary data, Undefined, ObjectId, Boolean, Date, Null, Regular Expression, DBPointer, JavaScript, Symbol, JavaScript (with scope), 32-bit integer, Timestamp, 64-bit integer, Decimal128, Min key, Max key
+All JSON Types: Object, String, Array, Boolean, Null, Number
+
+All BSON Types: Object, String, Array, Boolean, Null, Double, Decimal128, 32-bit integer, 64-bit integer, Min key, Max key, Binary data, Undefined, ObjectId, Date, Regular Expression, DBPointer, JavaScript, Symbol, JavaScript (with scope), Timestamp
 ----
 
-== CRUD
+=== CRUD
 
 *Q1: What's means of $or operator?*
 
@@ -52,7 +56,7 @@ Add an element to array.
 
 text filed contains neither "fact" nor "find".
 
-== Indexes
+=== Indexes
 
 *Q1: Which of the following must be true for a query to be a covered query?*
 
@@ -131,11 +135,7 @@ Which of the following queries are able to use the index? Check all that apply.
 * db.toys.find( { name : "Big Rig Truck", date : "2018-02-01", manufacturer : "Tanko" } )
 * db.toys.find( { date : "2018-03-01", manufacturer : "Loggo", name : "Brick Set" } )
 
-
-== Data Modeling
-
-
-== Aggregation
+=== Aggregation
 
 *Q1: Which of the following statements are true about the $match pipeline stage?*
 
@@ -145,7 +145,7 @@ Which of the following queries are able to use the index? Check all that apply.
 
 
 
-== Replication
+=== Replication
 
 *Q1: What settings can be controlled by rs.reconfig()?*
 
@@ -208,7 +208,7 @@ In parallel of pulling the documents, the Secondary will also pull the Oplog ent
 Write queries, as received by the Primary, are not guaranteed to be omnipotent, and may need to be transformed. For example, a write operation modifying many documents is not omnipotent and will be transformed to a series of writes, one per modified document.
 ----
 
-== Sharding
+=== Sharding
 
 *Q1: In a sharded cluster, which of the following indexes must contain only unique values?*
 
@@ -274,7 +274,7 @@ A common mistake is to insert a lot of data sorted by the shard key. For example
 * The ranges of two chunks do not overlap
 * Every chunk is assigned to a particular shard
 
-== Application Administration
+=== Application Administration
 
 *Q1: Which of the following is true about MongoDB's Role-Based Access Control (RBAC) system?*
 
@@ -298,7 +298,7 @@ In order to create a user, you need to be able to perform actions such as create
 readWriteAnyDatabase comes close but it does not have the ability to write to the system.users collection. It is used to manage users in the other databases.
 ----
 
-== Server Administration
+=== Server Administration
 
 *Q1. Which of the following must you do before backing up a running sharded cluster using a file system snapshot?*
 
@@ -385,3 +385,264 @@ The default mode for the explain() method is to report which candidate plans wou
 The explain() method will give some info about indexes but only for the ones in the considered plans. To get the full information about all the indexes, the recommended method is db.collection.stats() or the Aggregation Framework stage $indexStats.
 ----
 
+== Journals
+
+===
+
+=== Application and Server Administration
+
+[source, bash]
+.*1. rotate log files*
+----
+db.adminCommand({logRotate: 1})
+----
+
+[source, bash]
+.*2. check the log files*
+----
+$ ls -l *.log*
+-rw-------  1 ksoong  staff    1977 May 18 15:44 mongo.log
+-rw-------  1 ksoong  staff  268257 May 18 15:44 mongo.log.2019-05-18T07-44-58
+----
+
+[source, bash]
+.*3. set iloglevel to 0, and Profiling Level to track more than 50 ms opration*
+---
+db.adminCommand({setParameter: 1, logLevel: 0})
+use largeFiles
+db.setProfilingLevel(1, {slowms: 50})
+----
+
+[source, bash]
+.*4. execute link:files/insert_large_array.json[insert_large_array.json]*
+----
+$ ./insert_large_array.json
+----
+
+[source, json]
+.*5. check the profile message*
+----
+MongoDB Enterprise repl-1:PRIMARY> show profile
+
+insert	largeFiles.data 61ms Sat May 18 2019 16:39:50
+command:{
+	"insert" : "data",
+	"ordered" : true,
+	"lsid" : {
+		"id" : UUID("57ebcf4d-4cf5-4914-85aa-e0c927be70e5")
+	},
+	"$clusterTime" : {
+		"clusterTime" : Timestamp(1558168789, 1),
+		"signature" : {
+			"keyId" : NumberLong("6691838181387534337"),
+			"hash" : BinData(0,"FJxM1pQaObNVahBwrPceyfQkqYY=")
+		}
+	},
+	"$db" : "largeFiles",
+	"$readPreference" : {
+		"mode" : "primary"
+	}
+} ninserted:1 keysInserted:1 numYield:0 locks:{
+	"Global" : {
+		"acquireCount" : {
+			"r" : NumberLong(1),
+			"w" : NumberLong(1)
+		}
+	},
+	"Database" : {
+		"acquireCount" : {
+			"w" : NumberLong(1)
+		}
+	},
+	"Collection" : {
+		"acquireCount" : {
+			"w" : NumberLong(1)
+		}
+	}
+} responseLength:230 protocol:op_msg client:127.0.0.1 allUsers:[ { "user" : "root", "db" : "admin" } ] user:root@admin
+----
+
+[source, bash]
+.*6. check more profile data*
+----
+db.system.profile.count()
+db.system.profile.findOne()
+db.system.profile.findOne({op: "query"})
+db.system.profile.find({responseLength: {$gt: 1000}}).count()
+db.system.profile.find({ts: {$gt: ISODate("2019-05-18T08:36:38.615Z"), $lt: ISODate("2019-05-18T08:39:00.935Z")}}).sort({millis: -1})
+----
+
+[source, bash]
+.*7. serverStatus check basic performance info*
+----
+db.serverStatus().connections
+db.serverStatus().locks
+db.serverStatus().globalLock
+----
+
+=== Server Tools
+
+[source, bash]
+.*1. sample a reddit.json*
+----
+$ curl -o reddit.json --insecure https://www.reddit.com/r/technology/.json
+----
+
+[source, bash]
+.*2. import reddit.json*
+----
+$ mongoimport --port 27000 -u root -p mongo --authenticationDatabase admin --collection technology -db reddit --file reddit.json
+----
+
+[source, bash]
+.*3. export reddit data to csv*
+----
+$ mongoexport --host "repl-1/localhost:27000,localhost:27001,localhost:27002"  -u root -p mongo --authenticationDatabase admin -c technology -d reddit --type=csv -f "bar,foo,zoo" -o reddit.csv
+----
+
+[source, bash]
+.*4. dump the reddit data as bson*
+----
+$ mongodump --host "repl-1/localhost:27000,localhost:27001,localhost:27002"  -u root -p mongo --authenticationDatabase admin -c technology -d reddit --out reddit.dump
+----
+
+[source, bash]
+.*5. start a new mongodb and restore data*
+----
+$ mongod --dbpath db/ --logpath db/mongod.log --port 27017 --fork --auth
+$ mongo admin --port 27017 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+$ mongorestore --host "localhost:27017"  -u root -p mongo --authenticationDatabase admin reddit.dump/
+----
+
+[source, bash]
+.*6. use bsondump convert bson to json*
+----
+$ bsondump --outFile collection.json reddit.dump/reddit/technology.bson
+----
+
+=== Storage Engines
+
+[cols="2,2,2"]
+.*Differences between MMAPv1 and WiredTiger*
+|===
+|Items |MMAPv1 |WiredTiger
+
+|Locks/Concurrency
+|collection level in 3.0, databse level between 2.2 - 2.6 
+|document level
+
+|Journaling
+|ensure writes are atomic
+|ensures writes make it to disk between checkpoints
+
+|Data Compression
+|not support
+|support snappy and zlib compression algorithms
+
+|Disk fragmentation and performance cost
+|High
+|Low
+|===
+
+[cols="2,2,2"]
+.*MMAPv1 Vs WiredTiger(link:files/engines_pef.py[engines_pef.py], mongostat, mongotop)*
+|===
+|Items |MMAPv1 |WiredTiger
+
+|number of document inserts
+|10m
+|10m
+
+|Total disk usage(3 nodes in replica set)
+|5.2 GB
+|17G
+
+|Disk usage per node
+|1.7G
+|5.7G
+
+|write per seconds
+|16k
+|16k
+
+|every total time on bankdata.customers
+|200 ms
+|200 ms
+
+|system load avg
+|6.82, 6.40, 4.68
+|8.02, 6.07, 4.71
+ 
+|===
+
+The scripts in above comparison:
+
+[source, bash]
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+$ ./engines_pef.py
+$ ./engines_pef_read.py
+
+$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
+localhost:27000   15228    *0     *0     *0      17    32|0  5.0% 62.5%       0 9.84G 1.56G  0|0 1|0  2.10m   6.86m   18 repl-1  PRI May 17 10:53:47.599
+localhost:27001  *17461    *0     *0     *0       0    12|0 12.4% 72.8%       0 10.1G 1.39G  0|0 1|0  1.71k   61.6k   10 repl-1  SEC May 17 10:53:47.709
+localhost:27002  *17547    *0     *0     *0       0    13|0  5.6% 69.1%       0 10.2G 4.97G  0|2 2|0  1.76k   63.3k   10 repl-1  SEC May 17 10:53:47.709
+
+$ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
+                    ns    total    read    write    2019-05-17T10:54:14+08:00
+    bankdata.customers    285ms     0ms    285ms                             
+        local.oplog.rs     95ms    95ms      0ms  
+
+//switch to mmapv1
+$ pkill mongod
+$ rm -fr ~/tmp/r*
+$ mkdir -p ~/tmp/r{0,1,2}
+
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --storageEngine mmapv1 --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+$ ./engines_pef.py
+$ ./engines_pef_read.py
+
+$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
+localhost:27000  15172    *0     *0     *0     238   240|0       0        21.9G 1.06G   2134  0|0  0|0  6.13m   16.3m   18 repl-1  PRI May 17 11:18:30.041
+localhost:27001 *13298    *0     *0     *0       0    12|0       0        21.8G 4.99G   2165  0|0  1|0  1.64k   34.0k   10 repl-1  SEC May 17 11:18:29.110
+localhost:27002 *13316    *0     *0     *0       0    12|0       0        21.8G 4.98G   2022  0|0  0|0  1.64k   34.3k   10 repl-1  SEC May 17 11:18:29.110
+
+$ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
+                    ns    total     read    write    2019-05-17T11:19:33+08:00
+    bankdata.customers    344ms      0ms    344ms                             
+        local.oplog.rs    108ms    108ms      0ms                             
+     admin.system.keys      0ms      0ms      0ms   
+
+----
+
+image:img/wiredtiger.png[]
+
+image:img/engine-mmapv1.png[]
