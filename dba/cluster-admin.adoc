@@ -3102,204 +3102,559 @@ MongoDB Enterprise mongos> db.chunks.find().pretty()
 三个 chunks 的 ID 分别为：`m103.products-sku_MinKey`, `m103.products-sku_23153496`, `m103.products-sku_28928914`。
 |===
 
-=== Routed Queries 和 Scatter Gather
+=== ConfigDB
 
-如果查询基于 shard key 时则 mongos 会直接路由相应请求到对应的分区；反之则请求发送到所有分区，本部分对比两种查询。
-
-[source, text]
-.*1. 查看 shard key*
+[source, bash]
+.*1. 导入数据*
 ----
-MongoDB Enterprise mongos> sh.status()
---- Sharding Status --- 
-  sharding version: {
-  	"_id" : 1,
-  	"minCompatibleVersion" : 5,
-  	"currentVersion" : 6,
-  	"clusterId" : ObjectId("5ca584b4acc7277f703c4657")
-  }
-  shards:
-        {  "_id" : "m103-repl",  "host" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",  "state" : 1 }
-        {  "_id" : "m103-repl-2",  "host" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",  "state" : 1 }
-  active mongoses:
-        "3.6.11" : 1
-  autosplit:
-        Currently enabled: yes
-  balancer:
-        Currently enabled:  yes
-        Currently running:  no
-        Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours: 
-                1 : Success
+$ mongoimport --drop products.json --port 27017 -u "root" -p "mongo" --authenticationDatabase "admin" --db testConfigDB --collection products
+2019-06-02T16:34:48.382+0800	connected to: localhost:27017
+2019-06-02T16:34:48.397+0800	dropping: testConfigDB.products
+2019-06-02T16:34:51.366+0800	[###.....................] testConfigDB.products	11.7MB/87.9MB (13.3%)
+2019-06-02T16:34:54.365+0800	[#######.................] testConfigDB.products	25.8MB/87.9MB (29.3%)
+2019-06-02T16:34:57.362+0800	[##########..............] testConfigDB.products	39.6MB/87.9MB (45.0%)
+2019-06-02T16:35:00.365+0800	[##############..........] testConfigDB.products	52.9MB/87.9MB (60.2%)
+2019-06-02T16:35:03.367+0800	[##################......] testConfigDB.products	66.4MB/87.9MB (75.5%)
+2019-06-02T16:35:06.362+0800	[#####################...] testConfigDB.products	80.6MB/87.9MB (91.6%)
+2019-06-02T16:35:07.746+0800	[########################] testConfigDB.products	87.9MB/87.9MB (100.0%)
+2019-06-02T16:35:07.746+0800	imported 516784 documents
+----
+
+[source, bash]
+.*2. 查看导入的数据*
+----
+use testConfigDB
+
+db.products.count()
+516784
+
+db.products.aggregate([{$project: {_id: 0, sku: 1}}, {$sort: {sku: 1}}, {$limit: 20}])
+db.products.aggregate([{$project: {_id: 0, sku: 1}}, {$sort: {sku: -1}}, {$limit: 20}])
+
+db.products.aggregate([{$match: {sku: {$lt: 20000044}}}, {$project: {_id: 0, sku: 1}}])
+db.products.aggregate([{$match: {sku: {$gt: 9999265500050003}}}, {$project: {_id: 0, sku: 1}}])
+----
+
+[source, json]
+.*3. 查询 config DB*
+----
+use config
+
+db.mongos.find()
+
+db.shards.find()
+{ "_id" : "repl-a", "host" : "repl-a/localhost:27000,localhost:27001,localhost:27002", "state" : 1 }
+{ "_id" : "repl-b", "host" : "repl-b/localhost:28000,localhost:28001,localhost:28002", "state" : 1 }
+
+db.databases.find()
+db.collections.find()
+
+db.chunks.find()
+----
+
+[source, bash]
+.*4. 设定 test 数据库分区，创建索引，执行分区*
+----
+sh.enableSharding("testConfigDB")
+
+use testConfigDB
+
+db.products.stats()
+...
+        "ns" : "testConfigDB.products",
+	"count" : 516784,
+	"size" : 79714444,
+	"storageSize" : 25968640,
+	"totalIndexSize" : 4947968,
+	"indexSizes" : {
+		"_id_" : 4947968
+	},
+
+db.products.createIndex({sku: 1})
+
+db.products.stats()
+...
+	"ns" : "testConfigDB.products",
+	"count" : 516784,
+	"size" : 79714444,
+	"storageSize" : 25968640,
+	"totalIndexSize" : 10063872,
+	"indexSizes" : {
+		"_id_" : 4947968,
+		"sku_1" : 5115904
+	},
+
+db.adminCommand({shardCollection: "testConfigDB.products", key: {sku: 1}})
+----
+
+[source, bash]
+.*5. 查看分片状态*
+----
+sh.status()
+...
   databases:
-        {  "_id" : "m103",  "primary" : "m103-repl-2",  "partitioned" : true }
-                m103.products
+     {  "_id" : "testConfigDB",  "primary" : "repl-b",  "partitioned" : true,  "version" : {  "uuid" : UUID("03d0bae2-2dcd-4311-8802-5b9cc157ea22"),  "lastMod" : 1 } }
+                testConfigDB.products
                         shard key: { "sku" : 1 }
                         unique: false
                         balancing: true
                         chunks:
-                                m103-repl	1
-                                m103-repl-2	2
-                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : 23153496 } on : m103-repl Timestamp(2, 0) 
-                        { "sku" : 23153496 } -->> { "sku" : 28928914 } on : m103-repl-2 Timestamp(2, 1) 
-                        { "sku" : 28928914 } -->> { "sku" : { "$maxKey" : 1 } } on : m103-repl-2 Timestamp(1, 2) 
-        {  "_id" : "testDatabase",  "primary" : "m103-repl",  "partitioned" : false }
+                                repl-a	1
+                                repl-b	2
+                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : 23153496 } on : repl-a Timestamp(2, 0) 
+                        { "sku" : 23153496 } -->> { "sku" : 28928914 } on : repl-b Timestamp(2, 1) 
+                        { "sku" : 28928914 } -->> { "sku" : { "$maxKey" : 1 } } on : repl-b Timestamp(1, 2) 
 ----
 
-[source, text]
-.*2. Routed Queries*
+[source, json]
+.*6. 查询 config DB*
 ----
-MongoDB Enterprise mongos> db.products.find({"sku" : 28928914 }).explain()
-{
-	"queryPlanner" : {
-		"mongosPlannerVersion" : 1,
-		"winningPlan" : {
-			"stage" : "SINGLE_SHARD",
-			"shards" : [
-				{
-					"shardName" : "m103-repl-2",
-					"connectionString" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",
-					"serverInfo" : {
-						"host" : "m103",
-						"port" : 27004,
-						"version" : "3.6.11",
-						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
-					},
-					"plannerVersion" : 1,
-					"namespace" : "m103.products",
-					"indexFilterSet" : false,
-					"parsedQuery" : {
-						"sku" : {
-							"$eq" : 28928914
-						}
-					},
-					"winningPlan" : {
-						"stage" : "FETCH",
-						"inputStage" : {
-							"stage" : "SHARDING_FILTER",
-							"inputStage" : {
-								"stage" : "IXSCAN",
-								"keyPattern" : {
-									"sku" : 1
-								},
-								"indexName" : "sku_1",
-								"isMultiKey" : false,
-								"multiKeyPaths" : {
-									"sku" : [ ]
-								},
-								"isUnique" : false,
-								"isSparse" : false,
-								"isPartial" : false,
-								"indexVersion" : 2,
-								"direction" : "forward",
-								"indexBounds" : {
-									"sku" : [
-										"[28928914.0, 28928914.0]"
-									]
-								}
-							}
-						}
-					},
-					"rejectedPlans" : [ ]
-				}
-			]
-		}
-	},
-	"ok" : 1,
-	"operationTime" : Timestamp(1554362195, 1),
-	"$clusterTime" : {
-		"clusterTime" : Timestamp(1554362200, 3),
-		"signature" : {
-			"hash" : BinData(0,"q/PKCNK4dzZPGKPfGyWO+/vkkA8="),
-			"keyId" : NumberLong("6675887931275608090")
-		}
-	}
+use config
+
+db.chunks.aggregate({$match: {ns: {$eq: "testConfigDB.products"}}},{$project: {_id: 0, min: "$min.sku", max: "$max.sku", shard: 1}})
+{ "shard" : "repl-a", "min" : { "$minKey" : 1 }, "max" : 23153496 }
+{ "shard" : "repl-b", "min" : 23153496, "max" : 28928914 }
+{ "shard" : "repl-b", "min" : 28928914, "max" : { "$maxKey" : 1 } }
+
+db.collections.find()
+----
+
+[source, bash]
+.*7. 统计分片 a 和分片 b 上数据的总量*
+----
+$ mongo testConfigDB -u root -p mongo --authenticationDatabase "admin" --host "repl-a/localhost:27000,localhost:27001,localhost:27002" --eval 'db.products.count()'
+217885
+
+$ mongo testConfigDB -u root -p mongo --authenticationDatabase "admin" --host "repl-b/localhost:28000,localhost:28001,localhost:28002" --eval 'db.products.count()'
+298899
+
+$ mongo testConfigDB -u root -p mongo --authenticationDatabase "admin" --eval 'db.products.count()'
+516784
+----
+
+=== Hashed Sharding
+
+[source, bash]
+.*1. 导入数据*
+----
+$ mongoimport --drop products.json --port 27017 -u "root" -p "mongo" --authenticationDatabase "admin" --db testHashedSharding --collection products
+2019-06-02T18:54:14.607+0800	connected to: localhost:27017
+2019-06-02T18:54:14.621+0800	dropping: testHashedSharding.products
+2019-06-02T18:54:17.586+0800	[###.....................] testHashedSharding.products	12.0MB/87.9MB (13.7%)
+2019-06-02T18:54:20.589+0800	[######..................] testHashedSharding.products	25.1MB/87.9MB (28.6%)
+2019-06-02T18:54:23.588+0800	[##########..............] testHashedSharding.products	38.2MB/87.9MB (43.5%)
+2019-06-02T18:54:26.588+0800	[#############...........] testHashedSharding.products	51.3MB/87.9MB (58.3%)
+2019-06-02T18:54:29.589+0800	[#################.......] testHashedSharding.products	64.5MB/87.9MB (73.4%)
+2019-06-02T18:54:32.589+0800	[#####################...] testHashedSharding.products	77.6MB/87.9MB (88.3%)
+2019-06-02T18:54:34.695+0800	[########################] testHashedSharding.products	87.9MB/87.9MB (100.0%)
+---- 
+
+[source, bash]
+.*2. 查看导入的数据*
+----
+use testHashedSharding
+
+db.products.count()
+516784
+
+db.products.distinct('sku').length
+516784
+----
+
+[source, json]
+.*3. 查询 config DB*
+----
+use config
+
+db.databases.find({}, {_id: 0, primary: 1, partitioned: 1, lastMod: 1})
+{ "primary" : "repl-b", "partitioned" : true }
+{ "primary" : "repl-a", "partitioned" : false }
+----
+
+[source, bash]
+.*4. 创建哈希索引，执行哈希分区*
+----
+sh.enableSharding("testHashedSharding")
+
+use testHashedSharding
+
+db.products.createIndex({sku: "hashed"})
+
+sh.shardCollection("testHashedSharding.products", {sku: "hashed"})
+----
+
+[source, bash]
+.*5. 查看分片状态*
+----
+sh.status()
+...             
+  databases:  
+        {  "_id" : "testHashedSharding",  "primary" : "repl-a",  "partitioned" : true,  "version" : {  "uuid" : UUID("517a7dd2-4d4d-4167-b0a8-cfba67ecd0d5"),  "lastMod" : 1 } }
+                testHashedSharding.products
+                        shard key: { "sku" : "hashed" }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                repl-a	2
+                                repl-b	1
+                        { "sku" : { "$minKey" : 1 } } -->> { "sku" : NumberLong("-1442199500577127961") } on : repl-b Timestamp(2, 0) 
+                        { "sku" : NumberLong("-1442199500577127961") } -->> { "sku" : NumberLong("6331935390792935387") } on : repl-a Timestamp(2, 1) 
+                        { "sku" : NumberLong("6331935390792935387") } -->> { "sku" : { "$maxKey" : 1 } } on : repl-a Timestamp(1, 2) 
+----
+
+[source, json]
+.*6. 查看 Config DB*
+----
+use config 
+
+db.databases.find({}, {_id: 0, primary: 1, partitioned: 1, lastMod: 1})
+{ "primary" : "repl-a", "partitioned" : true }
+{ "primary" : "repl-b", "partitioned" : true }
+
+db.chunks.aggregate({$match: {ns: {$eq: "testHashedSharding.products"}}},{$project: {_id: 0, min: "$min.sku", max: "$max.sku", shard: 1}})
+{ "shard" : "repl-b", "min" : { "$minKey" : 1 }, "max" : NumberLong("-1442199500577127961") }
+{ "shard" : "repl-a", "min" : NumberLong("-1442199500577127961"), "max" : NumberLong("6331935390792935387") }
+{ "shard" : "repl-a", "min" : NumberLong("6331935390792935387"), "max" : { "$maxKey" : 1 } }
+----
+
+[source, bash]
+.*7. 统计分片 a 和分片 b 上数据的总量*
+----
+$ mongo testHashedSharding -u root -p mongo --authenticationDatabase "admin" --host "repl-a/localhost:27000,localhost:27001,localhost:27002" --eval 'db.products.count()'
+298899
+
+$ mongo testHashedSharding -u root -p mongo --authenticationDatabase "admin" --host "repl-b/localhost:28000,localhost:28001,localhost:28002" --eval 'db.products.count()'
+217885
+
+$ mongo testHashedSharding -u root -p mongo --authenticationDatabase "admin" --eval 'db.products.count()'
+516784
+----
+
+=== Chunks
+
+[source, bash]
+.*1. 导入数据*
+----
+use testChunks
+
+var doc = {
+   "name": "John Doe",
+   "balance": 99.99
+}
+
+for (var i = 0; i < 100000; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
 }
 ----
 
-[source, text]
-.*3. Scatter Gather*
+[source, bash]
+.*2. 将 accounts 分片*
 ----
-MongoDB Enterprise mongos> db.products.find({"name" : "Symphony No.4 - Romantic - CD" }).explain()
+sh.enableSharding("testChunks")
+
+db.accounts.createIndex({accountNo: 1})
+
+sh.shardCollection("testChunks.accounts", {accountNo: 1})
+----
+
+[source, bash]
+.*3. 查看分片分发情况*
+----
+db.accounts.getShardDistribution()
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 1
+ estimated data per chunk : 7.34MiB
+ estimated docs per chunk : 100000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 1
+ Shard repl-b contains 100% data, 100% docs in cluster, avg obj size on shard : 77B
+----
+
+[source, json]
+.*4. 查看 Config DB 中数据*
+----
+use config
+
+db.databases.find({}, {_id: 1, primary: 1, partitioned: 1, lastMod: 1})
+{ "_id" : "testHashedSharding", "primary" : "repl-a", "partitioned" : true }
+{ "_id" : "testConfigDB", "primary" : "repl-b", "partitioned" : true }
+{ "_id" : "testChunks", "primary" : "repl-b", "partitioned" : true }
+
+db.chunks.aggregate({$match: {ns: {$eq: "testChunks.accounts"}}},{$project: {_id: 0, min: "$min.accountNo", max: "$max.accountNo", shard: 1}})
+{ "shard" : "repl-b", "min" : { "$minKey" : 1 }, "max" : { "$maxKey" : 1 } }
+----
+
+[source, bash]
+.*5. 模拟大量数据导入，手动创建多个 chunk(默认只有当 chunk 的大小大于 64 M 时才开始移动)*
+----
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(10000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(20000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(30000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(40000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(50000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(60000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(70000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(80000)})
+sh.splitAt("testChunks.accounts", {accountNo: NumberLong(90000)})
+----
+
+[source, bash]
+.*6. 查看分片分发情况*
+----
+ db.accounts.getShardDistribution()
+
+Shard repl-a at repl-a/localhost:27000,localhost:27001,localhost:27002
+ data : 3.67MiB docs : 50000 chunks : 5
+ estimated data per chunk : 751KiB
+ estimated docs per chunk : 10000
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 5
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Totals
+ data : 11.01MiB docs : 150000 chunks : 10
+ Shard repl-a contains 33.33% data, 33.33% docs in cluster, avg obj size on shard : 77B
+ Shard repl-b contains 66.66% data, 66.66% docs in cluster, avg obj size on shard : 77B
+----
+
+[source, json]
+.*7. 查看集群状态*
+----
+sh.status()
+...
+        {  "_id" : "testChunks",  "primary" : "repl-b",  "partitioned" : true,  "version" : {  "uuid" : UUID("2da4784a-fa07-4a74-b4a7-bcbfa6729a4a"),  "lastMod" : 1 } }
+                testChunks.accounts
+                        shard key: { "accountNo" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                repl-a	5
+                                repl-b	5
+                        { "accountNo" : { "$minKey" : 1 } } -->> { "accountNo" : NumberLong(10000) } on : repl-a Timestamp(2, 0) 
+                        { "accountNo" : NumberLong(10000) } -->> { "accountNo" : NumberLong(20000) } on : repl-a Timestamp(3, 0) 
+                        { "accountNo" : NumberLong(20000) } -->> { "accountNo" : NumberLong(30000) } on : repl-a Timestamp(4, 0) 
+                        { "accountNo" : NumberLong(30000) } -->> { "accountNo" : NumberLong(40000) } on : repl-a Timestamp(5, 0) 
+                        { "accountNo" : NumberLong(40000) } -->> { "accountNo" : NumberLong(50000) } on : repl-a Timestamp(6, 0) 
+                        { "accountNo" : NumberLong(50000) } -->> { "accountNo" : NumberLong(60000) } on : repl-b Timestamp(6, 1) 
+                        { "accountNo" : NumberLong(60000) } -->> { "accountNo" : NumberLong(70000) } on : repl-b Timestamp(4, 2) 
+                        { "accountNo" : NumberLong(70000) } -->> { "accountNo" : NumberLong(80000) } on : repl-b Timestamp(5, 2) 
+                        { "accountNo" : NumberLong(80000) } -->> { "accountNo" : NumberLong(90000) } on : repl-b Timestamp(5, 4) 
+                        { "accountNo" : NumberLong(90000) } -->> { "accountNo" : { "$maxKey" : 1 } } on : repl-b Timestamp(5, 5) 
+----
+
+[source, json]
+.*8. 查看 Config DB 中数据*
+----
+db.chunks.aggregate({$match: {ns: {$eq: "testChunks.accounts"}}},{$project: {_id: 0, min: "$min.accountNo", max: "$max.accountNo", shard: 1}})
+{ "shard" : "repl-a", "min" : { "$minKey" : 1 }, "max" : NumberLong(10000) }
+{ "shard" : "repl-a", "min" : NumberLong(10000), "max" : NumberLong(20000) }
+{ "shard" : "repl-a", "min" : NumberLong(20000), "max" : NumberLong(30000) }
+{ "shard" : "repl-a", "min" : NumberLong(30000), "max" : NumberLong(40000) }
+{ "shard" : "repl-a", "min" : NumberLong(40000), "max" : NumberLong(50000) }
+{ "shard" : "repl-b", "min" : NumberLong(50000), "max" : NumberLong(60000) }
+{ "shard" : "repl-b", "min" : NumberLong(60000), "max" : NumberLong(70000) }
+{ "shard" : "repl-b", "min" : NumberLong(70000), "max" : NumberLong(80000) }
+{ "shard" : "repl-b", "min" : NumberLong(80000), "max" : NumberLong(90000) }
+{ "shard" : "repl-b", "min" : NumberLong(90000), "max" : { "$maxKey" : 1 } }
+----
+
+[source, bash]
+.*9. 查看数据*
+----
+$ mongo testChunks -u root -p mongo --authenticationDatabase "admin" --host "repl-a/localhost:27000,localhost:27001,localhost:27002" --eval 'db.accounts.count()'
+50000
+
+$ mongo testChunks -u root -p mongo --authenticationDatabase "admin" --host "repl-b/localhost:28000,localhost:28001,localhost:28002" --eval 'db.accounts.count()'
+50000
+
+$ mongo testChunks -u root -p mongo --authenticationDatabase "admin" --eval 'db.accounts.count()'
+100000
+----
+
+=== Routed Queries 和 Scatter Gather
+
+如果查询基于 shard key 时则 mongos 会直接路由相应请求到对应的分区；反之则请求发送到所有分区，本部分基于 <<Chunks, Chunks>> 数据库对比两种查询。
+
+[source, json]
+.*1. Routed Queries*
+----
+db.accounts.find({accountNo: 27008}).explain().queryPlanner.winningPlan
 {
-	"queryPlanner" : {
-		"mongosPlannerVersion" : 1,
-		"winningPlan" : {
-			"stage" : "SHARD_MERGE",
-			"shards" : [
-				{
-					"shardName" : "m103-repl-2",
-					"connectionString" : "m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006",
-					"serverInfo" : {
-						"host" : "m103",
-						"port" : 27004,
-						"version" : "3.6.11",
-						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
-					},
-					"plannerVersion" : 1,
-					"namespace" : "m103.products",
-					"indexFilterSet" : false,
-					"parsedQuery" : {
-						"name" : {
-							"$eq" : "Symphony No.4 - Romantic - CD"
-						}
-					},
-					"winningPlan" : {
-						"stage" : "SHARDING_FILTER",
-						"inputStage" : {
-							"stage" : "COLLSCAN",
-							"filter" : {
-								"name" : {
-									"$eq" : "Symphony No.4 - Romantic - CD"
-								}
-							},
-							"direction" : "forward"
-						}
-					},
-					"rejectedPlans" : [ ]
-				},
-				{
-					"shardName" : "m103-repl",
-					"connectionString" : "m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003",
-					"serverInfo" : {
-						"host" : "m103",
-						"port" : 27001,
-						"version" : "3.6.11",
-						"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
-					},
-					"plannerVersion" : 1,
-					"namespace" : "m103.products",
-					"indexFilterSet" : false,
-					"parsedQuery" : {
-						"name" : {
-							"$eq" : "Symphony No.4 - Romantic - CD"
-						}
-					},
-					"winningPlan" : {
-						"stage" : "SHARDING_FILTER",
-						"inputStage" : {
-							"stage" : "COLLSCAN",
-							"filter" : {
-								"name" : {
-									"$eq" : "Symphony No.4 - Romantic - CD"
-								}
-							},
-							"direction" : "forward"
-						}
-					},
-					"rejectedPlans" : [ ]
+	"stage" : "SINGLE_SHARD",
+	"shards" : [
+		{
+			"shardName" : "repl-a",
+			"connectionString" : "repl-a/localhost:27000,localhost:27001,localhost:27002",
+			"serverInfo" : {
+				"host" : "Kylins-MacBook-Pro.local",
+				"port" : 27000,
+				"version" : "4.0.7",
+				"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+			},
+			"plannerVersion" : 1,
+			"namespace" : "testChunks.accounts",
+			"indexFilterSet" : false,
+			"parsedQuery" : {
+				"accountNo" : {
+					"$eq" : 27008
 				}
-			]
+			},
+			"winningPlan" : {
+				"stage" : "FETCH",
+				"inputStage" : {
+					"stage" : "SHARDING_FILTER",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"accountNo" : 1
+						},
+						"indexName" : "accountNo_1",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"accountNo" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"accountNo" : [
+								"[27008.0, 27008.0]"
+							]
+						}
+					}
+				}
+			},
+			"rejectedPlans" : [ ]
 		}
-	},
-	"ok" : 1,
-	"operationTime" : Timestamp(1554362215, 1),
-	"$clusterTime" : {
-		"clusterTime" : Timestamp(1554362222, 2),
-		"signature" : {
-			"hash" : BinData(0,"vK/5Wzl1SaNxntKt9mBX7asuplI="),
-			"keyId" : NumberLong("6675887931275608090")
+	]
+}
+----
+
+[source, json]
+.*2. Scatter Gather*
+----
+db.accounts.find({accountNo: {$gt: 27008, $lt: 67000}}).explain().queryPlanner.winningPlan
+{
+	"stage" : "SHARD_MERGE",
+	"shards" : [
+		{
+			"shardName" : "repl-a",
+			"connectionString" : "repl-a/localhost:27000,localhost:27001,localhost:27002",
+			"serverInfo" : {
+				"host" : "Kylins-MacBook-Pro.local",
+				"port" : 27000,
+				"version" : "4.0.7",
+				"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+			},
+			"plannerVersion" : 1,
+			"namespace" : "testChunks.accounts",
+			"indexFilterSet" : false,
+			"parsedQuery" : {
+				"$and" : [
+					{
+						"accountNo" : {
+							"$lt" : 67000
+						}
+					},
+					{
+						"accountNo" : {
+							"$gt" : 27008
+						}
+					}
+				]
+			},
+			"winningPlan" : {
+				"stage" : "FETCH",
+				"inputStage" : {
+					"stage" : "SHARDING_FILTER",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"accountNo" : 1
+						},
+						"indexName" : "accountNo_1",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"accountNo" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"accountNo" : [
+								"(27008.0, 67000.0)"
+							]
+						}
+					}
+				}
+			},
+			"rejectedPlans" : [ ]
+		},
+		{
+			"shardName" : "repl-b",
+			"connectionString" : "repl-b/localhost:28000,localhost:28001,localhost:28002",
+			"serverInfo" : {
+				"host" : "Kylins-MacBook-Pro.local",
+				"port" : 28000,
+				"version" : "4.0.7",
+				"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+			},
+			"plannerVersion" : 1,
+			"namespace" : "testChunks.accounts",
+			"indexFilterSet" : false,
+			"parsedQuery" : {
+				"$and" : [
+					{
+						"accountNo" : {
+							"$lt" : 67000
+						}
+					},
+					{
+						"accountNo" : {
+							"$gt" : 27008
+						}
+					}
+				]
+			},
+			"winningPlan" : {
+				"stage" : "FETCH",
+				"inputStage" : {
+					"stage" : "SHARDING_FILTER",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"accountNo" : 1
+						},
+						"indexName" : "accountNo_1",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"accountNo" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"accountNo" : [
+								"(27008.0, 67000.0)"
+							]
+						}
+					}
+				}
+			},
+			"rejectedPlans" : [ ]
 		}
-	}
+	]
 }
 ----
 

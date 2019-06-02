@@ -216,7 +216,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.8" data-path="../examples/">
+        <li class="chapter " data-level="1.8" data-path="exam.html">
+            
+                <a href="exam.html">
+            
+                    
+                    Q & A
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../examples/">
             
                 <a href="../examples/">
             
@@ -230,7 +243,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.8.1" data-path="../examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.9.1" data-path="../examples/aggregation-sum.html">
             
                 <a href="../examples/aggregation-sum.html">
             
@@ -326,6 +339,9 @@
 <ul class="sectlevel2">
 <li><a href="#___13">&#x914D;&#x5236;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
 <li><a href="#___14">&#x914D;&#x5236;&#x7B2C;&#x4E8C;&#x4E2A;&#x5206;&#x7247;</a></li>
+<li><a href="#_configdb">ConfigDB</a></li>
+<li><a href="#_hashed_sharding">Hashed Sharding</a></li>
+<li><a href="#_chunks">Chunks</a></li>
 <li><a href="#_routed_queries_scatter_gather">Routed Queries &#x548C; Scatter Gather</a></li>
 </ul>
 </li>
@@ -3615,204 +3631,562 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl-2/192.168.103.100:2700
 </table>
 </div>
 <div class="sect2">
-<h3 id="_routed_queries_scatter_gather">Routed Queries &#x548C; Scatter Gather</h3>
-<div class="paragraph">
-<p>&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x57FA;&#x4E8E; shard key &#x65F6;&#x5219; mongos &#x4F1A;&#x76F4;&#x63A5;&#x8DEF;&#x7531;&#x76F8;&#x5E94;&#x8BF7;&#x6C42;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x5206;&#x533A;&#xFF1B;&#x53CD;&#x4E4B;&#x5219;&#x8BF7;&#x6C42;&#x53D1;&#x9001;&#x5230;&#x6240;&#x6709;&#x5206;&#x533A;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x5BF9;&#x6BD4;&#x4E24;&#x79CD;&#x67E5;&#x8BE2;&#x3002;</p>
-</div>
+<h3 id="_configdb">ConfigDB</h3>
 <div class="listingblock">
-<div class="title"><strong>1. &#x67E5;&#x770B; shard key</strong></div>
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; sh.status()
---- Sharding Status ---
-  sharding version: {
-  	&quot;_id&quot; : 1,
-  	&quot;minCompatibleVersion&quot; : 5,
-  	&quot;currentVersion&quot; : 6,
-  	&quot;clusterId&quot; : ObjectId(&quot;5ca584b4acc7277f703c4657&quot;)
-  }
-  shards:
-        {  &quot;_id&quot; : &quot;m103-repl&quot;,  &quot;host&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,  &quot;state&quot; : 1 }
-        {  &quot;_id&quot; : &quot;m103-repl-2&quot;,  &quot;host&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,  &quot;state&quot; : 1 }
-  active mongoses:
-        &quot;3.6.11&quot; : 1
-  autosplit:
-        Currently enabled: yes
-  balancer:
-        Currently enabled:  yes
-        Currently running:  no
-        Failed balancer rounds in last 5 attempts:  0
-        Migration Results for the last 24 hours:
-                1 : Success
-  databases:
-        {  &quot;_id&quot; : &quot;m103&quot;,  &quot;primary&quot; : &quot;m103-repl-2&quot;,  &quot;partitioned&quot; : true }
-                m103.products
-                        shard key: { &quot;sku&quot; : 1 }
-                        unique: false
-                        balancing: true
-                        chunks:
-                                m103-repl	1
-                                m103-repl-2	2
-                        { &quot;sku&quot; : { &quot;$minKey&quot; : 1 } } --&gt;&gt; { &quot;sku&quot; : 23153496 } on : m103-repl Timestamp(2, 0)
-                        { &quot;sku&quot; : 23153496 } --&gt;&gt; { &quot;sku&quot; : 28928914 } on : m103-repl-2 Timestamp(2, 1)
-                        { &quot;sku&quot; : 28928914 } --&gt;&gt; { &quot;sku&quot; : { &quot;$maxKey&quot; : 1 } } on : m103-repl-2 Timestamp(1, 2)
-        {  &quot;_id&quot; : &quot;testDatabase&quot;,  &quot;primary&quot; : &quot;m103-repl&quot;,  &quot;partitioned&quot; : false }</code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongoimport --drop products.json --port 27017 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --db <span class="hljs-built_in">test</span>ConfigDB --collection products
+2019-06-02T16:34:48.382+0800	connected to: localhost:27017
+2019-06-02T16:34:48.397+0800	dropping: <span class="hljs-built_in">test</span>ConfigDB.products
+2019-06-02T16:34:51.366+0800	[<span class="hljs-comment">###.....................] testConfigDB.products	11.7MB/87.9MB (13.3%)</span>
+2019-06-02T16:34:54.365+0800	[<span class="hljs-comment">#######.................] testConfigDB.products	25.8MB/87.9MB (29.3%)</span>
+2019-06-02T16:34:57.362+0800	[<span class="hljs-comment">##########..............] testConfigDB.products	39.6MB/87.9MB (45.0%)</span>
+2019-06-02T16:35:00.365+0800	[<span class="hljs-comment">##############..........] testConfigDB.products	52.9MB/87.9MB (60.2%)</span>
+2019-06-02T16:35:03.367+0800	[<span class="hljs-comment">##################......] testConfigDB.products	66.4MB/87.9MB (75.5%)</span>
+2019-06-02T16:35:06.362+0800	[<span class="hljs-comment">#####################...] testConfigDB.products	80.6MB/87.9MB (91.6%)</span>
+2019-06-02T16:35:07.746+0800	[<span class="hljs-comment">########################] testConfigDB.products	87.9MB/87.9MB (100.0%)</span>
+2019-06-02T16:35:07.746+0800	imported 516784 documents</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. Routed Queries</strong></div>
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.products.find({&quot;sku&quot; : 28928914 }).explain()
-{
-	&quot;queryPlanner&quot; : {
-		&quot;mongosPlannerVersion&quot; : 1,
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;SINGLE_SHARD&quot;,
-			&quot;shards&quot; : [
-				{
-					&quot;shardName&quot; : &quot;m103-repl-2&quot;,
-					&quot;connectionString&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,
-					&quot;serverInfo&quot; : {
-						&quot;host&quot; : &quot;m103&quot;,
-						&quot;port&quot; : 27004,
-						&quot;version&quot; : &quot;3.6.11&quot;,
-						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-					},
-					&quot;plannerVersion&quot; : 1,
-					&quot;namespace&quot; : &quot;m103.products&quot;,
-					&quot;indexFilterSet&quot; : false,
-					&quot;parsedQuery&quot; : {
-						&quot;sku&quot; : {
-							&quot;$eq&quot; : 28928914
-						}
-					},
-					&quot;winningPlan&quot; : {
-						&quot;stage&quot; : &quot;FETCH&quot;,
-						&quot;inputStage&quot; : {
-							&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
-							&quot;inputStage&quot; : {
-								&quot;stage&quot; : &quot;IXSCAN&quot;,
-								&quot;keyPattern&quot; : {
-									&quot;sku&quot; : 1
-								},
-								&quot;indexName&quot; : &quot;sku_1&quot;,
-								&quot;isMultiKey&quot; : false,
-								&quot;multiKeyPaths&quot; : {
-									&quot;sku&quot; : [ ]
-								},
-								&quot;isUnique&quot; : false,
-								&quot;isSparse&quot; : false,
-								&quot;isPartial&quot; : false,
-								&quot;indexVersion&quot; : 2,
-								&quot;direction&quot; : &quot;forward&quot;,
-								&quot;indexBounds&quot; : {
-									&quot;sku&quot; : [
-										&quot;[28928914.0, 28928914.0]&quot;
-									]
-								}
-							}
-						}
-					},
-					&quot;rejectedPlans&quot; : [ ]
-				}
-			]
-		}
+<pre class="highlight"><code class="language-bash" data-lang="bash">use <span class="hljs-built_in">test</span>ConfigDB
+
+db.products.count()
+516784
+
+db.products.aggregate([{<span class="hljs-variable">$project</span>: {_id: 0, sku: 1}}, {<span class="hljs-variable">$sort</span>: {sku: 1}}, {<span class="hljs-variable">$limit</span>: 20}])
+db.products.aggregate([{<span class="hljs-variable">$project</span>: {_id: 0, sku: 1}}, {<span class="hljs-variable">$sort</span>: {sku: -1}}, {<span class="hljs-variable">$limit</span>: 20}])
+
+db.products.aggregate([{<span class="hljs-variable">$match</span>: {sku: {<span class="hljs-variable">$lt</span>: 20000044}}}, {<span class="hljs-variable">$project</span>: {_id: 0, sku: 1}}])
+db.products.aggregate([{<span class="hljs-variable">$match</span>: {sku: {<span class="hljs-variable">$gt</span>: 9999265500050003}}}, {<span class="hljs-variable">$project</span>: {_id: 0, sku: 1}}])</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x8BE2; config DB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">use config
+
+db.mongos.find()
+
+db.shards.find()
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span>, <span class="hljs-string">&quot;state&quot;</span> : <span class="hljs-number">1</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;</span>, <span class="hljs-string">&quot;state&quot;</span> : <span class="hljs-number">1</span> }
+
+db.databases.find()
+db.collections.find()
+
+db.chunks.find()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x8BBE;&#x5B9A; test &#x6570;&#x636E;&#x5E93;&#x5206;&#x533A;&#xFF0C;&#x521B;&#x5EFA;&#x7D22;&#x5F15;&#xFF0C;&#x6267;&#x884C;&#x5206;&#x533A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.enableSharding(<span class="hljs-string">&quot;testConfigDB&quot;</span>)
+
+use <span class="hljs-built_in">test</span>ConfigDB
+
+db.products.stats()
+...
+        <span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testConfigDB.products&quot;</span>,
+	<span class="hljs-string">&quot;count&quot;</span> : 516784,
+	<span class="hljs-string">&quot;size&quot;</span> : 79714444,
+	<span class="hljs-string">&quot;storageSize&quot;</span> : 25968640,
+	<span class="hljs-string">&quot;totalIndexSize&quot;</span> : 4947968,
+	<span class="hljs-string">&quot;indexSizes&quot;</span> : {
+		<span class="hljs-string">&quot;_id_&quot;</span> : 4947968
 	},
-	&quot;ok&quot; : 1,
-	&quot;operationTime&quot; : Timestamp(1554362195, 1),
-	&quot;$clusterTime&quot; : {
-		&quot;clusterTime&quot; : Timestamp(1554362200, 3),
-		&quot;signature&quot; : {
-			&quot;hash&quot; : BinData(0,&quot;q/PKCNK4dzZPGKPfGyWO+/vkkA8=&quot;),
-			&quot;keyId&quot; : NumberLong(&quot;6675887931275608090&quot;)
-		}
-	}
+
+db.products.createIndex({sku: 1})
+
+db.products.stats()
+...
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testConfigDB.products&quot;</span>,
+	<span class="hljs-string">&quot;count&quot;</span> : 516784,
+	<span class="hljs-string">&quot;size&quot;</span> : 79714444,
+	<span class="hljs-string">&quot;storageSize&quot;</span> : 25968640,
+	<span class="hljs-string">&quot;totalIndexSize&quot;</span> : 10063872,
+	<span class="hljs-string">&quot;indexSizes&quot;</span> : {
+		<span class="hljs-string">&quot;_id_&quot;</span> : 4947968,
+		<span class="hljs-string">&quot;sku_1&quot;</span> : 5115904
+	},
+
+db.adminCommand({shardCollection: <span class="hljs-string">&quot;testConfigDB.products&quot;</span>, key: {sku: 1}})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.status()
+...
+  databases:
+     {  <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testConfigDB&quot;</span>,  <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,  <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span>,  <span class="hljs-string">&quot;version&quot;</span> : {  <span class="hljs-string">&quot;uuid&quot;</span> : UUID(<span class="hljs-string">&quot;03d0bae2-2dcd-4311-8802-5b9cc157ea22&quot;</span>),  <span class="hljs-string">&quot;lastMod&quot;</span> : 1 } }
+                <span class="hljs-built_in">test</span>ConfigDB.products
+                        shard key: { <span class="hljs-string">&quot;sku&quot;</span> : 1 }
+                        unique: <span class="hljs-literal">false</span>
+                        balancing: <span class="hljs-literal">true</span>
+                        chunks:
+                                repl<span class="hljs-_">-a</span>	1
+                                repl-b	2
+                        { <span class="hljs-string">&quot;sku&quot;</span> : { <span class="hljs-string">&quot;<span class="hljs-variable">$minKey</span>&quot;</span> : 1 } } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : 23153496 } on : repl<span class="hljs-_">-a</span> Timestamp(2, 0)
+                        { <span class="hljs-string">&quot;sku&quot;</span> : 23153496 } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : 28928914 } on : repl-b Timestamp(2, 1)
+                        { <span class="hljs-string">&quot;sku&quot;</span> : 28928914 } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : { <span class="hljs-string">&quot;<span class="hljs-variable">$maxKey</span>&quot;</span> : 1 } } on : repl-b Timestamp(1, 2)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x8BE2; config DB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">use config
+
+db.chunks.aggregate({$match: {ns: {$eq: <span class="hljs-string">&quot;testConfigDB.products&quot;</span>}}},{$project: {_id: <span class="hljs-number">0</span>, min: <span class="hljs-string">&quot;$min.sku&quot;</span>, max: <span class="hljs-string">&quot;$max.sku&quot;</span>, shard: <span class="hljs-number">1</span>}})
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }, <span class="hljs-string">&quot;max&quot;</span> : <span class="hljs-number">23153496</span> }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : <span class="hljs-number">23153496</span>, <span class="hljs-string">&quot;max&quot;</span> : <span class="hljs-number">28928914</span> }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : <span class="hljs-number">28928914</span>, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } }
+
+db.collections.find()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x7EDF;&#x8BA1;&#x5206;&#x7247; a &#x548C;&#x5206;&#x7247; b &#x4E0A;&#x6570;&#x636E;&#x7684;&#x603B;&#x91CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo <span class="hljs-built_in">test</span>ConfigDB -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+217885
+
+$ mongo <span class="hljs-built_in">test</span>ConfigDB -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+298899
+
+$ mongo <span class="hljs-built_in">test</span>ConfigDB -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+516784</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hashed_sharding">Hashed Sharding</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongoimport --drop products.json --port 27017 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --db <span class="hljs-built_in">test</span>HashedSharding --collection products
+2019-06-02T18:54:14.607+0800	connected to: localhost:27017
+2019-06-02T18:54:14.621+0800	dropping: <span class="hljs-built_in">test</span>HashedSharding.products
+2019-06-02T18:54:17.586+0800	[<span class="hljs-comment">###.....................] testHashedSharding.products	12.0MB/87.9MB (13.7%)</span>
+2019-06-02T18:54:20.589+0800	[<span class="hljs-comment">######..................] testHashedSharding.products	25.1MB/87.9MB (28.6%)</span>
+2019-06-02T18:54:23.588+0800	[<span class="hljs-comment">##########..............] testHashedSharding.products	38.2MB/87.9MB (43.5%)</span>
+2019-06-02T18:54:26.588+0800	[<span class="hljs-comment">#############...........] testHashedSharding.products	51.3MB/87.9MB (58.3%)</span>
+2019-06-02T18:54:29.589+0800	[<span class="hljs-comment">#################.......] testHashedSharding.products	64.5MB/87.9MB (73.4%)</span>
+2019-06-02T18:54:32.589+0800	[<span class="hljs-comment">#####################...] testHashedSharding.products	77.6MB/87.9MB (88.3%)</span>
+2019-06-02T18:54:34.695+0800	[<span class="hljs-comment">########################] testHashedSharding.products	87.9MB/87.9MB (100.0%)</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use <span class="hljs-built_in">test</span>HashedSharding
+
+db.products.count()
+516784
+
+db.products.distinct(<span class="hljs-string">&apos;sku&apos;</span>).length
+516784</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x8BE2; config DB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">use config
+
+db.databases.find({}, {_id: <span class="hljs-number">0</span>, primary: <span class="hljs-number">1</span>, partitioned: <span class="hljs-number">1</span>, lastMod: <span class="hljs-number">1</span>})
+{ <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+{ <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">false</span> }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x54C8;&#x5E0C;&#x7D22;&#x5F15;&#xFF0C;&#x6267;&#x884C;&#x54C8;&#x5E0C;&#x5206;&#x533A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.enableSharding(<span class="hljs-string">&quot;testHashedSharding&quot;</span>)
+
+use <span class="hljs-built_in">test</span>HashedSharding
+
+db.products.createIndex({sku: <span class="hljs-string">&quot;hashed&quot;</span>})
+
+sh.shardCollection(<span class="hljs-string">&quot;testHashedSharding.products&quot;</span>, {sku: <span class="hljs-string">&quot;hashed&quot;</span>})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.status()
+...
+  databases:
+        {  <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testHashedSharding&quot;</span>,  <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>,  <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span>,  <span class="hljs-string">&quot;version&quot;</span> : {  <span class="hljs-string">&quot;uuid&quot;</span> : UUID(<span class="hljs-string">&quot;517a7dd2-4d4d-4167-b0a8-cfba67ecd0d5&quot;</span>),  <span class="hljs-string">&quot;lastMod&quot;</span> : 1 } }
+                <span class="hljs-built_in">test</span>HashedSharding.products
+                        shard key: { <span class="hljs-string">&quot;sku&quot;</span> : <span class="hljs-string">&quot;hashed&quot;</span> }
+                        unique: <span class="hljs-literal">false</span>
+                        balancing: <span class="hljs-literal">true</span>
+                        chunks:
+                                repl<span class="hljs-_">-a</span>	2
+                                repl-b	1
+                        { <span class="hljs-string">&quot;sku&quot;</span> : { <span class="hljs-string">&quot;<span class="hljs-variable">$minKey</span>&quot;</span> : 1 } } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1442199500577127961&quot;</span>) } on : repl-b Timestamp(2, 0)
+                        { <span class="hljs-string">&quot;sku&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1442199500577127961&quot;</span>) } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : NumberLong(<span class="hljs-string">&quot;6331935390792935387&quot;</span>) } on : repl<span class="hljs-_">-a</span> Timestamp(2, 1)
+                        { <span class="hljs-string">&quot;sku&quot;</span> : NumberLong(<span class="hljs-string">&quot;6331935390792935387&quot;</span>) } --&gt;&gt; { <span class="hljs-string">&quot;sku&quot;</span> : { <span class="hljs-string">&quot;<span class="hljs-variable">$maxKey</span>&quot;</span> : 1 } } on : repl<span class="hljs-_">-a</span> Timestamp(1, 2)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B; Config DB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">use config
+
+db.databases.find({}, {_id: <span class="hljs-number">0</span>, primary: <span class="hljs-number">1</span>, partitioned: <span class="hljs-number">1</span>, lastMod: <span class="hljs-number">1</span>})
+{ <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+{ <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+
+db.chunks.aggregate({$match: {ns: {$eq: <span class="hljs-string">&quot;testHashedSharding.products&quot;</span>}}},{$project: {_id: <span class="hljs-number">0</span>, min: <span class="hljs-string">&quot;$min.sku&quot;</span>, max: <span class="hljs-string">&quot;$max.sku&quot;</span>, shard: <span class="hljs-number">1</span>}})
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }, <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1442199500577127961&quot;</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1442199500577127961&quot;</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-string">&quot;6331935390792935387&quot;</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-string">&quot;6331935390792935387&quot;</span>), <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x7EDF;&#x8BA1;&#x5206;&#x7247; a &#x548C;&#x5206;&#x7247; b &#x4E0A;&#x6570;&#x636E;&#x7684;&#x603B;&#x91CF;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo <span class="hljs-built_in">test</span>HashedSharding -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+298899
+
+$ mongo <span class="hljs-built_in">test</span>HashedSharding -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+217885
+
+$ mongo <span class="hljs-built_in">test</span>HashedSharding -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --eval <span class="hljs-string">&apos;db.products.count()&apos;</span>
+516784</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_chunks">Chunks</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use <span class="hljs-built_in">test</span>Chunks
+
+var doc = {
+   <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;John Doe&quot;</span>,
+   <span class="hljs-string">&quot;balance&quot;</span>: 99.99
+}
+
+<span class="hljs-keyword">for</span> (var i = 0; i &lt; 100000; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>3. Scatter Gather</strong></div>
+<div class="title"><strong>2. &#x5C06; accounts &#x5206;&#x7247;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise mongos&gt; db.products.find({&quot;name&quot; : &quot;Symphony No.4 - Romantic - CD&quot; }).explain()
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.enableSharding(<span class="hljs-string">&quot;testChunks&quot;</span>)
+
+db.accounts.createIndex({accountNo: 1})
+
+sh.shardCollection(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: 1})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x5206;&#x7247;&#x5206;&#x53D1;&#x60C5;&#x51B5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.accounts.getShardDistribution()
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 1
+ estimated data per chunk : 7.34MiB
+ estimated docs per chunk : 100000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 1
+ Shard repl-b contains 100% data, 100% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : 77B</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; Config DB &#x4E2D;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">use config
+
+db.databases.find({}, {_id: <span class="hljs-number">1</span>, primary: <span class="hljs-number">1</span>, partitioned: <span class="hljs-number">1</span>, lastMod: <span class="hljs-number">1</span>})
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testHashedSharding&quot;</span>, <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testConfigDB&quot;</span>, <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testChunks&quot;</span>, <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span> }
+
+db.chunks.aggregate({$match: {ns: {$eq: <span class="hljs-string">&quot;testChunks.accounts&quot;</span>}}},{$project: {_id: <span class="hljs-number">0</span>, min: <span class="hljs-string">&quot;$min.accountNo&quot;</span>, max: <span class="hljs-string">&quot;$max.accountNo&quot;</span>, shard: <span class="hljs-number">1</span>}})
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x6A21;&#x62DF;&#x5927;&#x91CF;&#x6570;&#x636E;&#x5BFC;&#x5165;&#xFF0C;&#x624B;&#x52A8;&#x521B;&#x5EFA;&#x591A;&#x4E2A; chunk(&#x9ED8;&#x8BA4;&#x53EA;&#x6709;&#x5F53; chunk &#x7684;&#x5927;&#x5C0F;&#x5927;&#x4E8E; 64 M &#x65F6;&#x624D;&#x5F00;&#x59CB;&#x79FB;&#x52A8;)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(10000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(20000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(30000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(40000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(50000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(60000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(70000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(80000)})
+sh.splitAt(<span class="hljs-string">&quot;testChunks.accounts&quot;</span>, {accountNo: NumberLong(90000)})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x5206;&#x7247;&#x5206;&#x53D1;&#x60C5;&#x51B5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"> db.accounts.getShardDistribution()
+
+Shard repl<span class="hljs-_">-a</span> at repl<span class="hljs-_">-a</span>/localhost:27000,localhost:27001,localhost:27002
+ data : 3.67MiB docs : 50000 chunks : 5
+ estimated data per chunk : 751KiB
+ estimated docs per chunk : 10000
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 5
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Totals
+ data : 11.01MiB docs : 150000 chunks : 10
+ Shard repl<span class="hljs-_">-a</span> contains 33.33% data, 33.33% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : 77B
+ Shard repl-b contains 66.66% data, 66.66% docs <span class="hljs-keyword">in</span> cluster, avg obj size on shard : 77B</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x96C6;&#x7FA4;&#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">sh.status()
+...
+        {  <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testChunks&quot;</span>,  <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,  <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span>,  <span class="hljs-string">&quot;version&quot;</span> : {  <span class="hljs-string">&quot;uuid&quot;</span> : UUID(<span class="hljs-string">&quot;2da4784a-fa07-4a74-b4a7-bcbfa6729a4a&quot;</span>),  <span class="hljs-string">&quot;lastMod&quot;</span> : <span class="hljs-number">1</span> } }
+                testChunks.accounts
+                        shard key: { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">1</span> }
+                        unique: <span class="hljs-literal">false</span>
+                        balancing: <span class="hljs-literal">true</span>
+                        chunks:
+                                repl-a	<span class="hljs-number">5</span>
+                                repl-b	<span class="hljs-number">5</span>
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> } } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">10000</span>) } on : repl-a Timestamp(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">10000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">20000</span>) } on : repl-a Timestamp(<span class="hljs-number">3</span>, <span class="hljs-number">0</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">20000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">30000</span>) } on : repl-a Timestamp(<span class="hljs-number">4</span>, <span class="hljs-number">0</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">30000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">40000</span>) } on : repl-a Timestamp(<span class="hljs-number">5</span>, <span class="hljs-number">0</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">40000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">50000</span>) } on : repl-a Timestamp(<span class="hljs-number">6</span>, <span class="hljs-number">0</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">50000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">60000</span>) } on : repl-b Timestamp(<span class="hljs-number">6</span>, <span class="hljs-number">1</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">60000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">70000</span>) } on : repl-b Timestamp(<span class="hljs-number">4</span>, <span class="hljs-number">2</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">70000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">80000</span>) } on : repl-b Timestamp(<span class="hljs-number">5</span>, <span class="hljs-number">2</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">80000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">90000</span>) } on : repl-b Timestamp(<span class="hljs-number">5</span>, <span class="hljs-number">4</span>)
+                        { <span class="hljs-string">&quot;accountNo&quot;</span> : NumberLong(<span class="hljs-number">90000</span>) } --&gt;&gt; { <span class="hljs-string">&quot;accountNo&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } } on : repl-b Timestamp(<span class="hljs-number">5</span>, <span class="hljs-number">5</span>)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x67E5;&#x770B; Config DB &#x4E2D;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.chunks.aggregate({$match: {ns: {$eq: <span class="hljs-string">&quot;testChunks.accounts&quot;</span>}}},{$project: {_id: <span class="hljs-number">0</span>, min: <span class="hljs-string">&quot;$min.accountNo&quot;</span>, max: <span class="hljs-string">&quot;$max.accountNo&quot;</span>, shard: <span class="hljs-number">1</span>}})
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }, <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">10000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">10000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">20000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">20000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">30000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">30000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">40000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">40000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">50000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">50000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">60000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">60000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">70000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">70000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">80000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">80000</span>), <span class="hljs-string">&quot;max&quot;</span> : NumberLong(<span class="hljs-number">90000</span>) }
+{ <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>, <span class="hljs-string">&quot;min&quot;</span> : NumberLong(<span class="hljs-number">90000</span>), <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x67E5;&#x770B;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo <span class="hljs-built_in">test</span>Chunks -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span> --eval <span class="hljs-string">&apos;db.accounts.count()&apos;</span>
+50000
+
+$ mongo <span class="hljs-built_in">test</span>Chunks -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --host <span class="hljs-string">&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;</span> --eval <span class="hljs-string">&apos;db.accounts.count()&apos;</span>
+50000
+
+$ mongo <span class="hljs-built_in">test</span>Chunks -u root -p mongo --authenticationDatabase <span class="hljs-string">&quot;admin&quot;</span> --eval <span class="hljs-string">&apos;db.accounts.count()&apos;</span>
+100000</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_routed_queries_scatter_gather">Routed Queries &#x548C; Scatter Gather</h3>
+<div class="paragraph">
+<p>&#x5982;&#x679C;&#x67E5;&#x8BE2;&#x57FA;&#x4E8E; shard key &#x65F6;&#x5219; mongos &#x4F1A;&#x76F4;&#x63A5;&#x8DEF;&#x7531;&#x76F8;&#x5E94;&#x8BF7;&#x6C42;&#x5230;&#x5BF9;&#x5E94;&#x7684;&#x5206;&#x533A;&#xFF1B;&#x53CD;&#x4E4B;&#x5219;&#x8BF7;&#x6C42;&#x53D1;&#x9001;&#x5230;&#x6240;&#x6709;&#x5206;&#x533A;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x57FA;&#x4E8E; <a href="#_chunks">Chunks</a> &#x6570;&#x636E;&#x5E93;&#x5BF9;&#x6BD4;&#x4E24;&#x79CD;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. Routed Queries</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.accounts.find({accountNo: <span class="hljs-number">27008</span>}).explain().queryPlanner.winningPlan
 {
-	&quot;queryPlanner&quot; : {
-		&quot;mongosPlannerVersion&quot; : 1,
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;SHARD_MERGE&quot;,
-			&quot;shards&quot; : [
-				{
-					&quot;shardName&quot; : &quot;m103-repl-2&quot;,
-					&quot;connectionString&quot; : &quot;m103-repl-2/192.168.103.100:27004,192.168.103.100:27005,192.168.103.100:27006&quot;,
-					&quot;serverInfo&quot; : {
-						&quot;host&quot; : &quot;m103&quot;,
-						&quot;port&quot; : 27004,
-						&quot;version&quot; : &quot;3.6.11&quot;,
-						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-					},
-					&quot;plannerVersion&quot; : 1,
-					&quot;namespace&quot; : &quot;m103.products&quot;,
-					&quot;indexFilterSet&quot; : false,
-					&quot;parsedQuery&quot; : {
-						&quot;name&quot; : {
-							&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
-						}
-					},
-					&quot;winningPlan&quot; : {
-						&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
-						&quot;inputStage&quot; : {
-							&quot;stage&quot; : &quot;COLLSCAN&quot;,
-							&quot;filter&quot; : {
-								&quot;name&quot; : {
-									&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
-								}
-							},
-							&quot;direction&quot; : &quot;forward&quot;
-						}
-					},
-					&quot;rejectedPlans&quot; : [ ]
-				},
-				{
-					&quot;shardName&quot; : &quot;m103-repl&quot;,
-					&quot;connectionString&quot; : &quot;m103-repl/192.168.103.100:27001,192.168.103.100:27002,192.168.103.100:27003&quot;,
-					&quot;serverInfo&quot; : {
-						&quot;host&quot; : &quot;m103&quot;,
-						&quot;port&quot; : 27001,
-						&quot;version&quot; : &quot;3.6.11&quot;,
-						&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-					},
-					&quot;plannerVersion&quot; : 1,
-					&quot;namespace&quot; : &quot;m103.products&quot;,
-					&quot;indexFilterSet&quot; : false,
-					&quot;parsedQuery&quot; : {
-						&quot;name&quot; : {
-							&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
-						}
-					},
-					&quot;winningPlan&quot; : {
-						&quot;stage&quot; : &quot;SHARDING_FILTER&quot;,
-						&quot;inputStage&quot; : {
-							&quot;stage&quot; : &quot;COLLSCAN&quot;,
-							&quot;filter&quot; : {
-								&quot;name&quot; : {
-									&quot;$eq&quot; : &quot;Symphony No.4 - Romantic - CD&quot;
-								}
-							},
-							&quot;direction&quot; : &quot;forward&quot;
-						}
-					},
-					&quot;rejectedPlans&quot; : [ ]
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SINGLE_SHARD&quot;</span>,
+	<span class="hljs-string">&quot;shards&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;shardName&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>,
+			<span class="hljs-string">&quot;connectionString&quot;</span> : <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span>,
+			<span class="hljs-string">&quot;serverInfo&quot;</span> : {
+				<span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;Kylins-MacBook-Pro.local&quot;</span>,
+				<span class="hljs-string">&quot;port&quot;</span> : <span class="hljs-number">27000</span>,
+				<span class="hljs-string">&quot;version&quot;</span> : <span class="hljs-string">&quot;4.0.7&quot;</span>,
+				<span class="hljs-string">&quot;gitVersion&quot;</span> : <span class="hljs-string">&quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;</span>
+			},
+			<span class="hljs-string">&quot;plannerVersion&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;namespace&quot;</span> : <span class="hljs-string">&quot;testChunks.accounts&quot;</span>,
+			<span class="hljs-string">&quot;indexFilterSet&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;parsedQuery&quot;</span> : {
+				<span class="hljs-string">&quot;accountNo&quot;</span> : {
+					<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-number">27008</span>
 				}
-			]
+			},
+			<span class="hljs-string">&quot;winningPlan&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+				<span class="hljs-string">&quot;inputStage&quot;</span> : {
+					<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SHARDING_FILTER&quot;</span>,
+					<span class="hljs-string">&quot;inputStage&quot;</span> : {
+						<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+						<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">1</span>
+						},
+						<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;accountNo_1&quot;</span>,
+						<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [ ]
+						},
+						<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+						<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+						<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [
+								<span class="hljs-string">&quot;[27008.0, 27008.0]&quot;</span>
+							]
+						}
+					}
+				}
+			},
+			<span class="hljs-string">&quot;rejectedPlans&quot;</span> : [ ]
 		}
-	},
-	&quot;ok&quot; : 1,
-	&quot;operationTime&quot; : Timestamp(1554362215, 1),
-	&quot;$clusterTime&quot; : {
-		&quot;clusterTime&quot; : Timestamp(1554362222, 2),
-		&quot;signature&quot; : {
-			&quot;hash&quot; : BinData(0,&quot;vK/5Wzl1SaNxntKt9mBX7asuplI=&quot;),
-			&quot;keyId&quot; : NumberLong(&quot;6675887931275608090&quot;)
+	]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. Scatter Gather</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.accounts.find({accountNo: {$gt: <span class="hljs-number">27008</span>, $lt: <span class="hljs-number">67000</span>}}).explain().queryPlanner.winningPlan
+{
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SHARD_MERGE&quot;</span>,
+	<span class="hljs-string">&quot;shards&quot;</span> : [
+		{
+			<span class="hljs-string">&quot;shardName&quot;</span> : <span class="hljs-string">&quot;repl-a&quot;</span>,
+			<span class="hljs-string">&quot;connectionString&quot;</span> : <span class="hljs-string">&quot;repl-a/localhost:27000,localhost:27001,localhost:27002&quot;</span>,
+			<span class="hljs-string">&quot;serverInfo&quot;</span> : {
+				<span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;Kylins-MacBook-Pro.local&quot;</span>,
+				<span class="hljs-string">&quot;port&quot;</span> : <span class="hljs-number">27000</span>,
+				<span class="hljs-string">&quot;version&quot;</span> : <span class="hljs-string">&quot;4.0.7&quot;</span>,
+				<span class="hljs-string">&quot;gitVersion&quot;</span> : <span class="hljs-string">&quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;</span>
+			},
+			<span class="hljs-string">&quot;plannerVersion&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;namespace&quot;</span> : <span class="hljs-string">&quot;testChunks.accounts&quot;</span>,
+			<span class="hljs-string">&quot;indexFilterSet&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;parsedQuery&quot;</span> : {
+				<span class="hljs-string">&quot;$and&quot;</span> : [
+					{
+						<span class="hljs-string">&quot;accountNo&quot;</span> : {
+							<span class="hljs-string">&quot;$lt&quot;</span> : <span class="hljs-number">67000</span>
+						}
+					},
+					{
+						<span class="hljs-string">&quot;accountNo&quot;</span> : {
+							<span class="hljs-string">&quot;$gt&quot;</span> : <span class="hljs-number">27008</span>
+						}
+					}
+				]
+			},
+			<span class="hljs-string">&quot;winningPlan&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+				<span class="hljs-string">&quot;inputStage&quot;</span> : {
+					<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SHARDING_FILTER&quot;</span>,
+					<span class="hljs-string">&quot;inputStage&quot;</span> : {
+						<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+						<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">1</span>
+						},
+						<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;accountNo_1&quot;</span>,
+						<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [ ]
+						},
+						<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+						<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+						<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [
+								<span class="hljs-string">&quot;(27008.0, 67000.0)&quot;</span>
+							]
+						}
+					}
+				}
+			},
+			<span class="hljs-string">&quot;rejectedPlans&quot;</span> : [ ]
+		},
+		{
+			<span class="hljs-string">&quot;shardName&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,
+			<span class="hljs-string">&quot;connectionString&quot;</span> : <span class="hljs-string">&quot;repl-b/localhost:28000,localhost:28001,localhost:28002&quot;</span>,
+			<span class="hljs-string">&quot;serverInfo&quot;</span> : {
+				<span class="hljs-string">&quot;host&quot;</span> : <span class="hljs-string">&quot;Kylins-MacBook-Pro.local&quot;</span>,
+				<span class="hljs-string">&quot;port&quot;</span> : <span class="hljs-number">28000</span>,
+				<span class="hljs-string">&quot;version&quot;</span> : <span class="hljs-string">&quot;4.0.7&quot;</span>,
+				<span class="hljs-string">&quot;gitVersion&quot;</span> : <span class="hljs-string">&quot;1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025&quot;</span>
+			},
+			<span class="hljs-string">&quot;plannerVersion&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;namespace&quot;</span> : <span class="hljs-string">&quot;testChunks.accounts&quot;</span>,
+			<span class="hljs-string">&quot;indexFilterSet&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;parsedQuery&quot;</span> : {
+				<span class="hljs-string">&quot;$and&quot;</span> : [
+					{
+						<span class="hljs-string">&quot;accountNo&quot;</span> : {
+							<span class="hljs-string">&quot;$lt&quot;</span> : <span class="hljs-number">67000</span>
+						}
+					},
+					{
+						<span class="hljs-string">&quot;accountNo&quot;</span> : {
+							<span class="hljs-string">&quot;$gt&quot;</span> : <span class="hljs-number">27008</span>
+						}
+					}
+				]
+			},
+			<span class="hljs-string">&quot;winningPlan&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+				<span class="hljs-string">&quot;inputStage&quot;</span> : {
+					<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SHARDING_FILTER&quot;</span>,
+					<span class="hljs-string">&quot;inputStage&quot;</span> : {
+						<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+						<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">1</span>
+						},
+						<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;accountNo_1&quot;</span>,
+						<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [ ]
+						},
+						<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+						<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+						<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+						<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+							<span class="hljs-string">&quot;accountNo&quot;</span> : [
+								<span class="hljs-string">&quot;(27008.0, 67000.0)&quot;</span>
+							]
+						}
+					}
+				}
+			},
+			<span class="hljs-string">&quot;rejectedPlans&quot;</span> : [ ]
 		}
-	}
+	]
 }</code></pre>
 </div>
 </div>
@@ -3861,7 +4235,7 @@ MongoDB Enterprise mongos&gt; sh.addShard(&quot;m103-repl-2/192.168.103.100:2700
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.4","depth":1,"next":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"previous":{"title":"Java","level":"1.3.2","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-04-05T09:56:52.667Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-05-04T13:22:06.142Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"集群管理","level":"1.4","depth":1,"next":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"previous":{"title":"Java","level":"1.3.2","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/cluster-admin.adoc","mtime":"2019-06-02T14:21:50.099Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-02T14:23:00.745Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

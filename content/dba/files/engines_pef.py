@@ -4,9 +4,9 @@ import time
 from datetime import datetime
 import pymongo
 
-
-record_amount = 1000000
-connection = pymongo.MongoClient('mongodb://root:mongo@localhost:27017/')
+bulkSize= 500;
+record_amount = 10000000
+connection = pymongo.MongoClient(host = 'localhost:27000', username = 'root', password = 'mongo', replicaset = 'repl-1')
 db = connection['bankdata']
 db.customers.drop()
 
@@ -15,6 +15,10 @@ db.customers.drop()
 
 
 ## THIS IS ALL ABOUT FAST TO WORK WITH DATA
+##Diferent insert operations insert and bulk
+
+
+
 
 # Create first main record
 ##  this is object in python
@@ -43,9 +47,6 @@ main_record = {
 #This is what i need to insert my object 1:1 c
 
 db.customers.insert(main_record);
-#This is what i need to insert my object 1:1
-
-
 
 
 
@@ -54,7 +55,7 @@ db.customers.insert(main_record);
 ## lets generate a ramdom set of users and accounts
 
 # Create a load of randomly generated records
-##
+## 
 FIRST_NAMES = ['Patricia', 'Paco', 'Ruben', 'Gustavo', 'Mandy', 'Sandy', 'Randy', 'Candy', 'Bambi']
 LAST_NAMES = ['Botin', 'Molero', 'Terceno', 'Loewe', 'Barrett', 'Saunders', 'Reid', 'Whittington-Smythe', 'Parker-Tweed']
 BRANCHES = ['EDI-1', 'EDI-1', 'LON-1', 'LON-2', 'LON-3', 'MAN-1', 'MAN-2', 'MAN-3', 'NEW-1']
@@ -64,9 +65,10 @@ collection=db.customers
 
 
 
-for count in xrange(record_amount):
-
-
+for count in xrange(record_amount/bulkSize):
+    bulk = collection.initialize_unordered_bulk_op()
+    execute_bulk = False
+    for count in xrange(bulkSize):
         single_digit = random.randint(1,9)
 
         new_record = {
@@ -101,13 +103,13 @@ for count in xrange(record_amount):
                 'balance': random.randint(0,99999)
             })
 
-        collection.insert(new_record)
+        bulk.insert(new_record)
 
-
-
+    bulk.execute()
+    ##print "bulk"
 
 #
 # Summary
-#
+# 
 print "%d records inserted" % record_amount
 print

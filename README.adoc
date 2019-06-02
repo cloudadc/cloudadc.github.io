@@ -548,7 +548,7 @@ $ mongod --dbpath ~/tmp/r0 --logpath ~/tmp/r0/mongo.log --port 27000 --fork --au
 //创建数据库存储文件及内部通信加密文件
 $ mkdir -p ~/tmp/ra{0,1,2}
 $ mkdir -p ~/tmp/rb{0,1,2}
-$ mkdir -p ~/tmp/cs{1,2,3}
+$ mkdir -p ~/tmp/cs{0,1,2}
 $ openssl rand -base64 755 > ~/tmp/keyfile
 $ chmod 400 ~/tmp/keyfile
 
