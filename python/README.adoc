@@ -1,0 +1,82 @@
+= Python
+:toc: manual
+
+== Hello World
+
+link:files/helloworld.py[helloworld.py]
+
+[source, python]
+----
+$ python helloworld.py 
+Hello, World!
+----
+
+== Syntax
+
+=== Indentation
+
+link:files/indentation.py[indentation.py]
+
+[source, python]
+----
+$ python indentation.py 
+Five is greater than two!
+----
+
+=== Variables
+
+link:files/variables.py[variables.py]
+
+[source, python]
+----
+$ python variables.py 
+Python is awesome
+----
+
+=== Numbers
+
+link:files/numbers.py[numbers.py]
+
+[source, python]
+----
+$ python numbers.py 
+<type 'int'>
+<type 'float'>
+<type 'complex'>
+
+<type 'int'>
+<type 'int'>
+<type 'int'>
+
+<type 'float'>
+<type 'float'>
+<type 'float'>
+
+<type 'float'>
+<type 'float'>
+<type 'float'>
+
+<type 'complex'>
+<type 'complex'>
+<type 'complex'>
+----
+
+[source, python]
+----
+
+----
+
+[source, python]
+----
+
+----
+
+[source, python]
+----
+
+----
+
+[source, python]
+----
+
+----
