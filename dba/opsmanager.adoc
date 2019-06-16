@@ -1,0 +1,119 @@
+= Ops Manager
+:toc: manual
+
+== 软件安装
+
+=== 安装准备
+
+[source, bash]
+.*操作系统配置*
+----
+
+----
+
+=== 依赖的包安装
+
+[source, bash]
+.*安装如下依赖包*
+----
+cyrus-sasl, cyrus-sasl-gssapi, cyrus-sasl-plain, lm_sensors-libs, net-snmp, net-snmp-agent-libs, net-snmp-libs, perl-Data-Dumper 
+----
+
+=== 安装
+
+[source, bash]
+.*1. DB 安装*
+----
+sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm
+sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm 
+sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm
+----
+
+.*2. 启动数据库*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/data/r{0,1,2}
+$ openssl rand -base64 755 > ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//创建安全登录账
+$ mongod --port 27000 --dbpath ~/data/r0/
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 192.168.33.100 --fork --auth --keyFile ~/data/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.initiate()'
+$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.add("192.168.33.100:27001")'
+$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.add("192.168.33.100:27002")'
+----
+
+[source, bash]
+.*3. Ops 安装*
+----
+sudo yum localinstall mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm
+----
+
+[source, bash]
+.*4. 配置 Ops 连接数据库（/opt/mongodb/mms/conf/conf-mms.properties）*
+----
+mongo.mongoUri=mongodb://root:mongo@192.168.33.100:27000,192.168.33.100:27001,192.168.33.100:27002/admin?replicaSet=repl-1&maxPoolSize=150
+----
+
+[source, bash]
+.*5. 启动 Ops Manager*
+----
+$ sudo systemctl start mongodb-mms.service
+----
+
+*6. 访问 http://192.168.33.100:8080 注册一个账户*
+
+image:img/ops-register.png[]
+
+选择 `password1!` 为密码，在弹出的页面根据提示完成配置：
+
+* URL To Access Ops Manager - http://opsmgr.example.com:8080
+
+配置完成后进入到如下界面
+
+image:img/opsmgr-install-finished.png[]
+
+=== 安装 agent 
+
+[source, bash]
+.*1. 安装*
+----
+$ curl -OL http://opsmgr.example.com:8080/download/agent/automation/mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+
+$ sudo chmod a+x mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+$ sudo yum localinstall mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+----
+
+[source, bash]
+.*2. 配置 key*
+----
+sudo vi /etc/mongodb-mms/automation-agent.config
+----
+
+NOTE: 部署界面有 安装 agent 的介绍。
+
+=== TODO 
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----

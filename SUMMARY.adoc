@@ -6,6 +6,7 @@
 .. link:dev/aggregation.adoc[Aggregation]
 .. link:dev/java.adoc[Java]
 . link:dba/cluster-admin.adoc[集群管理]
+.. link:dba/opsmanager.adoc[Ops Manager]
 . link:dba/security.adoc[安全]
 . link:dba/perf.adoc[性能调优]
 . link:dba/troubleshooting.adoc[Troubleshooting]
