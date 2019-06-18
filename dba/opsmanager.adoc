@@ -1,22 +1,25 @@
 = Ops Manager
 :toc: manual
 
-== 软件安装
+== Ops Manager 安装
 
-=== 安装准备
-
-[source, bash]
-.*操作系统配置*
-----
-
-----
-
-=== 依赖的包安装
+=== 操作系统准备
 
 [source, bash]
-.*安装如下依赖包*
+.*1. 配置主机名*
 ----
-cyrus-sasl, cyrus-sasl-gssapi, cyrus-sasl-plain, lm_sensors-libs, net-snmp, net-snmp-agent-libs, net-snmp-libs, perl-Data-Dumper 
+hostnamectl set-hostname opsmgr.example.com
+----
+
+[source, bash]
+.*2. 配置静态 IP*
+----
+nmcli connection modify eth0 ipv4.addresses 192.168.33.100/24
+nmcli connection modify eth0 ipv4.gateway 192.168.33.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
 ----
 
 === 安装
@@ -29,6 +32,7 @@ sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm
 sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm
 ----
 
+[source, bash]
 .*2. 启动数据库*
 ----
 //创建数据库存储文件及内部通信加密文件
@@ -79,7 +83,13 @@ image:img/ops-register.png[]
 
 image:img/opsmgr-install-finished.png[]
 
-=== 安装 agent 
+== Agent 安装
+
+=== 安装 Automation Agent 
+
+NOTE: Automation Agent 可以在需要部署导入时安装
+
+在 Ops Manager 界面，选择 *Deployment* -> *Agents* -> *Downloads & Settings*，选择相应的版本，例如 `Automation Agent Installation Instructions`，在弹出的界面根据步骤完成 agent 安装。
 
 [source, bash]
 .*1. 安装*
@@ -96,9 +106,196 @@ $ sudo yum localinstall mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_6
 sudo vi /etc/mongodb-mms/automation-agent.config
 ----
 
+[source, bash]
+.*3. 启动服务*
+----
+sudo systemctl start mongodb-mms-automation-agent.service
+----
+
 NOTE: 部署界面有 安装 agent 的介绍。
 
-=== TODO 
+=== 安装 Monitoring Agent
+
+NOTE: 可以在创建完 Project 后执行这部分。
+
+在 Ops Manager 界面，选择 *Deployment* -> *Agents* -> *Downloads & Settings*，选择相应的版本，例如 Install or Update the Monitoring Agent。
+
+[source, bash]
+.*1. 安装*
+----
+curl -OL http://opsmgr.example.com:8080/download/agent/monitoring/mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm
+
+chmod 777 mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm 
+
+sudo yum localinstall mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm -y
+----
+
+[source, bash]
+.*2. 配置 key, 用户名，密码*
+----
+sudo vi /etc/mongodb-mms/monitoring-agent.config
+
+mmsGroupId=5d08a1af8a49a31b324ec641
+mmsApiKey=5d08a41a8a49a31b324ec86d3dd0a7d168167e4fdb7ec454c450666b
+mmsBaseUrl=http://opsmgr.example.com:8080
+
+globalAuthUsername=mms-monitoring-agent
+globalAuthPassword=mongo 
+----
+
+[source, bash]
+.*3. 启动服务*
+----
+sudo systemctl start mongodb-mms-monitoring-agent.service
+----
+
+=== 安装 Backup Agent
+
+[source, bash]
+.*TODO*
+----
+//TODO
+----
+
+== 准备一个分片集群
+
+NOTE: 本部分集群为了测试使用，与 Ops Manager 不相干。
+
+[source, bash]
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/data/ra{0,1,2}
+$ mkdir -p ~/data/rb{0,1,2}
+$ mkdir -p ~/data/cs{0,1,2}
+$ openssl rand -base64 755 > ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//启动 ConfigServer，初始化，创建管理用户，并添加备节点
+$ mongod --port 26000 --dbpath ~/data/cs0/
+$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/data/cs$i --logpath ~/data/cs$i/mongo.log --port 2600$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-cs ; done
+
+$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval 'rs.add("192.168.33.101:26001")'
+$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval 'rs.add("192.168.33.101:26002")'
+
+//启动 mongos，并查看分片状态
+$ mongos --configdb 'repl-cs/192.168.33.101:26000,192.168.33.101:26001,192.168.33.101:26002' --logpath ~/data/mongos1.log --port 27017 --bind_ip 192.168.33.101 --fork --keyFile ~/data/keyfile
+$ mongos --configdb 'repl-cs/192.168.33.101:26000,192.168.33.101:26001,192.168.33.101:26002' --logpath ~/data/mongos2.log --port 27018 --bind_ip 192.168.33.101 --fork --keyFile ~/data/keyfile
+
+$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --host 192.168.33.101:27018 -u root -p mongo --eval 'sh.status()'
+
+//启动分片a，初始化，创建管理账户，添加备节点
+$ mongod --port 27000 --dbpath ~/data/ra0/
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/ra$i --logpath ~/data/ra$i/mongo.log --port 2700$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-a ; done
+
+$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval 'rs.add("192.168.33.101:27001")'
+$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval 'rs.add("192.168.33.101:27002")'
+
+//启动分片b，初始化，创建管理账户，添加备节点
+$ mongod --port 28000 --dbpath ~/data/rb0/
+$ mongo admin --port 28000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/rb$i --logpath ~/data/rb$i/mongo.log --port 2800$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-b ; done
+
+$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval 'rs.add("192.168.33.101:28001")'
+$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval 'rs.add("192.168.33.101:28002")'
+
+//配置分片，并查看分片状态
+$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.addShard("repl-a/192.168.33.101:27000,192.168.33.101:27001,192.168.33.101:27002")'
+$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.addShard("repl-b/192.168.33.101:28000,192.168.33.101:28001,192.168.33.101:28002")'
+
+$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --host 192.168.33.101:27018 -u root -p mongo --eval 'sh.status()'
+----
+
+== 导入一个存在的集群
+
+=== 创建一个 Project
+
+在 Ops Manager 界面创建一个 DEMO project
+
+image:img/ops-new-project.png[]
+
+根据 *安装 Monitoring Agent* 部分确保 Monitor Agent 在被拉管的机器上运行正常。同时从 Ops Manager 界选择 `Deployment` -> `Agents` -> `All Agents` 下列表中可看到对应 Monitor Agent
+
+image:img/ops-monitoring-agent.png[]
+
+在集群中每一个复制集中创建一个用户 db.createUser({user: "mms-monitoring-agent", pwd: "mongo", roles: [{ role:"clusterMonitor", db: "admin" }]})。
+
+=== 导入
+
+* 在 Ops Manager 界面选择 `Deployment` -> `Add New` -> `Existing MongoDB Deployment`
+
+image:img/ops-import-exists.png[]
+
+* 在弹出的界面配置一个 Automation Agent, 确保界面如下
+
+image:img/ops-automation-agent.png[]
+
+* 点击继续，进入到 *Import your deployment for monitoring* 界面输入相应的值
+
+----
+Hostname              -  192.168.33.101
+Port                  -  27017
+Enable Authentication -  Yes
+Username              -  root
+Password              -  mongo
+----
+
+* 点击继续，导入界面开始 ping 操作，执行成功后，会有如下输出
+
+image:img/ops-deployment-found.png[]
+
+* 点击继续，进入 *Adding your deployment to Ops Manager* 界面，会检测到导入的 Server 如下
+
+image:img/ops-server-import.png[]
+
+* 导入成功后，在 Cluster_0 中会有 2 个分片，3 个 CONFIGS，连个 mongos
+
+image:img/ops-imported-cluster.png[]
+
+=== 导入数据测试，并进行分区
+
+[source, bash]
+.*1. mongoimport 导入数据，进行分片保存*
+----
+$ mongoimport products.json --host 192.168.33.101:27017 -u "root" -p "mongo" --authenticationDatabase "admin" --db products --collection products
+
+$ mongo admin --host 192.168.33.101:27017 -u root -p mongo
+
+mongos> use products
+mongos> sh.enableSharding("products")
+mongos> db.products.createIndex({sku: 1})
+mongos> sh.shardCollection("products.products", {sku: 1})
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
 
 [source, bash]
 .**
