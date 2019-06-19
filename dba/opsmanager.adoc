@@ -236,13 +236,15 @@ image:img/ops-import-exists.png[]
 
 image:img/ops-automation-agent.png[]
 
+NOTE: 安装完 Automation Agent 后，点击继续Automation Agent 会自动安装 Monitoring Agent 和 Backup Agent。
+
 * 点击继续，进入到 *Import your deployment for monitoring* 界面输入相应的值
 
 ----
 Hostname              -  192.168.33.101
 Port                  -  27017
 Enable Authentication -  Yes
-Username              -  root
+Username              -  mms-monitoring-agent
 Password              -  mongo
 ----
 
