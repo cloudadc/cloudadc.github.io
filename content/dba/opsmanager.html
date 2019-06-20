@@ -1,0 +1,1376 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Ops Manager · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="security.html" />
+    
+    
+    <link rel="prev" href="cluster-admin.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="basic.html">
+            
+                <a href="basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../dev/">
+            
+                <a href="../dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../dev/aggregation.html">
+            
+                <a href="../dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../dev/java.html">
+            
+                <a href="../dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="cluster-admin.html">
+            
+                <a href="cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.4.1" data-path="opsmanager.html">
+            
+                <a href="opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    Troubleshooting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="exam.html">
+            
+                <a href="exam.html">
+            
+                    
+                    Q & A
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="../python/">
+            
+                <a href="../python/">
+            
+                    
+                    Python
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="../examples/">
+            
+                <a href="../examples/">
+            
+                    
+                    示例
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.10.1" data-path="../examples/aggregation-sum.html">
+            
+                <a href="../examples/aggregation-sum.html">
+            
+                    
+                    sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Ops Manager</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ops-manager">Ops Manager</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x6982;&#x8FF0;</a></li>
+<li><a href="#___2">&#x8F6F;&#x4EF6;&#x4E0B;&#x8F7D; &amp; &#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x51C6;&#x5907;</a></li>
+<li><a href="#_ops_manager">Ops Manager &#x5B89;&#x88C5;</a>
+<ul class="sectlevel2">
+<li><a href="#___3">&#x4F9D;&#x8D56;&#x5E94;&#x7528;&#x6570;&#x636E;&#x5E93;&#x5B89;&#x88C5;</a></li>
+<li><a href="#___4">&#x5B89;&#x88C5;</a></li>
+<li><a href="#___5">&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</a></li>
+</ul>
+</li>
+<li><a href="#_agent">Agent &#x5B89;&#x88C5;</a>
+<ul class="sectlevel2">
+<li><a href="#__automation_agent">&#x5B89;&#x88C5; Automation Agent</a></li>
+<li><a href="#__monitoring_agent">&#x5B89;&#x88C5; Monitoring Agent</a></li>
+<li><a href="#__backup_agent">&#x5B89;&#x88C5; Backup Agent</a></li>
+</ul>
+</li>
+<li><a href="#___6">&#x51C6;&#x5907;&#x6D4B;&#x8BD5;&#x96C6;&#x7FA4;</a>
+<ul class="sectlevel2">
+<li><a href="#___7">&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
+<li><a href="#___8">&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</a></li>
+</ul>
+</li>
+<li><a href="#___9">&#x5BFC;&#x5165;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x96C6;&#x7FA4;</a>
+<ul class="sectlevel2">
+<li><a href="#__clustermonitor">&#x521B;&#x5EFA; clusterMonitor &#x7528;&#x6237;</a></li>
+<li><a href="#__project">&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Project</a></li>
+<li><a href="#___10">&#x6267;&#x884C;&#x5BFC;&#x5165;</a></li>
+</ul>
+</li>
+<li><a href="#_ops_manager_2">Ops Manager &#x81EA;&#x52A8;&#x5316;&#x7BA1;&#x7406;</a>
+<ul class="sectlevel2">
+<li><a href="#_overview">Overview</a></li>
+<li><a href="#_real_time">Real Time</a></li>
+<li><a href="#_metrics">Metrics</a></li>
+<li><a href="#_data">Data</a></li>
+<li><a href="#_performance_advisor">Performance Advisor</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x6982;&#x8FF0;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x6587;&#x6863;&#x76EE;&#x7684;&#x65F6;&#x8BF4;&#x5982;&#x4F55;&#x901A;&#x8FC7; MongoDB Ops Manager &#x76D1;&#x63A7;&#x548C;&#x8B66;&#x544A;&#x529F;&#x80FD;&#x5BF9;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684; MongoDB &#x5206;&#x7247;&#x96C6;&#x7FA4;&#x8FDB;&#x884C;&#x5BFC;&#x5165;&#x7BA1;&#x7406;&#x3002;&#x6574;&#x4F53;&#x67B6;&#x6784;&#x5982;&#x4E0B;&#x56FE;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-demo-arch.png" alt="ops demo arch.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Ops Manager &#x548C;&#x5BF9;&#x5E94;&#x7684;&#x5E94;&#x7528;&#x6570;&#x636E;&#x5E93;&#x90E8;&#x7F72;&#x5728; opsmgr.example.com Linux &#x670D;&#x52A1;&#x5668;&#x4E0A;</p>
+</li>
+<li>
+<p>MongoDB &#x5206;&#x7247;&#x96C6;&#x7FA4;&#x90E8;&#x7F72;&#x5728; mongod.example.com Linux &#x670D;&#x52A1;&#x5668;&#x4E0A;</p>
+</li>
+<li>
+<p>Ops Manager &#x5BFC;&#x5165;&#x5DF2;&#x7ECF;&#x5B58;&#x5728;&#x7684;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#xFF0C;&#x5E76;&#x901A;&#x8FC7; http &#x670D;&#x52A1;&#x8BBF;&#x95EE;&#x67E5;&#x770B;&#x76D1;&#x63A7; Metrics</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x8F6F;&#x4EF6;&#x4E0B;&#x8F7D; &amp; &#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x51C6;&#x5907;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. <a href="https://www.mongodb.com/download-center/enterprise" target="_blank">&#x70B9;&#x51FB;&#x5B98;&#x65B9;&#x4E0B;&#x8F7D;&#x9875;&#x9762;</a>&#xFF0C;&#x4E0B;&#x8F7D;&#x5982;&#x4E0B; rpm &#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm
+mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm
+mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm
+mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; Ops Manager &#x670D;&#x52A1;&#x5668;&#x4E3B;&#x673A;&#x540D; opsmgr.example.com</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">hostnamectl <span class="hljs-built_in">set</span>-hostname opsmgr.example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x914D;&#x7F6E; Ops Manager &#x670D;&#x52A1;&#x5668;&#x9759;&#x6001; IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">nmcli connection modify eth0 ipv4.addresses 192.168.33.100/24
+nmcli connection modify eth0 ipv4.gateway 192.168.33.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x914D;&#x7F6E;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#x4E3B;&#x673A;&#x540D; mongod.example.com</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">hostnamectl <span class="hljs-built_in">set</span>-hostname mongod.example.com</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x914D;&#x7F6E;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#x9759;&#x6001; IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">nmcli connection modify eth0 ipv4.addresses 192.168.33.101/24
+nmcli connection modify eth0 ipv4.gateway 192.168.33.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x4E24;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x5206;&#x522B;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x6DFB;&#x52A0;&#x9759;&#x6001;&#x57DF;&#x540D;&#x89E3;&#x6790;&#x6620;&#x5C04;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.33.101  mongod.example.com&quot;</span> &gt;&gt; /etc/hosts
+<span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;192.168.33.100  opsmgr.example.com&quot;</span> &gt;&gt; /etc/hosts</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x4E24;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x5206;&#x522B;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x9A8C;&#x8BC1;&#x9759;&#x6001;&#x57DF;&#x540D;&#x89E3;&#x6790;&#x6620;&#x5C04;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> opsmgr mongod ; <span class="hljs-keyword">do</span> ping <span class="hljs-variable">$i</span>.example.com -c3 ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x4E24;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x521B;&#x5EFA; mongod &#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// root &#x6743;&#x9650;&#x4E0B;&#x5E38;&#x89C1;&#x7528;&#x6237;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x7528;&#x6237;&#x4E3A; sudo &#x7528;&#x6237;
+useradd mongod
+passwd mongod
+usermod <span class="hljs-_">-a</span>G wheel mongod
+<span class="hljs-built_in">exit</span>
+
+//&#x5207;&#x6362;&#x5230; mongod&#xFF0C;&#x521B;&#x5EFA;&#x76EE;&#x5F55;
+su - mongod
+mkdir rpms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x62F7;&#x8D1D;&#x7B2C;&#x4E00;&#x6B65;&#x4E0B;&#x8F7D;&#x5B8C;&#x6210;&#x7684; rpm &#x5305;&#x5230;&#x4E24;&#x53F0;&#x670D;&#x52A1;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">scp *.rpm mongod@opsmgr.example.com:~/rpms
+scp mongodb-enterprise-*.rpm mongod@mongod.example.com:~/rpms</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ops_manager">Ops Manager &#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x6240;&#x6709;&#x64CD;&#x4F5C;&#x5728; Ops Manager &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x8FDB;&#x884C;&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x4F9D;&#x8D56;&#x5E94;&#x7528;&#x6570;&#x636E;&#x5E93;&#x5B89;&#x88C5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. DB &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E;&#x5E76;&#x542F;&#x52A8;&#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/data/r{0,1,2}
+$ openssl rand -base64 755 &gt; ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
+$ mongod --port 27000 --dbpath ~/data/r0/
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+//&#x542F;&#x52A8;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/data/r<span class="hljs-variable">$i</span> --logpath ~/data/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; <span class="hljs-keyword">done</span>
+
+//&#x521D;&#x59CB;&#x5316;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;opsmgr.example.com:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;opsmgr.example.com:27002&quot;)&apos;</span>
+
+//&#x96C6;&#x7FA4;&#x521D;&#x59CB;&#x5316;&#x9A8C;&#x8BC1;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.isMaster()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.status()&apos;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x5B89;&#x88C5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. Ops &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo yum localinstall mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; Ops &#x8FDE;&#x63A5;&#x6570;&#x636E;&#x5E93;&#xFF08;/opt/mongodb/mms/conf/conf-mms.properties&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo.mongoUri=mongodb://root:mongo@opsmgr.example.com:27000,opsmgr.example.com:27001,opsmgr.example.com:27002/admin?replicaSet=repl-app-db&amp;maxPoolSize=150</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8; Ops Manager</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo systemctl start mongodb-mms.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; Ops Manager &#x670D;&#x52A1;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ netstat -antulop | grep 8080
+tcp6       0      0 :::8080                 :::*                    LISTEN      -                    off (0.00/0/0)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</h3>
+<div class="paragraph">
+<p><strong>1. &#x8BBF;&#x95EE; <a href="http://opsmgr.example.com:8080" class="bare" target="_blank">http://opsmgr.example.com:8080</a> &#x65F6;&#xFF0C;&#x70B9;&#x51FB; Register &#x94FE;&#x63A5;&#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x5168;&#x5C40;&#x7BA1;&#x7406;&#x8D26;&#x6237;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-register.png" alt="ops register.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x9009;&#x62E9; <code>password1!</code> &#x4E3A;&#x5BC6;&#x7801;&#xFF0C;&#x5728;&#x5F39;&#x51FA;&#x7684;&#x9875;&#x9762;&#x6839;&#x636E;&#x63D0;&#x793A;&#x5B8C;&#x6210;&#x914D;&#x7F6E;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x6CE8;&#x518C;&#x5B8C;&#x6210;&#x521D;&#x6B21;&#x767B;&#x9646;&#x4F1A;&#x5B9A;&#x5411;&#x5230; Configure Ops Manager &#x9875;&#x9762;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728; Configure Ops Manager &#x9875;&#x9762;&#x5B8C;&#x6210;&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Server</p>
+<div class="ulist">
+<ul>
+<li>
+<p>URL To Access Ops Manager - <a href="http://opsmgr.example.com:8080" class="bare" target="_blank">http://opsmgr.example.com:8080</a></p>
+</li>
+<li>
+<p>Client Certificate Mode   - None</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Email&#xFF08;&#x672C;&#x90E8;&#x5206;&#x9700;&#x8981;&#x5BF9;&#x63A5;&#x76F8;&#x5173;&#x90AE;&#x4EF6;&#x670D;&#x52A1;&#x5668;&#xFF09;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&quot;From&quot; Email Address                - <a href="mailto:opsmanager@example.com" target="_blank">opsmanager@example.com</a></p>
+</li>
+<li>
+<p>&quot;Reply To&quot; Email Address            - <a href="mailto:admin@example.com" target="_blank">admin@example.com</a></p>
+</li>
+<li>
+<p>Admin Email Address                 - <a href="mailto:admin@example.com" target="_blank">admin@example.com</a></p>
+</li>
+<li>
+<p>Email Delivery Method Configuration - SMTP Email Server</p>
+</li>
+<li>
+<p>Transport                           - smtp</p>
+</li>
+<li>
+<p>SMTP Server Hostname                - smtp.example.com</p>
+</li>
+<li>
+<p>SMTP Server Port                    - 587</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>User Authentication</p>
+<div class="ulist">
+<ul>
+<li>
+<p>User Authentication Method - Application Database</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Multi-Factor Authentication (MFA)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Other Authentication Options</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Permissions</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Backup Snapshots</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Backup Snapshots Schedule</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Snapshot Interval (Hours)                  - 24</p>
+</li>
+<li>
+<p>Base Retention Of Snapshots (In Days)      - 2</p>
+</li>
+<li>
+<p>Daily Retention Of Snapshots (In Days)     - No daily retention</p>
+</li>
+<li>
+<p>Weekly Retention Of Snapshots (In Weeks)   - 2</p>
+</li>
+<li>
+<p>Monthly Retention Of Snapshots (In Months) - 1</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>KMIP Server Configuration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Queryable Snapshot Configuration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>HTTP/HTTPS Proxy</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Twilio Integration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>MongoDB Version Management</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Alerts</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>&#x914D;&#x7F6E;&#x5B8C;&#x6210;&#x540E;&#x8FDB;&#x5165;&#x5230;&#x5982;&#x4E0B;Deployment &#x754C;&#x9762;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-install-finished.png" alt="opsmgr install finished.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_agent">Agent &#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5728; Ops Manager &#x65B0;&#x7248;&#x672C;&#x4E2D; Agent &#x4E0D;&#x9700;&#x8981;&#x624B;&#x52A8;&#x5B89;&#x88C5;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x53EF;&#x4EE5;&#x8DF3;&#x8FC7;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="__automation_agent">&#x5B89;&#x88C5; Automation Agent</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Automation Agent &#x53EF;&#x4EE5;&#x5728;&#x9700;&#x8981;&#x90E8;&#x7F72;&#x5BFC;&#x5165;&#x65F6;&#x5B89;&#x88C5;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#xFF0C;&#x9009;&#x62E9; <strong>Deployment</strong> &#x2192; <strong>Agents</strong> &#x2192; <strong>Downloads &amp; Settings</strong>&#xFF0C;&#x9009;&#x62E9;&#x76F8;&#x5E94;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x4F8B;&#x5982; <code>Automation Agent Installation Instructions</code>&#xFF0C;&#x5728;&#x5F39;&#x51FA;&#x7684;&#x754C;&#x9762;&#x6839;&#x636E;&#x6B65;&#x9AA4;&#x5B8C;&#x6210; agent &#x5B89;&#x88C5;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -OL http://opsmgr.example.com:8080/download/agent/automation/mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+
+$ sudo chmod a+x mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+$ sudo yum localinstall mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; key</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo vi /etc/mongodb-mms/automation-agent.config</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl start mongodb-mms-automation-agent.service</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x90E8;&#x7F72;&#x754C;&#x9762;&#x6709; &#x5B89;&#x88C5; agent &#x7684;&#x4ECB;&#x7ECD;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__monitoring_agent">&#x5B89;&#x88C5; Monitoring Agent</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x5728;&#x521B;&#x5EFA;&#x5B8C; Project &#x540E;&#x6267;&#x884C;&#x8FD9;&#x90E8;&#x5206;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#xFF0C;&#x9009;&#x62E9; <strong>Deployment</strong> &#x2192; <strong>Agents</strong> &#x2192; <strong>Downloads &amp; Settings</strong>&#xFF0C;&#x9009;&#x62E9;&#x76F8;&#x5E94;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x4F8B;&#x5982; Install or Update the Monitoring Agent&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -OL http://opsmgr.example.com:8080/download/agent/monitoring/mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm
+
+chmod 777 mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm
+
+sudo yum localinstall mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm -y</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; key, &#x7528;&#x6237;&#x540D;&#xFF0C;&#x5BC6;&#x7801;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo vi /etc/mongodb-mms/monitoring-agent.config
+
+mmsGroupId=5d08a1af8a49a31b324ec641
+mmsApiKey=5d08a41a8a49a31b324ec86d3dd0a7d168167e4fdb7ec454c450666b
+mmsBaseUrl=http://opsmgr.example.com:8080
+
+globalAuthUsername=mms-monitoring-agent
+globalAuthPassword=mongo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl start mongodb-mms-monitoring-agent.service</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__backup_agent">&#x5B89;&#x88C5; Backup Agent</h3>
+<div class="listingblock">
+<div class="title"><strong>TODO</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//TODO</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">&#x51C6;&#x5907;&#x6D4B;&#x8BD5;&#x96C6;&#x7FA4;</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x672C;&#x90E8;&#x5206;&#x96C6;&#x7FA4;&#x4E3A;&#x4E86;&#x6D4B;&#x8BD5;&#x4F7F;&#x7528;&#xFF0C;&#x4E0E; Ops Manager &#x5B89;&#x88C5;&#x4E0D;&#x76F8;&#x5173;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x6240;&#x6709;&#x64CD;&#x4F5C;&#x5728; mongod.example.com &#x670D;&#x52A1;&#x5668;&#x4E0A;&#x8FDB;&#x884C;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>MongoDB &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y</code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x5206;&#x7247;&#x96C6;&#x7FA4;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x811A;&#x672C;&#x6784;&#x5EFA;&#x4E00;&#x4E2A; 2 &#x5206;&#x7247;&#x3001;2 mongos&#x3001;1 ConfigServer &#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/data/ra{0,1,2}
+$ mkdir -p ~/data/rb{0,1,2}
+$ mkdir -p ~/data/cs{0,1,2}
+$ openssl rand -base64 755 &gt; ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//&#x542F;&#x52A8; ConfigServer&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ mongod --port 26000 --dbpath ~/data/cs0/
+$ mongo admin --port 26000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --configsvr --dbpath ~/data/cs<span class="hljs-variable">$i</span> --logpath ~/data/cs<span class="hljs-variable">$i</span>/mongo.log --port 2600<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-cs ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 26000 -u root -p mongo --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+$ mongo admin --port 26000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:26001&quot;)&apos;</span>
+$ mongo admin --port 26000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:26002&quot;)&apos;</span>
+
+//&#x542F;&#x52A8; mongos&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;
+$ mongos --configdb <span class="hljs-string">&apos;repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002&apos;</span> --logpath ~/data/mongos1.log --port 27017 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
+$ mongos --configdb <span class="hljs-string">&apos;repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002&apos;</span> --logpath ~/data/mongos2.log --port 27018 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
+
+$ mongo admin --port 27017 -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span>
+$ mongo admin --port 27018 -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span>
+
+//&#x542F;&#x52A8;&#x5206;&#x7247;a&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x8D26;&#x6237;&#xFF0C;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ mongod --port 27000 --dbpath ~/data/ra0/
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --shardsvr --dbpath ~/data/ra<span class="hljs-variable">$i</span> --logpath ~/data/ra<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl<span class="hljs-_">-a</span> ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:27002&quot;)&apos;</span>
+
+//&#x542F;&#x52A8;&#x5206;&#x7247;b&#xFF0C;&#x521D;&#x59CB;&#x5316;&#xFF0C;&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x8D26;&#x6237;&#xFF0C;&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
+$ mongod --port 28000 --dbpath ~/data/rb0/
+$ mongo admin --port 28000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --shardsvr --dbpath ~/data/rb<span class="hljs-variable">$i</span> --logpath ~/data/rb<span class="hljs-variable">$i</span>/mongo.log --port 2800<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-b ; <span class="hljs-keyword">done</span>
+
+$ mongo admin --port 28000 -u root -p mongo --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+$ mongo admin --port 28000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com&quot;)&apos;</span>
+$ mongo admin --port 28000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com&quot;)&apos;</span>
+
+//&#x914D;&#x7F6E;&#x5206;&#x7247;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5206;&#x7247;&#x72B6;&#x6001;
+$ mongo admin --port 27017 -u root -p mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-a/mongod.example.com:27000,mongod.example.com:27001,mongod.example.com:27002&quot;)&apos;</span>
+$ mongo admin --port 27017 -u root -p mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-b/mongod.example.com:28000,mongod.example.com:28001,mongod.example.com:28002&quot;)&apos;</span>
+
+$ mongo admin --port 27017 -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span>
+$ mongo admin --port 27018 -u root -p mongo --eval <span class="hljs-string">&apos;sh.status()&apos;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x811A;&#x672C;&#x6784;&#x5EFA;&#x4E00;&#x4E2A; 3 &#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/data/r{0,1,2}
+$ openssl rand -base64 755 &gt; ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
+$ mongod --port 27000 --dbpath ~/data/r0/
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+//&#x542F;&#x52A8;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/data/r<span class="hljs-variable">$i</span> --logpath ~/data/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; <span class="hljs-keyword">done</span>
+
+//&#x521D;&#x59CB;&#x5316;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;mongod.example.com:27002&quot;)&apos;</span>
+
+//&#x96C6;&#x7FA4;&#x521D;&#x59CB;&#x5316;&#x9A8C;&#x8BC1;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.isMaster()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.status()&apos;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___9">&#x5BFC;&#x5165;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x96C6;&#x7FA4;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5C06;&#x4E0A;&#x9762;&#x6B65;&#x9AA4;&#x521B;&#x5EFA;&#x7684;&#x6D4B;&#x8BD5;&#x96C6;&#x7FA4;&#x5BFC;&#x5165;&#x5230; Ops Manager.</p>
+</div>
+<div class="sect2">
+<h3 id="__clustermonitor">&#x521B;&#x5EFA; clusterMonitor &#x7528;&#x6237;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x5728;&#x96C6;&#x7FA4;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5206;&#x7247;&#x590D;&#x5236;&#x96C6;&#xFF0C;ConfigServer &#x590D;&#x5236;&#x96C6;&#x5408;&#x4E2D;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; clusterMonitor &#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.createUser({user: <span class="hljs-string">&quot;mms-monitoring-agent&quot;</span>, <span class="hljs-built_in">pwd</span>: <span class="hljs-string">&quot;mongo&quot;</span>, roles: [{ role:<span class="hljs-string">&quot;clusterMonitor&quot;</span>, db: <span class="hljs-string">&quot;admin&quot;</span> }]})</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>mms-monitoring-agent</code>/<code>mongo</code> &#x7528;&#x6237;&#x4F1A;&#x88AB; Monitor Agent &#x5BFC;&#x5165;&#x96C6;&#x7FA4;&#x65F6;&#x4F7F;&#x7528;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__project">&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Project</h3>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; DEMO project</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-new-project.png" alt="ops new project.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x4ECE; Ops Manager &#x754C;&#x9009;&#x62E9; <code>Deployment</code> &#x2192; <code>Agents</code> &#x2192; <code>All Agents</code> &#x4E0B;&#x5217;&#x8868;&#x4E2D;&#x53EF;&#x770B;&#x5230;&#x5BF9;&#x5E94; Agent</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-agent-lists.png" alt="ops agent lists.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x4E0A;&#x663E;&#x793A;&#x5BFC;&#x5165;&#x6210;&#x529F;&#x540E; Project &#x5BF9;&#x5E94;&#x6240;&#x6709; Agent&#xFF0C;&#x53EF;&#x6267;&#x884C;&#x5B8C;&#x540E;&#x56DE;&#x8FC7;&#x5934;&#x67E5;&#x770B;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___10">&#x6267;&#x884C;&#x5BFC;&#x5165;</h3>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762; DEMO Project &#x4E0B;&#x9009;&#x62E9; <code>Deployment</code> &#x2192; <code>Add New</code> &#x2192; <code>Existing MongoDB Deployment</code></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-import-exists.png" alt="ops import exists.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Install an Automation Agent on a single server</strong> &#x754C;&#x9762;&#xFF0C;&#x5728;&#x8BE5;&#x754C;&#x9762;&#x70B9;&#x51FB; <strong>Install Agent</strong> &#x6309;&#x94AE;&#xFF0C;&#x6839;&#x636E;&#x5F39;&#x51FA;&#x7684;&#x8BF4;&#x660E;&#x6B65;&#x9AA4;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Automation Agent, &#x914D;&#x7F6E;&#x6210;&#x529F;&#x540E;&#x754C;&#x9762;&#x5982;&#x4E0B;&#x754C;&#x9762;&#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-agent.png" alt="ops automation agent.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#x8FDB;&#x5165;&#x5230; <strong>Set up Ops Manager Monitoring</strong> &#x754C;&#x9762;&#xFF0C;Automation Agent &#x4F1A;&#x81EA;&#x52A8;&#x5B89;&#x88C5; Monitoring Agent &#x548C; Backup Agent&#xFF0C;&#x5B89;&#x88C5;&#x5B8C;&#x6210;&#x540E;&#x754C;&#x9762;&#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-all-agent.png" alt="ops all agent.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Import your deployment for monitoring</strong> &#x754C;&#x9762;&#x8F93;&#x5165;&#x76F8;&#x5E94;&#x7684;&#x503C;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Hostname              -  192.168.33.101
+Port                  -  27017
+Enable Authentication -  Yes
+Username              -  mms-monitoring-agent
+Password              -  mongo</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x5BFC;&#x5165;&#x754C;&#x9762;&#x5F00;&#x59CB; ping &#x64CD;&#x4F5C;&#xFF0C;&#x6267;&#x884C;&#x6210;&#x529F;&#x540E;&#xFF0C;&#x4F1A;&#x6709;&#x5982;&#x4E0B;&#x8F93;&#x51FA;&#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-deployment-found.png" alt="ops deployment found.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165; <strong>Adding your deployment to Ops Manager</strong> &#x754C;&#x9762;&#xFF0C;&#x4F1A;&#x68C0;&#x6D4B;&#x5230;&#x5BFC;&#x5165;&#x7684; Server &#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-server-import.png" alt="ops server import.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Do you want to add Ops Manager Automation to this deployment?</strong> &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x9875;&#x9762;&#x7684;&#x5E95;&#x90E8;&#xFF0C;&#x9009;&#x62E9;&#x63A5;&#x53D7; I understand that this requires the installation of an automation agent on each of the servers in my deployment and I have read the requirements/risks above&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-deployments.png" alt="ops automation deployments.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; * Configure authentication for Automation* &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x6839;&#x636E;&#x9875;&#x9762;&#x7684;&#x63D0;&#x793A;&#xFF0C;&#x5728;&#x96C6;&#x7FA4;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5206;&#x7247;&#x590D;&#x5236;&#x96C6;&#xFF0C;ConfigServer &#x590D;&#x5236;&#x96C6;&#x5408;&#x4E2D;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x7528;&#x6237;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use admin
+db.createUser({user: <span class="hljs-string">&apos;mms-automation&apos;</span>, <span class="hljs-built_in">pwd</span>: <span class="hljs-string">&apos;mongo&apos;</span>, roles: [<span class="hljs-string">&apos;clusterAdmin&apos;</span>, <span class="hljs-string">&apos;dbAdminAnyDatabase&apos;</span>, <span class="hljs-string">&apos;readWriteAnyDatabase&apos;</span>, <span class="hljs-string">&apos;restore&apos;</span>, <span class="hljs-string">&apos;userAdminAnyDatabase&apos;</span>]})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7136;&#x540E;&#x5728; <code>Provide authentication settings</code> &#x90E8;&#x5206;&#x8F93;&#x5165;&#x4E0A;&#x9762;&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-user.png" alt="ops automation user.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Install an Automation Agent on each of your servers</strong> &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x786E;&#x4FDD;&#x6240;&#x6709;&#x7684;&#x754C;&#x9762;&#x4E0A;&#x90FD;&#x5B89;&#x88C5;&#x4E86; Agent&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5B8C;&#x6210;&#x540E;&#x70B9;&#x51FB; <strong>Initialize Automation</strong> &#x6309;&#x94AE;&#xFF0C;&#x4F1A;&#x8FDB;&#x5165;&#x5230; <strong>Initializing Automation for your Deployment</strong> &#x9875;&#x9762;&#xFF0C;&#x6536;&#x96C6;&#x4FE1;&#x606F;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x4F1A;&#x6709;&#x5982;&#x4E0B;&#x8F93;&#x51FA;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-gather-all-process.png" alt="ops gather all process.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Review Deployment</strong> &#x6309;&#x94AE;&#xFF0C;&#x8FDB;&#x5165;&#x5230; Deployment &#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; Deployment &#x754C;&#x9762;&#x4E0A;&#x7AEF;&#x9EC4;&#x8272;&#x80CC;&#x666F;&#x6A2A;&#x6761;&#x4E2D; <strong>REVIEW &amp; DEPLOY</strong> &#x6309;&#x94AE;&#xFF0C;Review &#x76F8;&#x5173;&#x7684;&#x53D8;&#x5316;&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-confirm-deploy.png" alt="ops confirm deploy.png"></span></p>
+</div>
+<div class="paragraph">
+<p>Review &#x5B8C;&#x6210;&#x540E;&#x70B9;&#x51FB; <strong>Confirm &amp; Deploy</strong> &#x6309;&#x94AE;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5BFC;&#x5165;&#x6210;&#x529F;&#x540E;&#xFF0C;&#x5728; Cluster_0 &#x4E2D;&#x4F1A;&#x6709; 2 &#x4E2A;&#x5206;&#x7247;&#xFF0C;3 &#x4E2A; CONFIGS&#xFF0C;&#x8FDE;&#x4E2A; mongos</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-imported-cluster.png" alt="ops imported cluster.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ops_manager_2">Ops Manager &#x81EA;&#x52A8;&#x5316;&#x7BA1;&#x7406;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_overview">Overview</h3>
+<div class="paragraph">
+<p>&#x5728;&#x90E8;&#x7F72;&#x5B8C;&#x6210;&#x754C;&#x9762;&#xFF0C;&#x5982;&#x679C;&#x70B9;&#x51FB;&#x67D0;&#x4E00;&#x4E2A;&#x590D;&#x5236;&#x96C6;&#xFF0C;&#x4F1A;&#x8FDB;&#x5165;&#x5230; Overview &#x754C;&#x9762;&#xFF0C;&#x8BE5;&#x754C;&#x9762;&#x4E0B;&#x4F1A;&#x6709;&#x6574;&#x4F53;&#x6982;&#x8FF0;&#x754C;&#x9762;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-overview.png" alt="opsmgr overview.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_real_time">Real Time</h3>
+<div class="paragraph">
+<p>&#x8BE5;&#x754C;&#x9762;&#x4E0B;&#x4F1A;&#x6709;&#x5B9E;&#x65F6;&#x7684;&#x76D1;&#x63A7;&#x6570;&#x636E;&#xFF0C;&#x76D1;&#x63A7;&#x9879;&#x76EE;&#x4E3B;&#x8981;&#x6709; 4 &#x4E2A;&#x79CD;&#x7C7B;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x7CFB;&#x7EDF;&#x76F8;&#x5173;: CPU&#x3001;&#x78C1;&#x76D8;&#x4F7F;&#x7528;&#x7387;&#x3001;&#x7CFB;&#x7EDF;&#x5185;&#x5B58;&#x3001;&#x8FDE;&#x63A5;&#x603B;&#x6570;&#x3001;&#x7F51;&#x8DEF;&#x8FDB;&#x51FA;&#x7B49;</p>
+</li>
+<li>
+<p>MongoDB &#x76D1;&#x63A7;&#x6307;&#x6807;: OPERATIONS&#x3001;QUERY EXECUTION TIMES&#x3001;QUERY TARGETING&#x3001;READS &amp; WRITES</p>
+</li>
+<li>
+<p>&#x6700;&#x9AD8;&#x8D1F;&#x8F7D;&#x7684;&#x96C6;&#x5408;&#xFF0C;&#x4E3B;&#x8981;&#x4ECE;&#x8BFB;&#x5199;&#x4E24;&#x4E2A;&#x65B9;&#x9762;&#x53BB;&#x8861;&#x91CF;&#x8D1F;&#x8F7D;</p>
+</li>
+<li>
+<p>&#x6162;&#x64CD;&#x4F5C;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-real-time.png" alt="opsmgr real time.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_metrics">Metrics</h3>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x6839;&#x636E;&#x4E0D;&#x540C;&#x7684;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#xFF0C;&#x6536;&#x96C6;&#x4E00;&#x4E9B;&#x76D1;&#x63A7;&#x9879;&#x76EE;&#xFF0C;&#x5177;&#x4F53;&#x76D1;&#x63A7;&#x9879;&#x6709; 30 &#x591A;&#x79CD;&#xFF0C;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF0C;&#x5373;&#x7CFB;&#x7EDF;&#x76F8;&#x5173;&#xFF0C;&#x548C; MongoDB &#x76F8;&#x5173;&#xFF0C;&#x9009;&#x62E9;&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x76D1;&#x63A7;&#x9879;&#xFF0C;&#x5BF9;&#x5E94;&#x7684;&#x76D1;&#x63A7;&#x62A5;&#x8868;&#x4F1A;&#x663E;&#x793A;&#x51FA;&#x6765;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-metrics.png" alt="opsmgr metrics.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data">Data</h3>
+<div class="paragraph">
+<p>&#x5728;&#x8BE5;&#x754C;&#x9762;&#x70B9;&#x51FB; <strong>Create Database</strong> &#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-data-create-db.png" alt="opsmgr data create db.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x540C;&#x6837;&#x5728;&#x8BE5;&#x754C;&#x9762;&#x5982;&#x679C;&#x9009;&#x5B9A;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x96C6;&#x5408;&#xFF0C;&#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x6587;&#x6863;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-data-insert-doc.png" alt="opsmgr data insert doc.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance_advisor">Performance Advisor</h3>
+<div class="paragraph">
+<p>&#x8BE5;&#x9875;&#x9762;&#x4F1A;&#x5217;&#x51FA;&#x4E00;&#x5B9A;&#x65F6;&#x95F4;&#x6BB5;&#x5185; Ops Manager &#x68C0;&#x6D4B;&#x5230;&#x7684;&#x6162;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-perf-advisor.png" alt="opsmgr perf advisor.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="cluster-admin.html" class="navigation navigation-prev " aria-label="Previous page: 集群管理">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="security.html" class="navigation navigation-next " aria-label="Next page: 安全">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Ops Manager","level":"1.4.1","depth":2,"next":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"previous":{"title":"集群管理","level":"1.4","depth":1,"path":"dba/cluster-admin.adoc","ref":"dba/cluster-admin.adoc","articles":[{"title":"Ops Manager","level":"1.4.1","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/opsmanager.adoc","mtime":"2019-06-20T05:31:28.614Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T05:33:15.034Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

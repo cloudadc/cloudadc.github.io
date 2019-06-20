@@ -1,18 +1,35 @@
 = Ops Manager
 :toc: manual
 
-== Ops Manager 安装
+== 概述
 
-=== 操作系统准备
+本文档目的时说如何通过 MongoDB Ops Manager 监控和警告功能对一个存在的 MongoDB 分片集群进行导入管理。整体架构如下图：
+
+image:img/ops-demo-arch.png[]
+
+* Ops Manager 和对应的应用数据库部署在 opsmgr.example.com Linux 服务器上
+* MongoDB 分片集群部署在 mongod.example.com Linux 服务器上
+* Ops Manager 导入已经存在的分片集群，并通过 http 服务访问查看监控 Metrics
+
+== 软件下载 & 操作系统准备
 
 [source, bash]
-.*1. 配置主机名*
+.*1. link:https://www.mongodb.com/download-center/enterprise[点击官方下载页面]，下载如下 rpm 包*
+----
+mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm	
+mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm	
+mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm	
+mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm
+----
+
+[source, bash]
+.*2. 配置 Ops Manager 服务器主机名 opsmgr.example.com*
 ----
 hostnamectl set-hostname opsmgr.example.com
 ----
 
 [source, bash]
-.*2. 配置静态 IP*
+.*3. 配置 Ops Manager 服务器静态 IP*
 ----
 nmcli connection modify eth0 ipv4.addresses 192.168.33.100/24
 nmcli connection modify eth0 ipv4.gateway 192.168.33.1
@@ -22,68 +39,199 @@ nmcli connection reload
 nmcli connection up eth0
 ----
 
-=== 安装
+[source, bash]
+.*4. 配置分片集群主机名 mongod.example.com*
+----
+hostnamectl set-hostname mongod.example.com
+----
+
+[source, bash]
+.*5. 配置分片集群静态 IP*
+----
+nmcli connection modify eth0 ipv4.addresses 192.168.33.101/24
+nmcli connection modify eth0 ipv4.gateway 192.168.33.1
+nmcli connection modify eth0 ipv4.method manual
+nmcli connection modify eth0 connection.autoconnect yes
+nmcli connection reload
+nmcli connection up eth0
+----
+
+[source, bash]
+.*6. 两台服务器上分别执行如下命令添加静态域名解析映射*
+----
+echo "192.168.33.101  mongod.example.com" >> /etc/hosts
+echo "192.168.33.100  opsmgr.example.com" >> /etc/hosts
+----
+
+[source, bash]
+.*7. 两台服务器上分别执行如下命令验证静态域名解析映射*
+----
+for i in opsmgr mongod ; do ping $i.example.com -c3 ; done
+----
+
+[source, bash]
+.*8. 两台服务器上创建 mongod 用户*
+----
+// root 权限下常见用户，并添加用户为 sudo 用户
+useradd mongod
+passwd mongod
+usermod -aG wheel mongod
+exit
+
+//切换到 mongod，创建目录
+su - mongod
+mkdir rpms
+----
+
+[source, bash]
+.*9. 拷贝第一步下载完成的 rpm 包到两台服务器*
+----
+scp *.rpm mongod@opsmgr.example.com:~/rpms
+scp mongodb-enterprise-*.rpm mongod@mongod.example.com:~/rpms
+----
+
+== Ops Manager 安装
+
+本部分所有操作在 Ops Manager 服务器上进行。
+
+=== 依赖应用数据库安装
 
 [source, bash]
 .*1. DB 安装*
 ----
-sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm
-sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm 
-sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm
+sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y
 ----
 
 [source, bash]
-.*2. 启动数据库*
+.*2. 配置并启动数据库*
 ----
 //创建数据库存储文件及内部通信加密文件
 $ mkdir -p ~/data/r{0,1,2}
 $ openssl rand -base64 755 > ~/data/keyfile
 $ chmod 400 ~/data/keyfile
 
-//创建安全登录账
+//创建安全登录账户
 $ mongod --port 27000 --dbpath ~/data/r0/
 $ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
 
 //启动
-$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 192.168.33.100 --fork --auth --keyFile ~/data/keyfile --replSet repl-1 ; done
+$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; done
 
 //初始化
-$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.initiate()'
-$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.add("192.168.33.100:27001")'
-$ mongo admin --host 192.168.33.100:27000 -u root -p mongo --eval 'rs.add("192.168.33.100:27002")'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.initiate()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("opsmgr.example.com:27001")'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("opsmgr.example.com:27002")'
+
+//集群初始化验证
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.isMaster()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.status()'
 ----
 
+=== 安装
+
 [source, bash]
-.*3. Ops 安装*
+.*1. Ops 安装*
 ----
 sudo yum localinstall mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm
 ----
 
 [source, bash]
-.*4. 配置 Ops 连接数据库（/opt/mongodb/mms/conf/conf-mms.properties）*
+.*2. 配置 Ops 连接数据库（/opt/mongodb/mms/conf/conf-mms.properties）*
 ----
-mongo.mongoUri=mongodb://root:mongo@192.168.33.100:27000,192.168.33.100:27001,192.168.33.100:27002/admin?replicaSet=repl-1&maxPoolSize=150
+mongo.mongoUri=mongodb://root:mongo@opsmgr.example.com:27000,opsmgr.example.com:27001,opsmgr.example.com:27002/admin?replicaSet=repl-app-db&maxPoolSize=150
 ----
 
 [source, bash]
-.*5. 启动 Ops Manager*
+.*3. 启动 Ops Manager*
 ----
 $ sudo systemctl start mongodb-mms.service
 ----
 
-*6. 访问 http://192.168.33.100:8080 注册一个账户*
+[source, bash]
+.*4. 查看 Ops Manager 服务监听的端口*
+----
+$ netstat -antulop | grep 8080
+tcp6       0      0 :::8080                 :::*                    LISTEN      -                    off (0.00/0/0)
+----
+
+=== 初始化配置
+
+*1. 访问 http://opsmgr.example.com:8080 时，点击 Register 链接注册一个全局管理账户*
 
 image:img/ops-register.png[]
 
 选择 `password1!` 为密码，在弹出的页面根据提示完成配置：
 
-* URL To Access Ops Manager - http://opsmgr.example.com:8080
+*2. 注册完成初次登陆会定向到 Configure Ops Manager 页面*
 
-配置完成后进入到如下界面
+在 Configure Ops Manager 页面完成初始化配置
+
+* Web Server
+** URL To Access Ops Manager - http://opsmgr.example.com:8080
+** Client Certificate Mode   - None
+** 其它项使用默认配置
+
+* Email（本部分需要对接相关邮件服务器）
+** "From" Email Address                - opsmanager@example.com
+** "Reply To" Email Address            - admin@example.com
+** Admin Email Address                 - admin@example.com
+** Email Delivery Method Configuration - SMTP Email Server
+** Transport                           - smtp
+** SMTP Server Hostname                - smtp.example.com
+** SMTP Server Port                    - 587
+** 其它项使用默认配置
+
+* User Authentication
+** User Authentication Method - Application Database
+** 其它项使用默认配置 
+
+* Multi-Factor Authentication (MFA) 
+** 所有项使用默认配置 
+
+* Other Authentication Options
+** 所有项使用默认配置 
+
+* Permissions
+** 所有项使用默认配置
+
+* Backup Snapshots
+** 所有项使用默认配置
+
+* Backup Snapshots Schedule
+** Snapshot Interval (Hours)                  - 24
+** Base Retention Of Snapshots (In Days)      - 2
+** Daily Retention Of Snapshots (In Days)     - No daily retention
+** Weekly Retention Of Snapshots (In Weeks)   - 2
+** Monthly Retention Of Snapshots (In Months) - 1
+** 其它项使用默认配置
+
+* KMIP Server Configuration
+** 所有项使用默认配置
+
+* Queryable Snapshot Configuration
+** 所有项使用默认配置
+
+* HTTP/HTTPS Proxy
+** 所有项使用默认配置
+
+* Twilio Integration
+** 所有项使用默认配置
+
+* MongoDB Version Management
+** 所有项使用默认配置
+
+* Alerts
+** 所有项使用默认配置
+
+*配置完成后进入到如下Deployment 界面*
 
 image:img/opsmgr-install-finished.png[]
 
 == Agent 安装
+
+NOTE: 在 Ops Manager 新版本中 Agent 不需要手动安装，本部分可以跳过。
 
 === 安装 Automation Agent 
 
@@ -157,11 +305,22 @@ sudo systemctl start mongodb-mms-monitoring-agent.service
 //TODO
 ----
 
-== 准备一个分片集群
+== 准备测试集群
 
-NOTE: 本部分集群为了测试使用，与 Ops Manager 不相干。
+NOTE: 本部分集群为了测试使用，与 Ops Manager 安装不相关，本部分所有操作在 mongod.example.com 服务器上进行。
 
 [source, bash]
+.*MongoDB 安装*
+----
+sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
+sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y
+----
+
+=== 分片集群
+
+[source, bash]
+.*执行如下脚本构建一个 2 分片、2 mongos、1 ConfigServer 集群*
 ----
 //创建数据库存储文件及内部通信加密文件
 $ mkdir -p ~/data/ra{0,1,2}
@@ -173,46 +332,85 @@ $ chmod 400 ~/data/keyfile
 //启动 ConfigServer，初始化，创建管理用户，并添加备节点
 $ mongod --port 26000 --dbpath ~/data/cs0/
 $ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/data/cs$i --logpath ~/data/cs$i/mongo.log --port 2600$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-cs ; done
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/data/cs$i --logpath ~/data/cs$i/mongo.log --port 2600$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-cs ; done
 
-$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval 'rs.add("192.168.33.101:26001")'
-$ mongo admin --host 192.168.33.101:26000 -u root -p mongo --eval 'rs.add("192.168.33.101:26002")'
+$ mongo admin --port 26000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("mongod.example.com:26001")'
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("mongod.example.com:26002")'
 
 //启动 mongos，并查看分片状态
-$ mongos --configdb 'repl-cs/192.168.33.101:26000,192.168.33.101:26001,192.168.33.101:26002' --logpath ~/data/mongos1.log --port 27017 --bind_ip 192.168.33.101 --fork --keyFile ~/data/keyfile
-$ mongos --configdb 'repl-cs/192.168.33.101:26000,192.168.33.101:26001,192.168.33.101:26002' --logpath ~/data/mongos2.log --port 27018 --bind_ip 192.168.33.101 --fork --keyFile ~/data/keyfile
+$ mongos --configdb 'repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002' --logpath ~/data/mongos1.log --port 27017 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
+$ mongos --configdb 'repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002' --logpath ~/data/mongos2.log --port 27018 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
 
-$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.status()'
-$ mongo admin --host 192.168.33.101:27018 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
 
 //启动分片a，初始化，创建管理账户，添加备节点
 $ mongod --port 27000 --dbpath ~/data/ra0/
 $ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/ra$i --logpath ~/data/ra$i/mongo.log --port 2700$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-a ; done
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/ra$i --logpath ~/data/ra$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-a ; done
 
-$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval 'rs.add("192.168.33.101:27001")'
-$ mongo admin --host 192.168.33.101:27000 -u root -p mongo --eval 'rs.add("192.168.33.101:27002")'
+$ mongo admin --port 27000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27001")'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27002")'
 
 //启动分片b，初始化，创建管理账户，添加备节点
 $ mongod --port 28000 --dbpath ~/data/rb0/
 $ mongo admin --port 28000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/rb$i --logpath ~/data/rb$i/mongo.log --port 2800$i --bind_ip 192.168.33.101 --fork --auth --keyFile ~/data/keyfile --replSet repl-b ; done
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/rb$i --logpath ~/data/rb$i/mongo.log --port 2800$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-b ; done
 
-$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval 'rs.add("192.168.33.101:28001")'
-$ mongo admin --host 192.168.33.101:28000 -u root -p mongo --eval 'rs.add("192.168.33.101:28002")'
+$ mongo admin --port 28000 -u root -p mongo --eval "rs.initiate()"
+$ mongo admin --port 28000 -u root -p mongo --eval 'rs.add("mongod.example.com")'
+$ mongo admin --port 28000 -u root -p mongo --eval 'rs.add("mongod.example.com")'
 
 //配置分片，并查看分片状态
-$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.addShard("repl-a/192.168.33.101:27000,192.168.33.101:27001,192.168.33.101:27002")'
-$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.addShard("repl-b/192.168.33.101:28000,192.168.33.101:28001,192.168.33.101:28002")'
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.addShard("repl-a/mongod.example.com:27000,mongod.example.com:27001,mongod.example.com:27002")'
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.addShard("repl-b/mongod.example.com:28000,mongod.example.com:28001,mongod.example.com:28002")'
 
-$ mongo admin --host 192.168.33.101:27017 -u root -p mongo --eval 'sh.status()'
-$ mongo admin --host 192.168.33.101:27018 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
+----
+
+=== 三节点复制集
+
+[source, bash]
+.*执行如下脚本构建一个 3 节点复制集*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/data/r{0,1,2}
+$ openssl rand -base64 755 > ~/data/keyfile
+$ chmod 400 ~/data/keyfile
+
+//创建安全登录账户
+$ mongod --port 27000 --dbpath ~/data/r0/
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; done
+
+//初始化
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.initiate()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27001")'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27002")'
+
+//集群初始化验证
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.isMaster()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.status()'
 ----
 
 == 导入一个存在的集群
+
+本部分将上面步骤创建的测试集群导入到 Ops Manager.
+
+=== 创建 clusterMonitor 用户
+
+[source, bash]
+.*在集群中的所有分片复制集，ConfigServer 复制集合中执行如下命令创建一个 clusterMonitor 用户*
+----
+db.createUser({user: "mms-monitoring-agent", pwd: "mongo", roles: [{ role:"clusterMonitor", db: "admin" }]})
+----
+
+NOTE: `mms-monitoring-agent`/`mongo` 用户会被 Monitor Agent 导入集群时使用 
 
 === 创建一个 Project
 
@@ -220,23 +418,25 @@ $ mongo admin --host 192.168.33.101:27018 -u root -p mongo --eval 'sh.status()'
 
 image:img/ops-new-project.png[]
 
-根据 *安装 Monitoring Agent* 部分确保 Monitor Agent 在被拉管的机器上运行正常。同时从 Ops Manager 界选择 `Deployment` -> `Agents` -> `All Agents` 下列表中可看到对应 Monitor Agent
+从 Ops Manager 界选择 `Deployment` -> `Agents` -> `All Agents` 下列表中可看到对应 Agent
 
-image:img/ops-monitoring-agent.png[]
+image:img/ops-agent-lists.png[]
 
-在集群中每一个复制集中创建一个用户 db.createUser({user: "mms-monitoring-agent", pwd: "mongo", roles: [{ role:"clusterMonitor", db: "admin" }]})。
+NOTE: 如上显示导入成功后 Project 对应所有 Agent，可执行完后回过头查看。
 
-=== 导入
+=== 执行导入
 
-* 在 Ops Manager 界面选择 `Deployment` -> `Add New` -> `Existing MongoDB Deployment`
+在 Ops Manager 界面 DEMO Project 下选择 `Deployment` → `Add New` → `Existing MongoDB Deployment`
 
 image:img/ops-import-exists.png[]
 
-* 在弹出的界面配置一个 Automation Agent, 确保界面如下
+* 点击继续，进入到 *Install an Automation Agent on a single server* 界面，在该界面点击 *Install Agent* 按钮，根据弹出的说明步骤配置一个 Automation Agent, 配置成功后界面如下界面如下
 
 image:img/ops-automation-agent.png[]
 
-NOTE: 安装完 Automation Agent 后，点击继续Automation Agent 会自动安装 Monitoring Agent 和 Backup Agent。
+* 点击继续进入到 *Set up Ops Manager Monitoring* 界面，Automation Agent 会自动安装 Monitoring Agent 和 Backup Agent，安装完成后界面如下
+
+image:img/ops-all-agent.png[]
 
 * 点击继续，进入到 *Import your deployment for monitoring* 界面输入相应的值
 
@@ -248,7 +448,7 @@ Username              -  mms-monitoring-agent
 Password              -  mongo
 ----
 
-* 点击继续，导入界面开始 ping 操作，执行成功后，会有如下输出
+* 点击继续，导入界面开始 ping 操作，执行成功后，会有如下输出界面
 
 image:img/ops-deployment-found.png[]
 
@@ -256,63 +456,84 @@ image:img/ops-deployment-found.png[]
 
 image:img/ops-server-import.png[]
 
+* 点击继续，进入到 *Do you want to add Ops Manager Automation to this deployment?* 页面
+
+在页面的底部，选择接受 I understand that this requires the installation of an automation agent on each of the servers in my deployment and I have read the requirements/risks above，
+
+image:img/ops-automation-deployments.png[]
+
+* 点击继续，进入到 * Configure authentication for Automation* 页面
+
+根据页面的提示，在集群中的所有分片复制集，ConfigServer 复制集合中执行如下命令创建一个用户：
+
+[source, bash]
+----
+use admin 
+db.createUser({user: 'mms-automation', pwd: 'mongo', roles: ['clusterAdmin', 'dbAdminAnyDatabase', 'readWriteAnyDatabase', 'restore', 'userAdminAnyDatabase']})
+----
+
+然后在 `Provide authentication settings` 部分输入上面创建的用户
+
+image:img/ops-automation-user.png[]
+
+* 点击继续，进入到 *Install an Automation Agent on each of your servers* 页面
+
+确保所有的界面上都安装了 Agent。
+
+完成后点击 *Initialize Automation* 按钮，会进入到 *Initializing Automation for your Deployment* 页面，收集信息完成后，会有如下输出
+
+image:img/ops-gather-all-process.png[]
+
+* 点击 *Review Deployment* 按钮，进入到 Deployment 界面
+
+点击 Deployment 界面上端黄色背景横条中 *REVIEW & DEPLOY* 按钮，Review 相关的变化，
+
+image:img/ops-confirm-deploy.png[]
+
+Review 完成后点击 *Confirm & Deploy* 按钮。
+
 * 导入成功后，在 Cluster_0 中会有 2 个分片，3 个 CONFIGS，连个 mongos
 
 image:img/ops-imported-cluster.png[]
 
-=== 导入数据测试，并进行分区
+== Ops Manager 自动化管理
 
-[source, bash]
-.*1. mongoimport 导入数据，进行分片保存*
-----
-$ mongoimport products.json --host 192.168.33.101:27017 -u "root" -p "mongo" --authenticationDatabase "admin" --db products --collection products
+=== Overview
 
-$ mongo admin --host 192.168.33.101:27017 -u root -p mongo
+在部署完成界面，如果点击某一个复制集，会进入到 Overview 界面，该界面下会有整体概述界面
 
-mongos> use products
-mongos> sh.enableSharding("products")
-mongos> db.products.createIndex({sku: 1})
-mongos> sh.shardCollection("products.products", {sku: 1})
-----
+image:img/opsmgr-overview.png[]
 
-[source, bash]
-.**
-----
+=== Real Time
 
-----
+该界面下会有实时的监控数据，监控项目主要有 4 个种类
 
-[source, bash]
-.**
-----
+* 系统相关: CPU、磁盘使用率、系统内存、连接总数、网路进出等
+* MongoDB 监控指标: OPERATIONS、QUERY EXECUTION TIMES、QUERY TARGETING、READS & WRITES
+* 最高负载的集合，主要从读写两个方面去衡量负载
+* 慢操作
 
-----
+image:img/opsmgr-real-time.png[]
 
-[source, bash]
-.**
-----
+=== Metrics
 
-----
+可以根据不同的时间间隔，收集一些监控项目，具体监控项有 30 多种，分为两类，即系统相关，和 MongoDB 相关，选择任意一个监控项，对应的监控报表会显示出来
 
-[source, bash]
-.**
-----
+image:img/opsmgr-metrics.png[]
 
-----
+=== Data
 
-[source, bash]
-.**
-----
+在该界面点击 *Create Database* 可以创建一个数据库
 
-----
+image:img/opsmgr-data-create-db.png[]
 
-[source, bash]
-.**
-----
+同样在该界面如果选定一个数据库中的集合，可以创建文档。
 
-----
+image:img/opsmgr-data-insert-doc.png[]
 
-[source, bash]
-.**
-----
+=== Performance Advisor
 
-----
+该页面会列出一定时间段内 Ops Manager 检测到的慢查询。
+
+image:img/opsmgr-perf-advisor.png[]
+
