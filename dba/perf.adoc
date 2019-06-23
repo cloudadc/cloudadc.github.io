@@ -1,6 +1,94 @@
 = 性能调优
 :toc: manual
 
+== 硬件因素
+
+* 内存（RAM）的读写速度时普通 SSD 的 25 倍。MongoDB 中依赖 RAM 最多的操作包括：聚合、索引遍历、写操作、查询引擎、连接
+
+.*常见存储的IOPS*
+|===
+|类型 | IOPS
+
+|7200 rpm SATA
+|75 - 100
+
+|15000 rpm SAS
+|175 - 210
+
+|SSD Intel X25-E(SLC)
+|5000
+
+|SSD Intel X25-M G2(MLC) 
+|8000
+
+|Amazon EBS
+|100
+
+|Amazon EBS Provisioned
+|2000
+
+|Amazon EBS Provisioned IOPS(SSD)
+|3000
+
+|FusionIO
+|135 000
+
+|Violin Memory 6000
+|1 000 000
+|===
+
+== 数据落盘
+
+=== 使用directoryperdb、wiredTigerDirectoryForIndexes 增加吞吐量
+
+[source, bash]
+.*directoryperdb*
+----
+$ mongod --dbpath ~/data/db --logpath ~/data/db/mongod.log --fork --directoryperdb
+$ mongo hello --eval 'db.myCollections.insert({name: "hello"})'
+
+$ ls data/db/hello/
+collection-8-6275239857016906202.wt  index-9-6275239857016906202.wt
+----
+
+[source, bash]
+.*wiredTigerDirectoryForIndexes*
+----
+$ mongod --dbpath ~/data/db --logpath ~/data/db/mongod.log --fork --directoryperdb --wiredTigerDirectoryForIndexes
+$ mongo hello --eval 'db.myCollections.insert({name: "hello"})'
+
+$ ls -LR data/db/hello/
+data/db/hello/:
+collection  index
+
+data/db/hello/collection:
+8-6326041135875266620.wt
+
+data/db/hello/index:
+9-6326041135875266620.wt
+----
+
+=== 压缩（compression）
+
+MongoDB 4.2 支持 3 种压缩算法：
+
+|===
+|名称 |说明
+
+|snappy
+|
+
+|zstd
+|
+
+|zlib
+|
+|===
+
+=== journal
+
+journal 确保数据写磁盘过程中的一致性。
+
 == 索引的基本使用与创建
 
 === 准备数据库
