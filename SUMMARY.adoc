@@ -10,7 +10,7 @@
 . link:dba/security.adoc[安全]
 . link:dba/perf.adoc[性能调优]
 . link:dba/troubleshooting.adoc[Troubleshooting]
-. link:dba/exam.adoc[Q & A]
+. link:dba/dba.adoc[DBA]
 . link:python/README.adoc[Python]
 . link:examples/README.adoc[示例]
 .. link:examples/aggregation-sum.adoc[sum] 

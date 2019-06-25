@@ -1,6 +1,63 @@
 = MongoDB Q & A
 :toc: manual
 
+== 性能调优
+
+=== 应用设计模式
+
+* 只更新需要更新的字段 - 不建议取出整个文档，更新某个字段，然后保存整个文档
+* 避免不存在的查询 - 不存在的字段会导致全表扫描
+* Use covered queries when possible.
+* Test every query in your application with explain()
+* Update multiple array elements in a single operation
+* Avoid scatter-gather queries
+* Choose the appropriate write guarantees
+* Choose the right read-concern
+* Use causal consistency where needed
+* Use the most recent drivers from MongoDB
+* Ensure uniform distribution of shard keys
+* Use hash-based sharding when appropriate
+
+
+=== 数据模型设计 & 索引
+
+* Avoid large documents
+* Avoid unnecessarily long fifield names
+* Use caution when considering indexes on low-cardinality fifields
+* Eliminate unnecessary indexes
+* Remove indexes that are prefifixes of other indexes
+* Use a compound index rather than index intersection
+* Use partial indexes
+* Avoid regular expressions that are not left anchored or rooted
+* Use index optimizations available in the WiredTiger storage engine
+* Understand any existing document schema – MongoDB Compass
+* Identify & remove obsolete indexes
+
+
+=== 磁盘 I/O
+
+* Readahead size should be set to 0 for WiredTiger
+* Use XFS fifile systems; avoid EXT3
+* Disable access time settings
+* Don't use Huge Pages
+* Use RAID10
+* Use multiple devices for different databases – WiredTiger.
+* Implement multi-temperature storage & data locality using MongoDB Zones
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+
 == Q & A
 
 === BSON Vs JSON
@@ -554,12 +611,12 @@ $ bsondump --outFile collection.json reddit.dump/reddit/technology.bson
 |10m
 
 |Total disk usage(3 nodes in replica set)
-|5.2 GB
 |17G
+|5.2 GB
 
 |Disk usage per node
-|1.7G
 |5.7G
+|1.7G
 
 |write per seconds
 |16k
