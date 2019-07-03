@@ -1,0 +1,56 @@
+{
+  "region": { "$number": { "min": 0, "max": 1999 }},
+  "firstname": "$first",
+  "lastname": "$last",
+  "cell": { "$number": { "min": 1111111111, "max": 9999999999 }},
+  "email": "$email",
+  "dob": { "$date": { "min": "1930-01-01", "max": "2016-12-31" }},
+  "gender": "$gender",
+  "address": {
+    "number": { "$number": { "min": 1, "max": 9999 }},
+    "street": { "$street": { "country": "us" }},
+    "city": "$city",
+    "state": { "$state": { "country": "us" }},
+    "zip": "$zip",
+    "location": { "$point": { "long_lim": [-118.668469, -82.062023], "lat_lim": [32.924436, 41.679986]}}
+  },
+  "policies": { "$array": { "of": { "$choose": { "from": [
+            {
+              "policyType": "auto",
+              "policyNum": { "$string": { "length": 30 }},
+              "nextRenewalDt": { "$date": { "min": "2017-01-01", "max": "2017-12-31" }},
+              "model": { "$string": { "length": 30 }},
+              "year": { "$number": { "min": 1980, "max": 2017}},
+              "value": { "$number": { "min": 500, "max": 500000}}
+            },
+            {
+              "policyType": "home",
+              "policyNum": { "$string": { "length": 30 }},
+              "nextRenewalDt": { "$date": { "min": "2017-01-01", "max": "2017-12-31" }},
+              "address": {
+                "number": { "$number": { "min": 1, "max": 9999 }},
+                "street": { "$street": { "country": "us" }},
+                "city": "$city",
+                "state": { "$state": { "country": "us"}},
+                "zip": "$zip",
+                "location": { "$point": { "long_lim": [-118.668469, -82.062023], "lat_lim": [32.924436, 41.679986]}}},
+              "year": { "$number": { "min": 1970,"max": 2017}},
+              "value": { "$number": { "min": 500, "max": 10000000}}
+            },
+            {
+              "policyType": "life",
+              "policyNum": { "$string": {"length": 30}},
+              "nextRenewalDt": { "$date": { "min": "2017-01-01", "max": "2017-12-31" }},
+              "insured_person": {
+                "firstname": "$first",
+                "lastname": "$last",
+                "yob": {"$date": { "min": "1930-01-01", "max": "2016-12-31"}},
+                "smoking": "$bool"
+              }
+            }
+          ]
+        }
+      },
+      "number": { "$number": { "min": 3, "max": 6}}
+    }}
+}

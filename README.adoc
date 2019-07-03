@@ -833,6 +833,403 @@ db.users.insert({firstName:"Kylin", lastName:"Soong", region_code:"APAC"})
 
 === Freedom to run anywhere(为随处部署而建)
 
+== MongoDB 价值
+
+[source, bash]
+.*准备集群*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//创建安全登录账户
+$ mongod --port 27000 --dbpath ~/tmp/r0/
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.initiate()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("ksoong.local:27001")'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("ksoong.local:27002")'
+
+//集群初始化验证
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.isMaster()'
+$ mongo admin --port 27000 -u root -p mongo --eval 'rs.status()'
+----
+
+=== RICH-QUERY
+
+[source, bash]
+.*1. 安装 link:mgeneratejs[https://www.npmjs.com/package/mgeneratejs]*
+----
+$ node -v
+v10.15.3
+
+$ npm install -g mgeneratejs
+----
+
+[source, bash]
+.*2. 导入数据(link:etc/files/CustomerSingleView.json[CustomerSingleView.json])*
+----
+$ mgeneratejs CustomerSingleView.json -n 1000000 > customers.json
+$ mongoimport --host ksoong.local:27000 -u root -p mongo --authenticationDatabase=admin  --db=test --collection=customers --drop --file= customers.json
+----
+
+[source, bash]
+.*3. Compass 执行如下查询*
+----
+{ 'gender': 'Female' }
+{ 'dob': { '$gte': ISODate('1990-01-01'), '$lte' : ISODate('1990-12-12') }}
+{ 'address.state': 'UT' }
+{policies: { '$elemMatch': { 'policyType': 'life', 'insured_person.smoking': true }}}
+{ 'gender': 'Female', 'dob': { '$gte': ISODate('1990-01-01'), '$lte' : ISODate('1990-12-12')}, 'address.state': 'UT', 'policies': { $elemMatch: {'policyType': 'life', 'insured_person.smoking': true }}}
+----
+
+[source, bash]
+.*4. Compass 创建如下索引*
+----
+FIELD: address.state, TYPE: 1 (asc)
+FIELD: policies.policyType, TYPE: 1 (asc)
+FIELD: policies.insured_person.smoking, TYPE: 1 (asc)
+FIELD: gender, TYPE: 1 (asc)
+FIELD: dob, TYPE: 1 (asc)
+
+db.customers.createIndex({"address.state":1, "policies.policyType":1, "policies.insured_person.smoking":1, "gender":1, "dob":1})
+----
+
+*5. 结果*
+
+* 无索引 - 全集合扫描 1m 文档，返回 59 个文档，花费时间为 1780 毫秒
+* 有索引 - 索引扫描 59 个文档，返回 59 个文档，花费时间为 4 毫秒 
+
+=== FLEXIBLE
+
+*1. 脚本下载*
+
+* link:etc/pov/demo_settings.py[demo_settings.py]
+* link:etc/pov/create_model.py[create_model.py]
+* link:etc/pov/microservice_one.py[microservice_one.py]
+* link:etc/pov/alter_model.py[alter_model.py]
+* link:etc/pov/microservice_two.py[microservice_two.py]
+
+[source, bash]
+.*2. 依次执行脚本*
+----
+$ ./create_model.py
+$ ./microservice_one.py
+$ ./alter_model.py
+$ ./microservice_two.py
+----
+
+=== INGEST-RATE
+
+[source, bash]
+.*1. 下载 POCDriver*
+----
+wget https://github.com/johnlpage/POCDriver/archive/master.zip
+unzip master.zip
+cd POCDriver*
+mvn clean package
+cd bin
+ls POCDriver.jar 	
+----
+
+[source, bash]
+.*2. 执行 mongostat 查看监控数据*
+----
+$ mongostat --host ksoong.local:27000 --discover -u root -p mongo --authenticationDatabase admin
+----
+
+[source, bash]
+.*3. 执行如下命令*
+----
+$ java -jar POCDriver.jar -c "mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&authSource=admin" -t 4 -e -d 600 -f 25 -a 5:5 --depth 2 -x 3
+$ java -jar POCDriver.jar -c "mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&authSource=admin" -t 4 -e -d 600 -f 234 -a 20:20 --depth 2 -x 6
+$ java -jar POCDriver.jar -c "mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&authSource=admin" -t 4 -e -d 600 -f 1692 -a 10:10 --depth 2 -x 8
+----
+
+=== FAST-ANALYTICS
+
+[source, bash]
+.*1. 导入数据*
+----
+$ mongorestore --host repl-1/ksoong.local:27000,ksoong.local:27001,ksoong.local:27002 -u root -p mongo --authenticationDatabase admin --gzip customers_1m.bson.gz 
+$ mongorestore --host repl-1/ksoong.local:27000,ksoong.local:27001,ksoong.local:27002 -u root -p mongo --authenticationDatabase admin --gzip customers_10m.bson.gz 
+----
+
+[source, bash]
+.*2. 创建索引*
+----
+use test
+db.customers_1m.createIndex({country:1})
+db.customers_10m.createIndex({country:1})
+----
+
+[source, bash]
+.*3. 执行如下聚合*
+----
+db.customers_1m.aggregate([{ $match: { "country":"EN"} }, { $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} }])
+db.customers_1m.aggregate([{ $match: {"country":"EN"} }, { $unwind: {  path: "$accounts",} }, { $group: {_id: "$accounts.accountType", total: {$sum: "$accounts.balance"}} }])
+db.customers_1m.aggregate([{ $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} },{$sort:{"avgRank":-1}}])
+db.customers_1m.aggregate([{$project: {country: 1, numProducts: { $size: "$accounts" }}},{ $group: {_id: "$country", productCount: {$sum: "$numProducts"}} },{$sort:{"productCount":-1}}])
+
+db.customers_10m.aggregate([{ $match: { "country":"EN"} }, { $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} }])
+db.customers_10m.aggregate([{ $match: {"country":"EN"} }, { $unwind: {  path: "$accounts",} }, { $group: {_id: "$accounts.accountType", total: {$sum: "$accounts.balance"}} }])
+db.customers_10m.aggregate([{ $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} },{$sort:{"avgRank":-1}}])
+db.customers_10m.aggregate([{$project: {country: 1, numProducts: { $size: "$accounts" }}},{ $group: {_id: "$country", productCount: {$sum: "$numProducts"}} },{$sort:{"productCount":-1}}])
+----
+
+[source, bash]
+.*4. 查看聚合结果*
+----
+db.customers_1m.explain("executionStats").aggregate([{ $match: { "country":"EN"} }, { $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} }])
+db.customers_1m.explain("executionStats").aggregate([{ $match: {"country":"EN"} }, { $unwind: {  path: "$accounts",} }, { $group: {_id: "$accounts.accountType", total: {$sum: "$accounts.balance"}} }])
+db.customers_1m.explain("executionStats").aggregate([{ $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} },{$sort:{"avgRank":-1}}])
+db.customers_1m.explain("executionStats").aggregate([{$project: {country: 1, numProducts: { $size: "$accounts" }}},{ $group: {_id: "$country", productCount: {$sum: "$numProducts"}} },{$sort:{"productCount":-1}}])
+
+db.customers_10m.explain("executionStats").aggregate([{ $match: { "country":"EN"} }, { $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} }])
+db.customers_10m.explain("executionStats").aggregate([{ $match: {"country":"EN"} }, { $unwind: {  path: "$accounts",} }, { $group: {_id: "$accounts.accountType", total: {$sum: "$accounts.balance"}} }])
+db.customers_10m.explain("executionStats").aggregate([{ $group: {_id: "$country", avgRank: {$avg: "$rankLevel"}} },{$sort:{"avgRank":-1}}])
+db.customers_10m.explain("executionStats").aggregate([{$project: {country: 1, numProducts: { $size: "$accounts" }}},{ $group: {_id: "$country", productCount: {$sum: "$numProducts"}} },{$sort:{"productCount":-1}}])
+----
+
+|===
+|聚合 |1m 文档 |10m 文档
+
+|聚合 1
+|597 毫秒
+|
+
+|聚合 2
+|1482 毫秒
+|
+
+|聚合 3
+|1011 毫秒
+|
+
+|聚合 4
+|4553 毫秒
+|
+|===
+
+=== TRANSACTION
+
+[source, bash]
+.*1. 创建一个数据库*
+----
+// create player collection in the game database with 2 Players 
+use game;
+
+db.player.insert({"name": "Zoltar", "class": "Mage", "Gold": 100, "Apples": 10 });
+db.player.insert({"name": "Gilgamesh", "class": "Ranger", "Gold": 100, "Apples": 10});
+
+db.player.createIndex( { "name": 1 }, { unique: true } );
+----
+
+[source, bash]
+.*2. 会话隔离*
+----
+var s1 = db.getMongo().startSession();
+var s2 = db.getMongo().startSession();
+var s1Player = s1.getDatabase('game').getCollection('player');
+var s2Player = s2.getDatabase('game').getCollection('player');
+s1.startTransaction({readConcern: {level: 'snapshot'}, writeConcern: {w: 'majority'}});
+
+// Insert player 3, inside a transaction/session1
+s1Player.insert({"name": "Merlin", "class": "Mage", "Gold": 100, "Apples": 10});
+
+// Use session 2 and find the documents from collection and session1
+s2Player.find();
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 100, "Apples": 10 }
+// {"name": "Gilgamesh", "class": "Ranger", "Gold": 100, "Apples": 10}
+
+// Notice that the insert on session1 is only visible to it.
+s1Player.find()
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 100, "Apples": 10 }
+// {"name": "Gilgamesh", "class": "Ranger", "Gold": 100, "Apples": 10}
+// {"name": "Merlin", "class": "Mage", "Gold": 100, "Apples": 10}"}
+
+// Commit & end the session (if not committed within 60 secs transaction will timeout)
+s1.commitTransaction();
+
+// show the documents after committing the transaction
+s2Player.find();
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 100, "Apples": 10 }
+// {"name": "Gilgamesh, "class": "Ranger", "Gold": 100, "Apples": 10}
+// {"name": "Merlin, "class": "Mage", "Gold": 100, "Apples": 10}"}
+----
+
+[source, bash]
+.*3. 多文档更新、原子性和会话隔离*
+----
+// Start transaction with Merlin buying an apple from Zoltar for 2 gold
+s1.startTransaction({readConcern: {level: 'snapshot'}, writeConcern: {w: 'majority'}});
+s1Player.updateOne({"name": "Zoltar"}, {"$inc": {"Gold": 2, "Apples": -1} });
+s1Player.updateOne({"name": "Merlin"}, {"$inc": {"Gold": -2, "Apples": 1} });
+
+s1Player.find();
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+// {"name": "Gilgamesh, "class": "Ranger", "Gold": 100, "Apples": 10}
+// {"name": "Merlin, "class": "Mage", "Gold": 98, "Apples": 11}"}
+
+s2Player.find();
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 100, "Apples": 10 }
+// {"name": "Gilgamesh, "class": "Ranger", "Gold": 100, "Apples": 10}
+// {"name": "Merlin, "class": "Mage", "Gold": 100, "Apples": 10}"}
+
+s1.commitTransaction();
+
+s2Player.find();
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+// {"name": "Gilgamesh, "class": "Ranger", "Gold": 100, "Apples": 10}
+// {"name": "Merlin, "class": "Mage", "Gold": 98, "Apples": 11}"}
+----
+
+[source, bash]
+.*4. 多文档更新、原子性、一致性和回滚*
+----
+// Start a transaction with Zoltar refers a friend and gets 10 gold for the account creation
+s1.startTransaction({readConcern: {level: 'snapshot'}, writeConcern: {w: 'majority'}});
+
+s1Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+
+s1Player.updateOne({"name": "Zoltar"}, {"$inc": {"Gold": 10} });
+
+s1Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 112, "Apples": 9 }
+
+s1Player.insert({"name": "Merlin", "class": "Wizard", "Gold": 100, "Apples": 10 });
+// EXPECTED RESULT:
+// WriteCommandError({
+//        "operationTime" : Timestamp(1549657865, 3),
+//        "ok" : 0,
+//        "errmsg" : "E11000 duplicate key error collection: game.player index: name_1 dup key: { : \"Merlin\" }",
+//        "code" : 11000,
+//        "codeName" : "DuplicateKey",
+// })
+
+s1.abortTransaction();
+
+s1Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+----
+
+[source, bash]
+.*4. Multiple Document Updates and Retries Leading to Commit*
+----
+/ Start a transaction with Zoltar refers a friend and gets 10 gold for the account creation
+s1.startTransaction({readConcern: {level: 'snapshot'}, writeConcern: {w: 'majority'}});
+
+s1Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+
+s1Player.updateOne({"name": "Zoltar"}, {"$inc": {"Gold": 10} });
+
+s1Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 112, "Apples": 9 }
+
+s2Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 102, "Apples": 9 }
+
+s1Player.insert({"name": "Tim", "class": "Wizard", "Gold": 100, "Apples": 10 });
+
+s1.commitTransaction();
+
+s2Player.find({"name": "Zoltar"});
+// EXPECTED RESULT:
+// {"name": "Zoltar", "class": "Mage", "Gold": 112, "Apples": 9 }
+----
+
+=== SCHEMA
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
 
 == MongoDB 助力 DevOps
 
