@@ -1,4 +1,4 @@
-= TroubleShooting
+= 监控 & 问题处理
 :toc: manual
 
 == 工具简介
@@ -62,25 +62,138 @@ db.serverStatus().metrics.storage
 * https://github.com/rueckstiess/mtools
 |===
 
-[source, text]
+== 监控关键指标
+
+=== opcounters（操作计数器）
+
+opcounters（操作计数器）代表的是查询、更新、插入、删除、getmore和其他命令的的数量. 这个指标能够给出数据库工作情况的总体概况。
+
+NOTE: 该值为开机到当前的累计值。
+
+NOTE: *异常报警建议* - 视应用而定，观察应用正常运行时的均值，上浮一定比例。
+
+[source, bash]
+.*1. db.serverStatus().opcounters*
+----
+db.serverStatus().opcounters
+{
+	"insert" : 0,
+	"query" : 1,
+	"update" : 0,
+	"delete" : 0,
+	"getmore" : 0,
+	"command" : 12
+}
+----
+
+[source, bash]
+.*2. 执行 100000 次 insert*
+----
+use bankdata
+
+var doc = {
+   "name": "John Doe",
+   "balance": 99.99
+}
+for (var i = 0; i < 100000; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
+}
+----
+
+[source, bash]
+.*3. db.serverStatus().opcounters*
+----
+db.serverStatus().opcounters
+{
+	"insert" : 100000,
+	"query" : 1,
+	"update" : 1,
+	"delete" : 0,
+	"getmore" : 0,
+	"command" : 19
+}
+----
+
+[source, python]
+.*4. 执行如下代码，进行 query 操作*
+----
+#!/usr/bin/env python3
+  
+from pymongo import MongoClient
+import time
+
+def main():
+    # Read docs
+    read_client = MongoClient()
+    db = read_client.get_database("bankdata")
+    coll = db.get_collection("accounts")
+
+    while (True):
+        cur = coll.find({"accountNo": {"$lt": 100}}).sort("accountNo", -1).limit(10)
+        for doc in cur:
+            pass
+        time.sleep(0.2)
+
+
+####
+# Main
+####
+if __name__ == '__main__':
+    main()
+----
+
+[source, bash]
+.*5. db.serverStatus().opcounters*
+----
+db.serverStatus().opcounters
+{
+	"insert" : 100000,
+	"query" : 12856,
+	"update" : 16,
+	"delete" : 0,
+	"getmore" : 0,
+	"command" : 370
+}
+----
+
+[source, bash]
 .**
 ----
 
 ----
 
-[source, text]
+[source, bash]
 .**
 ----
 
 ----
 
-[source, text]
+[source, bash]
 .**
 ----
 
 ----
 
-[source, text]
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
 .**
 ----
 
