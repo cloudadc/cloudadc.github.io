@@ -37,7 +37,20 @@
 |1 000 000
 |===
 
-== 数据落盘
+== 数据落盘过程
+
+首先，MongoDB 在存储信息时使用压缩，MongoDB 存储引擎将数据存储到磁盘时使用压缩算法，这个对性能有很重要的影响，因为它降低了磁盘操作的 IO，同时也节省了 CPU 使用时间。
+
+image:img/mongod-data-to-disk.png[]
+
+其次，数据在存储到磁盘之前是在内存中保存，那么如何数据从内存中落盘过程中数据的一致性？MongoDB 提供了两种途径：
+
+. 内部持久化机制 - 一个周期性运行的内部程序周期性的将数据写入/同步到磁盘(A periodical internal process that regulates how data be flushed and synced in to data file)。在持久化机制刷盘的过程中，恢复日志（Journal）是一个必需的组件，它确保因为系统掉电或者崩溃时导致内存数据丢失问题，MongoDB 会先把数据更新写入到 Journal Buffer 里面，然后再更新内存数据，然后再返回给应用端。Journal 会以 100ms 的间隔批量刷到盘上。这样的情况下，即使出现断电数据尚未保存到文件，由于有 Journal 文件的存在，MongoDB 会自动根据 Journal 里面的操作历史记录来对数据文件重新进行追加。Journal 的刷盘是批量，基于压缩的格式进行的。关系型数据库（MySQL， PostgreSQL，Oracle 等）里都有一个Write Ahead Log（Redo Log）做同样的事情，MongoDB 的恢复日志（Journal）相当于关系数据库中的 WAL 日志。
+. 外部写关注（Write Concern) - 写关注是 MongoDB 特有的一个功能，它可以让你灵活地指定你写操作的持久化设定。这是一个在性能和可靠性之间的一个权衡，如果设定一个较强的可靠性配置，如：{w: “majority”} 和 {j:1}，那么极端情况下 MongoDB 丢数据的可能性为 0。
+
+最后，数据在磁盘上是一文件的形式保存，根据上面描述，磁盘上文件主要有三类：数据文件、索引文件、恢复日志（Journal）文件。
+
+image:img/mongod-disk-files.png[]
 
 === 使用directoryperdb、wiredTigerDirectoryForIndexes 增加吞吐量
 
@@ -87,7 +100,60 @@ MongoDB 4.2 支持 3 种压缩算法：
 
 === journal
 
-journal 确保数据写磁盘过程中的一致性。
+journal 确保数据写磁盘过程中的一致性。那么 journal 详细工作原理是什么？
+
+TODO--
+
+== MongoDB 索引类型
+
+=== 单字段索引(Single Field Indexes)
+
+MongoDB 数据库中所提供的最简单索引，它的创建语法：
+
+[source, javascript]
+----
+db.<collection>.createIndex({<field>: <direction>})
+----
+
+
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+
+
 
 == 索引的基本使用与创建
 
