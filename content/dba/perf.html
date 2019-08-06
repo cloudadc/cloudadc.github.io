@@ -64,7 +64,7 @@
     <link rel="next" href="troubleshooting.html" />
     
     
-    <link rel="prev" href="security.html" />
+    <link rel="prev" href="opsmanager.html" />
     
 
     </head>
@@ -104,6 +104,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="../presentation.html">
+            
+                <a href="../presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2" data-path="basic.html">
@@ -116,6 +135,25 @@
                 </a>
             
 
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="dist.html">
+            
+                <a href="dist.html">
+            
+                    
+                    分布式系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -191,6 +229,32 @@
             
         </li>
     
+        <li class="chapter active" data-level="1.4.2" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -209,12 +273,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.6" data-path="perf.html">
+        <li class="chapter " data-level="1.6" data-path="dba.html">
             
-                <a href="perf.html">
+                <a href="dba.html">
             
                     
-                    性能调优
+                    DBA
             
                 </a>
             
@@ -222,33 +286,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" data-path="troubleshooting.html">
-            
-                <a href="troubleshooting.html">
-            
-                    
-                    Troubleshooting
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.8" data-path="exam.html">
-            
-                <a href="exam.html">
-            
-                    
-                    Q & A
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.9" data-path="../python/">
+        <li class="chapter " data-level="1.7" data-path="../python/">
             
                 <a href="../python/">
             
@@ -261,7 +299,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10" data-path="../examples/">
+        <li class="chapter " data-level="1.8" data-path="../examples/">
             
                 <a href="../examples/">
             
@@ -275,7 +313,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.1" data-path="../examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.8.1" data-path="../examples/aggregation-sum.html">
             
                 <a href="../examples/aggregation-sum.html">
             
@@ -342,20 +380,31 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</a>
+<li><a href="#__">&#x786C;&#x4EF6;&#x56E0;&#x7D20;</a></li>
+<li><a href="#___2">&#x6570;&#x636E;&#x843D;&#x76D8;&#x8FC7;&#x7A0B;</a>
 <ul class="sectlevel2">
-<li><a href="#___2">&#x51C6;&#x5907;&#x6570;&#x636E;&#x5E93;</a></li>
-<li><a href="#___3">&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#x5BF9;&#x6BD4;</a></li>
-<li><a href="#___4">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</a></li>
-<li><a href="#___5">&#x590D;&#x5408;&#x7D22;&#x5F15;</a></li>
-<li><a href="#___6">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</a></li>
-<li><a href="#___7">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</a></li>
+<li><a href="#__directoryperdb_wiredtigerdirectoryforindexes">&#x4F7F;&#x7528;directoryperdb&#x3001;wiredTigerDirectoryForIndexes &#x589E;&#x52A0;&#x541E;&#x5410;&#x91CF;</a></li>
+<li><a href="#__compression">&#x538B;&#x7F29;&#xFF08;compression&#xFF09;</a></li>
+<li><a href="#_journal">journal</a></li>
+</ul>
+</li>
+<li><a href="#_mongodb">MongoDB &#x7D22;&#x5F15;&#x7C7B;&#x578B;</a>
+<ul class="sectlevel2">
+<li><a href="#__single_field_indexes">&#x5355;&#x5B57;&#x6BB5;&#x7D22;&#x5F15;(Single Field Indexes)</a></li>
+<li><a href="#__compound_indexes">&#x590D;&#x5408;&#x7D22;&#x5F15;(Compound Indexes)</a></li>
+</ul>
+</li>
+<li><a href="#___3">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</a>
+<ul class="sectlevel2">
+<li><a href="#___4">&#x590D;&#x5408;&#x7D22;&#x5F15;</a></li>
+<li><a href="#___5">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</a></li>
+<li><a href="#___6">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</a></li>
 <li><a href="#__key">&#x591A; key &#x590D;&#x5408;&#x7D22;&#x5F15;</a></li>
 </ul>
 </li>
-<li><a href="#___8">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</a>
+<li><a href="#___7">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</a>
 <ul class="sectlevel2">
-<li><a href="#___9">&#x6570;&#x636E;&#x5BFC;&#x5165;</a></li>
+<li><a href="#___8">&#x6570;&#x636E;&#x5BFC;&#x5165;</a></li>
 <li><a href="#__background">&#x521B;&#x5EFA; background &#x7D22;&#x5F15;</a></li>
 </ul>
 </li>
@@ -363,167 +412,225 @@
 </ul>
 </div>
 <div class="sect1">
-<h2 id="__">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</h2>
+<h2 id="__">&#x786C;&#x4EF6;&#x56E0;&#x7D20;</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5185;&#x5B58;&#xFF08;RAM&#xFF09;&#x7684;&#x8BFB;&#x5199;&#x901F;&#x5EA6;&#x65F6;&#x666E;&#x901A; SSD &#x7684; 25 &#x500D;&#x3002;MongoDB &#x4E2D;&#x4F9D;&#x8D56; RAM &#x6700;&#x591A;&#x7684;&#x64CD;&#x4F5C;&#x5305;&#x62EC;&#xFF1A;&#x805A;&#x5408;&#x3001;&#x7D22;&#x5F15;&#x904D;&#x5386;&#x3001;&#x5199;&#x64CD;&#x4F5C;&#x3001;&#x67E5;&#x8BE2;&#x5F15;&#x64CE;&#x3001;&#x8FDE;&#x63A5;</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<caption class="title">Table 1. <strong>&#x5E38;&#x89C1;&#x5B58;&#x50A8;&#x7684;IOPS</strong></caption>
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x7C7B;&#x578B;</th>
+<th class="tableblock halign-left valign-top">IOPS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7200 rpm SATA</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">75 - 100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15000 rpm SAS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">175 - 210</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSD Intel X25-E(SLC)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SSD Intel X25-M G2(MLC)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EBS</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">100</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EBS Provisioned</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EBS Provisioned IOPS(SSD)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">FusionIO</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">135 000</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Violin Memory 6000</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1 000 000</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x6570;&#x636E;&#x843D;&#x76D8;&#x8FC7;&#x7A0B;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x9996;&#x5148;&#xFF0C;MongoDB &#x5728;&#x5B58;&#x50A8;&#x4FE1;&#x606F;&#x65F6;&#x4F7F;&#x7528;&#x538B;&#x7F29;&#xFF0C;MongoDB &#x5B58;&#x50A8;&#x5F15;&#x64CE;&#x5C06;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x5230;&#x78C1;&#x76D8;&#x65F6;&#x4F7F;&#x7528;&#x538B;&#x7F29;&#x7B97;&#x6CD5;&#xFF0C;&#x8FD9;&#x4E2A;&#x5BF9;&#x6027;&#x80FD;&#x6709;&#x5F88;&#x91CD;&#x8981;&#x7684;&#x5F71;&#x54CD;&#xFF0C;&#x56E0;&#x4E3A;&#x5B83;&#x964D;&#x4F4E;&#x4E86;&#x78C1;&#x76D8;&#x64CD;&#x4F5C;&#x7684; IO&#xFF0C;&#x540C;&#x65F6;&#x4E5F;&#x8282;&#x7701;&#x4E86; CPU &#x4F7F;&#x7528;&#x65F6;&#x95F4;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongod-data-to-disk.png" alt="mongod data to disk.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5176;&#x6B21;&#xFF0C;&#x6570;&#x636E;&#x5728;&#x5B58;&#x50A8;&#x5230;&#x78C1;&#x76D8;&#x4E4B;&#x524D;&#x662F;&#x5728;&#x5185;&#x5B58;&#x4E2D;&#x4FDD;&#x5B58;&#xFF0C;&#x90A3;&#x4E48;&#x5982;&#x4F55;&#x6570;&#x636E;&#x4ECE;&#x5185;&#x5B58;&#x4E2D;&#x843D;&#x76D8;&#x8FC7;&#x7A0B;&#x4E2D;&#x6570;&#x636E;&#x7684;&#x4E00;&#x81F4;&#x6027;&#xFF1F;MongoDB &#x63D0;&#x4F9B;&#x4E86;&#x4E24;&#x79CD;&#x9014;&#x5F84;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x5185;&#x90E8;&#x6301;&#x4E45;&#x5316;&#x673A;&#x5236; - &#x4E00;&#x4E2A;&#x5468;&#x671F;&#x6027;&#x8FD0;&#x884C;&#x7684;&#x5185;&#x90E8;&#x7A0B;&#x5E8F;&#x5468;&#x671F;&#x6027;&#x7684;&#x5C06;&#x6570;&#x636E;&#x5199;&#x5165;/&#x540C;&#x6B65;&#x5230;&#x78C1;&#x76D8;(A periodical internal process that regulates how data be flushed and synced in to data file)&#x3002;&#x5728;&#x6301;&#x4E45;&#x5316;&#x673A;&#x5236;&#x5237;&#x76D8;&#x7684;&#x8FC7;&#x7A0B;&#x4E2D;&#xFF0C;&#x6062;&#x590D;&#x65E5;&#x5FD7;&#xFF08;Journal&#xFF09;&#x662F;&#x4E00;&#x4E2A;&#x5FC5;&#x9700;&#x7684;&#x7EC4;&#x4EF6;&#xFF0C;&#x5B83;&#x786E;&#x4FDD;&#x56E0;&#x4E3A;&#x7CFB;&#x7EDF;&#x6389;&#x7535;&#x6216;&#x8005;&#x5D29;&#x6E83;&#x65F6;&#x5BFC;&#x81F4;&#x5185;&#x5B58;&#x6570;&#x636E;&#x4E22;&#x5931;&#x95EE;&#x9898;&#xFF0C;MongoDB &#x4F1A;&#x5148;&#x628A;&#x6570;&#x636E;&#x66F4;&#x65B0;&#x5199;&#x5165;&#x5230; Journal Buffer &#x91CC;&#x9762;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x66F4;&#x65B0;&#x5185;&#x5B58;&#x6570;&#x636E;&#xFF0C;&#x7136;&#x540E;&#x518D;&#x8FD4;&#x56DE;&#x7ED9;&#x5E94;&#x7528;&#x7AEF;&#x3002;Journal &#x4F1A;&#x4EE5; 100ms &#x7684;&#x95F4;&#x9694;&#x6279;&#x91CF;&#x5237;&#x5230;&#x76D8;&#x4E0A;&#x3002;&#x8FD9;&#x6837;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x5373;&#x4F7F;&#x51FA;&#x73B0;&#x65AD;&#x7535;&#x6570;&#x636E;&#x5C1A;&#x672A;&#x4FDD;&#x5B58;&#x5230;&#x6587;&#x4EF6;&#xFF0C;&#x7531;&#x4E8E;&#x6709; Journal &#x6587;&#x4EF6;&#x7684;&#x5B58;&#x5728;&#xFF0C;MongoDB &#x4F1A;&#x81EA;&#x52A8;&#x6839;&#x636E; Journal &#x91CC;&#x9762;&#x7684;&#x64CD;&#x4F5C;&#x5386;&#x53F2;&#x8BB0;&#x5F55;&#x6765;&#x5BF9;&#x6570;&#x636E;&#x6587;&#x4EF6;&#x91CD;&#x65B0;&#x8FDB;&#x884C;&#x8FFD;&#x52A0;&#x3002;Journal &#x7684;&#x5237;&#x76D8;&#x662F;&#x6279;&#x91CF;&#xFF0C;&#x57FA;&#x4E8E;&#x538B;&#x7F29;&#x7684;&#x683C;&#x5F0F;&#x8FDB;&#x884C;&#x7684;&#x3002;&#x5173;&#x7CFB;&#x578B;&#x6570;&#x636E;&#x5E93;&#xFF08;MySQL&#xFF0C; PostgreSQL&#xFF0C;Oracle &#x7B49;&#xFF09;&#x91CC;&#x90FD;&#x6709;&#x4E00;&#x4E2A;Write Ahead Log&#xFF08;Redo Log&#xFF09;&#x505A;&#x540C;&#x6837;&#x7684;&#x4E8B;&#x60C5;&#xFF0C;MongoDB &#x7684;&#x6062;&#x590D;&#x65E5;&#x5FD7;&#xFF08;Journal&#xFF09;&#x76F8;&#x5F53;&#x4E8E;&#x5173;&#x7CFB;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684; WAL &#x65E5;&#x5FD7;&#x3002;</p>
+</li>
+<li>
+<p>&#x5916;&#x90E8;&#x5199;&#x5173;&#x6CE8;&#xFF08;Write Concern) - &#x5199;&#x5173;&#x6CE8;&#x662F; MongoDB &#x7279;&#x6709;&#x7684;&#x4E00;&#x4E2A;&#x529F;&#x80FD;&#xFF0C;&#x5B83;&#x53EF;&#x4EE5;&#x8BA9;&#x4F60;&#x7075;&#x6D3B;&#x5730;&#x6307;&#x5B9A;&#x4F60;&#x5199;&#x64CD;&#x4F5C;&#x7684;&#x6301;&#x4E45;&#x5316;&#x8BBE;&#x5B9A;&#x3002;&#x8FD9;&#x662F;&#x4E00;&#x4E2A;&#x5728;&#x6027;&#x80FD;&#x548C;&#x53EF;&#x9760;&#x6027;&#x4E4B;&#x95F4;&#x7684;&#x4E00;&#x4E2A;&#x6743;&#x8861;&#xFF0C;&#x5982;&#x679C;&#x8BBE;&#x5B9A;&#x4E00;&#x4E2A;&#x8F83;&#x5F3A;&#x7684;&#x53EF;&#x9760;&#x6027;&#x914D;&#x7F6E;&#xFF0C;&#x5982;&#xFF1A;{w: &#x201C;majority&#x201D;} &#x548C; {j:1}&#xFF0C;&#x90A3;&#x4E48;&#x6781;&#x7AEF;&#x60C5;&#x51B5;&#x4E0B; MongoDB &#x4E22;&#x6570;&#x636E;&#x7684;&#x53EF;&#x80FD;&#x6027;&#x4E3A; 0&#x3002;</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>&#x6700;&#x540E;&#xFF0C;&#x6570;&#x636E;&#x5728;&#x78C1;&#x76D8;&#x4E0A;&#x662F;&#x4E00;&#x6587;&#x4EF6;&#x7684;&#x5F62;&#x5F0F;&#x4FDD;&#x5B58;&#xFF0C;&#x6839;&#x636E;&#x4E0A;&#x9762;&#x63CF;&#x8FF0;&#xFF0C;&#x78C1;&#x76D8;&#x4E0A;&#x6587;&#x4EF6;&#x4E3B;&#x8981;&#x6709;&#x4E09;&#x7C7B;&#xFF1A;&#x6570;&#x636E;&#x6587;&#x4EF6;&#x3001;&#x7D22;&#x5F15;&#x6587;&#x4EF6;&#x3001;&#x6062;&#x590D;&#x65E5;&#x5FD7;&#xFF08;Journal&#xFF09;&#x6587;&#x4EF6;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongod-disk-files.png" alt="mongod disk files.png"></span></p>
+</div>
+<div class="sect2">
+<h3 id="__directoryperdb_wiredtigerdirectoryforindexes">&#x4F7F;&#x7528;directoryperdb&#x3001;wiredTigerDirectoryForIndexes &#x589E;&#x52A0;&#x541E;&#x5410;&#x91CF;</h3>
+<div class="listingblock">
+<div class="title"><strong>directoryperdb</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongod --dbpath ~/data/db --logpath ~/data/db/mongod.log --fork --directoryperdb
+$ mongo hello --eval <span class="hljs-string">&apos;db.myCollections.insert({name: &quot;hello&quot;})&apos;</span>
+
+$ ls data/db/hello/
+collection-8-6275239857016906202.wt  index-9-6275239857016906202.wt</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>wiredTigerDirectoryForIndexes</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongod --dbpath ~/data/db --logpath ~/data/db/mongod.log --fork --directoryperdb --wiredTigerDirectoryForIndexes
+$ mongo hello --eval <span class="hljs-string">&apos;db.myCollections.insert({name: &quot;hello&quot;})&apos;</span>
+
+$ ls -LR data/db/hello/
+data/db/hello/:
+collection  index
+
+data/db/hello/collection:
+8-6326041135875266620.wt
+
+data/db/hello/index:
+9-6326041135875266620.wt</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__compression">&#x538B;&#x7F29;&#xFF08;compression&#xFF09;</h3>
+<div class="paragraph">
+<p>MongoDB 4.2 &#x652F;&#x6301; 3 &#x79CD;&#x538B;&#x7F29;&#x7B97;&#x6CD5;&#xFF1A;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x540D;&#x79F0;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">snappy</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">zstd</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">zlib</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_journal">journal</h3>
+<div class="paragraph">
+<p>journal &#x786E;&#x4FDD;&#x6570;&#x636E;&#x5199;&#x78C1;&#x76D8;&#x8FC7;&#x7A0B;&#x4E2D;&#x7684;&#x4E00;&#x81F4;&#x6027;&#x3002;&#x90A3;&#x4E48; journal &#x8BE6;&#x7EC6;&#x5DE5;&#x4F5C;&#x539F;&#x7406;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</p>
+</div>
+<div class="paragraph">
+<p>TODO--</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mongodb">MongoDB &#x7D22;&#x5F15;&#x7C7B;&#x578B;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___2">&#x51C6;&#x5907;&#x6570;&#x636E;&#x5E93;</h3>
+<h3 id="__single_field_indexes">&#x5355;&#x5B57;&#x6BB5;&#x7D22;&#x5F15;(Single Field Indexes)</h3>
 <div class="paragraph">
-<p>&#x672C;&#x90E8;&#x5206;&#x51C6;&#x5907;&#x4E00;&#x4E2A;&#x6D4B;&#x8BD5;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x7528;&#x6765;&#x5B9E;&#x8DF5;&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;&#x3002;</p>
+<p>MongoDB &#x6570;&#x636E;&#x5E93;&#x4E2D;&#x6240;&#x63D0;&#x4F9B;&#x7684;&#x6700;&#x7B80;&#x5355;&#x7D22;&#x5F15;&#xFF0C;&#x5B83;&#x7684;&#x521B;&#x5EFA;&#x8BED;&#x6CD5;&#xFF1A;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>1. &#x51C6;&#x5907;&#x914D;&#x7F6E;&#x6587;&#x4EF6;&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">storage:
-  dbPath: /var/mongodb/db-index/
-
-systemLog:
-  destination: file
-  logAppend: true
-  path: /var/mongodb/db-index/mongod.log
-
-net:
-  port: 27017
-  bindIp: localhost,192.168.103.100
-
-processManagement:
-  fork: true
-
-operationProfiling:
-  slowOpThresholdMs: 50
-
-security:
-  authorization: enabled</code></pre>
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.&lt;collection&gt;.createIndex({&lt;field&gt;: &lt;direction&gt;})</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. &#x521B;&#x5EFA;&#x6570;&#x636E;&#x5B58;&#x50A8;&#x76EE;&#x5F55;</strong></div>
+<div class="title"><strong>1. &#x6CA1;&#x6709;&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mkdir -p /var/mongodb/db-index/</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. &#x542F;&#x52A8;&#x6570;&#x636E;&#x5E93;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongod -f index-mongod.conf</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4.&#x521B;&#x5EFA;&#x7BA1;&#x7406;&#x7528;&#x6237;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo admin --host 127.0.0.1:27017 --eval &apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongodb&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})&apos;</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5.&#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/people.json
-2019-04-05T10:01:53.857+0000	no collection specified
-2019-04-05T10:01:53.857+0000	using filename &apos;people&apos; as collection
-2019-04-05T10:01:53.872+0000	connected to: localhost
-2019-04-05T10:01:55.553+0000	imported 50474 documents</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. mongo shell &#x767B;&#x5F55;&#xFF0C;&#x67E5;&#x770B;&#x5BFC;&#x5165;&#x7684;&#x6570;&#x636E;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">$ mongo -u root -p mongodb --authenticationDatabase admin
-MongoDB shell version v3.6.11
-connecting to: mongodb://127.0.0.1:27017/?authSource=admin&amp;gssapiServiceName=mongodb
-Implicit session: session { &quot;id&quot; : UUID(&quot;4454bf09-0797-429e-88e8-39993e6f39be&quot;) }
-MongoDB server version: 3.6.11
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({<span class="hljs-string">&quot;ssn&quot;</span>: <span class="hljs-string">&quot;720-38-5636&quot;</span>}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
 
-MongoDB Enterprise &gt; use m201
-switched to db m201
-
-MongoDB Enterprise &gt; db.people.count()
-50474
-
-MongoDB Enterprise &gt; db.people.findOne()
+r.queryPlanner.winningPlan
 {
-	&quot;_id&quot; : ObjectId(&quot;57d7a121fa937f710a7d486f&quot;),
-	&quot;last_name&quot; : &quot;Nelson&quot;,
-	&quot;quote&quot; : &quot;Quis sed tenetur eius illo.&quot;,
-	&quot;job&quot; : &quot;Conservator, furniture&quot;,
-	&quot;ssn&quot; : &quot;671-16-1433&quot;,
-	&quot;address&quot; : {
-		&quot;city&quot; : &quot;Nicholsbury&quot;,
-		&quot;state&quot; : &quot;Indiana&quot;,
-		&quot;street&quot; : &quot;699 Ryan Branch Apt. 371&quot;,
-		&quot;zip&quot; : &quot;52277&quot;
-	},
-	&quot;first_name&quot; : &quot;Mary&quot;,
-	&quot;company_id&quot; : ObjectId(&quot;57d7a121fa937f710a7d486d&quot;),
-	&quot;employer&quot; : &quot;Terry and Sons&quot;,
-	&quot;birthday&quot; : ISODate(&quot;2015-11-25T17:26:40Z&quot;),
-	&quot;email&quot; : &quot;cindy93@gmail.com&quot;
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___3">&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#x5BF9;&#x6BD4;</h3>
-<div class="paragraph">
-<p>&#x672C;&#x90E8;&#x5206;&#x5BF9;&#x6BD4;&#x6709;&#x7D22;&#x5F15;&#x548C;&#x65E0;&#x7D22;&#x5F15;&#x6761;&#x4EF6;&#x4E0B;&#x7684;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x3002;</p>
-</div>
-<div class="listingblock">
-<div class="title"><strong>1. &#x65E0;&#x7D22;&#x5F15;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: &quot;720-38-5636&quot;}).explain(&quot;executionStats&quot;)
-{
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;ssn&quot; : {
-				&quot;$eq&quot; : &quot;720-38-5636&quot;
-			}
-		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;COLLSCAN&quot;,
-			&quot;filter&quot; : {
-				&quot;ssn&quot; : {
-					&quot;$eq&quot; : &quot;720-38-5636&quot;
-				}
-			},
-			&quot;direction&quot; : &quot;forward&quot;
-		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 1,
-		&quot;executionTimeMillis&quot; : 21,
-		&quot;totalKeysExamined&quot; : 0,
-		&quot;totalDocsExamined&quot; : 50474,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;COLLSCAN&quot;,
-			&quot;filter&quot; : {
-				&quot;ssn&quot; : {
-					&quot;$eq&quot; : &quot;720-38-5636&quot;
-				}
-			},
-			&quot;nReturned&quot; : 1,
-			&quot;executionTimeMillisEstimate&quot; : 10,
-			&quot;works&quot; : 50476,
-			&quot;advanced&quot; : 1,
-			&quot;needTime&quot; : 50474,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 394,
-			&quot;restoreState&quot; : 394,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;direction&quot; : &quot;forward&quot;,
-			&quot;docsExamined&quot; : 50474
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COLLSCAN&quot;</span>,
+	<span class="hljs-string">&quot;filter&quot;</span> : {
+		<span class="hljs-string">&quot;ssn&quot;</span> : {
+			<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;720-38-5636&quot;</span>
 		}
 	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>
+}
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">24</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">0</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COLLSCAN&quot;</span>,
+		<span class="hljs-string">&quot;filter&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : {
+				<span class="hljs-string">&quot;$eq&quot;</span> : <span class="hljs-string">&quot;720-38-5636&quot;</span>
+			}
+		},
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">20</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50476</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">394</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">394</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+		<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">50474</span>
+	}
 }</code></pre>
 </div>
 </div>
@@ -542,120 +649,104 @@ queryPlanner &#x90E8;&#x5206; winningPlan stage &#x4E3A; COLLSCAN&#xFF0C;&#x5373
 <div class="listingblock">
 <div class="title"><strong>2. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.createIndex({ssn: 1})
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.people.createIndex({ssn: <span class="hljs-number">1</span>})
 {
-	&quot;createdCollectionAutomatically&quot; : false,
-	&quot;numIndexesBefore&quot; : 1,
-	&quot;numIndexesAfter&quot; : 2,
-	&quot;ok&quot; : 1
+	<span class="hljs-string">&quot;createdCollectionAutomatically&quot;</span> : <span class="hljs-literal">false</span>,
+	<span class="hljs-string">&quot;numIndexesBefore&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;numIndexesAfter&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;ok&quot;</span> : <span class="hljs-number">1</span>
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>3. &#x6709;&#x7D22;&#x5F15;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
+<div class="title"><strong>3. &#x6709;&#x7D22;&#x5F15;&#x67E5;&#x8BE2;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: &quot;720-38-5636&quot;}).explain(&quot;executionStats&quot;)
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({<span class="hljs-string">&quot;ssn&quot;</span>: <span class="hljs-string">&quot;720-38-5636&quot;</span>}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.queryPlanner.winningPlan
 {
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;ssn&quot; : {
-				&quot;$eq&quot; : &quot;720-38-5636&quot;
-			}
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+	<span class="hljs-string">&quot;inputStage&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+		<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
 		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;
-					]
-				}
-			}
+		<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+		<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
 		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 1,
-		&quot;executionTimeMillis&quot; : 0,
-		&quot;totalKeysExamined&quot; : 1,
-		&quot;totalDocsExamined&quot; : 1,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;nReturned&quot; : 1,
-			&quot;executionTimeMillisEstimate&quot; : 0,
-			&quot;works&quot; : 2,
-			&quot;advanced&quot; : 1,
-			&quot;needTime&quot; : 0,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 0,
-			&quot;restoreState&quot; : 0,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;docsExamined&quot; : 1,
-			&quot;alreadyHasObj&quot; : 0,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;nReturned&quot; : 1,
-				&quot;executionTimeMillisEstimate&quot; : 0,
-				&quot;works&quot; : 2,
-				&quot;advanced&quot; : 1,
-				&quot;needTime&quot; : 0,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 0,
-				&quot;restoreState&quot; : 0,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;
-					]
-				},
-				&quot;keysExamined&quot; : 1,
-				&quot;seeks&quot; : 1,
-				&quot;dupsTested&quot; : 0,
-				&quot;dupsDropped&quot; : 0,
-				&quot;seenInvalidated&quot; : 0
-			}
+		<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+		<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [
+				<span class="hljs-string">&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;</span>
+			]
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	}
+}
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+			},
+			<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+			<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+			},
+			<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+			<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [
+					<span class="hljs-string">&quot;[\&quot;720-38-5636\&quot;, \&quot;720-38-5636\&quot;]&quot;</span>
+				]
+			},
+			<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
+		}
+	}
 }</code></pre>
 </div>
 </div>
@@ -674,663 +765,612 @@ queryPlanner &#x90E8;&#x5206; winningPlan stage &#x4E3A; FETCH&#xFF0C;&#x800C; i
 <div class="listingblock">
 <div class="title"><strong>4. &#x67E5;&#x8BE2;&#x4E00;&#x5B9A;&#x8303;&#x56F4;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$gte: &quot;555-00-0000&quot;, $lt: &quot;556-00-0000&quot;}}).explain(&quot;executionStats&quot;)
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({<span class="hljs-string">&quot;ssn&quot;</span>: {$gte: <span class="hljs-string">&quot;555-00-0000&quot;</span>, $lt: <span class="hljs-string">&quot;556-00-0000&quot;</span>}}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+ r.queryPlanner.winningPlan
 {
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;$and&quot; : [
-				{
-					&quot;ssn&quot; : {
-						&quot;$lt&quot; : &quot;556-00-0000&quot;
-					}
-				},
-				{
-					&quot;ssn&quot; : {
-						&quot;$gte&quot; : &quot;555-00-0000&quot;
-					}
-				}
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+	<span class="hljs-string">&quot;inputStage&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+		<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+		},
+		<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+		<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+		},
+		<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+		<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [
+				<span class="hljs-string">&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;</span>
 			]
-		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;
-					]
-				}
-			}
-		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 49,
-		&quot;executionTimeMillis&quot; : 0,
-		&quot;totalKeysExamined&quot; : 49,
-		&quot;totalDocsExamined&quot; : 49,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;nReturned&quot; : 49,
-			&quot;executionTimeMillisEstimate&quot; : 0,
-			&quot;works&quot; : 50,
-			&quot;advanced&quot; : 49,
-			&quot;needTime&quot; : 0,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 0,
-			&quot;restoreState&quot; : 0,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;docsExamined&quot; : 49,
-			&quot;alreadyHasObj&quot; : 0,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;nReturned&quot; : 49,
-				&quot;executionTimeMillisEstimate&quot; : 0,
-				&quot;works&quot; : 50,
-				&quot;advanced&quot; : 49,
-				&quot;needTime&quot; : 0,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 0,
-				&quot;restoreState&quot; : 0,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;
-					]
-				},
-				&quot;keysExamined&quot; : 49,
-				&quot;seeks&quot; : 1,
-				&quot;dupsTested&quot; : 0,
-				&quot;dupsDropped&quot; : 0,
-				&quot;seenInvalidated&quot; : 0
-			}
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	}
+}
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">49</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">49</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">49</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">49</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">49</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">49</span>,
+		<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">49</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">49</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+			},
+			<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+			<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+			},
+			<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+			<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [
+					<span class="hljs-string">&quot;[\&quot;555-00-0000\&quot;, \&quot;556-00-0000\&quot;)&quot;</span>
+				]
+			},
+			<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">49</span>,
+			<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
+		}
+	}
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>5. &#x67E5;&#x8BE2;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$in: [&quot;001-29-9184&quot;, &quot;177-45-0950&quot;, &quot;265-67-9973&quot;]}}).explain(&quot;executionStats&quot;)
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({<span class="hljs-string">&quot;ssn&quot;</span>: {$<span class="hljs-keyword">in</span>: [<span class="hljs-string">&quot;001-29-9184&quot;</span>, <span class="hljs-string">&quot;177-45-0950&quot;</span>, <span class="hljs-string">&quot;265-67-9973&quot;</span>]}}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.queryPlanner.winningPlan
 {
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;ssn&quot; : {
-				&quot;$in&quot; : [
-					&quot;001-29-9184&quot;,
-					&quot;177-45-0950&quot;,
-					&quot;265-67-9973&quot;
-				]
-			}
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+	<span class="hljs-string">&quot;inputStage&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+		<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
 		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
-						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
-						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
-					]
-				}
-			}
+		<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+		<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
 		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 3,
-		&quot;executionTimeMillis&quot; : 2,
-		&quot;totalKeysExamined&quot; : 6,
-		&quot;totalDocsExamined&quot; : 3,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;nReturned&quot; : 3,
-			&quot;executionTimeMillisEstimate&quot; : 0,
-			&quot;works&quot; : 6,
-			&quot;advanced&quot; : 3,
-			&quot;needTime&quot; : 2,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 0,
-			&quot;restoreState&quot; : 0,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;docsExamined&quot; : 3,
-			&quot;alreadyHasObj&quot; : 0,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;nReturned&quot; : 3,
-				&quot;executionTimeMillisEstimate&quot; : 0,
-				&quot;works&quot; : 6,
-				&quot;advanced&quot; : 3,
-				&quot;needTime&quot; : 2,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 0,
-				&quot;restoreState&quot; : 0,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
-						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
-						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
-					]
-				},
-				&quot;keysExamined&quot; : 6,
-				&quot;seeks&quot; : 3,
-				&quot;dupsTested&quot; : 0,
-				&quot;dupsDropped&quot; : 0,
-				&quot;seenInvalidated&quot; : 0
-			}
+		<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+		<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [
+				<span class="hljs-string">&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;</span>,
+				<span class="hljs-string">&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;</span>,
+				<span class="hljs-string">&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;</span>
+			]
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	}
+}
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">6</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">3</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">6</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">3</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">3</span>,
+		<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">6</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+			},
+			<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+			<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+			},
+			<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+			<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [
+					<span class="hljs-string">&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;</span>,
+					<span class="hljs-string">&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;</span>,
+					<span class="hljs-string">&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;</span>
+				]
+			},
+			<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">6</span>,
+			<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
+		}
+	}
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>6. &#x67E5;&#x8BE2;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x5185;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x53CA;&#x591A;&#x4E2A;&#x5176;&#x4ED6;&#x5C5E;&#x6027;&#xFF0C;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#x662F;&#x5426;&#x547D;&#x4E2D;&#x7D22;&#x5F15;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({&quot;ssn&quot;: {$in: [&quot;001-29-9184&quot;, &quot;177-45-0950&quot;, &quot;265-67-9973&quot;]}, last_name: {$gte: &quot;H&quot;}}).explain(&quot;executionStats&quot;)
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({<span class="hljs-string">&quot;ssn&quot;</span>: {$<span class="hljs-keyword">in</span>: [<span class="hljs-string">&quot;001-29-9184&quot;</span>, <span class="hljs-string">&quot;177-45-0950&quot;</span>, <span class="hljs-string">&quot;265-67-9973&quot;</span>]}, last_name: {$gte: <span class="hljs-string">&quot;H&quot;</span>}}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.queryPlanner.winningPlan
 {
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
-			&quot;$and&quot; : [
-				{
-					&quot;last_name&quot; : {
-						&quot;$gte&quot; : &quot;H&quot;
-					}
-				},
-				{
-					&quot;ssn&quot; : {
-						&quot;$in&quot; : [
-							&quot;001-29-9184&quot;,
-							&quot;177-45-0950&quot;,
-							&quot;265-67-9973&quot;
-						]
-					}
-				}
+	<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+	<span class="hljs-string">&quot;filter&quot;</span> : {
+		<span class="hljs-string">&quot;last_name&quot;</span> : {
+			<span class="hljs-string">&quot;$gte&quot;</span> : <span class="hljs-string">&quot;H&quot;</span>
+		}
+	},
+	<span class="hljs-string">&quot;inputStage&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+		<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+		},
+		<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+		<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+		},
+		<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+		<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+		<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+			<span class="hljs-string">&quot;ssn&quot;</span> : [
+				<span class="hljs-string">&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;</span>,
+				<span class="hljs-string">&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;</span>,
+				<span class="hljs-string">&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;</span>
 			]
-		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;filter&quot; : {
-				&quot;last_name&quot; : {
-					&quot;$gte&quot; : &quot;H&quot;
-				}
-			},
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
-						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
-						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
-					]
-				}
-			}
-		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 2,
-		&quot;executionTimeMillis&quot; : 0,
-		&quot;totalKeysExamined&quot; : 6,
-		&quot;totalDocsExamined&quot; : 3,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;FETCH&quot;,
-			&quot;filter&quot; : {
-				&quot;last_name&quot; : {
-					&quot;$gte&quot; : &quot;H&quot;
-				}
-			},
-			&quot;nReturned&quot; : 2,
-			&quot;executionTimeMillisEstimate&quot; : 0,
-			&quot;works&quot; : 6,
-			&quot;advanced&quot; : 2,
-			&quot;needTime&quot; : 3,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 0,
-			&quot;restoreState&quot; : 0,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;docsExamined&quot; : 3,
-			&quot;alreadyHasObj&quot; : 0,
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;IXSCAN&quot;,
-				&quot;nReturned&quot; : 3,
-				&quot;executionTimeMillisEstimate&quot; : 0,
-				&quot;works&quot; : 6,
-				&quot;advanced&quot; : 3,
-				&quot;needTime&quot; : 2,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 0,
-				&quot;restoreState&quot; : 0,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;keyPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;indexName&quot; : &quot;ssn_1&quot;,
-				&quot;isMultiKey&quot; : false,
-				&quot;multiKeyPaths&quot; : {
-					&quot;ssn&quot; : [ ]
-				},
-				&quot;isUnique&quot; : false,
-				&quot;isSparse&quot; : false,
-				&quot;isPartial&quot; : false,
-				&quot;indexVersion&quot; : 2,
-				&quot;direction&quot; : &quot;forward&quot;,
-				&quot;indexBounds&quot; : {
-					&quot;ssn&quot; : [
-						&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;,
-						&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;,
-						&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;
-					]
-				},
-				&quot;keysExamined&quot; : 6,
-				&quot;seeks&quot; : 3,
-				&quot;dupsTested&quot; : 0,
-				&quot;dupsDropped&quot; : 0,
-				&quot;seenInvalidated&quot; : 0
-			}
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="___4">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</h3>
-<div class="listingblock">
-<div class="title"><strong>1. &#x67E5;&#x770B;&#x96C6;&#x5408;&#x7684;&#x7D22;&#x5F15;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.getIndexes()
-[
-	{
-		&quot;v&quot; : 2,
-		&quot;key&quot; : {
-			&quot;_id&quot; : 1
-		},
-		&quot;name&quot; : &quot;_id_&quot;,
-		&quot;ns&quot; : &quot;m201.people&quot;
-	},
-	{
-		&quot;v&quot; : 2,
-		&quot;key&quot; : {
-			&quot;ssn&quot; : 1
-		},
-		&quot;name&quot; : &quot;ssn_1&quot;,
-		&quot;ns&quot; : &quot;m201.people&quot;
 	}
-]</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>&#x53EF;&#x4EE5;&#x770B;&#x5230; ssh &#x5C5E;&#x6027;&#x4E0A;&#x521B;&#x5EFA;&#x4E86;&#x7D22;&#x5F15;&#x3002;</p>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. &#x4EE5;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x7D22;&#x5F15;&#x6392;&#x5E8F;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain(&quot;executionStats&quot;)
-{
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
+}
 
-		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;PROJECTION&quot;,
-			&quot;transformBy&quot; : {
-				&quot;_id&quot; : 0,
-				&quot;last_name&quot; : 1,
-				&quot;first_name&quot; : 1,
-				&quot;ssn&quot; : 1
-			},
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;FETCH&quot;,
-				&quot;inputStage&quot; : {
-					&quot;stage&quot; : &quot;IXSCAN&quot;,
-					&quot;keyPattern&quot; : {
-						&quot;ssn&quot; : 1
-					},
-					&quot;indexName&quot; : &quot;ssn_1&quot;,
-					&quot;isMultiKey&quot; : false,
-					&quot;multiKeyPaths&quot; : {
-						&quot;ssn&quot; : [ ]
-					},
-					&quot;isUnique&quot; : false,
-					&quot;isSparse&quot; : false,
-					&quot;isPartial&quot; : false,
-					&quot;indexVersion&quot; : 2,
-					&quot;direction&quot; : &quot;forward&quot;,
-					&quot;indexBounds&quot; : {
-						&quot;ssn&quot; : [
-							&quot;[MinKey, MaxKey]&quot;
-						]
-					}
-				}
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">0</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">6</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+		<span class="hljs-string">&quot;filter&quot;</span> : {
+			<span class="hljs-string">&quot;last_name&quot;</span> : {
+				<span class="hljs-string">&quot;$gte&quot;</span> : <span class="hljs-string">&quot;H&quot;</span>
 			}
 		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 50474,
-		&quot;executionTimeMillis&quot; : 189,
-		&quot;totalKeysExamined&quot; : 50474,
-		&quot;totalDocsExamined&quot; : 50474,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;PROJECTION&quot;,
-			&quot;nReturned&quot; : 50474,
-			&quot;executionTimeMillisEstimate&quot; : 180,
-			&quot;works&quot; : 50475,
-			&quot;advanced&quot; : 50474,
-			&quot;needTime&quot; : 0,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 394,
-			&quot;restoreState&quot; : 394,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;transformBy&quot; : {
-				&quot;_id&quot; : 0,
-				&quot;last_name&quot; : 1,
-				&quot;first_name&quot; : 1,
-				&quot;ssn&quot; : 1
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">6</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">3</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">3</span>,
+		<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">6</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
 			},
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;FETCH&quot;,
-				&quot;nReturned&quot; : 50474,
-				&quot;executionTimeMillisEstimate&quot; : 180,
-				&quot;works&quot; : 50475,
-				&quot;advanced&quot; : 50474,
-				&quot;needTime&quot; : 0,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 394,
-				&quot;restoreState&quot; : 394,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;docsExamined&quot; : 50474,
-				&quot;alreadyHasObj&quot; : 0,
-				&quot;inputStage&quot; : {
-					&quot;stage&quot; : &quot;IXSCAN&quot;,
-					&quot;nReturned&quot; : 50474,
-					&quot;executionTimeMillisEstimate&quot; : 0,
-					&quot;works&quot; : 50475,
-					&quot;advanced&quot; : 50474,
-					&quot;needTime&quot; : 0,
-					&quot;needYield&quot; : 0,
-					&quot;saveState&quot; : 394,
-					&quot;restoreState&quot; : 394,
-					&quot;isEOF&quot; : 1,
-					&quot;invalidates&quot; : 0,
-					&quot;keyPattern&quot; : {
-						&quot;ssn&quot; : 1
-					},
-					&quot;indexName&quot; : &quot;ssn_1&quot;,
-					&quot;isMultiKey&quot; : false,
-					&quot;multiKeyPaths&quot; : {
-						&quot;ssn&quot; : [ ]
-					},
-					&quot;isUnique&quot; : false,
-					&quot;isSparse&quot; : false,
-					&quot;isPartial&quot; : false,
-					&quot;indexVersion&quot; : 2,
-					&quot;direction&quot; : &quot;forward&quot;,
-					&quot;indexBounds&quot; : {
-						&quot;ssn&quot; : [
-							&quot;[MinKey, MaxKey]&quot;
-						]
-					},
-					&quot;keysExamined&quot; : 50474,
-					&quot;seeks&quot; : 1,
-					&quot;dupsTested&quot; : 0,
-					&quot;dupsDropped&quot; : 0,
-					&quot;seenInvalidated&quot; : 0
-				}
-			}
+			<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+			<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+			},
+			<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+			<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+			<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+			<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : [
+					<span class="hljs-string">&quot;[\&quot;001-29-9184\&quot;, \&quot;001-29-9184\&quot;]&quot;</span>,
+					<span class="hljs-string">&quot;[\&quot;177-45-0950\&quot;, \&quot;177-45-0950\&quot;]&quot;</span>,
+					<span class="hljs-string">&quot;[\&quot;265-67-9973\&quot;, \&quot;265-67-9973\&quot;]&quot;</span>
+				]
+			},
+			<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">6</span>,
+			<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">3</span>,
+			<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	}
 }</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>3. &#x5220;&#x9664;&#x7D22;&#x5F15;</strong></div>
+<div class="title"><strong>7. &#x4EE5;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x7D22;&#x5F15;&#x6392;&#x5E8F;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.dropIndex({ssn: 1})
-{ &quot;nIndexesWas&quot; : 2, &quot;ok&quot; : 1 }</code></pre>
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-keyword">var</span> r = db.people.find({}, {_id: <span class="hljs-number">0</span>, last_name: <span class="hljs-number">1</span>, first_name: <span class="hljs-number">1</span>, ssn: <span class="hljs-number">1</span>}).sort({ssn: <span class="hljs-number">1</span>}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">116</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;PROJECTION&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">98</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">395</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">395</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;transformBy&quot;</span> : {
+			<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;last_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;first_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+		},
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">76</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">395</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">395</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+				<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">33</span>,
+				<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+				<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">395</span>,
+				<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">395</span>,
+				<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+				},
+				<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_1&quot;</span>,
+				<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+				},
+				<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+				<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : [
+						<span class="hljs-string">&quot;[MinKey, MaxKey]&quot;</span>
+					]
+				},
+				<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
+			}
+		}
+	}
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>4. &#x4EE5;&#x975E;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x5185;&#x5B58;&#x6392;&#x5E8F;</strong></div>
+<div class="title"><strong>8. &#x5220;&#x9664;&#x7D22;&#x5F15;&#xFF0C;&#x4EE5;&#x975E;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x5347;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#xFF0C;&#x6392;&#x5E8F;&#x4F7F;&#x7528;&#x4E86;&#x5185;&#x5B58;&#x6392;&#x5E8F;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-text" data-lang="text">MongoDB Enterprise &gt; db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1}).explain(&quot;executionStats&quot;)
-{
-	&quot;queryPlanner&quot; : {
-		&quot;plannerVersion&quot; : 1,
-		&quot;namespace&quot; : &quot;m201.people&quot;,
-		&quot;indexFilterSet&quot; : false,
-		&quot;parsedQuery&quot; : {
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.people.dropIndex({ssn: <span class="hljs-number">1</span>})
 
+<span class="hljs-keyword">var</span> r = db.people.find({}, {_id: <span class="hljs-number">0</span>, last_name: <span class="hljs-number">1</span>, first_name: <span class="hljs-number">1</span>, ssn: <span class="hljs-number">1</span>}).sort({ssn: <span class="hljs-number">1</span>}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">217</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">0</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;PROJECTION&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">198</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">100952</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">50477</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">795</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">795</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;transformBy&quot;</span> : {
+			<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;last_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;first_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
 		},
-		&quot;winningPlan&quot; : {
-			&quot;stage&quot; : &quot;PROJECTION&quot;,
-			&quot;transformBy&quot; : {
-				&quot;_id&quot; : 0,
-				&quot;last_name&quot; : 1,
-				&quot;first_name&quot; : 1,
-				&quot;ssn&quot; : 1
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SORT&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">162</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">100952</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">50477</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">795</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">795</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;sortPattern&quot;</span> : {
+				<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
 			},
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;SORT&quot;,
-				&quot;sortPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;inputStage&quot; : {
-					&quot;stage&quot; : &quot;SORT_KEY_GENERATOR&quot;,
-					&quot;inputStage&quot; : {
-						&quot;stage&quot; : &quot;COLLSCAN&quot;,
-						&quot;direction&quot; : &quot;forward&quot;
-					}
-				}
-			}
-		},
-		&quot;rejectedPlans&quot; : [ ]
-	},
-	&quot;executionStats&quot; : {
-		&quot;executionSuccess&quot; : true,
-		&quot;nReturned&quot; : 50474,
-		&quot;executionTimeMillis&quot; : 151,
-		&quot;totalKeysExamined&quot; : 0,
-		&quot;totalDocsExamined&quot; : 50474,
-		&quot;executionStages&quot; : {
-			&quot;stage&quot; : &quot;PROJECTION&quot;,
-			&quot;nReturned&quot; : 50474,
-			&quot;executionTimeMillisEstimate&quot; : 132,
-			&quot;works&quot; : 100952,
-			&quot;advanced&quot; : 50474,
-			&quot;needTime&quot; : 50477,
-			&quot;needYield&quot; : 0,
-			&quot;saveState&quot; : 789,
-			&quot;restoreState&quot; : 789,
-			&quot;isEOF&quot; : 1,
-			&quot;invalidates&quot; : 0,
-			&quot;transformBy&quot; : {
-				&quot;_id&quot; : 0,
-				&quot;last_name&quot; : 1,
-				&quot;first_name&quot; : 1,
-				&quot;ssn&quot; : 1
-			},
-			&quot;inputStage&quot; : {
-				&quot;stage&quot; : &quot;SORT&quot;,
-				&quot;nReturned&quot; : 50474,
-				&quot;executionTimeMillisEstimate&quot; : 92,
-				&quot;works&quot; : 100952,
-				&quot;advanced&quot; : 50474,
-				&quot;needTime&quot; : 50477,
-				&quot;needYield&quot; : 0,
-				&quot;saveState&quot; : 789,
-				&quot;restoreState&quot; : 789,
-				&quot;isEOF&quot; : 1,
-				&quot;invalidates&quot; : 0,
-				&quot;sortPattern&quot; : {
-					&quot;ssn&quot; : 1
-				},
-				&quot;memUsage&quot; : 19977871,
-				&quot;memLimit&quot; : 33554432,
-				&quot;inputStage&quot; : {
-					&quot;stage&quot; : &quot;SORT_KEY_GENERATOR&quot;,
-					&quot;nReturned&quot; : 50474,
-					&quot;executionTimeMillisEstimate&quot; : 31,
-					&quot;works&quot; : 50477,
-					&quot;advanced&quot; : 50474,
-					&quot;needTime&quot; : 2,
-					&quot;needYield&quot; : 0,
-					&quot;saveState&quot; : 789,
-					&quot;restoreState&quot; : 789,
-					&quot;isEOF&quot; : 1,
-					&quot;invalidates&quot; : 0,
-					&quot;inputStage&quot; : {
-						&quot;stage&quot; : &quot;COLLSCAN&quot;,
-						&quot;nReturned&quot; : 50474,
-						&quot;executionTimeMillisEstimate&quot; : 10,
-						&quot;works&quot; : 50476,
-						&quot;advanced&quot; : 50474,
-						&quot;needTime&quot; : 1,
-						&quot;needYield&quot; : 0,
-						&quot;saveState&quot; : 789,
-						&quot;restoreState&quot; : 789,
-						&quot;isEOF&quot; : 1,
-						&quot;invalidates&quot; : 0,
-						&quot;direction&quot; : &quot;forward&quot;,
-						&quot;docsExamined&quot; : 50474
-					}
+			<span class="hljs-string">&quot;memUsage&quot;</span> : <span class="hljs-number">19977871</span>,
+			<span class="hljs-string">&quot;memLimit&quot;</span> : <span class="hljs-number">33554432</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;SORT_KEY_GENERATOR&quot;</span>,
+				<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">57</span>,
+				<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50477</span>,
+				<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">795</span>,
+				<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">795</span>,
+				<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;inputStage&quot;</span> : {
+					<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;COLLSCAN&quot;</span>,
+					<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+					<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">21</span>,
+					<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50476</span>,
+					<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+					<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">1</span>,
+					<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+					<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">795</span>,
+					<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">795</span>,
+					<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+					<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+					<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+					<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">50474</span>
 				}
 			}
 		}
-	},
-	&quot;serverInfo&quot; : {
-		&quot;host&quot; : &quot;m103&quot;,
-		&quot;port&quot; : 27017,
-		&quot;version&quot; : &quot;3.6.11&quot;,
-		&quot;gitVersion&quot; : &quot;b4339db12bf57ffee5b84a95c6919dbd35fe31c9&quot;
-	},
-	&quot;ok&quot; : 1
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x521B;&#x5EFA;&#x5347;&#x7EED;&#x7D22;&#x5F15;&#xFF0C;&#x4EE5;&#x7D22;&#x5F15;&#x7684;&#x5C5E;&#x6027;&#x8FDB;&#x884C;&#x964D;&#x5E8F;&#x6392;&#x5E8F;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x6267;&#x884C;&#x8BA1;&#x5212;&#xFF0C;&#x9884;&#x671F;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.people.createIndex({ssn: <span class="hljs-number">-1</span>})
+
+<span class="hljs-keyword">var</span> r = db.people.find({}, {_id: <span class="hljs-number">0</span>, last_name: <span class="hljs-number">1</span>, first_name: <span class="hljs-number">1</span>, ssn: <span class="hljs-number">1</span>}).sort({ssn: <span class="hljs-number">-1</span>}).explain(<span class="hljs-string">&quot;executionStats&quot;</span>)
+
+r.executionStats
+{
+	<span class="hljs-string">&quot;executionSuccess&quot;</span> : <span class="hljs-literal">true</span>,
+	<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionTimeMillis&quot;</span> : <span class="hljs-number">123</span>,
+	<span class="hljs-string">&quot;totalKeysExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;totalDocsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+	<span class="hljs-string">&quot;executionStages&quot;</span> : {
+		<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;PROJECTION&quot;</span>,
+		<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">110</span>,
+		<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+		<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+		<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">396</span>,
+		<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">396</span>,
+		<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+		<span class="hljs-string">&quot;transformBy&quot;</span> : {
+			<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;last_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;first_name&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">1</span>
+		},
+		<span class="hljs-string">&quot;inputStage&quot;</span> : {
+			<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;FETCH&quot;</span>,
+			<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">99</span>,
+			<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+			<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">396</span>,
+			<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">396</span>,
+			<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+			<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;docsExamined&quot;</span> : <span class="hljs-number">50474</span>,
+			<span class="hljs-string">&quot;alreadyHasObj&quot;</span> : <span class="hljs-number">0</span>,
+			<span class="hljs-string">&quot;inputStage&quot;</span> : {
+				<span class="hljs-string">&quot;stage&quot;</span> : <span class="hljs-string">&quot;IXSCAN&quot;</span>,
+				<span class="hljs-string">&quot;nReturned&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;executionTimeMillisEstimate&quot;</span> : <span class="hljs-number">23</span>,
+				<span class="hljs-string">&quot;works&quot;</span> : <span class="hljs-number">50475</span>,
+				<span class="hljs-string">&quot;advanced&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;needTime&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;needYield&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;saveState&quot;</span> : <span class="hljs-number">396</span>,
+				<span class="hljs-string">&quot;restoreState&quot;</span> : <span class="hljs-number">396</span>,
+				<span class="hljs-string">&quot;isEOF&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;invalidates&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;keyPattern&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : <span class="hljs-number">-1</span>
+				},
+				<span class="hljs-string">&quot;indexName&quot;</span> : <span class="hljs-string">&quot;ssn_-1&quot;</span>,
+				<span class="hljs-string">&quot;isMultiKey&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;multiKeyPaths&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : [ ]
+				},
+				<span class="hljs-string">&quot;isUnique&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isSparse&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;isPartial&quot;</span> : <span class="hljs-literal">false</span>,
+				<span class="hljs-string">&quot;indexVersion&quot;</span> : <span class="hljs-number">2</span>,
+				<span class="hljs-string">&quot;direction&quot;</span> : <span class="hljs-string">&quot;forward&quot;</span>,
+				<span class="hljs-string">&quot;indexBounds&quot;</span> : {
+					<span class="hljs-string">&quot;ssn&quot;</span> : [
+						<span class="hljs-string">&quot;[MaxKey, MinKey]&quot;</span>
+					]
+				},
+				<span class="hljs-string">&quot;keysExamined&quot;</span> : <span class="hljs-number">50474</span>,
+				<span class="hljs-string">&quot;seeks&quot;</span> : <span class="hljs-number">1</span>,
+				<span class="hljs-string">&quot;dupsTested&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;dupsDropped&quot;</span> : <span class="hljs-number">0</span>,
+				<span class="hljs-string">&quot;seenInvalidated&quot;</span> : <span class="hljs-number">0</span>
+			}
+		}
+	}
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="___5">&#x590D;&#x5408;&#x7D22;&#x5F15;</h3>
+<h3 id="__compound_indexes">&#x590D;&#x5408;&#x7D22;&#x5F15;(Compound Indexes)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">&#x7D22;&#x5F15;&#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x4E0E;&#x521B;&#x5EFA;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___4">&#x590D;&#x5408;&#x7D22;&#x5F15;</h3>
 <div class="paragraph">
 <p>&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5373;&#x7D22;&#x5F15;&#x9879;&#x662F;&#x7531;&#x591A;&#x4E2A;&#x5C5E;&#x6027;&#x6784;&#x6210;&#x3002;</p>
 </div>
@@ -1576,7 +1616,7 @@ queryPlanner &#x90E8;&#x5206; winningPlan stage &#x4E3A; FETCH&#xFF0C;&#x800C; i
 </div>
 </div>
 <div class="sect2">
-<h3 id="___6">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</h3>
+<h3 id="___5">&#x4F7F;&#x7528;&#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x521B;&#x5EFA;&#x590D;&#x5408;&#x7D22;&#x5F15; <code>{job: 1, employer: 1, last_name: 1, frist_name: 1}</code>&#xFF0C;&#x57FA;&#x4E8E;&#x6B64;&#x7D22;&#x5F15;&#x8FDB;&#x884C;&#x67E5;&#x8BE2;&#x3002;</p>
 </div>
@@ -1685,7 +1725,7 @@ db.people.find({job: &quot;Jewellery designer&quot;, first_name: &quot;Sara&quot
 </table>
 </div>
 <div class="sect2">
-<h3 id="___7">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</h3>
+<h3 id="___6">&#x6392;&#x5E8F;&#x4E2D;&#x4F7F;&#x7528;&#x590D;&#x5408;&#x7D22;&#x5F15;&#x5C5E;&#x6027;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x67E5;&#x770B;&#x7D22;&#x5F15;</strong></div>
 <div class="content">
@@ -1987,10 +2027,10 @@ WriteResult({
 </div>
 </div>
 <div class="sect1">
-<h2 id="___8">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</h2>
+<h2 id="___7">&#x521B;&#x5EFA;&#x7D22;&#x5F15;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___9">&#x6570;&#x636E;&#x5BFC;&#x5165;</h3>
+<h3 id="___8">&#x6570;&#x636E;&#x5BFC;&#x5165;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
 <div class="content">
@@ -2264,12 +2304,12 @@ MongoDB Enterprise &gt; db.restaurants.findOne()
 
             
                 
-                <a href="security.html" class="navigation navigation-prev " aria-label="Previous page: 安全">
+                <a href="opsmanager.html" class="navigation navigation-prev " aria-label="Previous page: Ops Manager">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="troubleshooting.html" class="navigation navigation-next " aria-label="Next page: Troubleshooting">
+                <a href="troubleshooting.html" class="navigation navigation-next " aria-label="Next page: 监控">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -2280,7 +2320,7 @@ MongoDB Enterprise &gt; db.restaurants.findOne()
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.6","depth":1,"next":{"title":"Troubleshooting","level":"1.7","depth":1,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"previous":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-04-06T08:42:06.258Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T05:33:15.034Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.4.2","depth":2,"next":{"title":"监控","level":"1.4.3","depth":2,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"previous":{"title":"Ops Manager","level":"1.4.1","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-07-24T12:44:17.185Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-08-06T11:24:55.955Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

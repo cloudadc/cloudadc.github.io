@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="dba/basic.html" />
+    <link rel="next" href="presentation.html" />
     
     
 
@@ -102,6 +102,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.1.1" data-path="presentation.html">
+            
+                <a href="presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.2" data-path="dba/basic.html">
@@ -114,6 +133,25 @@
                 </a>
             
 
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="dba/dist.html">
+            
+                <a href="dba/dist.html">
+            
+                    
+                    分布式系统
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
             
         </li>
     
@@ -189,6 +227,32 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4.2" data-path="dba/perf.html">
+            
+                <a href="dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="dba/troubleshooting.html">
+            
+                <a href="dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -207,12 +271,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.6" data-path="dba/perf.html">
+        <li class="chapter " data-level="1.6" data-path="dba/dba.html">
             
-                <a href="dba/perf.html">
+                <a href="dba/dba.html">
             
                     
-                    性能调优
+                    DBA
             
                 </a>
             
@@ -220,33 +284,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.7" data-path="dba/troubleshooting.html">
-            
-                <a href="dba/troubleshooting.html">
-            
-                    
-                    Troubleshooting
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.8" data-path="dba/exam.html">
-            
-                <a href="dba/exam.html">
-            
-                    
-                    Q & A
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.9" data-path="python/">
+        <li class="chapter " data-level="1.7" data-path="python/">
             
                 <a href="python/">
             
@@ -259,7 +297,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.10" data-path="examples/">
+        <li class="chapter " data-level="1.8" data-path="examples/">
             
                 <a href="examples/">
             
@@ -273,7 +311,7 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.10.1" data-path="examples/aggregation-sum.html">
+        <li class="chapter " data-level="1.8.1" data-path="examples/aggregation-sum.html">
             
                 <a href="examples/aggregation-sum.html">
             
@@ -347,6 +385,16 @@
 <li><a href="#_best_way_to_work_with_data">Best way to work with data(&#x4E3A;&#x5FEB;&#x901F;&#x5F00;&#x53D1;&#x800C;&#x751F;)</a></li>
 <li><a href="#_intelligently_put_data_where_you_want_it">Intelligently put data where you want it(&#x4E3A;&#x9AD8;&#x6548;&#x53EF;&#x9760;&#x8FD0;&#x884C;&#x800C;&#x8BBE;&#x8BA1;)</a></li>
 <li><a href="#_freedom_to_run_anywhere">Freedom to run anywhere(&#x4E3A;&#x968F;&#x5904;&#x90E8;&#x7F72;&#x800C;&#x5EFA;)</a></li>
+</ul>
+</li>
+<li><a href="#_mongodb_3">MongoDB &#x4EF7;&#x503C;</a>
+<ul class="sectlevel2">
+<li><a href="#_rich_query">RICH-QUERY</a></li>
+<li><a href="#_flexible_2">FLEXIBLE</a></li>
+<li><a href="#_ingest_rate">INGEST-RATE</a></li>
+<li><a href="#_fast_analytics">FAST-ANALYTICS</a></li>
+<li><a href="#_transaction">TRANSACTION</a></li>
+<li><a href="#_schema">SCHEMA</a></li>
 </ul>
 </li>
 <li><a href="#_mongodb_devops">MongoDB &#x52A9;&#x529B; DevOps</a></li>
@@ -1344,6 +1392,451 @@ db.users.insert({firstName:<span class="hljs-string">&quot;Kylin&quot;</span>, l
 </div>
 </div>
 <div class="sect1">
+<h2 id="_mongodb_3">MongoDB &#x4EF7;&#x503C;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>&#x51C6;&#x5907;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 &gt; ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
+$ mongod --port 27000 --dbpath ~/tmp/r0/
+$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
+
+//&#x542F;&#x52A8;
+$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/tmp/r<span class="hljs-variable">$i</span> --logpath ~/tmp/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
+
+//&#x521D;&#x59CB;&#x5316;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27001&quot;)&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27002&quot;)&apos;</span>
+
+//&#x96C6;&#x7FA4;&#x521D;&#x59CB;&#x5316;&#x9A8C;&#x8BC1;
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.isMaster()&apos;</span>
+$ mongo admin --port 27000 -u root -p mongo --eval <span class="hljs-string">&apos;rs.status()&apos;</span></code></pre>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_rich_query">RICH-QUERY</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5; <a href="mgeneratejs"><a href="https://www.npmjs.com/package/mgeneratejs" class="bare" target="_blank">https://www.npmjs.com/package/mgeneratejs</a></a></strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ node -v
+v10.15.3
+
+$ npm install -g mgeneratejs</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5BFC;&#x5165;&#x6570;&#x636E;(<a href="etc/files/CustomerSingleView.json">CustomerSingleView.json</a>)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mgeneratejs CustomerSingleView.json -n 1000000 &gt; customers.json
+$ mongoimport --host ksoong.local:27000 -u root -p mongo --authenticationDatabase=admin  --db=<span class="hljs-built_in">test</span> --collection=customers --drop --file= customers.json</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. Compass &#x6267;&#x884C;&#x5982;&#x4E0B;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">{ <span class="hljs-string">&apos;gender&apos;</span>: <span class="hljs-string">&apos;Female&apos;</span> }
+{ <span class="hljs-string">&apos;dob&apos;</span>: { <span class="hljs-string">&apos;$gte&apos;</span>: ISODate(<span class="hljs-string">&apos;1990-01-01&apos;</span>), <span class="hljs-string">&apos;$lte&apos;</span> : ISODate(<span class="hljs-string">&apos;1990-12-12&apos;</span>) }}
+{ <span class="hljs-string">&apos;address.state&apos;</span>: <span class="hljs-string">&apos;UT&apos;</span> }
+{policies: { <span class="hljs-string">&apos;$elemMatch&apos;</span>: { <span class="hljs-string">&apos;policyType&apos;</span>: <span class="hljs-string">&apos;life&apos;</span>, <span class="hljs-string">&apos;insured_person.smoking&apos;</span>: <span class="hljs-literal">true</span> }}}
+{ <span class="hljs-string">&apos;gender&apos;</span>: <span class="hljs-string">&apos;Female&apos;</span>, <span class="hljs-string">&apos;dob&apos;</span>: { <span class="hljs-string">&apos;$gte&apos;</span>: ISODate(<span class="hljs-string">&apos;1990-01-01&apos;</span>), <span class="hljs-string">&apos;$lte&apos;</span> : ISODate(<span class="hljs-string">&apos;1990-12-12&apos;</span>)}, <span class="hljs-string">&apos;address.state&apos;</span>: <span class="hljs-string">&apos;UT&apos;</span>, <span class="hljs-string">&apos;policies&apos;</span>: { <span class="hljs-variable">$elemMatch</span>: {<span class="hljs-string">&apos;policyType&apos;</span>: <span class="hljs-string">&apos;life&apos;</span>, <span class="hljs-string">&apos;insured_person.smoking&apos;</span>: <span class="hljs-literal">true</span> }}}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. Compass &#x521B;&#x5EFA;&#x5982;&#x4E0B;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">FIELD: address.state, TYPE: 1 (asc)
+FIELD: policies.policyType, TYPE: 1 (asc)
+FIELD: policies.insured_person.smoking, TYPE: 1 (asc)
+FIELD: gender, TYPE: 1 (asc)
+FIELD: dob, TYPE: 1 (asc)
+
+db.customers.createIndex({<span class="hljs-string">&quot;address.state&quot;</span>:1, <span class="hljs-string">&quot;policies.policyType&quot;</span>:1, <span class="hljs-string">&quot;policies.insured_person.smoking&quot;</span>:1, <span class="hljs-string">&quot;gender&quot;</span>:1, <span class="hljs-string">&quot;dob&quot;</span>:1})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>5. &#x7ED3;&#x679C;</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x65E0;&#x7D22;&#x5F15; - &#x5168;&#x96C6;&#x5408;&#x626B;&#x63CF; 1m &#x6587;&#x6863;&#xFF0C;&#x8FD4;&#x56DE; 59 &#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x82B1;&#x8D39;&#x65F6;&#x95F4;&#x4E3A; 1780 &#x6BEB;&#x79D2;</p>
+</li>
+<li>
+<p>&#x6709;&#x7D22;&#x5F15; - &#x7D22;&#x5F15;&#x626B;&#x63CF; 59 &#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x8FD4;&#x56DE; 59 &#x4E2A;&#x6587;&#x6863;&#xFF0C;&#x82B1;&#x8D39;&#x65F6;&#x95F4;&#x4E3A; 4 &#x6BEB;&#x79D2;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flexible_2">FLEXIBLE</h3>
+<div class="paragraph">
+<p><strong>1. &#x811A;&#x672C;&#x4E0B;&#x8F7D;</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="etc/pov/demo_settings.py">demo_settings.py</a></p>
+</li>
+<li>
+<p><a href="etc/pov/create_model.py">create_model.py</a></p>
+</li>
+<li>
+<p><a href="etc/pov/microservice_one.py">microservice_one.py</a></p>
+</li>
+<li>
+<p><a href="etc/pov/alter_model.py">alter_model.py</a></p>
+</li>
+<li>
+<p><a href="etc/pov/microservice_two.py">microservice_two.py</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4F9D;&#x6B21;&#x6267;&#x884C;&#x811A;&#x672C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ./create_model.py
+$ ./microservice_one.py
+$ ./alter_model.py
+$ ./microservice_two.py</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ingest_rate">INGEST-RATE</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x4E0B;&#x8F7D; POCDriver</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget https://github.com/johnlpage/POCDriver/archive/master.zip
+unzip master.zip
+<span class="hljs-built_in">cd</span> POCDriver*
+mvn clean package
+<span class="hljs-built_in">cd</span> bin
+ls POCDriver.jar</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C; mongostat &#x67E5;&#x770B;&#x76D1;&#x63A7;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongostat --host ksoong.local:27000 --discover -u root -p mongo --authenticationDatabase admin</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ java -jar POCDriver.jar -c <span class="hljs-string">&quot;mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&amp;authSource=admin&quot;</span> -t 4 <span class="hljs-_">-e</span> <span class="hljs-_">-d</span> 600 <span class="hljs-_">-f</span> 25 <span class="hljs-_">-a</span> 5:5 --depth 2 -x 3
+$ java -jar POCDriver.jar -c <span class="hljs-string">&quot;mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&amp;authSource=admin&quot;</span> -t 4 <span class="hljs-_">-e</span> <span class="hljs-_">-d</span> 600 <span class="hljs-_">-f</span> 234 <span class="hljs-_">-a</span> 20:20 --depth 2 -x 6
+$ java -jar POCDriver.jar -c <span class="hljs-string">&quot;mongodb://root:mongo@ksoong.local:27000,ksoong.local:27001,ksoong.local:27002/admin?replicaSet=repl-1&amp;authSource=admin&quot;</span> -t 4 <span class="hljs-_">-e</span> <span class="hljs-_">-d</span> 600 <span class="hljs-_">-f</span> 1692 <span class="hljs-_">-a</span> 10:10 --depth 2 -x 8</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_fast_analytics">FAST-ANALYTICS</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5BFC;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongorestore --host repl-1/ksoong.local:27000,ksoong.local:27001,ksoong.local:27002 -u root -p mongo --authenticationDatabase admin --gzip customers_1m.bson.gz
+$ mongorestore --host repl-1/ksoong.local:27000,ksoong.local:27001,ksoong.local:27002 -u root -p mongo --authenticationDatabase admin --gzip customers_10m.bson.gz</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use <span class="hljs-built_in">test</span>
+db.customers_1m.createIndex({country:1})
+db.customers_10m.createIndex({country:1})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x805A;&#x5408;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.customers_1m.aggregate([{ <span class="hljs-variable">$match</span>: { <span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} }])
+db.customers_1m.aggregate([{ <span class="hljs-variable">$match</span>: {<span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$unwind</span>: {  path: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span>,} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.accountType&quot;</span>, total: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.balance&quot;</span>}} }])
+db.customers_1m.aggregate([{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;avgRank&quot;</span>:-1}}])
+db.customers_1m.aggregate([{<span class="hljs-variable">$project</span>: {country: 1, numProducts: { <span class="hljs-variable">$size</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span> }}},{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, productCount: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$numProducts</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;productCount&quot;</span>:-1}}])
+
+db.customers_10m.aggregate([{ <span class="hljs-variable">$match</span>: { <span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} }])
+db.customers_10m.aggregate([{ <span class="hljs-variable">$match</span>: {<span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$unwind</span>: {  path: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span>,} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.accountType&quot;</span>, total: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.balance&quot;</span>}} }])
+db.customers_10m.aggregate([{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;avgRank&quot;</span>:-1}}])
+db.customers_10m.aggregate([{<span class="hljs-variable">$project</span>: {country: 1, numProducts: { <span class="hljs-variable">$size</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span> }}},{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, productCount: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$numProducts</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;productCount&quot;</span>:-1}}])</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x805A;&#x5408;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.customers_1m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$match</span>: { <span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} }])
+db.customers_1m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$match</span>: {<span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$unwind</span>: {  path: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span>,} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.accountType&quot;</span>, total: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.balance&quot;</span>}} }])
+db.customers_1m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;avgRank&quot;</span>:-1}}])
+db.customers_1m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{<span class="hljs-variable">$project</span>: {country: 1, numProducts: { <span class="hljs-variable">$size</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span> }}},{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, productCount: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$numProducts</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;productCount&quot;</span>:-1}}])
+
+db.customers_10m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$match</span>: { <span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} }])
+db.customers_10m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$match</span>: {<span class="hljs-string">&quot;country&quot;</span>:<span class="hljs-string">&quot;EN&quot;</span>} }, { <span class="hljs-variable">$unwind</span>: {  path: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span>,} }, { <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.accountType&quot;</span>, total: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>.balance&quot;</span>}} }])
+db.customers_10m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, avgRank: {<span class="hljs-variable">$avg</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$rankLevel</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;avgRank&quot;</span>:-1}}])
+db.customers_10m.explain(<span class="hljs-string">&quot;executionStats&quot;</span>).aggregate([{<span class="hljs-variable">$project</span>: {country: 1, numProducts: { <span class="hljs-variable">$size</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$accounts</span>&quot;</span> }}},{ <span class="hljs-variable">$group</span>: {_id: <span class="hljs-string">&quot;<span class="hljs-variable">$country</span>&quot;</span>, productCount: {<span class="hljs-variable">$sum</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$numProducts</span>&quot;</span>}} },{<span class="hljs-variable">$sort</span>:{<span class="hljs-string">&quot;productCount&quot;</span>:-1}}])</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x805A;&#x5408;</th>
+<th class="tableblock halign-left valign-top">1m &#x6587;&#x6863;</th>
+<th class="tableblock halign-left valign-top">10m &#x6587;&#x6863;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x805A;&#x5408; 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">597 &#x6BEB;&#x79D2;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x805A;&#x5408; 2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1482 &#x6BEB;&#x79D2;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x805A;&#x5408; 3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1011 &#x6BEB;&#x79D2;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x805A;&#x5408; 4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4553 &#x6BEB;&#x79D2;</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_transaction">TRANSACTION</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// create player collection <span class="hljs-keyword">in</span> the game database with 2 Players
+use game;
+
+db.player.insert({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10 });
+db.player.insert({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gilgamesh&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Ranger&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10});
+
+db.player.createIndex( { <span class="hljs-string">&quot;name&quot;</span>: 1 }, { unique: <span class="hljs-literal">true</span> } );</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x4F1A;&#x8BDD;&#x9694;&#x79BB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">var s1 = db.getMongo().startSession();
+var s2 = db.getMongo().startSession();
+var s1Player = s1.getDatabase(<span class="hljs-string">&apos;game&apos;</span>).getCollection(<span class="hljs-string">&apos;player&apos;</span>);
+var s2Player = s2.getDatabase(<span class="hljs-string">&apos;game&apos;</span>).getCollection(<span class="hljs-string">&apos;player&apos;</span>);
+s1.startTransaction({<span class="hljs-built_in">read</span>Concern: {level: <span class="hljs-string">&apos;snapshot&apos;</span>}, writeConcern: {w: <span class="hljs-string">&apos;majority&apos;</span>}});
+
+// Insert player 3, inside a transaction/session1
+s1Player.insert({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10});
+
+// Use session 2 and find the documents from collection and session1
+s2Player.find();
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10 }
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gilgamesh&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Ranger&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10}
+
+// Notice that the insert on session1 is only visible to it.
+s1Player.find()
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10 }
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gilgamesh&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Ranger&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10}
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10}<span class="hljs-string">&quot;}
+
+// Commit &amp; end the session (if not committed within 60 secs transaction will timeout)
+s1.commitTransaction();
+
+// show the documents after committing the transaction
+s2Player.find();
+// EXPECTED RESULT:
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Zoltar<span class="hljs-string">&quot;, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Mage<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10 }
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Gilgamesh, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Ranger&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10}
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Mage<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10}&quot;</span>}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x591A;&#x6587;&#x6863;&#x66F4;&#x65B0;&#x3001;&#x539F;&#x5B50;&#x6027;&#x548C;&#x4F1A;&#x8BDD;&#x9694;&#x79BB;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// Start transaction with Merlin buying an apple from Zoltar <span class="hljs-keyword">for</span> 2 gold
+s1.startTransaction({<span class="hljs-built_in">read</span>Concern: {level: <span class="hljs-string">&apos;snapshot&apos;</span>}, writeConcern: {w: <span class="hljs-string">&apos;majority&apos;</span>}});
+s1Player.updateOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>}, {<span class="hljs-string">&quot;<span class="hljs-variable">$inc</span>&quot;</span>: {<span class="hljs-string">&quot;Gold&quot;</span>: 2, <span class="hljs-string">&quot;Apples&quot;</span>: -1} });
+s1Player.updateOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin&quot;</span>}, {<span class="hljs-string">&quot;<span class="hljs-variable">$inc</span>&quot;</span>: {<span class="hljs-string">&quot;Gold&quot;</span>: -2, <span class="hljs-string">&quot;Apples&quot;</span>: 1} });
+
+s1Player.find();
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gilgamesh, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Ranger<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10}
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Merlin, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 98, <span class="hljs-string">&quot;Apples&quot;</span>: 11}<span class="hljs-string">&quot;}
+
+s2Player.find();
+// EXPECTED RESULT:
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Zoltar<span class="hljs-string">&quot;, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Mage<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10 }
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Gilgamesh, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Ranger&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10}
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Mage<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10}&quot;</span>}
+
+s1.commitTransaction();
+
+s2Player.find();
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Gilgamesh, &quot;</span>class<span class="hljs-string">&quot;: &quot;</span>Ranger<span class="hljs-string">&quot;, &quot;</span>Gold<span class="hljs-string">&quot;: 100, &quot;</span>Apples<span class="hljs-string">&quot;: 10}
+// {&quot;</span>name<span class="hljs-string">&quot;: &quot;</span>Merlin, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 98, <span class="hljs-string">&quot;Apples&quot;</span>: 11}<span class="hljs-string">&quot;}</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x591A;&#x6587;&#x6863;&#x66F4;&#x65B0;&#x3001;&#x539F;&#x5B50;&#x6027;&#x3001;&#x4E00;&#x81F4;&#x6027;&#x548C;&#x56DE;&#x6EDA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// Start a transaction with Zoltar refers a friend and gets 10 gold <span class="hljs-keyword">for</span> the account creation
+s1.startTransaction({<span class="hljs-built_in">read</span>Concern: {level: <span class="hljs-string">&apos;snapshot&apos;</span>}, writeConcern: {w: <span class="hljs-string">&apos;majority&apos;</span>}});
+
+s1Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+
+s1Player.updateOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>}, {<span class="hljs-string">&quot;<span class="hljs-variable">$inc</span>&quot;</span>: {<span class="hljs-string">&quot;Gold&quot;</span>: 10} });
+
+s1Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 112, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+
+s1Player.insert({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Merlin&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Wizard&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10 });
+// EXPECTED RESULT:
+// WriteCommandError({
+//        <span class="hljs-string">&quot;operationTime&quot;</span> : Timestamp(1549657865, 3),
+//        <span class="hljs-string">&quot;ok&quot;</span> : 0,
+//        <span class="hljs-string">&quot;errmsg&quot;</span> : <span class="hljs-string">&quot;E11000 duplicate key error collection: game.player index: name_1 dup key: { : \&quot;Merlin\&quot; }&quot;</span>,
+//        <span class="hljs-string">&quot;code&quot;</span> : 11000,
+//        <span class="hljs-string">&quot;codeName&quot;</span> : <span class="hljs-string">&quot;DuplicateKey&quot;</span>,
+// })
+
+s1.abortTransaction();
+
+s1Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. Multiple Document Updates and Retries Leading to Commit</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ Start a transaction with Zoltar refers a friend and gets 10 gold <span class="hljs-keyword">for</span> the account creation
+s1.startTransaction({<span class="hljs-built_in">read</span>Concern: {level: <span class="hljs-string">&apos;snapshot&apos;</span>}, writeConcern: {w: <span class="hljs-string">&apos;majority&apos;</span>}});
+
+s1Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+
+s1Player.updateOne({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>}, {<span class="hljs-string">&quot;<span class="hljs-variable">$inc</span>&quot;</span>: {<span class="hljs-string">&quot;Gold&quot;</span>: 10} });
+
+s1Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 112, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+
+s2Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 102, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }
+
+s1Player.insert({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Tim&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Wizard&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 100, <span class="hljs-string">&quot;Apples&quot;</span>: 10 });
+
+s1.commitTransaction();
+
+s2Player.find({<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>});
+// EXPECTED RESULT:
+// {<span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Zoltar&quot;</span>, <span class="hljs-string">&quot;class&quot;</span>: <span class="hljs-string">&quot;Mage&quot;</span>, <span class="hljs-string">&quot;Gold&quot;</span>: 112, <span class="hljs-string">&quot;Apples&quot;</span>: 9 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_schema">SCHEMA</h3>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_mongodb_devops">MongoDB &#x52A9;&#x529B; DevOps</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -1365,6 +1858,9 @@ db.users.insert({firstName:<span class="hljs-string">&quot;Kylin&quot;</span>, l
 <div class="sectionbody">
 <div class="ulist">
 <ul>
+<li>
+<p>FY20 Q1 - <a href="https://www.fool.com/earnings/call-transcripts/2019/06/05/mongodb-inc-mdb-q1-2020-earnings-call-transcript.aspx" class="bare" target="_blank">https://www.fool.com/earnings/call-transcripts/2019/06/05/mongodb-inc-mdb-q1-2020-earnings-call-transcript.aspx</a></p>
+</li>
 <li>
 <p>FY19 Q4 - <a href="https://www.fool.com/earnings/call-transcripts/2019/03/14/mongodb-inc-mdb-q4-2018-earnings-conference-call-t.aspx" class="bare" target="_blank">https://www.fool.com/earnings/call-transcripts/2019/03/14/mongodb-inc-mdb-q4-2018-earnings-conference-call-t.aspx</a></p>
 </li>
@@ -1411,7 +1907,7 @@ db.users.insert({firstName:<span class="hljs-string">&quot;Kylin&quot;</span>, l
             
                 
                 
-                <a href="dba/basic.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 基础">
+                <a href="presentation.html" class="navigation navigation-next navigation-unique" aria-label="Next page: 为什么 MongoDB">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1422,7 +1918,7 @@ db.users.insert({firstName:<span class="hljs-string">&quot;Kylin&quot;</span>, l
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-05-31T06:55:50.769Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-06-20T05:33:15.034Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"MongoDB","level":"1.1","depth":1,"next":{"title":"为什么 MongoDB","level":"1.1.1","depth":2,"path":"presentation.adoc","ref":"presentation.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"README.adoc","mtime":"2019-07-03T13:18:04.196Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-08-06T11:24:55.955Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
