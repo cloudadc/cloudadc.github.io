@@ -182,6 +182,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1.1" data-path="aggregation-sum.html">
+            
+                <a href="aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
         <li class="chapter " data-level="1.3.2" data-path="java.html">
@@ -299,38 +318,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.8" data-path="../examples/">
-            
-                <a href="../examples/">
-            
-                    
-                    示例
-            
-                </a>
-            
-
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.8.1" data-path="../examples/aggregation-sum.html">
-            
-                <a href="../examples/aggregation-sum.html">
-            
-                    
-                    sum
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
-        </li>
-    
 
     
 
@@ -377,7 +364,39 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x5F00;&#x53D1;">&#x5F00;&#x53D1;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x5FEB;&#x901F;&#x521B;&#x5EFA;&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x5FEB;&#x901F;&#x521B;&#x5EFA;&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</h2>
+<div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x65E0;&#x5B89;&#x5168;&#x5FEB;&#x901F;&#x521B;&#x5EFA;&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir -p ~/data/r{0,1,2}
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/data/r<span class="hljs-variable">$i</span> --logpath ~/data/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --replSet repl ; <span class="hljs-keyword">done</span>
 
+mongo admin --port 27000 --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
+mongo admin --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27001&quot;)&apos;</span>
+mongo admin --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27002&quot;)&apos;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -420,7 +439,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"开发","level":"1.3","depth":1,"next":{"title":"Aggregation","level":"1.3.1","depth":2,"path":"dev/aggregation.adoc","ref":"dev/aggregation.adoc","articles":[]},"previous":{"title":"分布式系统","level":"1.2.1","depth":2,"path":"dba/dist.adoc","ref":"dba/dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/README.adoc","mtime":"2019-07-03T03:32:17.679Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-08-06T11:24:55.955Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"开发","level":"1.3","depth":1,"next":{"title":"Aggregation","level":"1.3.1","depth":2,"path":"dev/aggregation.adoc","ref":"dev/aggregation.adoc","articles":[{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"分布式系统","level":"1.2.1","depth":2,"path":"dba/dist.adoc","ref":"dba/dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/README.adoc","mtime":"2019-08-20T06:16:08.040Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-08-20T09:22:00.173Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

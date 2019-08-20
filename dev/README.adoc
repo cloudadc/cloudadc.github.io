@@ -1,3 +1,17 @@
 = 开发
 :toc: manual
 
+== 快速创建三节点复制集
+
+NOTE: 无安全快速创建三节点复制集。
+
+[source, bash]
+----
+mkdir -p ~/data/r{0,1,2}
+for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --replSet repl ; done
+
+mongo admin --port 27000 --eval 'rs.initiate()'
+mongo admin --port 27000 --eval 'rs.add("ksoong.local:27001")'
+mongo admin --port 27000 --eval 'rs.add("ksoong.local:27002")'
+----
+
