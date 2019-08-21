@@ -104,7 +104,7 @@ journal 确保数据写磁盘过程中的一致性。那么 journal 详细工作
 
 TODO--
 
-== MongoDB 索引类型
+== MongoDB 索引
 
 === 单字段索引(Single Field Indexes)
 
@@ -113,6 +113,13 @@ MongoDB 数据库中所提供的最简单索引，它的创建语法：
 [source, javascript]
 ----
 db.<collection>.createIndex({<field>: <direction>})
+----
+
+下载 people.json (链接: https://pan.baidu.com/s/1ZEbXIU3NXcToT5-xNQY83g 提取码: 3wvd) 导入到 MongoDB
+
+[source, javascript]
+----
+$ mongoimport --host 127.0.0.1:27000 --db test --collection people --drop --file ~/Downloads/people.json
 ----
 
 [source, javascript]
@@ -267,7 +274,45 @@ r.executionStats
 }
 ----
 
-NOTE: queryPlanner 部分 winningPlan stage 为 FETCH，而 inputStage 的 stage 为 IXSCAN，即查询是通过索引完成；executionStats 部分 nReturned 显示查询结果返回文档总数为 1，totalDocsExamined 属性显示扫描文档的总数为 1，即通过索引获取。
+NOTE: 注意: queryPlanner 部分 winningPlan stage 为 FETCH，而 inputStage 的 stage 为 IXSCAN，即查询是通过索引完成；executionStats 部分 nReturned 显示查询结果返回文档总数为 1，totalDocsExamined 属性显示扫描文档的总数为 1，即通过索引获取。
+
+*对比有索引和无索引下执行计划的不同*
+
+|===
+|对比项 |无索引 |有索引
+
+|`queryPlanner.winningPlan.stage`
+|COLLSCAN
+|FETCH
+
+|`queryPlanner.winningPlan.inputStage.stage`
+|
+|IXSCAN
+
+|`executionStats.nReturned`
+|1
+|1
+
+|`executionStats.executionTimeMillis`
+|24
+|1
+
+|`executionStats.totalKeysExamined`
+|0
+|1
+
+|`executionStats.totalDocsExamined`
+|50474
+|1
+
+|`executionStats.executionStages.stage`
+|COLLSCAN
+|FETCH
+
+|`executionStats.executionStages.inputStage.stage`
+|
+|IXSCAN
+|===
 
 [source, javascript]
 .*4. 查询一定范围内多个文档，查看执行计划是否命中索引*
@@ -360,6 +405,8 @@ r.executionStats
 	}
 }
 ----
+
+NOTE: range 查询可以命中索引，`executionStats.totalKeysExamined` 和 `executionStats.totalDocsExamined` 相同，都为 49，`executionStats.executionStages.stage` 为 FETCH，`executionStats.executionStages.inputStage.stage` 为 IXSCAN。 
 
 [source, javascript]
 .*5. 查询一个集合内多个文档，查看执行计划是否命中索引*
@@ -456,6 +503,8 @@ r.executionStats
 	}
 }
 ----
+
+NOTE: $in 查询可以命中索引，`executionStats.totalKeysExamined` 为 6，`executionStats.totalDocsExamined` 为 3，`executionStats.executionStages.stage` 为 FETCH，`executionStats.executionStages.inputStage.stage` 为 IXSCAN。
 
 [source, javascript]
 .*6. 查询一个集合内多个文档，及多个其他属性，查看执行计划是否命中索引*
@@ -562,6 +611,70 @@ r.executionStats
 	}
 }
 ----
+
+NOTE: 索引前缀查询同样可以命中索引，查询可以命中索引，`executionStats.totalKeysExamined` 和 `executionStats.totalDocsExamined` 相同，都为 49，`executionStats.executionStages.stage` 为 FETCH，`executionStats.executionStages.inputStage.stage` 为 IXSCAN。
+
+MongoDB 中 sort 排序操作通常需要基于索引键进行，如果 queryPlanner 不能够获取索引键，那么排序会在内存中进行。
+
+* sort 排序基于索引基于索引键性能优于基于非索引键
+* 如果 sort 排序不基于索引键，那么排序使用的内存不能超过 32 MB
+* 如果升序或降序的单字段索引存在，那么 sort 排序可以是任意方向
+
+基于如下 7, 8, 9 步，执行 `db.people.find({}, {_id: 0, last_name: 1, first_name: 1, ssn: 1}).sort({ssn: 1})`, 对比无索引，升序索引、降序索引：
+
+|===
+|对比项 |无索引 |升序索引 |降序索引
+
+|`executionStats.nReturned`
+|50474
+|50474
+|50474
+
+|`executionStats.executionTimeMillis`
+|222
+|114
+|124
+
+|`executionStats.totalKeysExamined`
+|0
+|50474
+|50474
+
+|`executionStats.totalDocsExamined`
+|50474
+|50474
+|50474
+
+|`executionStats.executionStages.stage`
+|PROJECTION
+|PROJECTION
+|PROJECTION
+
+|`executionStats.executionStages.inputStage.stage`
+|SORT
+|FETCH
+|FETCH
+
+|`executionStats.executionStages.inputStage.inputStage.stage`
+|SORT_KEY_GENERATOR
+|IXSCAN
+|IXSCAN
+
+|`executionStats.executionStages.inputStage.inputStage.inputStage.stage`
+|COLLSCAN
+|
+|
+
+|`executionStats.executionStages.inputStage.inputStage.direction`
+|
+|forward
+|backward
+
+|`xecutionStats.executionStages.inputStage.inputStage.keysExamined`
+|
+|50474
+|50474
+|===
 
 [source, javascript]
 .*7. 以索引的属性进行升序排序，并查看执行计划，预期结果，排序使用了索引排序*
@@ -819,296 +932,168 @@ r.executionStats
 
 === 复合索引(Compound Indexes)
 
-[source, javascript]
-----
-
-----
+MongoDB 数据库中复合索引及索引基于多个字段，它的创建语法：
 
 [source, javascript]
 ----
-
+db.<collection>.createIndex({<field1>: <type>, <field2>: <type2>, ...})
 ----
+
+如下是关于复合索引需要注意的地方：
+
+* 复合索引最多可以基于 32 个字段，通常复合索引中的字段不能包括哈希字段。
+* Equality 和 Range 可以使用复合索引及复合索引前缀，且与字段升序和降序无关
+* Sorting 可以使用复合索引及复合索引前缀，但与字段升序和降序有关
+* 基于 ESR 模式创建复合索引
+
+下载 people.json (链接: https://pan.baidu.com/s/1ZEbXIU3NXcToT5-xNQY83g 提取码: 3wvd) 导入到 MongoDB
 
 [source, javascript]
 ----
-
+$ mongoimport --host 127.0.0.1:27000 --db test --collection people --drop --file ~/Downloads/people.json
 ----
+
+基于 link:basic.adoc[基础] 部分安装 Compass，使用 Compass 查看执行计划。
+
+*1. 无索引下查看执行计划*
+
+Compass 中查看 `db.people.find({last_name: "Frazier", first_name: "Jasmine"})` 操作的执行计划，会有如下图形化界面
+
+image:img/compass-executionStats.png[]
+
+*2. 创建单字段升序索引，查看执行计划*
+
+Compass 中同样可以常见索引，例如如下
+
+image:img/compass-create-single-indes-asd.png[]
+
+如上创建了升序索引，名称为 last_name，在 Shell 中可以查看
 
 [source, javascript]
 ----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-
-
-
-== 索引的基本使用与创建
-
-=== 复合索引
-
-复合索引即索引项是由多个属性构成。
-
-[source, text]
-.*1. 根据名字查询，并查看执行计划*
-----
-MongoDB Enterprise > db.people.find({last_name: "Frazier", first_name: "Jasmine"}).explain("executionStats")
-{
-	"queryPlanner" : {
-		"plannerVersion" : 1,
-		"namespace" : "m201.people",
-		"indexFilterSet" : false,
-		"parsedQuery" : {
-			"$and" : [
-				{
-					"first_name" : {
-						"$eq" : "Jasmine"
-					}
-				},
-				{
-					"last_name" : {
-						"$eq" : "Frazier"
-					}
-				}
-			]
+> db.people.getIndexes()
+[
+	{
+		"v" : 2,
+		"key" : {
+			"_id" : 1
 		},
-		"winningPlan" : {
-			"stage" : "COLLSCAN",
-			"filter" : {
-				"$and" : [
-					{
-						"first_name" : {
-							"$eq" : "Jasmine"
-						}
-					},
-					{
-						"last_name" : {
-							"$eq" : "Frazier"
-						}
-					}
-				]
-			},
-			"direction" : "forward"
+		"name" : "_id_",
+		"ns" : "test.people"
+	},
+	{
+		"v" : 2,
+		"key" : {
+			"last_name" : 1
 		},
-		"rejectedPlans" : [ ]
-	},
-	"executionStats" : {
-		"executionSuccess" : true,
-		"nReturned" : 1,
-		"executionTimeMillis" : 22,
-		"totalKeysExamined" : 0,
-		"totalDocsExamined" : 50474,
-		"executionStages" : {
-			"stage" : "COLLSCAN",
-			"filter" : {
-				"$and" : [
-					{
-						"first_name" : {
-							"$eq" : "Jasmine"
-						}
-					},
-					{
-						"last_name" : {
-							"$eq" : "Frazier"
-						}
-					}
-				]
-			},
-			"nReturned" : 1,
-			"executionTimeMillisEstimate" : 10,
-			"works" : 50476,
-			"advanced" : 1,
-			"needTime" : 50474,
-			"needYield" : 0,
-			"saveState" : 394,
-			"restoreState" : 394,
-			"isEOF" : 1,
-			"invalidates" : 0,
-			"direction" : "forward",
-			"docsExamined" : 50474
-		}
-	},
-	"serverInfo" : {
-		"host" : "m103",
-		"port" : 27017,
-		"version" : "3.6.11",
-		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
-	},
-	"ok" : 1
-}
+		"name" : "last_name",
+		"ns" : "test.people"
+	}
+]
 ----
 
-NOTE: 可以看到，复合条件的文档只有一个，查找这个文档执行了全集合扫描，totalDocsExamined 属性值为 50474。
+Compass 中查看 `db.people.find({last_name: "Frazier", first_name: "Jasmine"})` 操作的执行计划，会有如下图形化界面
 
-[source, text]
-.*2. 创建复合索引*
-----
-MongoDB Enterprise > db.people.createIndex({last_name: 1, first_name: 1})
-{
-	"createdCollectionAutomatically" : false,
-	"numIndexesBefore" : 1,
-	"numIndexesAfter" : 2,
-	"ok" : 1
-}
-----
+image:img/compass-query-with-prefix-index.png[]
 
-[source, text]
-.*3. 根据名字查询，并查看执行计划*
+可以看到基于索引键查询。
+
+*3. 创建复合升序索引，查看执行计划*
+
+image:img/compass-compand-indexes.png[]
+
+可以看到复合索引更能提高查询的性能。
+
+NOTE: 复合索引下，range 范围查询，例如 `{last_name: "Frazier", first_name: {$gte : "L"}}` 等同样可以使用索引。
+
+*4. 复合索引前缀*
+
+复合索引前缀指的是复合索引从开始的一个子集，例如索引字段是
+
+[source, javascript]
 ----
-MongoDB Enterprise > db.people.find({last_name: "Frazier", first_name: "Jasmine"}).explain("executionStats")
-{
-	"queryPlanner" : {
-		"plannerVersion" : 1,
-		"namespace" : "m201.people",
-		"indexFilterSet" : false,
-		"parsedQuery" : {
-			"$and" : [
-				{
-					"first_name" : {
-						"$eq" : "Jasmine"
-					}
-				},
-				{
-					"last_name" : {
-						"$eq" : "Frazier"
-					}
-				}
-			]
-		},
-		"winningPlan" : {
-			"stage" : "FETCH",
-			"inputStage" : {
-				"stage" : "IXSCAN",
-				"keyPattern" : {
-					"last_name" : 1,
-					"first_name" : 1
-				},
-				"indexName" : "last_name_1_first_name_1",
-				"isMultiKey" : false,
-				"multiKeyPaths" : {
-					"last_name" : [ ],
-					"first_name" : [ ]
-				},
-				"isUnique" : false,
-				"isSparse" : false,
-				"isPartial" : false,
-				"indexVersion" : 2,
-				"direction" : "forward",
-				"indexBounds" : {
-					"last_name" : [
-						"[\"Frazier\", \"Frazier\"]"
-					],
-					"first_name" : [
-						"[\"Jasmine\", \"Jasmine\"]"
-					]
-				}
-			}
-		},
-		"rejectedPlans" : [ ]
-	},
-	"executionStats" : {
-		"executionSuccess" : true,
-		"nReturned" : 1,
-		"executionTimeMillis" : 0,
-		"totalKeysExamined" : 1,
-		"totalDocsExamined" : 1,
-		"executionStages" : {
-			"stage" : "FETCH",
-			"nReturned" : 1,
-			"executionTimeMillisEstimate" : 0,
-			"works" : 2,
-			"advanced" : 1,
-			"needTime" : 0,
-			"needYield" : 0,
-			"saveState" : 0,
-			"restoreState" : 0,
-			"isEOF" : 1,
-			"invalidates" : 0,
-			"docsExamined" : 1,
-			"alreadyHasObj" : 0,
-			"inputStage" : {
-				"stage" : "IXSCAN",
-				"nReturned" : 1,
-				"executionTimeMillisEstimate" : 0,
-				"works" : 2,
-				"advanced" : 1,
-				"needTime" : 0,
-				"needYield" : 0,
-				"saveState" : 0,
-				"restoreState" : 0,
-				"isEOF" : 1,
-				"invalidates" : 0,
-				"keyPattern" : {
-					"last_name" : 1,
-					"first_name" : 1
-				},
-				"indexName" : "last_name_1_first_name_1",
-				"isMultiKey" : false,
-				"multiKeyPaths" : {
-					"last_name" : [ ],
-					"first_name" : [ ]
-				},
-				"isUnique" : false,
-				"isSparse" : false,
-				"isPartial" : false,
-				"indexVersion" : 2,
-				"direction" : "forward",
-				"indexBounds" : {
-					"last_name" : [
-						"[\"Frazier\", \"Frazier\"]"
-					],
-					"first_name" : [
-						"[\"Jasmine\", \"Jasmine\"]"
-					]
-				},
-				"keysExamined" : 1,
-				"seeks" : 1,
-				"dupsTested" : 0,
-				"dupsDropped" : 0,
-				"seenInvalidated" : 0
-			}
-		}
-	},
-	"serverInfo" : {
-		"host" : "m103",
-		"port" : 27017,
-		"version" : "3.6.11",
-		"gitVersion" : "b4339db12bf57ffee5b84a95c6919dbd35fe31c9"
-	},
-	"ok" : 1
-}
+{ "job": 1, "last_name": 1, "first_name": 1 }
 ----
 
-=== 使用索引前缀查询
+那么复合索引前缀是
+
+[source, javascript]
+----
+{ job: 1 }
+{ job: 1, last_name: 1 }
+----
+
+基于复合索引前缀查询同样可以使用索引，如下查询条件可以使用索引
+
+[source, javascript]
+----
+{job: "Magazine features editor"}
+{job: "Magazine features editor", last_name: "Ayers"}
+{job: "Magazine features editor", last_name: "Ayers", first_name: "Mark"}
+{first_name: "Mark", last_name: "Ayers", job: "Magazine features editor"}
+----
+
+如下查询可以部分使用索引
+
+[source, javascript]
+----
+{job: "Magazine features editor", first_name: "Mark"}
+----
+
+如下查询条件不能够使用索引
+
+[source, javascript]
+----
+{last_name: "Ayers"}
+{last_name: "Ayers", first_name: "Mark"}
+{first_name: "Mark"}
+----
+
+*5. 复合索引下升序和降序对排序是有影响的*
+
+创建如下复合索引
+
+[source, javascript]
+----
+{ "job": 1, "last_name": -1, "first_name": 1 }
+----
+
+升序和降序对查询没有影响，如下查询条件同样可以使用索引
+
+[source, javascript]
+----
+{job: "Magazine features editor"} 
+{job: "Magazine features editor", last_name: "Ayers"}
+{job: "Magazine features editor", last_name: "Ayers", first_name: "Mark"}
+----
+
+使用如下排序可以使用索引,
+
+[source, javascript]
+----
+{job: 1}
+{job: -1}
+{job: 1, last_name: -1}
+{job: -1, last_name: 1}
+{job: 1, last_name: -1, first_name: 1}
+{job: -1, last_name: 1, first_name: -1}
+----
+
+如下排序不能使用索引
+
+[source, javascript]
+----
+{job: 1, last_name: 1}
+{job: -1, last_name: -1}
+{job: 1, last_name: -1, first_name: -1}
+{job: 1, last_name: 1, first_name: 1}
+{job: -1, last_name: 1, first_name: 1}
+{first_name: 1}
+{first_name: -1}
+{last_name: -1, first_name: 1}
+----
+
+==== 使用索引前缀查询
 
 本部分创建复合索引 `{job: 1, employer: 1, last_name: 1, frist_name: 1}`，基于此索引进行查询。
 
@@ -1192,7 +1177,7 @@ db.people.find({job: "Jewellery designer", first_name: "Sara",  last_name: "Cook
 |1
 |===
 
-=== 排序中使用复合索引属性
+==== 排序中使用复合索引属性
 
 [source, text]
 .*1. 查看索引*
@@ -1256,7 +1241,7 @@ db.people.find({job: "Jewellery designer", employer: "Baldwin-Nichols"}).sort({f
 |SORT_KEY_GENERATOR
 |===
 
-=== 多 key 复合索引
+==== 多 key 复合索引
 
 如果一个 JSON 文档中嵌入了 Array 或 JSON 文档时，创建索引就可能是多 key 复合索引。
 
@@ -1441,6 +1426,8 @@ WriteResult({
 	}
 })
 ----
+
+=== Multikey 索引
 
 == 创建索引
 
