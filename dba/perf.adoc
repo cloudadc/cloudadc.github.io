@@ -1429,7 +1429,546 @@ WriteResult({
 
 === Multikey 索引
 
-== 创建索引
+为了更有效的支持数组类型的字段的查询，MongoDB 引入 Multikey 索引，创建语法：
+
+[source, javascript]
+----
+db.coll.createIndex( { <field>: < 1 or -1 > } )
+----
+
+* 不能基于两个 Array 字段创建  Multikey 索引
+
+[source, javascript]
+.*1. 向 products 集合中添加一条记录*
+----
+db.products.insert({
+  productName: "MongoDB Short Sleeve T-Shirt",
+  categories: ["T-Shirts", "Clothing", "Apparel"],
+  stock: { size: "L", color: "green", quantity: 100 }
+});
+----
+
+[source, javascript]
+.*2. 在 stock.quantity 上创建索引*
+----
+db.products.createIndex({ "stock.quantity": 1})
+----
+
+[source, javascript]
+.*3. 查看执行计划*
+----
+var exp = db.products.explain()
+exp.find({ "stock.quantity": 100 })
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.products",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"stock.quantity" : {
+				"$eq" : 100
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"stock.quantity" : 1
+				},
+				"indexName" : "stock.quantity_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"stock.quantity" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"stock.quantity" : [
+						"[100.0, 100.0]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 注意，`winningPlan.inputStage.stage` 值为 IXSCAN，`winningPlan.inputStage.isMultiKey` 值为 false。
+
+[source, javascript]
+.*4. 向 products 集合中添加一条记录(stock 为 Array)*
+----
+  productName: "MongoDB Long Sleeve T-Shirt",
+  categories: ["T-Shirts", "Clothing", "Apparel"],
+  stock: [
+    { size: "S", color: "red", quantity: 25 },
+    { size: "S", color: "blue", quantity: 10 },
+    { size: "M", color: "blue", quantity: 50 }
+  ]
+});
+----
+
+[source, javascript]
+.*5. 查看执行计划*
+----
+exp.find({ "stock.quantity": 100 })
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.products",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"stock.quantity" : {
+				"$eq" : 100
+			}
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"stock.quantity" : 1
+				},
+				"indexName" : "stock.quantity_1",
+				"isMultiKey" : true,
+				"multiKeyPaths" : {
+					"stock.quantity" : [
+						"stock"
+					]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"stock.quantity" : [
+						"[100.0, 100.0]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 注意，`winningPlan.inputStage.stage` 值为 IXSCAN，`winningPlan.inputStage.isMultiKey` 值为 true。
+
+[source, javascript]
+.*6. 在两个 ARRAY 字段上创建复合索引*
+----
+db.products.createIndex({ categories: 1, "stock.quantity": 1 })
+{
+	"ok" : 0,
+	"errmsg" : "cannot index parallel arrays [stock] [categories]",
+	"code" : 171,
+	"codeName" : "CannotIndexParallelArrays"
+}
+----
+
+[source, javascript]
+.*7. 复合索引中只允许一个字段为 Array 字段*
+----
+db.products.createIndex({ productName: 1, "stock.quantity": 1 })
+----
+
+=== Partial 索引
+
+Partial 索引只在符合某些条件的集合字段上创建索引。创建 Partial 索引语法：
+
+[source, javascript]
+----
+db.<collection>.createIndex(
+   { <field>: 1, <field>: 1 },
+   { partialFilterExpression: { <field>: { $operator } } }
+)
+----
+
+partialFilterExpression 支持的 operator 包括：
+
+* $eq
+* $exists: true 
+* $gt, $gte, $lt, $lte 
+* $type
+* $and
+
+如果要使用 Partial 索引，则查询条件中需要有 partialFilterExpression；Partial 索引不能和 sparse 索引一起使用；_id 字段或分片 Key 不能创建 Partial 索引。
+
+[source, javascript]
+.*1. 向 restaurants 中添加一条记录*
+----
+db.restaurants.insert({
+   "name" : "Han Dynasty",
+   "cuisine" : "Sichuan",
+   "stars" : 4.4,
+   "address" : {
+      "street" : "90 3rd Ave",
+      "city" : "New York",
+      "state" : "NY",
+      "zipcode" : "10003"
+   }
+});
+----
+
+[source, javascript]
+.*2. 查看执行计划*
+----
+var exp = db.restaurants.explain()
+exp.find({'address.city': 'New York', cuisine: 'Sichuan'})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"address.city" : {
+						"$eq" : "New York"
+					}
+				},
+				{
+					"cuisine" : {
+						"$eq" : "Sichuan"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"$and" : [
+					{
+						"address.city" : {
+							"$eq" : "New York"
+						}
+					},
+					{
+						"cuisine" : {
+							"$eq" : "Sichuan"
+						}
+					}
+				]
+			},
+			"direction" : "forward"
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+[source, javascript]
+.*3. 创建 Partial 索引*
+----
+db.restaurants.createIndex(
+  { "address.city": 1, cuisine: 1 },
+  { partialFilterExpression: { 'stars': { $gte: 3.5 } } }
+)
+----
+
+[source, javascript]
+.*4. 查看执行计划*
+----
+exp.find({'address.city': 'New York', cuisine: 'Sichuan', stars: { $gt: 4.0 }})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"address.city" : {
+						"$eq" : "New York"
+					}
+				},
+				{
+					"cuisine" : {
+						"$eq" : "Sichuan"
+					}
+				},
+				{
+					"stars" : {
+						"$gt" : 4
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"stars" : {
+					"$gt" : 4
+				}
+			},
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"address.city" : 1,
+					"cuisine" : 1
+				},
+				"indexName" : "address.city_1_cuisine_1",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"address.city" : [ ],
+					"cuisine" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : true,
+				"indexVersion" : 2,
+				"direction" : "forward",
+				"indexBounds" : {
+					"address.city" : [
+						"[\"New York\", \"New York\"]"
+					],
+					"cuisine" : [
+						"[\"Sichuan\", \"Sichuan\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOET: 注意，`winningPlan.inputStage.stage` 值为 IXSCAN，`winningPlan.inputStage.isPartial` 值为 true。
+
+[source, javascript]
+.*5. 使用不同的过滤条件，查看执行计划*
+----
+ exp.find({'address.city': 'New York', cuisine: 'Sichuan', stars: { $gt: 2.0 }})
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"address.city" : {
+						"$eq" : "New York"
+					}
+				},
+				{
+					"cuisine" : {
+						"$eq" : "Sichuan"
+					}
+				},
+				{
+					"stars" : {
+						"$gt" : 2
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "COLLSCAN",
+			"filter" : {
+				"$and" : [
+					{
+						"address.city" : {
+							"$eq" : "New York"
+						}
+					},
+					{
+						"cuisine" : {
+							"$eq" : "Sichuan"
+						}
+					},
+					{
+						"stars" : {
+							"$gt" : 2
+						}
+					}
+				]
+			},
+			"direction" : "forward"
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+NOTE: 注意，没有执行没有使用索引。
+
+=== Text 索引
+
+Text 索引用来支持文本搜索，创建语法
+
+[source, javascript]
+----
+db.<collection>.createIndex( { <field>: "text", <field>: "text" , ... } )
+----
+
+* Text 索引可以创建到任意文本字段（String 类型），不管该字段是文档的字段或数组字段
+* 一个文档中可创建多个 Text 索引
+* 复合索引中可以使用 Text 索引
+
+[source, javascript]
+.*1. 向 textExample 集合中添加 2 条记录*
+----
+db.textExample.insertOne({ "statement": "MongoDB is the best" })
+db.textExample.insertOne({ "statement": "MongoDB is the worst." })
+----
+
+[source, javascript]
+.*2. 创建索引*
+----
+db.textExample.createIndex({ statement: "text" })
+----
+
+[source, javascript]
+.*3. 查看执行计划*
+----
+db.textExample.find({ $text: { $search: "MongoDB best" } }).explain()
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.textExample",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$text" : {
+				"$search" : "MongoDB best",
+				"$language" : "english",
+				"$caseSensitive" : false,
+				"$diacriticSensitive" : false
+			}
+		},
+		"winningPlan" : {
+			"stage" : "TEXT",
+			"indexPrefix" : {
+				
+			},
+			"indexName" : "statement_text",
+			"parsedTextQuery" : {
+				"terms" : [
+					"best",
+					"mongodb"
+				],
+				"negatedTerms" : [ ],
+				"phrases" : [ ],
+				"negatedPhrases" : [ ]
+			},
+			"textIndexVersion" : 3,
+			"inputStage" : {
+				"stage" : "TEXT_MATCH",
+				"inputStage" : {
+					"stage" : "FETCH",
+					"inputStage" : {
+						"stage" : "OR",
+						"inputStages" : [
+							{
+								"stage" : "IXSCAN",
+								"keyPattern" : {
+									"_fts" : "text",
+									"_ftsx" : 1
+								},
+								"indexName" : "statement_text",
+								"isMultiKey" : true,
+								"isUnique" : false,
+								"isSparse" : false,
+								"isPartial" : false,
+								"indexVersion" : 2,
+								"direction" : "backward",
+								"indexBounds" : {
+									
+								}
+							},
+							{
+								"stage" : "IXSCAN",
+								"keyPattern" : {
+									"_fts" : "text",
+									"_ftsx" : 1
+								},
+								"indexName" : "statement_text",
+								"isMultiKey" : true,
+								"isUnique" : false,
+								"isSparse" : false,
+								"isPartial" : false,
+								"indexVersion" : 2,
+								"direction" : "backward",
+								"indexBounds" : {
+									
+								}
+							}
+						]
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+=== TODO
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+== OLD
 
 === 数据导入
 
