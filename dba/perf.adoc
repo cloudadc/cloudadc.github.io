@@ -1968,249 +1968,1885 @@ db.textExample.find({ $text: { $search: "MongoDB best" } }).explain()
 
 ----
 
-== OLD
+== 常见性能操作
 
-=== 数据导入
+本部分讨论 MongoDB 中常见与性能相关的一些操作。
 
-[source, text]
-.*1. 导入数据*
+下载restaurants.json（链接: https://pan.baidu.com/s/1g6tZHllZeXcCRHG7seTPDg 提取码: sqrx ）导入到 MongoDB。
+
+[source, javascript]
 ----
-$ mongoimport --db m201 --username root --password mongodb --authenticationDatabase admin --file /shared/restaurants.json
-2019-04-05T13:28:45.088+0000	no collection specified
-2019-04-05T13:28:45.088+0000	using filename 'restaurants' as collection
-2019-04-05T13:28:45.100+0000	connected to: localhost
-2019-04-05T13:28:48.090+0000	[###.....................] m201.restaurants	23.6MB/144MB (16.4%)
-2019-04-05T13:28:51.090+0000	[#######.................] m201.restaurants	46.6MB/144MB (32.4%)
-2019-04-05T13:28:54.090+0000	[###########.............] m201.restaurants	69.4MB/144MB (48.3%)
-2019-04-05T13:28:57.090+0000	[###############.........] m201.restaurants	91.8MB/144MB (63.9%)
-2019-04-05T13:29:00.090+0000	[###################.....] m201.restaurants	115MB/144MB (79.9%)
-2019-04-05T13:29:03.090+0000	[#######################.] m201.restaurants	138MB/144MB (96.1%)
-2019-04-05T13:29:03.798+0000	[########################] m201.restaurants	144MB/144MB (100.0%)
-2019-04-05T13:29:03.799+0000	imported 1000000 documents
+$ mongoimport --db test --username root --password mongodb --authenticationDatabase admin --file restaurants.json
+2019-08-29T11:23:50.703+0800	no collection specified
+2019-08-29T11:23:50.703+0800	using filename 'restaurants' as collection
+2019-08-29T11:23:50.709+0800	connected to: localhost:27000
+2019-08-29T11:23:53.708+0800	[##......................] test.restaurants	12.8MB/144MB (8.9%)
+2019-08-29T11:23:56.708+0800	[####....................] test.restaurants	25.6MB/144MB (17.8%)
+2019-08-29T11:23:59.705+0800	[######..................] test.restaurants	38.5MB/144MB (26.8%)
+2019-08-29T11:24:02.708+0800	[########................] test.restaurants	51.7MB/144MB (36.0%)
+2019-08-29T11:24:05.707+0800	[##########..............] test.restaurants	64.7MB/144MB (45.0%)
+2019-08-29T11:24:08.709+0800	[############............] test.restaurants	77.6MB/144MB (54.0%)
+2019-08-29T11:24:11.707+0800	[##############..........] test.restaurants	89.4MB/144MB (62.2%)
+2019-08-29T11:24:14.709+0800	[#################.......] test.restaurants	103MB/144MB (71.6%)
+2019-08-29T11:24:17.706+0800	[###################.....] test.restaurants	114MB/144MB (79.6%)
+2019-08-29T11:24:20.706+0800	[####################....] test.restaurants	126MB/144MB (87.4%)
+2019-08-29T11:24:23.708+0800	[######################..] test.restaurants	132MB/144MB (92.2%)
+2019-08-29T11:24:26.706+0800	[#######################.] test.restaurants	141MB/144MB (98.2%)
+2019-08-29T11:24:27.315+0800	[########################] test.restaurants	144MB/144MB (100.0%)
+2019-08-29T11:24:27.315+0800	imported 1000000 documents
 ----
 
-[source, text]
-.*2. mongo shell 登录并查看数据*
+=== background 模式创建索引
+
+MongoDB 中构建索引有两种模式：Foreground 和 Background，默认构建索引采用 Foreground 模式，Foreground 会阻塞所有向正在创建索引的集合以及数据库上的读和写操作；Background 模式构架索引话费的时间较长，但不会阻塞任何操作。 
+
+[source, javascript]
 ----
-$ mongo --username root --password mongodb --authenticationDatabase admin
-MongoDB shell version v3.6.11
-connecting to: mongodb://127.0.0.1:27017/?authSource=admin&gssapiServiceName=mongodb
-Implicit session: session { "id" : UUID("fa203fbf-c07a-47ad-8c5c-126dad5b0146") }
-MongoDB server version: 3.6.11
+db.restaurants.createIndex( {"cuisine": 1, "name": 1, "address.zipcode": 1}, {"background": true} )
+----
 
-MongoDB Enterprise > use m201
-switched to db m201
+=== 查询计划
 
-MongoDB Enterprise > db.restaurants.count()
-1000000
+通常任何数据库对任意一个查询都会生成一个查询计划(Query Plan)，这个查询计划通常通过 Query Optimizer 根据算法计算选择，MongoDB 中也有类似的机制，本部分执行 `db.restaurants.find({"address.zipcode": {$gt: 50000}, cuisine: "Sushi"}).sort({stars: -1})` 查询，创建不同的索引，查看查询计划
 
-MongoDB Enterprise > db.restaurants.findOne()
+[source, javascript]
+.*1. 无索引查询*
+----
+// 除 _id 外不创建任何索引
+db.restaurants.getIndexes().length
+1
+
+//执行查询
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1})
+
+//查看执行计划
+pc = db.restaurants.getPlanCache()
+qs = pc.listQueryShapes()
+pc.getPlansByQuery(qs[0])
+----
+
+[source, javascript]
+."2. 创建一个索引后查询"
+----
+// 创建索引
+db.restaurants.createIndex( {"address.zipcode": 1, "cuisine": 1}, {"background": true} )
+
+//执行查询，次查询能命中索引，但不是最佳
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1})
+
+//查看执行计划
+pc = db.restaurants.getPlanCache()
+qs = pc.listQueryShapes()
+pc.getPlansByQuery(qs[0])
+----
+
+[source, javascript]
+.*3. 创建一个较好一些的索引*
+----
+// 创建索引
+db.restaurants.createIndex( {"cuisine": 1, "name": 1, "address.zipcode": 1}, {"background": true} )
+
+//执行查询
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1})
+
+//查看执行计划
+pc = db.restaurants.getPlanCache()
+qs = pc.listQueryShapes()
+pc.getPlansByQuery(qs[0])
+----
+
+[source, javascript]
+.*4. 创建一个ESR 索引*
+----
+// 创建索引
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1}, {"background": true} )
+
+//执行查询
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1})
+
+//查看执行计划
+pc = db.restaurants.getPlanCache()
+qs = pc.listQueryShapes()
+pc.getPlansByQuery(qs[0])
+----
+
+=== Compass 或命令行执行 explain() 查看执行过程
+
+本部分基于 restaurants 集合，依次创建如下索引执行 `db.restaurants.find({"address.zipcode": {$gt: 50000}, cuisine: "Sushi"}).sort({stars: -1})`，并通过 Compass 或命令行执行 explain() 查看执行过程。
+
+[source, javascript]
+----
+db.restaurants.createIndex( {"address.zipcode": 1, "cuisine": 1}, {"background": true} )
+db.restaurants.createIndex( {"cuisine": 1, "name": 1, "address.zipcode": 1}, {"background": true} )
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1}, {"background": true} )
+----
+
+==== 不创建索引
+
+.*Compass 查询性能*
+|===
+|统计项 |值
+
+|Documents Returned
+|11692
+
+|Index Keys Examined
+|0
+
+|Documents Examined
+|1000000
+
+|Actual Query Execution Time (ms)
+|412
+
+|Sorted in Memory
+|yes
+
+|所选索引
+|无
+|===
+
+image:img/explain-no-index.png[]
+
+[source, javascript]
+.*查看查询计划*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('queryPlanner')
 {
-	"_id" : ObjectId("5ca7580df8858899e8a535ab"),
-	"name" : "Perry Street Brasserie",
-	"cuisine" : "French",
-	"stars" : 0.3,
-	"address" : {
-		"street" : "959 Iveno Square",
-		"city" : "Fokemlid",
-		"state" : "AL",
-		"zipcode" : "18882"
-	}
-}
-----
-
-=== 创建 background 索引
-
-[source, text]
-.*1. 创建 background 索引*
-----
-MongoDB Enterprise > db.restaurants.createIndex({cuisine: 1, name: 1, "address.zipcode": 1}, {background: true})
-{
-	"createdCollectionAutomatically" : false,
-	"numIndexesBefore" : 1,
-	"numIndexesAfter" : 2,
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "COLLSCAN",
+					"filter" : {
+						"$and" : [
+							{
+								"cuisine" : {
+									"$eq" : "Sushi"
+								}
+							},
+							{
+								"address.zipcode" : {
+									"$lt" : "50000"
+								}
+							}
+						]
+					},
+					"direction" : "forward"
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
 	"ok" : 1
 }
 ----
 
-[source, text]
-.*2. 查看创建的索引*
+[source, javascript]
+.*查看执行计划*
 ----
-MongoDB Enterprise > db.restaurants.getIndexes()
-[
-	{
-		"v" : 2,
-		"key" : {
-			"_id" : 1
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
 		},
-		"name" : "_id_",
-		"ns" : "m201.restaurants"
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "COLLSCAN",
+					"filter" : {
+						"$and" : [
+							{
+								"cuisine" : {
+									"$eq" : "Sushi"
+								}
+							},
+							{
+								"address.zipcode" : {
+									"$lt" : "50000"
+								}
+							}
+						]
+					},
+					"direction" : "forward"
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
 	},
-	{
-		"v" : 2,
-		"key" : {
-			"cuisine" : 1,
-			"name" : 1,
-			"address.zipcode" : 1
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 11692,
+		"executionTimeMillis" : 420,
+		"totalKeysExamined" : 0,
+		"totalDocsExamined" : 1000000,
+		"executionStages" : {
+			"stage" : "SORT",
+			"nReturned" : 11692,
+			"executionTimeMillisEstimate" : 360,
+			"works" : 1011696,
+			"advanced" : 11692,
+			"needTime" : 1000003,
+			"needYield" : 0,
+			"saveState" : 7917,
+			"restoreState" : 7917,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"memUsage" : 2184524,
+			"memLimit" : 33554432,
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"nReturned" : 11692,
+				"executionTimeMillisEstimate" : 294,
+				"works" : 1000003,
+				"advanced" : 11692,
+				"needTime" : 988310,
+				"needYield" : 0,
+				"saveState" : 7917,
+				"restoreState" : 7917,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"inputStage" : {
+					"stage" : "COLLSCAN",
+					"filter" : {
+						"$and" : [
+							{
+								"cuisine" : {
+									"$eq" : "Sushi"
+								}
+							},
+							{
+								"address.zipcode" : {
+									"$lt" : "50000"
+								}
+							}
+						]
+					},
+					"nReturned" : 11692,
+					"executionTimeMillisEstimate" : 262,
+					"works" : 1000002,
+					"advanced" : 11692,
+					"needTime" : 988309,
+					"needYield" : 0,
+					"saveState" : 7917,
+					"restoreState" : 7917,
+					"isEOF" : 1,
+					"invalidates" : 0,
+					"direction" : "forward",
+					"docsExamined" : 1000000
+				}
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+==== 创建索引 1
+
+[source, javascript]
+.*创建索引*
+----
+db.restaurants.createIndex( {"address.zipcode": 1, "cuisine": 1}, {"background": true, name: "1_address_zipcode_cuisine"} )
+----
+
+.*Compass 查询性能*
+|===
+|统计项 |值
+
+|Documents Returned
+|11692
+
+|Index Keys Examined
+|96107
+
+|Documents Examined
+|11692
+
+|Actual Query Execution Time (ms)
+|282
+
+|Sorted in Memory
+|yes
+
+|所选索引
+|1_address_zipcode_cuisine
+|===
+
+image:img/explan-index-1.png[]
+
+[source, javascript]
+.*查看查询计划*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('queryPlanner')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
 		},
-		"name" : "cuisine_1_name_1_address.zipcode_1",
-		"ns" : "m201.restaurants",
-		"background" : true
-	}
-]
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "FETCH",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"address.zipcode" : 1,
+							"cuisine" : 1
+						},
+						"indexName" : "1_address_zipcode_cuisine",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"address.zipcode" : [ ],
+							"cuisine" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							],
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							]
+						}
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
 ----
 
-== TODO
+[source, javascript]
+.*查看执行过程*
+----
+ db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "FETCH",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"address.zipcode" : 1,
+							"cuisine" : 1
+						},
+						"indexName" : "1_address_zipcode_cuisine",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"address.zipcode" : [ ],
+							"cuisine" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							],
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							]
+						}
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [ ]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 11692,
+		"executionTimeMillis" : 259,
+		"totalKeysExamined" : 96107,
+		"totalDocsExamined" : 11692,
+		"executionStages" : {
+			"stage" : "SORT",
+			"nReturned" : 11692,
+			"executionTimeMillisEstimate" : 242,
+			"works" : 107801,
+			"advanced" : 11692,
+			"needTime" : 96108,
+			"needYield" : 0,
+			"saveState" : 849,
+			"restoreState" : 849,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"memUsage" : 2184524,
+			"memLimit" : 33554432,
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"nReturned" : 11692,
+				"executionTimeMillisEstimate" : 212,
+				"works" : 96108,
+				"advanced" : 11692,
+				"needTime" : 84415,
+				"needYield" : 0,
+				"saveState" : 849,
+				"restoreState" : 849,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"inputStage" : {
+					"stage" : "FETCH",
+					"nReturned" : 11692,
+					"executionTimeMillisEstimate" : 212,
+					"works" : 96107,
+					"advanced" : 11692,
+					"needTime" : 84414,
+					"needYield" : 0,
+					"saveState" : 849,
+					"restoreState" : 849,
+					"isEOF" : 1,
+					"invalidates" : 0,
+					"docsExamined" : 11692,
+					"alreadyHasObj" : 0,
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"nReturned" : 11692,
+						"executionTimeMillisEstimate" : 168,
+						"works" : 96107,
+						"advanced" : 11692,
+						"needTime" : 84414,
+						"needYield" : 0,
+						"saveState" : 849,
+						"restoreState" : 849,
+						"isEOF" : 1,
+						"invalidates" : 0,
+						"keyPattern" : {
+							"address.zipcode" : 1,
+							"cuisine" : 1
+						},
+						"indexName" : "1_address_zipcode_cuisine",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"address.zipcode" : [ ],
+							"cuisine" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							],
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							]
+						},
+						"keysExamined" : 96107,
+						"seeks" : 84415,
+						"dupsTested" : 0,
+						"dupsDropped" : 0,
+						"seenInvalidated" : 0
+					}
+				}
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
 
-[source, text]
-.**
+==== 创建索引 2
+
+[source, javascript]
+.*创建索引*
+----
+db.restaurants.createIndex( {"cuisine": 1, "name": 1, "address.zipcode": 1}, {"background": true, name: "2_cuisine_name_address_zipcode"} )
+----
+
+.*Compass 查询性能*
+|===
+|统计项 |值
+
+|Documents Returned
+|11692
+
+|Index Keys Examined
+|11793
+
+|Documents Examined
+|11692
+
+|Actual Query Execution Time (ms)
+|135
+
+|Sorted in Memory
+|yes
+
+|所选索引
+|2_cuisine_name_address_zipcode
+|===
+
+image:img/explain-index-2.png[]
+
+[source, javascript]
+.*查看查询计划*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('queryPlanner')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "FETCH",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"cuisine" : 1,
+							"name" : 1,
+							"address.zipcode" : 1
+						},
+						"indexName" : "2_cuisine_name_address_zipcode",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"cuisine" : [ ],
+							"name" : [ ],
+							"address.zipcode" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							],
+							"name" : [
+								"[MinKey, MaxKey]"
+							],
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							]
+						}
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+[source, javascript]
+.*查看执行过程*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "SORT",
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"inputStage" : {
+					"stage" : "FETCH",
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"keyPattern" : {
+							"cuisine" : 1,
+							"name" : 1,
+							"address.zipcode" : 1
+						},
+						"indexName" : "2_cuisine_name_address_zipcode",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"cuisine" : [ ],
+							"name" : [ ],
+							"address.zipcode" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							],
+							"name" : [
+								"[MinKey, MaxKey]"
+							],
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							]
+						}
+					}
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 11692,
+		"executionTimeMillis" : 119,
+		"totalKeysExamined" : 11793,
+		"totalDocsExamined" : 11692,
+		"executionStages" : {
+			"stage" : "SORT",
+			"nReturned" : 11692,
+			"executionTimeMillisEstimate" : 101,
+			"works" : 23487,
+			"advanced" : 11692,
+			"needTime" : 11794,
+			"needYield" : 0,
+			"saveState" : 280,
+			"restoreState" : 280,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"sortPattern" : {
+				"stars" : -1
+			},
+			"memUsage" : 2184524,
+			"memLimit" : 33554432,
+			"inputStage" : {
+				"stage" : "SORT_KEY_GENERATOR",
+				"nReturned" : 11692,
+				"executionTimeMillisEstimate" : 79,
+				"works" : 11794,
+				"advanced" : 11692,
+				"needTime" : 101,
+				"needYield" : 0,
+				"saveState" : 280,
+				"restoreState" : 280,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"inputStage" : {
+					"stage" : "FETCH",
+					"nReturned" : 11692,
+					"executionTimeMillisEstimate" : 67,
+					"works" : 11793,
+					"advanced" : 11692,
+					"needTime" : 100,
+					"needYield" : 0,
+					"saveState" : 280,
+					"restoreState" : 280,
+					"isEOF" : 1,
+					"invalidates" : 0,
+					"docsExamined" : 11692,
+					"alreadyHasObj" : 0,
+					"inputStage" : {
+						"stage" : "IXSCAN",
+						"nReturned" : 11692,
+						"executionTimeMillisEstimate" : 22,
+						"works" : 11793,
+						"advanced" : 11692,
+						"needTime" : 100,
+						"needYield" : 0,
+						"saveState" : 280,
+						"restoreState" : 280,
+						"isEOF" : 1,
+						"invalidates" : 0,
+						"keyPattern" : {
+							"cuisine" : 1,
+							"name" : 1,
+							"address.zipcode" : 1
+						},
+						"indexName" : "2_cuisine_name_address_zipcode",
+						"isMultiKey" : false,
+						"multiKeyPaths" : {
+							"cuisine" : [ ],
+							"name" : [ ],
+							"address.zipcode" : [ ]
+						},
+						"isUnique" : false,
+						"isSparse" : false,
+						"isPartial" : false,
+						"indexVersion" : 2,
+						"direction" : "forward",
+						"indexBounds" : {
+							"cuisine" : [
+								"[\"Sushi\", \"Sushi\"]"
+							],
+							"name" : [
+								"[MinKey, MaxKey]"
+							],
+							"address.zipcode" : [
+								"[\"\", \"50000\")"
+							]
+						},
+						"keysExamined" : 11793,
+						"seeks" : 101,
+						"dupsTested" : 0,
+						"dupsDropped" : 0,
+						"seenInvalidated" : 0
+					}
+				}
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+==== 创建索引 3
+
+[source, javascript]
+.*创建索引*
+----
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1}, {"background": true, name: "3_cuisine_stars"} )
+----
+
+.*Compass 查询性能*
+|===
+|统计项 |值
+
+|Documents Returned
+|11692
+
+|Index Keys Examined
+|23303
+
+|Documents Examined
+|23303
+
+|Actual Query Execution Time (ms)
+|95
+
+|Sorted in Memory
+|no
+
+|所选索引
+|3_cuisine_stars
+|===
+
+image:img/explain-index-3.png[]
+
+[source, javascript]
+.*查看查询计划*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('queryPlanner')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"address.zipcode" : {
+					"$lt" : "50000"
+				}
+			},
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1
+				},
+				"indexName" : "3_cuisine_stars",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"cuisine" : 1,
+								"name" : 1,
+								"address.zipcode" : 1
+							},
+							"indexName" : "2_cuisine_name_address_zipcode",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"cuisine" : [ ],
+								"name" : [ ],
+								"address.zipcode" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								],
+								"name" : [
+									"[MinKey, MaxKey]"
+								],
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+[source, javascript]
+.*查看执行过程*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"address.zipcode" : {
+					"$lt" : "50000"
+				}
+			},
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1
+				},
+				"indexName" : "3_cuisine_stars",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"cuisine" : 1,
+								"name" : 1,
+								"address.zipcode" : 1
+							},
+							"indexName" : "2_cuisine_name_address_zipcode",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"cuisine" : [ ],
+								"name" : [ ],
+								"address.zipcode" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								],
+								"name" : [
+									"[MinKey, MaxKey]"
+								],
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 11692,
+		"executionTimeMillis" : 82,
+		"totalKeysExamined" : 23303,
+		"totalDocsExamined" : 23303,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"filter" : {
+				"address.zipcode" : {
+					"$lt" : "50000"
+				}
+			},
+			"nReturned" : 11692,
+			"executionTimeMillisEstimate" : 80,
+			"works" : 23304,
+			"advanced" : 11692,
+			"needTime" : 11611,
+			"needYield" : 0,
+			"saveState" : 190,
+			"restoreState" : 190,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 23303,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 23303,
+				"executionTimeMillisEstimate" : 23,
+				"works" : 23304,
+				"advanced" : 23303,
+				"needTime" : 0,
+				"needYield" : 0,
+				"saveState" : 190,
+				"restoreState" : 190,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1
+				},
+				"indexName" : "3_cuisine_stars",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					]
+				},
+				"keysExamined" : 23303,
+				"seeks" : 1,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+==== 创建索引 4
+
+[source, javascript]
+.*创建索引*
+----
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1}, {"background": true, "name": "4_cuisine_stars_address_zipcode"} )
+----
+
+.*Compass 查询性能*
+|===
+|统计项 |值
+
+|Documents Returned
+|11692
+
+|Index Keys Examined
+|11744
+
+|Documents Examined
+|11692
+
+|Actual Query Execution Time (ms)
+|56
+
+|Sorted in Memory
+|no
+
+|所选索引
+|4_cuisine_stars_address_zipcode
+|===
+
+image:img/explain-index-4.png[]
+
+[source, javascript]
+.*查看查询计划*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('queryPlanner')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1,
+					"address.zipcode" : 1
+				},
+				"indexName" : "4_cuisine_stars_address_zipcode",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ],
+					"address.zipcode" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					],
+					"address.zipcode" : [
+						"(\"50000\", \"\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"cuisine" : 1,
+								"name" : 1,
+								"address.zipcode" : 1
+							},
+							"indexName" : "2_cuisine_name_address_zipcode",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"cuisine" : [ ],
+								"name" : [ ],
+								"address.zipcode" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								],
+								"name" : [
+									"[MinKey, MaxKey]"
+								],
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"stage" : "FETCH",
+				"filter" : {
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				},
+				"inputStage" : {
+					"stage" : "IXSCAN",
+					"keyPattern" : {
+						"cuisine" : 1,
+						"stars" : 1
+					},
+					"indexName" : "3_cuisine_stars",
+					"isMultiKey" : false,
+					"multiKeyPaths" : {
+						"cuisine" : [ ],
+						"stars" : [ ]
+					},
+					"isUnique" : false,
+					"isSparse" : false,
+					"isPartial" : false,
+					"indexVersion" : 2,
+					"direction" : "backward",
+					"indexBounds" : {
+						"cuisine" : [
+							"[\"Sushi\", \"Sushi\"]"
+						],
+						"stars" : [
+							"[MaxKey, MinKey]"
+						]
+					}
+				}
+			},
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+[source, javascript]
+.*查看执行过程*
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}).explain('executionStats')
+{
+	"queryPlanner" : {
+		"plannerVersion" : 1,
+		"namespace" : "test.restaurants",
+		"indexFilterSet" : false,
+		"parsedQuery" : {
+			"$and" : [
+				{
+					"cuisine" : {
+						"$eq" : "Sushi"
+					}
+				},
+				{
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				}
+			]
+		},
+		"winningPlan" : {
+			"stage" : "FETCH",
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1,
+					"address.zipcode" : 1
+				},
+				"indexName" : "4_cuisine_stars_address_zipcode",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ],
+					"address.zipcode" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					],
+					"address.zipcode" : [
+						"(\"50000\", \"\"]"
+					]
+				}
+			}
+		},
+		"rejectedPlans" : [
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"cuisine" : 1,
+								"name" : 1,
+								"address.zipcode" : 1
+							},
+							"indexName" : "2_cuisine_name_address_zipcode",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"cuisine" : [ ],
+								"name" : [ ],
+								"address.zipcode" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								],
+								"name" : [
+									"[MinKey, MaxKey]"
+								],
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								]
+							}
+						}
+					}
+				}
+			},
+			{
+				"stage" : "FETCH",
+				"filter" : {
+					"address.zipcode" : {
+						"$lt" : "50000"
+					}
+				},
+				"inputStage" : {
+					"stage" : "IXSCAN",
+					"keyPattern" : {
+						"cuisine" : 1,
+						"stars" : 1
+					},
+					"indexName" : "3_cuisine_stars",
+					"isMultiKey" : false,
+					"multiKeyPaths" : {
+						"cuisine" : [ ],
+						"stars" : [ ]
+					},
+					"isUnique" : false,
+					"isSparse" : false,
+					"isPartial" : false,
+					"indexVersion" : 2,
+					"direction" : "backward",
+					"indexBounds" : {
+						"cuisine" : [
+							"[\"Sushi\", \"Sushi\"]"
+						],
+						"stars" : [
+							"[MaxKey, MinKey]"
+						]
+					}
+				}
+			},
+			{
+				"stage" : "SORT",
+				"sortPattern" : {
+					"stars" : -1
+				},
+				"inputStage" : {
+					"stage" : "SORT_KEY_GENERATOR",
+					"inputStage" : {
+						"stage" : "FETCH",
+						"inputStage" : {
+							"stage" : "IXSCAN",
+							"keyPattern" : {
+								"address.zipcode" : 1,
+								"cuisine" : 1
+							},
+							"indexName" : "1_address_zipcode_cuisine",
+							"isMultiKey" : false,
+							"multiKeyPaths" : {
+								"address.zipcode" : [ ],
+								"cuisine" : [ ]
+							},
+							"isUnique" : false,
+							"isSparse" : false,
+							"isPartial" : false,
+							"indexVersion" : 2,
+							"direction" : "forward",
+							"indexBounds" : {
+								"address.zipcode" : [
+									"[\"\", \"50000\")"
+								],
+								"cuisine" : [
+									"[\"Sushi\", \"Sushi\"]"
+								]
+							}
+						}
+					}
+				}
+			}
+		]
+	},
+	"executionStats" : {
+		"executionSuccess" : true,
+		"nReturned" : 11692,
+		"executionTimeMillis" : 51,
+		"totalKeysExamined" : 11744,
+		"totalDocsExamined" : 11692,
+		"executionStages" : {
+			"stage" : "FETCH",
+			"nReturned" : 11692,
+			"executionTimeMillisEstimate" : 43,
+			"works" : 11744,
+			"advanced" : 11692,
+			"needTime" : 51,
+			"needYield" : 0,
+			"saveState" : 96,
+			"restoreState" : 96,
+			"isEOF" : 1,
+			"invalidates" : 0,
+			"docsExamined" : 11692,
+			"alreadyHasObj" : 0,
+			"inputStage" : {
+				"stage" : "IXSCAN",
+				"nReturned" : 11692,
+				"executionTimeMillisEstimate" : 10,
+				"works" : 11744,
+				"advanced" : 11692,
+				"needTime" : 51,
+				"needYield" : 0,
+				"saveState" : 96,
+				"restoreState" : 96,
+				"isEOF" : 1,
+				"invalidates" : 0,
+				"keyPattern" : {
+					"cuisine" : 1,
+					"stars" : 1,
+					"address.zipcode" : 1
+				},
+				"indexName" : "4_cuisine_stars_address_zipcode",
+				"isMultiKey" : false,
+				"multiKeyPaths" : {
+					"cuisine" : [ ],
+					"stars" : [ ],
+					"address.zipcode" : [ ]
+				},
+				"isUnique" : false,
+				"isSparse" : false,
+				"isPartial" : false,
+				"indexVersion" : 2,
+				"direction" : "backward",
+				"indexBounds" : {
+					"cuisine" : [
+						"[\"Sushi\", \"Sushi\"]"
+					],
+					"stars" : [
+						"[MaxKey, MinKey]"
+					],
+					"address.zipcode" : [
+						"(\"50000\", \"\"]"
+					]
+				},
+				"keysExamined" : 11744,
+				"seeks" : 52,
+				"dupsTested" : 0,
+				"dupsDropped" : 0,
+				"seenInvalidated" : 0
+			}
+		}
+	},
+	"serverInfo" : {
+		"host" : "ksoong.local",
+		"port" : 27017,
+		"version" : "4.0.7",
+		"gitVersion" : "1b82c812a9c0bbf6dc79d5400de9ea99e6ffa025"
+	},
+	"ok" : 1
+}
+----
+
+=== Covered 查询
+
+Projection 也会影响查询的性能，如果返回的字段完全是索引的字段，或索引字段的一个子集，那么查询就是 Covered 查询，返回的速度极快。
+
+restaurants 集合中创建了如下索引:
+
+[source, javascript]
+----
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1})
+----
+
+执行 db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}) 查询，使用如下 Projection ，则查询是 Covered 查询，Documents Examined 值为 0
+
+[source, javascript]
+----
+{_id: 0, "address.zipcode": 1, cuisine: 1, stars : 1}
+{_id: 0, "address.zipcode": 1, cuisine: 1}
+{_id: 0, "address.zipcode": 1, stars: 1}
+{_id: 0, cuisine: 1, stars: 1}
+{_id: 0, "address.zipcode": 1}
+{_id: 0, cuisine: 1}
+{_id: 0, stars: 1}
+----
+
+=== TODO
+
+[source, javascript]
 ----
 
 ----
 
-[source, text]
-.**
+[source, javascript]
 ----
 
 ----
 
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
-
-[source, text]
-.**
-----
-
-----
 
 
 

@@ -1,17 +1,41 @@
 = 开发
 :toc: manual
 
-== 快速创建三节点复制集
-
-NOTE: 无安全快速创建三节点复制集。
+== 三节点复制集
 
 [source, bash]
 ----
 mkdir -p ~/data/r{0,1,2}
 for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --replSet repl ; done
 
-mongo admin --port 27000 --eval 'rs.initiate()'
-mongo admin --port 27000 --eval 'rs.add("ksoong.local:27001")'
-mongo admin --port 27000 --eval 'rs.add("ksoong.local:27002")'
+mongo --port 27000 --eval 'rs.initiate()'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27001")'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27002")'
+----
+
+== 五节点读写分离复制集合
+
+[source, bash]
+----
+mkdir -p ~/data/r{0,1,2,3,4}
+for i in 0 1 2 3 4; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --replSet repl ; done
+
+mongo --port 27000 --eval 'rs.initiate()'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27001")'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27002")'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27003")'
+mongo --port 27000 --eval 'rs.add("ksoong.local:27004")'
+
+mongo --host 'repl/localhost:27000,localhost:27001,localhost:27002,localhost:27003,localhost:27004' 
+> cfg = rs.conf()
+> cfg.members[0].tags={"nodeType": "ELECTABLE"}
+> cfg.members[1].tags={"nodeType": "ELECTABLE"}
+> cfg.members[2].tags={"nodeType": "ELECTABLE"}
+> cfg.members[3].tags={"nodeType": "ANALYTICS"}
+> cfg.members[4].tags={"nodeType": "ANALYTICS"}
+
+> cfg.members[3].priority=0
+> cfg.members[4].priority=0
+> rs.reconfig(cfg)
 ----
 
