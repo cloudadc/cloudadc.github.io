@@ -1951,23 +1951,6 @@ db.textExample.find({ $text: { $search: "MongoDB best" } }).explain()
 }
 ----
 
-=== TODO
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
-[source, javascript]
-----
-
-----
-
 == 常见性能操作
 
 本部分讨论 MongoDB 中常见与性能相关的一些操作。
@@ -3811,6 +3794,32 @@ db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort(
 }
 ----
 
+=== 查看索引资源分配
+
+同样基于 restaurant 机会进行，创建如下索引
+
+[source, javascript]
+----
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1}, {"background": true, "name": "cuisine_stars_address_zipcode"})
+----
+
+执行查询
+
+[source, javascript]
+----
+db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1})
+----
+
+查看索引详细情况
+
+[source, javascript]
+----
+var stats = db.restaurants.stats({indexDetails: true})
+stats.indexDetails
+stats.indexDetails.cuisine_stars_address_zipcode
+stats.indexDetails.cuisine_stars_address_zipcode.cache
+----
+
 === Covered 查询
 
 Projection 也会影响查询的性能，如果返回的字段完全是索引的字段，或索引字段的一个子集，那么查询就是 Covered 查询，返回的速度极快。
@@ -3819,7 +3828,7 @@ restaurants 集合中创建了如下索引:
 
 [source, javascript]
 ----
-db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1})
+db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1}, {"background": true, "name": "cuisine_stars_address_zipcode"})
 ----
 
 执行 db.restaurants.find({"address.zipcode": {$lt: "50000"}, cuisine: "Sushi"}).sort({stars: -1}) 查询，使用如下 Projection ，则查询是 Covered 查询，Documents Examined 值为 0
@@ -3835,7 +3844,115 @@ db.restaurants.createIndex( {"cuisine": 1, "stars": 1, "address.zipcode": 1})
 {_id: 0, stars: 1}
 ----
 
-=== TODO
+=== 数据类型的影响
+
+MongoDB 中的一个字段可以是不同的类型，不同的数据类型的影响是什么呢？
+
+* 查询匹配 - 只有类型正确了才可以正确匹配
+* 查询排序 - 排序的规则，先类型（类型顺序：MinKey -> Null -> Number -> String -> Object -> Array -> BinData -> ObjectId -> Boolean -> Date -> Timestamp -> Regular Expression -> MaxKey），后大小
+
+[source, javascript]
+----
+// base 的类型不同
+db.shapes.insert( { type: "triangle", side_length_type: "equilateral", base : 10, height: 20   } )
+db.shapes.insert( { type: "triangle", side_length_type: "isosceles", base : NumberDecimal("2.8284271247461903"), side_length: 2   } )
+db.shapes.insert( { type: "square", base: 1} )
+db.shapes.insert( { type: "rectangle", side: 10, base: 3} )
+db.shapes.insert( { type: "pyramid", apex: 10, base: "3"} )
+db.shapes.insert( { type: "pyramid", apex: 10, base: "14"} )
+
+// 查询匹配，类型不正确，无返回
+db.shapes.find({base: 2.8284271247461903})
+db.shapes.find({base: "2.8284271247461903"})
+
+// 查询匹配，类型正确，有返回
+db.shapes.find({base: NumberDecimal("2.8284271247461903")})
+
+// 查询排序，先 Number，后 String
+db.shapes.find({}, {base:1, _id:0}).sort({base:1})
+----
+
+通常应避免数据类型不一致的问题，这样可以简化客户端应用的逻辑，以及避免应用数据连续性问题。
+
+=== 聚合性能
+
+在不创建索引的情况下，聚合流水线中如果有排序，当排序内存超过 100 MB 时会有异常抛出。 
+
+[source, javascript]
+.*1. 导入数据*
+----
+mongoimport -c restaurants --drop restaurants.json
+----
+
+[source, javascript]
+.*2. 执行聚合*
+----
+db.restaurants.aggregate([
+  { $match: { stars: { $gt: 2 } } },
+  { $sort: { stars: 1 } },
+  { $group: { _id: "$cuisine", count: { $sum: 1 } } }
+])
+
+2019-09-03T13:03:33.065+0800 E QUERY    [js] Error: command failed: {
+	"ok" : 0,
+	"errmsg" : "Sort exceeded memory limit of 104857600 bytes, but did not opt in to external sorting. Aborting operation. Pass allowDiskUse:true to opt in.",
+	"code" : 16819,
+	"codeName" : "Location16819"
+} : aggregate failed
+----
+
+[source, javascript]
+.*3. 创建索引*
+----
+db.restaurants.createIndex({stars: 1})
+----
+
+[source, javascript]
+.*4. 执行聚合*
+----
+db.restaurants.aggregate([
+  { $match: { stars: { $gt: 2 } } },
+  { $sort: { stars: 1 } },
+  { $group: { _id: "$cuisine", count: { $sum: 1 } } }
+])
+----
+
+=== Collation
+
+MongoDB 中 Collation 运行在 String 比较时指定一些语言相关的规则，例如大小写，方言等。可以在设定 Collation 的地方包括：Collection, View, Index 或某个具体的操作。
+
+[source, javascript]
+----
+// create a collection-level collation for Chinese
+db.createCollection( "foreign_text", {collation: {locale: "zh"}})
+
+// insert an example document
+db.foreign_text.insert({name: "中国", text: "这里是中国"})
+
+// 使用不同的 Collation 进行查询匹配，可以正常工作
+db.foreign_text.find({ _id: {$exists:1 } }).collation({locale: 'it'})
+db.foreign_text.aggregate([ {$match: { _id: {$exists:1 }  }}], {collation: {locale: 'es'}})
+
+// 在索引上创建 collation
+db.foreign_text.createIndex( {name: 1},  {collation: {locale: 'zh'}} )
+----
+
+== TODO
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
 
 [source, javascript]
 ----

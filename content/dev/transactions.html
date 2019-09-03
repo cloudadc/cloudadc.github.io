@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>开发 · GitBook</title>
+        <title>分布式事务 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,10 +61,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="aggregation.html" />
+    <link rel="next" href="java.html" />
     
     
-    <link rel="prev" href="../dba/dist.html" />
+    <link rel="prev" href="aggregation-sum.html" />
     
 
     </head>
@@ -157,7 +157,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3" data-path="./">
+        <li class="chapter " data-level="1.3" data-path="./">
             
                 <a href="./">
             
@@ -203,7 +203,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.2" data-path="transactions.html">
+        <li class="chapter active" data-level="1.3.2" data-path="transactions.html">
             
                 <a href="transactions.html">
             
@@ -361,7 +361,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >开发</a>
+        <a href=".." >分布式事务</a>
     </h1>
 </div>
 
@@ -376,58 +376,8 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x5F00;&#x53D1;">&#x5F00;&#x53D1;</h1>
-<div id="toc" class="toc">
-<div id="toctitle">Table of Contents</div>
-<ul class="sectlevel1">
-<li><a href="#__">&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</a></li>
-<li><a href="#___2">&#x4E94;&#x8282;&#x70B9;&#x8BFB;&#x5199;&#x5206;&#x79BB;&#x590D;&#x5236;&#x96C6;&#x5408;</a></li>
-</ul>
-</div>
-<div class="sect1">
-<h2 id="__">&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir -p ~/data/r{0,1,2}
-<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/data/r<span class="hljs-variable">$i</span> --logpath ~/data/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --replSet repl ; <span class="hljs-keyword">done</span>
+                                <h1 id="&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;">&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;</h1>
 
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27001&quot;)&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27002&quot;)&apos;</span></code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="___2">&#x4E94;&#x8282;&#x70B9;&#x8BFB;&#x5199;&#x5206;&#x79BB;&#x590D;&#x5236;&#x96C6;&#x5408;</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir -p ~/data/r{0,1,2,3,4}
-<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 3 4; <span class="hljs-keyword">do</span> mongod --dbpath ~/data/r<span class="hljs-variable">$i</span> --logpath ~/data/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --bind_ip 0.0.0.0 --fork --replSet repl ; <span class="hljs-keyword">done</span>
-
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27001&quot;)&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27002&quot;)&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27003&quot;)&apos;</span>
-mongo --port 27000 --eval <span class="hljs-string">&apos;rs.add(&quot;ksoong.local:27004&quot;)&apos;</span>
-
-mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:27001,localhost:27002,localhost:27003,localhost:27004&apos;</span>
-&gt; cfg = rs.conf()
-&gt; cfg.members[0].tags={<span class="hljs-string">&quot;nodeType&quot;</span>: <span class="hljs-string">&quot;ELECTABLE&quot;</span>}
-&gt; cfg.members[1].tags={<span class="hljs-string">&quot;nodeType&quot;</span>: <span class="hljs-string">&quot;ELECTABLE&quot;</span>}
-&gt; cfg.members[2].tags={<span class="hljs-string">&quot;nodeType&quot;</span>: <span class="hljs-string">&quot;ELECTABLE&quot;</span>}
-&gt; cfg.members[3].tags={<span class="hljs-string">&quot;nodeType&quot;</span>: <span class="hljs-string">&quot;ANALYTICS&quot;</span>}
-&gt; cfg.members[4].tags={<span class="hljs-string">&quot;nodeType&quot;</span>: <span class="hljs-string">&quot;ANALYTICS&quot;</span>}
-
-&gt; cfg.members[3].priority=0
-&gt; cfg.members[4].priority=0
-&gt; rs.reconfig(cfg)</code></pre>
-</div>
-</div>
-</div>
-</div>
                                 
                                 </section>
                             
@@ -454,12 +404,12 @@ mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:2700
 
             
                 
-                <a href="../dba/dist.html" class="navigation navigation-prev " aria-label="Previous page: 分布式系统">
+                <a href="aggregation-sum.html" class="navigation navigation-prev " aria-label="Previous page: $sum">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="aggregation.html" class="navigation navigation-next " aria-label="Next page: Aggregation">
+                <a href="java.html" class="navigation navigation-next " aria-label="Next page: Java">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -470,7 +420,7 @@ mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:2700
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"开发","level":"1.3","depth":1,"next":{"title":"Aggregation","level":"1.3.1","depth":2,"path":"dev/aggregation.adoc","ref":"dev/aggregation.adoc","articles":[{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"分布式系统","level":"1.2.1","depth":2,"path":"dba/dist.adoc","ref":"dba/dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/README.adoc","mtime":"2019-08-27T02:35:56.282Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-03T12:39:41.323Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"分布式事务","level":"1.3.2","depth":2,"next":{"title":"Java","level":"1.3.3","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"previous":{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/transactions.adoc","mtime":"2019-09-03T09:39:46.760Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-03T12:39:41.323Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

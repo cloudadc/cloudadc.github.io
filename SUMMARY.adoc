@@ -7,6 +7,7 @@
 . link:dev/README.adoc[开发]
 .. link:dev/aggregation.adoc[Aggregation]
 ... link:dev/aggregation-sum.adoc[$sum]
+.. link:dev/transactions.adoc[分布式事务]
 .. link:dev/java.adoc[Java]
 . link:dba/cluster-admin.adoc[集群管理]
 .. link:dba/opsmanager.adoc[Ops Manager]
