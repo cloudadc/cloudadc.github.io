@@ -1,0 +1,309 @@
+= 分片
+:toc: manual
+
+== Chunk
+
+=== 修改 Chunk 默认大小
+
+Chunk 默认大小为 64 MB，允许 Chunk 大小的范围是 1MB - 1024MB。
+
+[source, javascript]
+----
+// 连接到 mongos
+
+//修改 Chunk 大小为 1MB
+use config
+db.settings.save( { _id:"chunksize", value: 1 } )
+----
+
+=== 配置集合分片
+
+[source, javascript]
+----
+sh.enableSharding("testSharding")
+db.adminCommand({shardCollection: "testSharding.people", key: {x: 1}})
+
+//集合分片后会创建一个 Chunk 在主分片
+use config
+db.chunks.find({"ns" : "testSharding.people"}).pretty()
+{
+	"_id" : "testSharding.people-x_MinKey",
+	"ns" : "testSharding.people",
+	"min" : {
+		"x" : { "$minKey" : 1 }
+	},
+	"max" : {
+		"x" : { "$maxKey" : 1 }
+	},
+	"shard" : "repl-b",
+	"lastmod" : Timestamp(1, 0),
+	"lastmodEpoch" : ObjectId("5d79bb8e1d79c9b0a46a5b1d"),
+	"history" : [
+		{
+			"validAfter" : Timestamp(1568258958, 6),
+			"shard" : "repl-b"
+		}
+	]
+}
+----
+
+=== 向初始化的 chunk 添加数据
+
+[source, java]
+.*1. 执行如下命令插入 500 条数据*
+----
+java -jar target/bulkLoad-jar-with-dependencies.jar -u "mongodb://localhost:27017" -d testSharding -c people -f people.json -s -n 500 -k x --start 0 -m
+----
+
+[source, javascript]
+.*2. 查看分片 Chunk 分布情况*
+----
+// 执行 sh.status()
+sh.status()
+...
+        {  "_id" : "testSharding",  "primary" : "repl-b",  "partitioned" : true,  "version" : {  "uuid" : UUID("07ea271e-9ae7-4588-9f9b-7ad64ddf899d"),  "lastMod" : 1 } }
+                testSharding.people
+                        shard key: { "x" : 1 }
+                        unique: false
+                        balancing: true
+                        chunks:
+                                repl-b	1
+                        { "x" : { "$minKey" : 1 } } -->> { "x" : { "$maxKey" : 1 } } on : repl-b Timestamp(1, 0) 
+
+// 查询 chunks 集合
+use config
+db.chunks.find({"ns" : "testSharding.people"}).pretty()
+----
+
+=== Chunk 分裂
+
+当 Chunk 的大小大于 Chunk Size 或 大于一个 Chunk 允许的最大文档数目时，Chunk 就会分裂。
+
+[source, javascript]
+.*1. 执行如下命令插入 500 条数据*
+----
+java -jar target/bulkLoad-jar-with-dependencies.jar -u "mongodb://localhost:27017" -d testSharding -c people -f people.json -s -n 1100 -k x --start 500 -m
+----
+
+[source, javascript]
+.*2. 查看分片 Chunk 分布情况*
+----
+//集合分片后会创建一个 Chunk 在主分片
+use config
+db.chunks.find({"ns" : "testSharding.people"}).pretty()
+{
+	"_id" : "testSharding.people-x_MinKey",
+	"lastmod" : Timestamp(2, 0),
+	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
+	"ns" : "testSharding.people",
+	"min" : {
+		"x" : { "$minKey" : 1 }
+	},
+	"max" : {
+		"x" : "1"
+	},
+	"shard" : "repl-c",
+	"history" : [
+		{
+			"validAfter" : Timestamp(1568611132, 15),
+			"shard" : "repl-c"
+		}
+	]
+}
+{
+	"_id" : "testSharding.people-x_\"1\"",
+	"lastmod" : Timestamp(2, 1),
+	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
+	"ns" : "testSharding.people",
+	"min" : {
+		"x" : "1"
+	},
+	"max" : {
+		"x" : "93"
+	},
+	"shard" : "repl-b",
+	"history" : [
+		{
+			"validAfter" : Timestamp(1568611061, 6),
+			"shard" : "repl-b"
+		}
+	]
+}
+{
+	"_id" : "testSharding.people-x_\"93\"",
+	"lastmod" : Timestamp(1, 3),
+	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
+	"ns" : "testSharding.people",
+	"min" : {
+		"x" : "93"
+	},
+	"max" : {
+		"x" : { "$maxKey" : 1 }
+	},
+	"shard" : "repl-b",
+	"history" : [
+		{
+			"validAfter" : Timestamp(1568611061, 6),
+			"shard" : "repl-b"
+		}
+	]
+}
+----
+
+=== Chunk 常见 Troubleshooting 步骤
+
+[source, javascript]
+.*1. 收集 config dump*
+----
+mongodump --host HOST:PORT -d config -o configdump 
+----
+
+[source, javascript]
+.*2. 查看所有分片的数据库*
+----
+use config
+db.databases.find({},{primary: 1, partitioned: 1})
+{ "_id" : "testSharding", "primary" : "repl-b", "partitioned" : true }
+{ "_id" : "test", "primary" : "repl-c", "partitioned" : true }
+----
+
+[source, javascript]
+.*3. 查看各分片 chunk 总数*
+----
+// 各分片 chunk 总数
+use config
+db.chunks.aggregate([{ $group: { _id: { shard: "$shard" }, count: { $sum: 1 } } }, { $sort : { "_id.shard" : 1 } } ])
+{ "_id" : { "shard" : "repl-a" }, "count" : 26 }
+{ "_id" : { "shard" : "repl-b" }, "count" : 25 }
+{ "_id" : { "shard" : "repl-c" }, "count" : 26 }
+
+// 某一个数据库 chunk 在各分片的分布
+db.chunks.aggregate([{$match: {"ns" : "testSharding.people"}}, { $group: { _id: { shard: "$shard" }, count: { $sum: 1 } } }, { $sort : { "_id.shard" : 1 } } ])
+{ "_id" : { "shard" : "repl-a" }, "count" : 25 }
+{ "_id" : { "shard" : "repl-b" }, "count" : 25 }
+{ "_id" : { "shard" : "repl-c" }, "count" : 25 }
+----
+
+[source, javascript]
+.*4. 查看集合总数，以及分片集合的总数*
+----
+db.collections.count({dropped: false})
+3
+
+db.collections.count({key: {x: 1}, dropped: false})
+2
+----
+
+=== 手动迁移 chunk
+
+chunk 的移动有两种方式：Balancer 均衡器，手动，本部分说明如何手动迁移 chunk。
+
+[source, javascript]
+----
+TODO
+----
+
+=== 将新数据引导到新的分片上
+
+通过分片集标签可以在新集合上将数据引导到新分片上。由于每天一个集合，数量较大，使用脚本完成分配工作。
+
+[source, javascript]
+----
+// disable balancing for all namespaces
+use config
+db.collections.find({dropped: false}).forEach(function(coll) {
+  sh.disableBalancing(coll._id);
+  print(coll._id + " balancing disabled");
+});
+
+sh.addTagRange("test.people", {x: MinKey}, {x: MaxKey}, "new_shards")
+sh.moveChunk("test.people", {x: 1}, "repl-b")
+sh.addShardTag("repl-b", "new_shards");
+
+//re-enable balancer for all namespaces
+db.collections.find({dropped: false}).forEach(function(coll) {
+  sh.enableBalancing(coll._id);
+  print(coll._id + " balancing enabled");
+});
+----
+
+导入 100 万条数据
+
+[source, javascript]
+----
+java -jar target/bulkLoad-jar-with-dependencies.jar -u "mongodb://localhost:27017" -d test -c people -f people.json -s -n 1000000 -k x --start 0 -m
+----
+
+查看chunk 分布
+
+[source, javascript]
+----
+db.chunks.aggregate([{$match: {"ns" : "test.people"}}, { $group: { _id: { shard: "$shard" }, count: { $sum: 1 } } }, { $sort : { "_id.shard" : 1 } } ])
+{ "_id" : { "shard" : "repl-a" }, "count" : 1 }
+{ "_id" : { "shard" : "repl-b" }, "count" : 14 }
+----
+
+== 片键选择
+
+=== 片键选择三原则
+
+Shard Key 决定如何将一个集合中的文档分发到不同的分片，Shard Key 需要是一个索引的字段或索引的复合字段。将一个集合进行分片语法如下:
+
+[source, bash]
+----
+sh.shardCollection( <database>.<collection>, <key> )
+----
+
+NOTE: 如果集合不为空，那么进行分区操作前，首先必须对 Shard Key 对应的字段创建索引，如果集合为空，那么进行分区操作时会自动创建对 Shard Key 对应的字段创建索引。
+
+到目前可以看出，Shard Key 在集合分区中起到决定性的作用，如何确保集合分区合理高效，就必须选择最合适的 Shard Key。那么如何选择 Shard Key？选择 Shard Key 有三个指标：
+
+* *合理的基数(Cardinality)* - 基数不能太小，如果太小，例如 Shard Key 就有三个可能的值，那么如果有超过 3 个分区，则是无意义的，基数太大也不行，虽然可以保证水平扩展，但无法高效的通过 chunk 分发
+* *合理的频率(Frequency)* - 如果数据集中在某一个 Shard Key 对应的值上，那么数据无法很好的分发
+* *合理的变化(Monotonically)* - 如果 Shard Key 对应的值在不停的增加或减小，那么靠近 maxKey 或 minKey 的 分区数据变得越来越多，不利于集群高效运行.
+
+=== 单调递增/递减片键易造成数据分配不均
+
+单调递增或递减的片键（以下简称单调片键）因为新值总是位于整个值域的上限（递增）或下限（递减）处，造成无论哪个片拥有上限或下限处的数据块，新文档始终会被分配到那个分片上。一方面这样会造成该分片成为写入热点，无法分散写入压力。另外一方面持续对该片的写入会使数据分布极不均匀，需要依赖均衡器在后期将数据移动到其他分片达到均衡的目的。从另一个角度讲，如果数据一开始就能够分散写入到不同的分片上，则不需要通过重新搬迁来均衡数据，即省去了均衡对资源带来的额外消耗。因此，单调片键无论对性能或水平扩展都会造成不利影响，选择片键时应当避免。
+
+常见的单调片键包括：
+
+* 数字序列
+* 时间
+* ObjectId
+* UUID
+
+=== 读写负载影响片键选择
+
+选择分片键时，需要考虑最主要的因素是什么？明白集群的读写负载。
+
+如果工作负载主要是写入，则不能使用单调增加/减少的片键并分发写入是至关重要的。
+
+如果工作负载主要是读取，则需要识别最常见的查询，并确保这些查询得到分发和本地化。不使用片键的查询将被发送到所有分片。那些非目标查询不能很好地扩展，这意味着添加新的分片没有帮助，所以我们希望最小化这些。
+
+== TODO
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----
+
+[source, javascript]
+----
+
+----

@@ -136,25 +136,6 @@
             
 
             
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.2.1" data-path="../dba/dist.html">
-            
-                <a href="../dba/dist.html">
-            
-                    
-                    分布式系统
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
         </li>
     
         <li class="chapter " data-level="1.3" data-path="./">
@@ -248,7 +229,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="../dba/opsmanager.html">
+        <li class="chapter " data-level="1.4.1" data-path="../dba/sharding.html">
+            
+                <a href="../dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../dba/opsmanager.html">
             
                 <a href="../dba/opsmanager.html">
             
@@ -261,7 +255,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="../dba/perf.html">
+        <li class="chapter " data-level="1.4.3" data-path="../dba/perf.html">
             
                 <a href="../dba/perf.html">
             
@@ -274,7 +268,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="../dba/troubleshooting.html">
+        <li class="chapter " data-level="1.4.4" data-path="../dba/troubleshooting.html">
             
                 <a href="../dba/troubleshooting.html">
             
@@ -377,7 +371,171 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;">&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x5355;&#x6587;&#x6863;&#x539F;&#x5B50;&#x6027;&#x53EF;&#x6EE1;&#x8DB3;&#x5927;&#x591A;&#x6570;&#x4E1A;&#x52A1;&#x9700;&#x6C42;</a></li>
+<li><a href="#_drivers_api">Drivers API</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x9A71;&#x52A8;&#x7248;&#x672C;</a></li>
+<li><a href="#_callback_api">Callback API</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x5355;&#x6587;&#x6863;&#x539F;&#x5B50;&#x6027;&#x53EF;&#x6EE1;&#x8DB3;&#x5927;&#x591A;&#x6570;&#x4E1A;&#x52A1;&#x9700;&#x6C42;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x5728; MongoDB &#x4E2D;&#xFF0C;&#x5BF9;&#x5355;&#x4E2A;&#x6587;&#x6863;&#x7684;&#x64CD;&#x4F5C;&#x662F;&#x539F;&#x5B50;&#x64CD;&#x4F5C;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/mongodb-document-model.png" alt="mongodb document model.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x7531;&#x4E8E; MongoDB &#x6587;&#x6863;&#x6570;&#x636E;&#x6A21;&#x578B;&#xFF0C;&#x4E00;&#x4E2A;&#x6587;&#x6863;&#x4E2D;&#x901A;&#x8FC7;&#x5D4C;&#x5165;&#x5F0F;&#x7684;&#x6587;&#x6863;&#x548C;&#x6570;&#x7EC4;&#x6765;&#x8868;&#x793A;&#x4F20;&#x7EDF;&#x5173;&#x7CFB;&#x6570;&#x636E;&#x5E93;&#x6A21;&#x578B;&#x4E2D;&#x7684;&#x4E00;&#x5BF9;&#x4E00;&#x3001;&#x4E00;&#x5BF9;&#x591A;&#x5173;&#x7CFB;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x901A;&#x8FC7;&#x6587;&#x6863;&#x4E4B;&#x95F4;&#x7684;&#x590D;&#x6742;&#x5173;&#x7CFB;&#x6765;&#x63CF;&#x8FF0;&#x4E1A;&#x52A1;&#x9700;&#x6C42;&#x4E2D;&#x7684;&#x4E00;&#x5BF9;&#x4E00;&#x3001;&#x4E00;&#x5BF9;&#x591A;&#x5173;&#x7CFB;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x6240;&#x4EE5;&#x5355;&#x6587;&#x6863;&#x539F;&#x5B50;&#x6027;&#x53EF;&#x4EE5;&#x6EE1;&#x8DB3;&#x5B9E;&#x9645;&#x751F;&#x4EA7;&#x4E2D;&#x5927;&#x591A;&#x6570;&#x5173;&#x4E8E;&#x4E8B;&#x52A1;&#x7684;&#x9700;&#x6C42;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5BF9;&#x4E8E;&#x9700;&#x8981;&#x5BF9;&#x591A;&#x4E2A;&#x6587;&#x6863;&#xFF08;&#x5728;&#x5355;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x96C6;&#x5408;&#x4E2D;&#xFF09;&#x8FDB;&#x884C;&#x539F;&#x5B50;&#x8BFB;&#x5199;&#x7684;&#x60C5;&#x51B5;&#xFF0C;MongoDB &#x652F;&#x6301;&#x591A;&#x6587;&#x6863;&#x4E8B;&#x52A1;&#x3002;&#x4F7F;&#x7528;&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;&#xFF0C;&#x53EF;&#x4EE5;&#x8DE8;&#x591A;&#x4E2A;&#x64CD;&#x4F5C;&#xFF0C;&#x96C6;&#x5408;&#xFF0C;&#x6570;&#x636E;&#x5E93;&#xFF0C;&#x6587;&#x6863;&#x548C;&#x5206;&#x7247;&#x8FDB;&#x884C;&#x539F;&#x5B50;&#x6027;&#x64CD;&#x4F5C;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_drivers_api">Drivers API</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x4E3A;&#x652F;&#x6301; MongoDB &#x4E8B;&#x52A1;&#xFF0C;Drivers API &#x6709;&#x4E24;&#x7C7B;&#xFF1A;Callback API &#x548C; Core API&#xFF0C;&#x524D;&#x8005;&#x66F4;&#x52A0;&#x81EA;&#x52A8;&#x5316;&#xFF0C;&#x540E;&#x8005;&#x9700;&#x8981;&#x624B;&#x52A8;&#x53BB;&#x63A7;&#x5236;&#x4E8B;&#x52A1;&#x7684;&#x5F00;&#x59CB;&#xFF0C;&#x4E8B;&#x52A1;&#x7684;&#x63D0;&#x4EA4;&#x7B49;&#x3002;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Callback API</th>
+<th class="tableblock halign-left valign-top">Core API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>&#x5F00;&#x59CB;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#xFF0C;&#x6267;&#x884C;&#x4E00;&#x4E9B;&#x6307;&#x5B9A;&#x7684;&#x64CD;&#x4F5C;&#xFF0C;&#x63D0;&#x4EA4;&#x4E8B;&#x52A1;&#xFF08;&#x653E;&#x5F03;&#x56DE;&#x9000;&#xFF0C;&#x629B;&#x51FA;&#x5F02;&#x5E38;&#xFF09;</p>
+</li>
+<li>
+<p>&#x81EA;&#x52A8;&#x5408;&#x5E76;&#x5904;&#x7406;&#x5F02;&#x5E38;&#xFF08;TransientTransactionError &#x548C; UnknownTransactionCommitResult&#xFF09;</p>
+</li>
+</ul>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>&#x9700;&#x8981;&#x660E;&#x786E;&#x7684;&#x65B9;&#x6CD5;&#x8C03;&#x8FD0;&#x6765;&#x5F00;&#x59CB;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#xFF0C;&#x63D0;&#x4EA4;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;</p>
+</li>
+<li>
+<p>&#x6CA1;&#x6709;&#x9519;&#x8BEF;&#x5F02;&#x5E38;&#x5904;&#x7406;&#x673A;&#x5236;&#xFF0C;&#x9700;&#x8981;&#x624B;&#x52A8;&#x53BB;&#x5B9E;&#x73B0;&#xFF0C;&#x53BB;&#x5904;&#x7406; TransientTransactionError &#x548C; UnknownTransactionCommitResult &#x5F02;&#x5E38;&#x3002;</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="sect2">
+<h3 id="___2">&#x9A71;&#x52A8;&#x7248;&#x672C;</h3>
+<div class="paragraph">
+<p>&#x8981;&#x4F7F;&#x7528; MongoDB 4.2 &#x7248;&#x672C;&#x7684;&#x5206;&#x5E03;&#x5F0F;&#x4E8B;&#x52A1;&#xFF0C;&#x9A71;&#x52A8;&#x5FC5;&#x9700;&#x6EE1;&#x8DB3;&#x5982;&#x4E0B;&#x7248;&#x672C;:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x7F16;&#x7A0B;&#x8BED;&#x8A00;</th>
+<th class="tableblock halign-left valign-top">&#x7248;&#x672C;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Node</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.3.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Python</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.9.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Go</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1.1</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3.11.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">C#</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.9.0</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ruby</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2.10.0</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_callback_api">Callback API</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">		String uri = <span class="hljs-string">&quot;mongodb://localhost:27000,localhost:27001,localhost:27002/admin?replicaSet=repl&quot;</span>;
 
+		<span class="hljs-keyword">final</span> MongoClient client = MongoClients.create(uri);
+
+		<span class="hljs-comment">/**
+		 * Create collections. CRUD operations in transactions must be on existing collections.
+		 */</span>
+		client.getDatabase(<span class="hljs-string">&quot;mydb1&quot;</span>).getCollection(<span class="hljs-string">&quot;foo&quot;</span>).withWriteConcern(MAJORITY).insertOne(<span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-number">0</span>));
+		client.getDatabase(<span class="hljs-string">&quot;mydb2&quot;</span>).getCollection(<span class="hljs-string">&quot;bar&quot;</span>).withWriteConcern(MAJORITY).insertOne(<span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;xyz&quot;</span>, <span class="hljs-number">0</span>));
+
+		<span class="hljs-keyword">final</span> ClientSession clientSession = client.startSession();
+
+		TransactionOptions txnOptions = TransactionOptions.builder()
+				.readPreference(primary())
+				.readConcern(LOCAL)
+				.writeConcern(MAJORITY)
+				.build();
+
+		TransactionBody&lt;?&gt; txnBody = <span class="hljs-keyword">new</span> TransactionBody&lt;String&gt;() {
+
+			<span class="hljs-meta">@Override</span>
+			<span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">execute</span><span class="hljs-params">()</span> </span>{
+
+				MongoCollection&lt;Document&gt; coll1 = client.getDatabase(<span class="hljs-string">&quot;mydb1&quot;</span>).getCollection(<span class="hljs-string">&quot;foo&quot;</span>);
+		        MongoCollection&lt;Document&gt; coll2 = client.getDatabase(<span class="hljs-string">&quot;mydb2&quot;</span>).getCollection(<span class="hljs-string">&quot;bar&quot;</span>);
+
+		        coll1.insertOne(clientSession, <span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;abc&quot;</span>, <span class="hljs-number">1</span>));
+		        coll2.insertOne(clientSession, <span class="hljs-keyword">new</span> Document(<span class="hljs-string">&quot;xyz&quot;</span>, <span class="hljs-number">999</span>));
+
+				<span class="hljs-keyword">return</span> <span class="hljs-string">&quot;SUCCESS&quot;</span>;
+			}
+		};
+
+		<span class="hljs-keyword">try</span> {
+			clientSession.withTransaction(txnBody, txnOptions);
+		} <span class="hljs-keyword">finally</span> {
+			clientSession.close();
+		}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -420,7 +578,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"分布式事务","level":"1.3.2","depth":2,"next":{"title":"Java","level":"1.3.3","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"previous":{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/transactions.adoc","mtime":"2019-09-03T09:39:46.760Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-03T12:39:41.323Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"分布式事务","level":"1.3.2","depth":2,"next":{"title":"Java","level":"1.3.3","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"previous":{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/transactions.adoc","mtime":"2019-09-03T14:12:48.066Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

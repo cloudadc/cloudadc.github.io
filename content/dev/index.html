@@ -64,7 +64,7 @@
     <link rel="next" href="aggregation.html" />
     
     
-    <link rel="prev" href="../dba/dist.html" />
+    <link rel="prev" href="../dba/basic.html" />
     
 
     </head>
@@ -135,25 +135,6 @@
                 </a>
             
 
-            
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.2.1" data-path="../dba/dist.html">
-            
-                <a href="../dba/dist.html">
-            
-                    
-                    分布式系统
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
             
         </li>
     
@@ -248,7 +229,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="../dba/opsmanager.html">
+        <li class="chapter " data-level="1.4.1" data-path="../dba/sharding.html">
+            
+                <a href="../dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../dba/opsmanager.html">
             
                 <a href="../dba/opsmanager.html">
             
@@ -261,7 +255,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="../dba/perf.html">
+        <li class="chapter " data-level="1.4.3" data-path="../dba/perf.html">
             
                 <a href="../dba/perf.html">
             
@@ -274,7 +268,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="../dba/troubleshooting.html">
+        <li class="chapter " data-level="1.4.4" data-path="../dba/troubleshooting.html">
             
                 <a href="../dba/troubleshooting.html">
             
@@ -382,6 +376,7 @@
 <ul class="sectlevel1">
 <li><a href="#__">&#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;</a></li>
 <li><a href="#___2">&#x4E94;&#x8282;&#x70B9;&#x8BFB;&#x5199;&#x5206;&#x79BB;&#x590D;&#x5236;&#x96C6;&#x5408;</a></li>
+<li><a href="#___3">&#x4E24;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -428,6 +423,35 @@ mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:2700
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="___3">&#x4E24;&#x5206;&#x7247;&#x96C6;&#x7FA4;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir r{a,b,c}
+mkdir cs
+
+mongod --configsvr --dbpath cs --logpath cs/mongo.log --port 26000 --fork --replSet repl-cs
+mongo --port 26000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+mongod --shardsvr --dbpath ra --logpath ra/mongo.log --port 27000 --fork --replSet repl<span class="hljs-_">-a</span>
+mongo --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+mongod --shardsvr --dbpath rb --logpath rb/mongo.log --port 28000 --fork --replSet repl-b
+mongo --port 28000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+mongod --shardsvr --dbpath rc --logpath rc/mongo.log --port 29000 --fork --replSet repl-c
+mongo --port 29000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
+
+mongos --configdb <span class="hljs-string">&apos;repl-cs/localhost:26000&apos;</span> --logpath ~/tmp/mongos.log --port 27017 --fork
+
+mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-a/localhost:27000&quot;)&apos;</span>
+mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-b/localhost:28000&quot;)&apos;</span>
+mongo --eval <span class="hljs-string">&apos;sh.addShard(&quot;repl-c/localhost:29000&quot;)&apos;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -454,7 +478,7 @@ mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:2700
 
             
                 
-                <a href="../dba/dist.html" class="navigation navigation-prev " aria-label="Previous page: 分布式系统">
+                <a href="../dba/basic.html" class="navigation navigation-prev " aria-label="Previous page: 基础">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -470,7 +494,7 @@ mongo --host <span class="hljs-string">&apos;repl/localhost:27000,localhost:2700
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"开发","level":"1.3","depth":1,"next":{"title":"Aggregation","level":"1.3.1","depth":2,"path":"dev/aggregation.adoc","ref":"dev/aggregation.adoc","articles":[{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"分布式系统","level":"1.2.1","depth":2,"path":"dba/dist.adoc","ref":"dba/dist.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/README.adoc","mtime":"2019-08-27T02:35:56.282Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-03T12:39:41.323Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"开发","level":"1.3","depth":1,"next":{"title":"Aggregation","level":"1.3.1","depth":2,"path":"dev/aggregation.adoc","ref":"dev/aggregation.adoc","articles":[{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]}]},"previous":{"title":"基础","level":"1.2","depth":1,"path":"dba/basic.adoc","ref":"dba/basic.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/README.adoc","mtime":"2019-09-12T02:12:50.879Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

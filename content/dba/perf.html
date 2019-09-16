@@ -136,25 +136,6 @@
             
 
             
-            <ul class="articles">
-                
-    
-        <li class="chapter " data-level="1.2.1" data-path="dist.html">
-            
-                <a href="dist.html">
-            
-                    
-                    分布式系统
-            
-                </a>
-            
-
-            
-        </li>
-    
-
-            </ul>
-            
         </li>
     
         <li class="chapter " data-level="1.3" data-path="../dev/">
@@ -248,7 +229,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="opsmanager.html">
+        <li class="chapter " data-level="1.4.1" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="opsmanager.html">
             
                 <a href="opsmanager.html">
             
@@ -261,7 +255,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.4.2" data-path="perf.html">
+        <li class="chapter active" data-level="1.4.3" data-path="perf.html">
             
                 <a href="perf.html">
             
@@ -274,7 +268,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="troubleshooting.html">
+        <li class="chapter " data-level="1.4.4" data-path="troubleshooting.html">
             
                 <a href="troubleshooting.html">
             
@@ -401,6 +395,7 @@
 <ul class="sectlevel2">
 <li><a href="#_background">background &#x6A21;&#x5F0F;&#x521B;&#x5EFA;&#x7D22;&#x5F15;</a></li>
 <li><a href="#___6">&#x67E5;&#x8BE2;&#x8BA1;&#x5212;</a></li>
+<li><a href="#_esr_vs">ESR &#x7D22;&#x5F15; Vs &#x7D22;&#x5F15;&#x524D;&#x7F00;</a></li>
 <li><a href="#_compass_explain">Compass &#x6216;&#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C; explain() &#x67E5;&#x770B;&#x6267;&#x884C;&#x8FC7;&#x7A0B;</a></li>
 <li><a href="#___8">&#x67E5;&#x770B;&#x7D22;&#x5F15;&#x8D44;&#x6E90;&#x5206;&#x914D;</a></li>
 <li><a href="#_covered">Covered &#x67E5;&#x8BE2;</a></li>
@@ -2836,6 +2831,40 @@ pc.getPlansByQuery(qs[<span class="hljs-number">0</span>])</code></pre>
 </div>
 </div>
 <div class="sect2">
+<h3 id="_esr_vs">ESR &#x7D22;&#x5F15; Vs &#x7D22;&#x5F15;&#x524D;&#x7F00;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x6D4B;&#x8BD5;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.computers.insertMany([{processor: <span class="hljs-string">&quot;i7&quot;</span>, price: <span class="hljs-number">1800</span>, memoryGB: <span class="hljs-number">16</span>}, {processor: <span class="hljs-string">&quot;i7&quot;</span>, price: <span class="hljs-number">1900</span>, memoryGB: <span class="hljs-number">32</span>}, {processor: <span class="hljs-string">&quot;i9&quot;</span>, price: <span class="hljs-number">1900</span>, memoryGB: <span class="hljs-number">16</span>}, {processor: <span class="hljs-string">&quot;i9&quot;</span>, price: <span class="hljs-number">2500</span>, memoryGB: <span class="hljs-number">32</span>}])</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA;&#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.computers.createIndex({ processor: <span class="hljs-number">1</span>, price: <span class="hljs-number">1</span>, memoryGB: <span class="hljs-number">-1</span> })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x7D22;&#x5F15;&#x524D;&#x7F00;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.computers.find( { processor: <span class="hljs-string">&quot;i7&quot;</span> } ).sort( { price: <span class="hljs-number">1</span> } )
+db.computers.find( { processor: <span class="hljs-string">&quot;i9&quot;</span>, price: { $lt: <span class="hljs-number">2000</span> } } ).sort( { memoryGB: <span class="hljs-number">-1</span> } )</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA; ESR &#x7D22;&#x5F15;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.computers.createIndex({ processor: <span class="hljs-number">1</span>, memoryGB: <span class="hljs-number">1</span>, price: <span class="hljs-number">1</span> })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x57FA;&#x4E8E; ESR &#x7D22;&#x5F15;&#x67E5;&#x8BE2;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.computers.find( { processor: <span class="hljs-string">&quot;i9&quot;</span>, price: { $lt: <span class="hljs-number">2000</span> } } ).sort( { memoryGB: <span class="hljs-number">-1</span> } )</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_compass_explain">Compass &#x6216;&#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C; explain() &#x67E5;&#x770B;&#x6267;&#x884C;&#x8FC7;&#x7A0B;</h3>
 <div class="paragraph">
 <p>&#x672C;&#x90E8;&#x5206;&#x57FA;&#x4E8E; restaurants &#x96C6;&#x5408;&#xFF0C;&#x4F9D;&#x6B21;&#x521B;&#x5EFA;&#x5982;&#x4E0B;&#x7D22;&#x5F15;&#x6267;&#x884C; <code>db.restaurants.find({&quot;address.zipcode&quot;: {$gt: 50000}, cuisine: &quot;Sushi&quot;}).sort({stars: -1})</code>&#xFF0C;&#x5E76;&#x901A;&#x8FC7; Compass &#x6216;&#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C; explain() &#x67E5;&#x770B;&#x6267;&#x884C;&#x8FC7;&#x7A0B;&#x3002;</p>
@@ -4725,6 +4754,19 @@ stats.indexDetails.cuisine_stars_address_zipcode.cache</code></pre>
 {_id: <span class="hljs-number">0</span>, stars: <span class="hljs-number">1</span>}</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-comment">//&#x521D;&#x59CB;&#x5316;&#x6570;&#x636E;</span>
+db.products.insertMany([{rating: <span class="hljs-number">6</span>, price: <span class="hljs-number">7</span>, comments: <span class="hljs-string">&quot;comments&quot;</span>}, {rating: <span class="hljs-number">8</span>, price: <span class="hljs-number">7</span>, comments: <span class="hljs-string">&quot;comments&quot;</span>}, {rating: <span class="hljs-number">9</span>, price: <span class="hljs-number">8</span>, comments: <span class="hljs-string">&quot;comments&quot;</span>}])
+
+<span class="hljs-comment">//&#x521B;&#x5EFA;&#x7D22;&#x5F15;</span>
+db.products.createIndex({rating: <span class="hljs-number">1</span>, price: <span class="hljs-number">1</span>})
+
+<span class="hljs-comment">// &#x67E5;&#x8BE2;</span>
+db.products.find({<span class="hljs-string">&quot;rating&quot;</span>: { <span class="hljs-string">&quot;$gt&quot;</span>: <span class="hljs-number">7</span> } }, { <span class="hljs-string">&quot;_id&quot;</span>: <span class="hljs-number">0</span>, <span class="hljs-string">&quot;price&quot;</span>: <span class="hljs-number">1</span> })</code></pre>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="___9">&#x6570;&#x636E;&#x7C7B;&#x578B;&#x7684;&#x5F71;&#x54CD;</h3>
@@ -4907,7 +4949,7 @@ db.foreign_text.createIndex( {name: <span class="hljs-number">1</span>},  {colla
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.4.2","depth":2,"next":{"title":"监控","level":"1.4.3","depth":2,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"previous":{"title":"Ops Manager","level":"1.4.1","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-09-03T09:37:50.490Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-03T12:39:41.323Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"性能调优","level":"1.4.3","depth":2,"next":{"title":"监控","level":"1.4.4","depth":2,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"previous":{"title":"Ops Manager","level":"1.4.2","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/perf.adoc","mtime":"2019-09-16T09:34:32.519Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

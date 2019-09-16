@@ -39,3 +39,29 @@ mongo --host 'repl/localhost:27000,localhost:27001,localhost:27002,localhost:270
 > rs.reconfig(cfg)
 ----
 
+== 两分片集群
+
+[source, bash]
+----
+mkdir r{a,b,c}
+mkdir cs
+
+mongod --configsvr --dbpath cs --logpath cs/mongo.log --port 26000 --fork --replSet repl-cs
+mongo --port 26000 --eval "rs.initiate()"
+
+mongod --shardsvr --dbpath ra --logpath ra/mongo.log --port 27000 --fork --replSet repl-a
+mongo --port 27000 --eval "rs.initiate()"
+
+mongod --shardsvr --dbpath rb --logpath rb/mongo.log --port 28000 --fork --replSet repl-b
+mongo --port 28000 --eval "rs.initiate()"
+
+mongod --shardsvr --dbpath rc --logpath rc/mongo.log --port 29000 --fork --replSet repl-c
+mongo --port 29000 --eval "rs.initiate()"
+
+mongos --configdb 'repl-cs/localhost:26000' --logpath ~/tmp/mongos.log --port 27017 --fork
+
+mongo --eval 'sh.addShard("repl-a/localhost:27000")'
+mongo --eval 'sh.addShard("repl-b/localhost:28000")'
+mongo --eval 'sh.addShard("repl-c/localhost:29000")'
+----
+

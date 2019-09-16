@@ -1,3 +1,101 @@
 = 分布式事务
 :toc: manual
 
+== 单文档原子性可满足大多数业务需求
+
+在 MongoDB 中，对单个文档的操作是原子操作。
+
+image:img/mongodb-document-model.png[]
+
+由于 MongoDB 文档数据模型，一个文档中通过嵌入式的文档和数组来表示传统关系数据库模型中的一对一、一对多关系，而不是通过文档之间的复杂关系来描述业务需求中的一对一、一对多关系。
+
+所以单文档原子性可以满足实际生产中大多数关于事务的需求。
+
+对于需要对多个文档（在单个或多个集合中）进行原子读写的情况，MongoDB 支持多文档事务。使用分布式事务，可以跨多个操作，集合，数据库，文档和分片进行原子性操作。
+
+== Drivers API
+
+为支持 MongoDB 事务，Drivers API 有两类：Callback API 和 Core API，前者更加自动化，后者需要手动去控制事务的开始，事务的提交等。 
+ 
+[cols="5a,5a"]
+|===
+|Callback API |Core API
+
+|
+* 开始一个事务，执行一些指定的操作，提交事务（放弃回退，抛出异常）
+* 自动合并处理异常（TransientTransactionError 和 UnknownTransactionCommitResult）
+|
+* 需要明确的方法调运来开始一个事务，提交一个事务
+* 没有错误异常处理机制，需要手动去实现，去处理 TransientTransactionError 和 UnknownTransactionCommitResult 异常。
+
+|===
+
+=== 驱动版本
+
+要使用 MongoDB 4.2 版本的分布式事务，驱动必需满足如下版本:
+
+|===
+|编程语言 | 版本
+
+|Node 
+|3.3.0
+
+|Python
+|3.9.0
+
+|Go
+|1.1
+
+|Java
+|3.11.0
+
+|C#
+|2.9.0
+
+|Ruby
+|2.10.0
+|===
+
+=== Callback API
+
+[source, java]
+----
+		String uri = "mongodb://localhost:27000,localhost:27001,localhost:27002/admin?replicaSet=repl";
+		
+		final MongoClient client = MongoClients.create(uri);
+		
+		/**
+		 * Create collections. CRUD operations in transactions must be on existing collections.
+		 */
+		client.getDatabase("mydb1").getCollection("foo").withWriteConcern(MAJORITY).insertOne(new Document("abc", 0));
+		client.getDatabase("mydb2").getCollection("bar").withWriteConcern(MAJORITY).insertOne(new Document("xyz", 0));
+		
+		final ClientSession clientSession = client.startSession();
+		
+		TransactionOptions txnOptions = TransactionOptions.builder()
+				.readPreference(primary())
+				.readConcern(LOCAL)
+				.writeConcern(MAJORITY)
+				.build();
+			
+		TransactionBody<?> txnBody = new TransactionBody<String>() {
+
+			@Override
+			public String execute() {
+				
+				MongoCollection<Document> coll1 = client.getDatabase("mydb1").getCollection("foo");
+		        MongoCollection<Document> coll2 = client.getDatabase("mydb2").getCollection("bar");
+		        
+		        coll1.insertOne(clientSession, new Document("abc", 1));
+		        coll2.insertOne(clientSession, new Document("xyz", 999));
+		        
+				return "SUCCESS";
+			}
+		};
+		
+		try {
+			clientSession.withTransaction(txnBody, txnOptions);
+		} finally {
+			clientSession.close();
+		}
+----
