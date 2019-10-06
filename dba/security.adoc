@@ -152,12 +152,14 @@ $ mongo -u root -p mongo --authenticationDatabase admin
 ----
 $ mkdir -p data/db
 $ mongod --dbpath data/db/ --logpath data/db/mongod.log --auth --fork
-$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
+$ mongo admin --eval 'db.createUser({user: "superuser", pwd: "password", roles: [{role: "root", db: "admin"}]})'
 ----
 
 [source, bash]
-.*2. 执行如下命令查看认证机制*
+.*2. 安全登录，执行如下命令查看认证机制*
 ----
+$ mongo -u superuser -p password --authenticationDatabase admin 
+
 db.runCommand({getParameter: 1, authenticationMechanisms: 1})
 {
 	"authenticationMechanisms" : [
@@ -173,34 +175,34 @@ NOTE: 如下命令可正确从 Shell 执行：
 
 [source, bash]
 ----
-$ mongo admin -u root -p mongo --eval "db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
+$ mongo admin -u superuser -p password --eval "db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
 
-$ mongo admin --eval "db.auth('root', 'mongo');db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
+$ mongo admin --eval "db.auth('superuser', 'password');db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
 
-$ mongo -u root -p mongo --eval "db=db.getSisterDB('admin');db.runCommand({getParameter: 1, authenticationMechanisms: 1})" --authenticationDatabase admin
+$ mongo -u superuser -p password --eval "db=db.getSisterDB('admin');db.runCommand({getParameter: 1, authenticationMechanisms: 1})"
 ----
 
 [source, bash]
 .*3. 查看 SHA-1/SHA-256 加密串*
 ----
-$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'db.system.users.find().pretty()'
-
+$ mongo admin -u "superuser" -p "password" --eval 'db.system.users.find().pretty()'
 {
-	"_id" : "admin.root",
-	"user" : "root",
+	"_id" : "admin.superuser",
+	"userId" : UUID("c0f0d3fe-b047-4279-810d-e5a248fb359e"),
+	"user" : "superuser",
 	"db" : "admin",
 	"credentials" : {
 		"SCRAM-SHA-1" : {
 			"iterationCount" : 10000,
-			"salt" : "Qs62Os9tVFfOIJJ174tZNg==",
-			"storedKey" : "/WomvCioN6yJ4hIUzX5XQtN8+88=",
-			"serverKey" : "iTB0cfed0xxJQTZso9Tkwp8aMsE="
+			"salt" : "uKjXKBWEAEn7SZRepZQnvw==",
+			"storedKey" : "FsFVBjmUm9xZOE/yr8e+GNSaWrs=",
+			"serverKey" : "Y4LPJhOA1IZV6KmpCiJHIX2UrmU="
 		},
 		"SCRAM-SHA-256" : {
 			"iterationCount" : 15000,
-			"salt" : "iFPYDBm8xavWiMy8ny2+xt/0qdbbbhnexSR7hg==",
-			"storedKey" : "QlGZlLQYl7yG8e2wVd93uOx5yjjR5A7GJds3tbof73c=",
-			"serverKey" : "jxLe2eTZ+beB3cCiC5NC9LMbdupdXTqkS6yHvzxPJVE="
+			"salt" : "qmy7h7JaaoHQOLS8Q4OMEcTFYrfgOlflgBzt2w==",
+			"storedKey" : "YGFaUMsVrcO7LRrdQJ0V7tgENyPLXtIf0LfPRU/UD/8=",
+			"serverKey" : "5ADI2L+r0l5g7u6Pj2+Lg9g3W69J97omv9U7b5S1mio="
 		}
 	},
 	"roles" : [
