@@ -9,6 +9,7 @@
 .. link:dev/transactions.adoc[分布式事务]
 .. link:dev/java.adoc[Java]
 . link:dba/cluster-admin.adoc[集群管理]
+.. link:dba/replication.adoc[高可用]
 .. link:dba/sharding.adoc[分片]
 .. link:dba/opsmanager.adoc[Ops Manager]
 .. link:dba/perf.adoc[性能调优]

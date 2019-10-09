@@ -1,0 +1,207 @@
+= 高可用
+:toc: manual
+
+== Oplog
+
+=== Oplog 示例
+
+[source, json]
+.*db.test.insert({_id: 1, value: 1})*
+----
+{
+	"ts" : Timestamp(1570588262, 2),
+	"t" : NumberLong(1),
+	"h" : NumberLong("-3162705877901309764"),
+	"v" : 2,
+	"op" : "i",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"wall" : ISODate("2019-10-09T02:31:02.766Z"),
+	"o" : {
+		"_id" : 1,
+		"value" : 1
+	}
+}
+----
+
+[source, json]
+.*db.test.update({_id: 1}, {$inc: {value: 10}})*
+----
+{
+	"ts" : Timestamp(1570588425, 1),
+	"t" : NumberLong(1),
+	"h" : NumberLong("-1203673023540594040"),
+	"v" : 2,
+	"op" : "u",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"o2" : {
+		"_id" : 1
+	},
+	"wall" : ISODate("2019-10-09T02:33:45.404Z"),
+	"o" : {
+		"$v" : 1,
+		"$set" : {
+			"value" : 11
+		}
+	}
+}
+----
+
+[source, json]
+.*db.test.update({}, {$set: {name: "foo"}})*
+----
+{
+	"ts" : Timestamp(1570588832, 1),
+	"t" : NumberLong(1),
+	"h" : NumberLong("6515094169908862103"),
+	"v" : 2,
+	"op" : "u",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"o2" : {
+		"_id" : 1
+	},
+	"wall" : ISODate("2019-10-09T02:40:32.722Z"),
+	"o" : {
+		"$v" : 1,
+		"$set" : {
+			"name" : "foo"
+		}
+	}
+}
+----
+
+[source, json]
+.*db.test.update({}, {$set: {name: "bar"}}, {multi: true})*
+----
+{ "ts" : Timestamp(1570589237, 1), "t" : NumberLong(1), "h" : NumberLong("-1220821550137650221"), "v" : 2, "op" : "u", "ns" : "test.test", "ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"), "o2" : { "_id" : 1 }, "wall" : ISODate("2019-10-09T02:47:17.242Z"), "o" : { "$v" : 1, "$set" : { "name" : "bar" } } }
+{ "ts" : Timestamp(1570589237, 2), "t" : NumberLong(1), "h" : NumberLong("3321497765907076362"), "v" : 2, "op" : "u", "ns" : "test.test", "ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"), "o2" : { "_id" : 2 }, "wall" : ISODate("2019-10-09T02:47:17.242Z"), "o" : { "$v" : 1, "$set" : { "name" : "bar" } } }
+{ "ts" : Timestamp(1570589237, 3), "t" : NumberLong(1), "h" : NumberLong("2492957690417542532"), "v" : 2, "op" : "u", "ns" : "test.test", "ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"), "o2" : { "_id" : 3 }, "wall" : ISODate("2019-10-09T02:47:17.242Z"), "o" : { "$v" : 1, "$set" : { "name" : "bar" } } }
+----
+
+[source, json]
+.*db.test.update({_id: 1}, {$push: {array: "a"}}*
+----
+{
+	"ts" : Timestamp(1570589551, 1),
+	"t" : NumberLong(1),
+	"h" : NumberLong("6092504800295097491"),
+	"v" : 2,
+	"op" : "u",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"o2" : {
+		"_id" : 1
+	},
+	"wall" : ISODate("2019-10-09T02:52:31.794Z"),
+	"o" : {
+		"$v" : 1,
+		"$set" : {
+			"array" : [
+				"a"
+			]
+		}
+	}
+}
+----
+
+[source, json]
+.*db.test.update({_id: 1}, {$push: {array: "b"}})*
+----
+{
+	"ts" : Timestamp(1570589838, 1),
+	"t" : NumberLong(1),
+	"h" : NumberLong("-3567419863364947058"),
+	"v" : 2,
+	"op" : "u",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"o2" : {
+		"_id" : 1
+	},
+	"wall" : ISODate("2019-10-09T02:57:18.724Z"),
+	"o" : {
+		"$v" : 1,
+		"$set" : {
+			"array.1" : "b"
+		}
+	}
+}
+----
+
+[source, json]
+.*db.test.update({_id: 1}, {$addToSet: {array: "e"}})*
+----
+{
+	"ts" : Timestamp(1570589955, 1),
+	"t" : NumberLong(1),
+	"h" : NumberLong("2739338538944730109"),
+	"v" : 2,
+	"op" : "u",
+	"ns" : "test.test",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"o2" : {
+		"_id" : 1
+	},
+	"wall" : ISODate("2019-10-09T02:59:15.200Z"),
+	"o" : {
+		"$v" : 1,
+		"$set" : {
+			"array" : [
+				"a",
+				"b",
+				"c",
+				"e"
+			]
+		}
+	}
+}
+----
+
+[source, json]
+.*db.test.createIndex({value: 1})*
+----
+{
+	"ts" : Timestamp(1570590200, 2),
+	"t" : NumberLong(1),
+	"h" : NumberLong("5745853766514684235"),
+	"v" : 2,
+	"op" : "c",
+	"ns" : "test.$cmd",
+	"ui" : UUID("5ea14ede-676a-4be2-9334-eb54042b762b"),
+	"wall" : ISODate("2019-10-09T03:03:20.170Z"),
+	"o" : {
+		"createIndexes" : "test",
+		"v" : 2,
+		"key" : {
+			"value" : 1
+		},
+		"name" : "value_1"
+	}
+}
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
