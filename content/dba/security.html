@@ -229,7 +229,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="sharding.html">
+        <li class="chapter " data-level="1.4.1" data-path="replication.html">
+            
+                <a href="replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="sharding.html">
             
                 <a href="sharding.html">
             
@@ -242,7 +255,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="opsmanager.html">
+        <li class="chapter " data-level="1.4.3" data-path="opsmanager.html">
             
                 <a href="opsmanager.html">
             
@@ -255,7 +268,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="perf.html">
+        <li class="chapter " data-level="1.4.4" data-path="perf.html">
             
                 <a href="perf.html">
             
@@ -268,7 +281,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.4" data-path="troubleshooting.html">
+        <li class="chapter " data-level="1.4.5" data-path="troubleshooting.html">
             
                 <a href="troubleshooting.html">
             
@@ -305,19 +318,6 @@
             
                     
                     DBA
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7" data-path="../python/">
-            
-                <a href="../python/">
-            
-                    
-                    Python
             
                 </a>
             
@@ -638,13 +638,15 @@ subject= CN=server.example.com,OU=SA,O=MongoDB,L=Beijing,ST=Beijing,C=CN</code><
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">$ mkdir -p data/db
 $ mongod --dbpath data/db/ --logpath data/db/mongod.log --auth --fork
-$ mongo admin --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})&apos;</span></code></pre>
+$ mongo admin --eval <span class="hljs-string">&apos;db.createUser({user: &quot;superuser&quot;, pwd: &quot;password&quot;, roles: [{role: &quot;root&quot;, db: &quot;admin&quot;}]})&apos;</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
+<div class="title"><strong>2. &#x5B89;&#x5168;&#x767B;&#x5F55;&#xFF0C;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x67E5;&#x770B;&#x8BA4;&#x8BC1;&#x673A;&#x5236;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">db.runCommand({getParameter: 1, authenticationMechanisms: 1})
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo -u superuser -p password --authenticationDatabase admin
+
+db.runCommand({getParameter: 1, authenticationMechanisms: 1})
 {
 	<span class="hljs-string">&quot;authenticationMechanisms&quot;</span> : [
 		<span class="hljs-string">&quot;MONGODB-X509&quot;</span>,
@@ -669,34 +671,34 @@ $ mongo admin --eval <span class="hljs-string">&apos;db.createUser({user: &quot;
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin -u root -p mongo --eval <span class="hljs-string">&quot;db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin -u superuser -p password --eval <span class="hljs-string">&quot;db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
 
-$ mongo admin --eval <span class="hljs-string">&quot;db.auth(&apos;root&apos;, &apos;mongo&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
+$ mongo admin --eval <span class="hljs-string">&quot;db.auth(&apos;superuser&apos;, &apos;password&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span>
 
-$ mongo -u root -p mongo --eval <span class="hljs-string">&quot;db=db.getSisterDB(&apos;admin&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span> --authenticationDatabase admin</code></pre>
+$ mongo -u superuser -p password --eval <span class="hljs-string">&quot;db=db.getSisterDB(&apos;admin&apos;);db.runCommand({getParameter: 1, authenticationMechanisms: 1})&quot;</span></code></pre>
 </div>
 </div>
 <div class="listingblock">
 <div class="title"><strong>3. &#x67E5;&#x770B; SHA-1/SHA-256 &#x52A0;&#x5BC6;&#x4E32;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;db.system.users.find().pretty()&apos;</span>
-
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongo admin -u <span class="hljs-string">&quot;superuser&quot;</span> -p <span class="hljs-string">&quot;password&quot;</span> --eval <span class="hljs-string">&apos;db.system.users.find().pretty()&apos;</span>
 {
-	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;admin.root&quot;</span>,
-	<span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>,
+	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;admin.superuser&quot;</span>,
+	<span class="hljs-string">&quot;userId&quot;</span> : UUID(<span class="hljs-string">&quot;c0f0d3fe-b047-4279-810d-e5a248fb359e&quot;</span>),
+	<span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;superuser&quot;</span>,
 	<span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span>,
 	<span class="hljs-string">&quot;credentials&quot;</span> : {
 		<span class="hljs-string">&quot;SCRAM-SHA-1&quot;</span> : {
 			<span class="hljs-string">&quot;iterationCount&quot;</span> : 10000,
-			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;Qs62Os9tVFfOIJJ174tZNg==&quot;</span>,
-			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;/WomvCioN6yJ4hIUzX5XQtN8+88=&quot;</span>,
-			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;iTB0cfed0xxJQTZso9Tkwp8aMsE=&quot;</span>
+			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;uKjXKBWEAEn7SZRepZQnvw==&quot;</span>,
+			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;FsFVBjmUm9xZOE/yr8e+GNSaWrs=&quot;</span>,
+			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;Y4LPJhOA1IZV6KmpCiJHIX2UrmU=&quot;</span>
 		},
 		<span class="hljs-string">&quot;SCRAM-SHA-256&quot;</span> : {
 			<span class="hljs-string">&quot;iterationCount&quot;</span> : 15000,
-			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;iFPYDBm8xavWiMy8ny2+xt/0qdbbbhnexSR7hg==&quot;</span>,
-			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;QlGZlLQYl7yG8e2wVd93uOx5yjjR5A7GJds3tbof73c=&quot;</span>,
-			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;jxLe2eTZ+beB3cCiC5NC9LMbdupdXTqkS6yHvzxPJVE=&quot;</span>
+			<span class="hljs-string">&quot;salt&quot;</span> : <span class="hljs-string">&quot;qmy7h7JaaoHQOLS8Q4OMEcTFYrfgOlflgBzt2w==&quot;</span>,
+			<span class="hljs-string">&quot;storedKey&quot;</span> : <span class="hljs-string">&quot;YGFaUMsVrcO7LRrdQJ0V7tgENyPLXtIf0LfPRU/UD/8=&quot;</span>,
+			<span class="hljs-string">&quot;serverKey&quot;</span> : <span class="hljs-string">&quot;5ADI2L+r0l5g7u6Pj2+Lg9g3W69J97omv9U7b5S1mio=&quot;</span>
 		}
 	},
 	<span class="hljs-string">&quot;roles&quot;</span> : [
@@ -1589,7 +1591,7 @@ $ mongo admin --port 27000 --eval &apos;rs.add(&quot;localhost:27002&quot;)&apos
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安全","level":"1.5","depth":1,"next":{"title":"DBA","level":"1.6","depth":1,"path":"dba/dba.adoc","ref":"dba/dba.adoc","articles":[]},"previous":{"title":"监控","level":"1.4.4","depth":2,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/security.adoc","mtime":"2019-07-03T03:32:17.678Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安全","level":"1.5","depth":1,"next":{"title":"DBA","level":"1.6","depth":1,"path":"dba/dba.adoc","ref":"dba/dba.adoc","articles":[]},"previous":{"title":"监控","level":"1.4.5","depth":2,"path":"dba/troubleshooting.adoc","ref":"dba/troubleshooting.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/security.adoc","mtime":"2019-10-05T07:24:24.304Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-10-17T14:27:21.160Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

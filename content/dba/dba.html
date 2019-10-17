@@ -61,8 +61,6 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../python/" />
-    
     
     <link rel="prev" href="security.html" />
     
@@ -229,7 +227,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="sharding.html">
+        <li class="chapter " data-level="1.4.1" data-path="replication.html">
+            
+                <a href="replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="sharding.html">
             
                 <a href="sharding.html">
             
@@ -242,7 +253,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="opsmanager.html">
+        <li class="chapter " data-level="1.4.3" data-path="opsmanager.html">
             
                 <a href="opsmanager.html">
             
@@ -255,7 +266,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="perf.html">
+        <li class="chapter " data-level="1.4.4" data-path="perf.html">
             
                 <a href="perf.html">
             
@@ -268,7 +279,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.4" data-path="troubleshooting.html">
+        <li class="chapter " data-level="1.4.5" data-path="troubleshooting.html">
             
                 <a href="troubleshooting.html">
             
@@ -305,19 +316,6 @@
             
                     
                     DBA
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7" data-path="../python/">
-            
-                <a href="../python/">
-            
-                    
-                    Python
             
                 </a>
             
@@ -374,39 +372,38 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#__">&#x6027;&#x80FD;&#x8C03;&#x4F18;</a>
+<li><a href="#__">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x5206;&#x6790;</a>
 <ul class="sectlevel2">
-<li><a href="#___2">&#x5E94;&#x7528;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</a></li>
-<li><a href="#___3">&#x6570;&#x636E;&#x6A21;&#x578B;&#x8BBE;&#x8BA1; &amp; &#x7D22;&#x5F15;</a></li>
+<li><a href="#___2">&#x65E5;&#x5FD7;&#x4E2D;&#x627E;&#x51FA;&#x6162;&#x67E5;&#x8BE2;</a></li>
+</ul>
+</li>
+<li><a href="#___3">&#x6027;&#x80FD;&#x8C03;&#x4F18;</a>
+<ul class="sectlevel2">
+<li><a href="#___4">&#x5E94;&#x7528;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</a></li>
+<li><a href="#___5">&#x6570;&#x636E;&#x6A21;&#x578B;&#x8BBE;&#x8BA1; &amp; &#x7D22;&#x5F15;</a></li>
 <li><a href="#__i_o">&#x78C1;&#x76D8; I/O</a></li>
-</ul>
-</li>
-<li><a href="#_q_a">Q &amp; A</a>
-<ul class="sectlevel2">
-<li><a href="#_bson_vs_json">BSON Vs JSON</a></li>
-<li><a href="#_crud">CRUD</a></li>
-<li><a href="#_indexes">Indexes</a></li>
-<li><a href="#_aggregation">Aggregation</a></li>
-<li><a href="#_replication">Replication</a></li>
-<li><a href="#_sharding">Sharding</a></li>
-<li><a href="#_application_administration">Application Administration</a></li>
-<li><a href="#_server_administration">Server Administration</a></li>
-</ul>
-</li>
-<li><a href="#_journals">Journals</a>
-<ul class="sectlevel2">
-<li><a href="#_application_and_server_administration">Application and Server Administration</a></li>
-<li><a href="#_server_tools">Server Tools</a></li>
-<li><a href="#_storage_engines">Storage Engines</a></li>
 </ul>
 </li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="__">&#x6027;&#x80FD;&#x8C03;&#x4F18;</h2>
+<h2 id="__">&#x5E38;&#x89C1;&#x95EE;&#x9898;&#x5206;&#x6790;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___2">&#x5E94;&#x7528;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</h3>
+<h3 id="___2">&#x65E5;&#x5FD7;&#x4E2D;&#x627E;&#x51FA;&#x6162;&#x67E5;&#x8BE2;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">grep -P <span class="hljs-string">&apos;\d+ms$&apos;</span> mongodb.log | grep DB.COLLECTION</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">&#x6027;&#x80FD;&#x8C03;&#x4F18;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___4">&#x5E94;&#x7528;&#x8BBE;&#x8BA1;&#x6A21;&#x5F0F;</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -449,7 +446,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="___3">&#x6570;&#x636E;&#x6A21;&#x578B;&#x8BBE;&#x8BA1; &amp; &#x7D22;&#x5F15;</h3>
+<h3 id="___5">&#x6570;&#x636E;&#x6A21;&#x578B;&#x8BBE;&#x8BA1; &amp; &#x7D22;&#x5F15;</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -530,1036 +527,6 @@
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_q_a">Q &amp; A</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_bson_vs_json">BSON Vs JSON</h3>
-<div class="paragraph">
-<p><strong>Q1: Why does MongoDB use BSON rather than JSON?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>BSON includes metadata to describe a document/object</p>
-</li>
-<li>
-<p>BSON supports more data types than JSON</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q2: Which writes are atomic in MongoDB 4.0?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>An update to a single document in a replica set</p>
-</li>
-<li>
-<p>An update to multiple documents in a replica set using transactions</p>
-</li>
-<li>
-<p>An update to a single document in a sharded cluster</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q3: In order to ensure that you can maintain high availability in the face of server failure, you should use which of the following MongoDB feature?</strong></p>
-</div>
-<div class="paragraph">
-<p>Replication</p>
-</div>
-<div class="paragraph">
-<p><strong>Q4: Which of the following are valid types in BSON?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Decimal128</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>All JSON Types: Object, String, Array, Boolean, Null, Number
-
-All BSON Types: Object, String, Array, Boolean, Null, Double, Decimal128, 32-bit integer, 64-bit integer, Min key, Max key, Binary data, Undefined, ObjectId, Date, Regular Expression, DBPointer, JavaScript, Symbol, JavaScript (with scope), Timestamp</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_crud">CRUD</h3>
-<div class="paragraph">
-<p><strong>Q1: What&#x2019;s means of $or operator?</strong></p>
-</div>
-<div class="paragraph">
-<p>The $or operator means that any document that satisfies one of the conditions will be retrieved.</p>
-</div>
-<div class="paragraph">
-<p><strong>Q2: What&#x2019;s means of $slice operator?</strong></p>
-</div>
-<div class="paragraph">
-<p>The $slice projection operator is used to control how many elements of an array will be returned after fetching it.</p>
-</div>
-<div class="paragraph">
-<p><strong>Q3: On which of the following CRUD operations can you specify a write concern?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>db.collection.insertOne()</p>
-</li>
-<li>
-<p>db.collection.updateMany()</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q4: What&#x2019;s means of $addToSet operator?</strong></p>
-</div>
-<div class="paragraph">
-<p>Add an element to array.</p>
-</div>
-<div class="paragraph">
-<p><strong>Q5: What&#x2019;s the relation between $set and $unset?</strong></p>
-</div>
-<div class="paragraph">
-<p><strong>Q6: What&#x2019;s the means of <code>db.sayings.find( {$text: {$search: &quot;fact find&quot;}})</code></strong></p>
-</div>
-<div class="paragraph">
-<p>text filed contains neither &quot;fact&quot; nor &quot;find&quot;.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_indexes">Indexes</h3>
-<div class="paragraph">
-<p><strong>Q1: Which of the following must be true for a query to be a covered query?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>All fields used in the selection filter of the query must be in the index that the query uses</p>
-</li>
-<li>
-<p>All fields returned in the results must be in the index that the query uses</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>All fields used in the selection filter of the query must be in the index, so the system can find the documents that satisfy the selection filter without having to retrieve the document from the collection. All fields returned in the results must be in the index, so again there is no need to retrieve the full document. A common mistake is not to provide a projection that filters out the field _id, which is returned by default. If the _id field is not a field in the index definition, it is not available, and the query system will need to fetch the full document to retrieve the value.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q2:</strong> You have created the following index on the foo collection:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">db.foo.createIndex( { a : <span class="hljs-number">1</span>, b : <span class="hljs-number">-1</span>, c : <span class="hljs-number">-1</span>, d: <span class="hljs-number">1</span> } )</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Which of the following queries will be able to fulfill the query without an in-memory sort (i.e., it&#x2019;s able to use the index to sort)?</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>db.foo.find( { a : 100 } ).sort( { b : 1, c : 1 } )</p>
-</li>
-<li>
-<p>db.foo.find( { a : 200, b : { $lt : 100 } } ).sort( { b : 1 } )</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Recall that compound indexes should be built in the order of equality, range, sort for common operational query patterns.
-
-Also recall that as long as the query uses all keys of a compound index or a combination of index prefixes, it will make use of the existing index.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q3:</strong> Suppose you have a collection &quot;sample&quot; with an index created as follows.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">db.sample.createIndex( { <span class="hljs-string">&quot;foo&quot;</span> : <span class="hljs-number">-1</span> } )</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For which of the following queries can MongoDB efficiently look at only a subset of the index entries, rather than all of the index entries?</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>db.sample.find( { &quot;foo&quot; : /^c.*d/ } )</p>
-</li>
-<li>
-<p>db.sample.find( { &quot;foo&quot; : /^e.*f/ } )</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q4: Which of the following statements are true of unique indexes?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The &quot;unique&quot; constraint on an index ensures that no two (or more) documents can share a value for that field in a collection</p>
-</li>
-<li>
-<p>Hashed indexes cannot be unique.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Unique indexes have certain properties and restrictions that you should be familiar with.
-
-For example, they ensure that no documents have the same data at the same key that carries a unique index, and you may not specify a unique constraint on a field that is specified as a hashed index.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q5: Which of the following is true of covered queries?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>MongoDB can satisfy covered queries using only index keys.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Covered queries are the best queries!
-
-The underlying index supports the entire query, so no document information is required to be fetched from disk. With a covered query, you are servicing the operation entirely from the index, which is usually faster than examining each document.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q6:</strong> You have the following index on the toys collection:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">{
-    <span class="hljs-string">&quot;manufacturer&quot;</span> : <span class="hljs-number">1</span>,
-    <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-number">1</span>,
-    <span class="hljs-string">&quot;date&quot;</span> : <span class="hljs-number">-1</span>
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Which of the following queries are able to use the index? Check all that apply.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>db.toys.find( { manufacturer : &quot;Matteo&quot;, name : &quot;Barbara&quot;, date : &quot;2018-07-02&quot; } )</p>
-</li>
-<li>
-<p>db.toys.find( { name : &quot;Big Rig Truck&quot;, date : &quot;2018-02-01&quot;, manufacturer : &quot;Tanko&quot; } )</p>
-</li>
-<li>
-<p>db.toys.find( { date : &quot;2018-03-01&quot;, manufacturer : &quot;Loggo&quot;, name : &quot;Brick Set&quot; } )</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_aggregation">Aggregation</h3>
-<div class="paragraph">
-<p><strong>Q1: Which of the following statements are true about the $match pipeline stage?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>You should use it as early as possible in the pipeline.</p>
-</li>
-<li>
-<p>It can be used as many times as needed.</p>
-</li>
-<li>
-<p>It has a syntax similar to find() commands.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_replication">Replication</h3>
-<div class="paragraph">
-<p><strong>Q1: What settings can be controlled by rs.reconfig()?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Priority for each replica set member</p>
-</li>
-<li>
-<p>Which replica set members are hidden</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q2: What is the principal advantage of having a delayed replica set member?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>It provides a window of time to recover from an operator error.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>If you have a delayed member in your replica set, for example, a delay of one hour, it will take one hour before changes on the Primary are replicated to this member.
-
-If a user were to drop a collection or database on the Primary, you would have one hour to go to this delayed member to retrieve the destroyed data.
-
-You can also query older versions of your documents, however, you can&apos;t choose a historical version to retrieve as you only get the one that existed one hour ago.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q3: Which of the following is a correct definition for idempotence?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>If an action may be performed multiple times and have the same effect as if it had been performed once, it is idempotent. For example, $set: {a: 3} is idempotent, but $inc: {a: 1} is not.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>The desire for the Oplog to be idempotent is to ensure that if the server needs to resume applying Oplog entries it will always get to the same end state, regardless if it reapplies some that entry already applied. For example, if the server crashes applying oplog5 and it is difficult to identify if oplog5 is applied, then idempotency let you restart at oplog4 without issues.
-
-Another goal is to have the new state of the document be independent of a previous state. This means all operators like $em, which relies on the previous value to determine the new value, needs to be transformed to the actual values seen. For example, if an increment operation results in modifying a field from the value &apos;4&apos; to the value &apos;5&apos;, the operation should be transformed to simply set &apos;5&apos; on that field. Replaying this operation many times always lead to the same result.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q4: Which of the following describe the primary reasons MongoDB supports replication?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>To provide high availability</p>
-</li>
-<li>
-<p>To prevent downtime in case of a disaster at a data center</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q5: Which of the following are true of the Oplog entries created as a result of the CUD operations in MongoDB?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A single write query may result in multiple oplog entries.</p>
-</li>
-<li>
-<p>Each oplog entry specifies whether a document is inserted, updated, or deleted.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>When a write operation modifies many documents on a Primary, the Primary needs to insert a separate entry in the Oplog for each modified document. This is the only way the system can ensure the Oplog remains omnipotent.
-
-A single command writing to many documents, running on a secondary which fails in the middle of the command, could not be guaranteed to be replayed correctly.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q6: Which of the following are best practice reasons to read from secondaries?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>To offload batch processing work from the primary (e.g., data analytics)</p>
-</li>
-<li>
-<p>To provide local reads in geographically distributed replica sets</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q7: A replica set is under a moderate write load. A new data bearing member with no data is added to an existing replica set. Which of the following might be fetched by the new member before it can become a secondary?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Entries in the primary&#x2019;s oplog</p>
-</li>
-<li>
-<p>BSON documents from the primary&#x2019;s database(s)</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>When the new member is added, it will undergo what is called an initial sync. During that phase, the Secondary will start pulling all the documents from the Primary.
-
-In parallel of pulling the documents, the Secondary will also pull the Oplog entries, which reflect modifications done on those documents, or new documents being inserted. Applying those Oplog entries after it fetched all documents will ensure a coherent state of the documents. This guarantee is based on the omnipotence of the operations put in the Oplog.
-
-Write queries, as received by the Primary, are not guaranteed to be omnipotent, and may need to be transformed. For example, a write operation modifying many documents is not omnipotent and will be transformed to a series of writes, one per modified document.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_sharding">Sharding</h3>
-<div class="paragraph">
-<p><strong>Q1: In a sharded cluster, which of the following indexes must contain only unique values?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The _id index</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q2: An insufficiently granular (&#x201C;low cardinality&#x201D;) shard key can result in which type of problems?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Large chunks that cannot be split.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Documents with the same values for their shard key will be colocated in the same chunk. If a lot of documents have the same values, this may result in a very big chunk. The system is unable to split this chunk as there is no value between the bounds of the chunk. For example if a shard key is the name of a country, all documents with USA are placed in the same chunk, and this chunk can&apos;t be split, as there is no other value between USA and USA.
-
-Chunks that can not be split are called jumbo chunks.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q3: When a chunk is in flight from one shard to another during a migration process, where are reads to that chunk directed?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>To the shard from which it is being migrated</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>hen a chunk is in flight, reads and writes from the application can still access the documents in that chunk. Modifications on documents are propagated to the shard where it is migrated.
-
-Until the chunk is fully migrated, the shard (donor) that is sending it to another shard (receiver) is the only location where the all documents are present in their latest form. For that reason, the donor shard is processing the reads.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q4: In which of the following situations can we assume sharding will be an effective strategy?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A single MongoDB instance cannot keep up with your application&#x2019;s write load and you have exhausted other options.</p>
-</li>
-<li>
-<p>our data set is too big to fit in a single MongoDB instance.</p>
-</li>
-<li>
-<p>You would like to improve read performance for your application.</p>
-</li>
-<li>
-<p>The data set is taking too much time to backup and restore.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q5: Which of the following are traits of a hashed _id as a shard key, relative to an unhashed _id?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Inserts on auto-generated ObjectId&#x2019;s will be distributed across shards</p>
-</li>
-<li>
-<p>Range queries (to find documents created on a particular week, for example) may be less efficient</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q6: In a sharded collection, which of the following is true of the primary shard?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>It holds the unsharded collections for the database.</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>For a given database in a cluster, not all collections may be sharded. As a matter of fact, you are likely to shard only the very large collections. For the ease of management and to provide features like $lookup across collections, it makes sense to group all non-sharded collections together, and this location is referred to as the Primary Shard for this given database. Other databases in the cluster are likely to have a different Primary Shard to level the space and load between the shards.
-
-As a note, the term Primary Shard is used here, so be careful not to confuse this notion with the Primary replica in a replica set.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q7: When should you pre-split data for a sharded cluster?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>When you expect to set and leave the balancer inactive</p>
-</li>
-<li>
-<p>When you are performing a bulk initial load</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>If you are using a hashed shard key, or know the distribution of your data very well such that you can arrange for a distribution of data to be equilibrated between shards, you may want to pre-split the data and not use the balancer. Please note the balancer is there to help by doing the migrations of chunks when needed.
-
-A common mistake is to insert a lot of data sorted by the shard key. For example, migrating from a SQL database with the data sorted by userid, and using the same userid field as your shard key. By doing so, you will insert on a single shard (the one with the upper chunk), and then those documents are likely going to migrate to another shard later, doubling the number of writes. Alternatively, if you pre-split the collection across the values of userid, documents will not be written twice. Note that this is still not the optimal way to load the documents. For better performance, have parallel queries inserting each on one shard within the range of documents belonging to the chunks on a given shard.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q8: In the context of a sharded cluster, which of the following is true of chunks?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Chunks may exist that contain no documents</p>
-</li>
-<li>
-<p>Chunk ranges are inclusive of the lower boundary and exclusive of the upper boundary</p>
-</li>
-<li>
-<p>The ranges of two chunks do not overlap</p>
-</li>
-<li>
-<p>Every chunk is assigned to a particular shard</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_application_administration">Application Administration</h3>
-<div class="paragraph">
-<p><strong>Q1: Which of the following is true about MongoDB&#x2019;s Role-Based Access Control (RBAC) system?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>A role can inherit privileges from other roles associated with that database</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>role-based access control is only available once you turn on authorization and have user accounts. You can run the cluster without any user account and privileges, however, it is strongly recommended to enable authentication and authorization.
-
-While creating a user, you can assign a role or many roles at the creation time. As a matter of fact, this would be the recommended way, as it makes it easier to keep a tight control on all accounts.
-
-MongoDB associates users and their roles to different databases, however all the information about users and roles is kept in the admin database.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q2: You are required to create a user for your organization that manages all other users. Which role would be required for this user?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>userAdminAnyDatabase</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>In order to create a user, you need to be able to perform actions such as createUser and changePassword. These actions are available to the role userAdminAnyDatabase.
-
-readWriteAnyDatabase comes close but it does not have the ability to write to the system.users collection. It is used to manage users in the other databases.</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_server_administration">Server Administration</h3>
-<div class="paragraph">
-<p><strong>Q1. Which of the following must you do before backing up a running sharded cluster using a file system snapshot?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Disable the balancer</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>One of the requirements for doing a backup of a sharded cluster is to ensure that no group of documents (chunks) are getting migrated by one shard to another shard while you are copying the data for the given shard.
-
-For this reason, you need to ensure the balancer is disabled while you take the file system snapshots.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q2: What are the uses of the mongo shell?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Allow people to use MongoDB with a simple command line interface.</p>
-</li>
-<li>
-<p>Perform administrative tasks.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q3: What is an indication that your disk speed is causing a performance bottleneck?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>High IO wait times in the CPU stats</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>IO wait is the key piece of information. That means the disk is unable to promptly take all the requests sent to it.
-
-SSD are usually faster than spinning disks, however you can have a system performing very well with spinning disks if they are not used at full capacity.
-
-High number of page faults and Resident memory approaches physical memory are usually symptoms that the system does not have enough physical memory.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q4: You have a three-member replica set. If your secondaries are falling behind, which of the following are plausible causes?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Network issues</p>
-</li>
-<li>
-<p>Slower hardware on the secondaries</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>Network issues may lead to the replication subsystem not being able to quickly get the changes happening on the Primary resulting in replication lag.
-
-Having faster hardware for the Primary can also lead to replication lag. Imagine the Primary operating at full capacity. While this is happening, the secondaries with slower hardware may not be able to apply all the writes happening on the Primary at the same speed.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q5: In MongoDB, the WiredTiger storage engine provides concurrency at what level?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Document level concurrency</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>The WiredTiger storage engine supports document-level concurrency, allowing multiple documents from the same collection to be written to, simultaneously.</pre>
-</div>
-</div>
-<div class="paragraph">
-<p><strong>Q6: Which of the following is a feature of the WiredTiger storage engine component in MongoDB?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Compression of data files</p>
-</li>
-<li>
-<p>Index prefix compression</p>
-</li>
-<li>
-<p>Document level concurrency</p>
-</li>
-<li>
-<p>A dedicated cache of RAM</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q7: Which of the following are compression algorithms available for WiredTiger in MongoDB 4.0?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>zlib</p>
-</li>
-<li>
-<p>snappy</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q8: Which of the following is true of the file system cache when using WiredTiger as your storage engine?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The size of the File System Cache is tunable</p>
-</li>
-<li>
-<p>The File System Cache is used by MongoDB</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q9: What is the following are features of zlib compression with WiredTiger?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Disk I/O will probably be lower with zlib than without compression.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q10: What is the command for exporting data into a CSV file format from a MongoDB server</strong></p>
-</div>
-<div class="paragraph">
-<p>mongoexport --host localhost:27017 -d catalog -c shoes --type=csv -f fields -o shoes.csv</p>
-</div>
-<div class="paragraph">
-<p><strong>Q11: You would like to store a .gif file in MongoDB using GridFS. Which of the following can help you to do this?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>mongofiles</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Q12: Which of the following is true regarding the explain() method?</strong></p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The explain() method provides information about which query plan would be selected for a given query</p>
-</li>
-</ul>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>The default mode for the explain() method is to report which candidate plans would be executed, without doing the execution. The reason to default to this behavior is not to add an additional load on a server unless it is explicitly requested.
-
-The explain() method will give some info about indexes but only for the ones in the considered plans. To get the full information about all the indexes, the recommended method is db.collection.stats() or the Aggregation Framework stage $indexStats.</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_journals">Journals</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>===</p>
-</div>
-<div class="sect2">
-<h3 id="_application_and_server_administration">Application and Server Administration</h3>
-<div class="listingblock">
-<div class="title"><strong>1. rotate log files</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">db.adminCommand({<span class="hljs-built_in">log</span>Rotate: 1})</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. check the log files</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ ls <span class="hljs-_">-l</span> *.log*
--rw-------  1 ksoong  staff    1977 May 18 15:44 mongo.log
--rw-------  1 ksoong  staff  268257 May 18 15:44 mongo.log.2019-05-18T07-44-58</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. set iloglevel to 0, and Profiling Level to track more than 50 ms opration</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">---
-db.adminCommand({<span class="hljs-built_in">set</span>Parameter: 1, <span class="hljs-built_in">log</span>Level: 0})
-use largeFiles
-db.setProfilingLevel(1, {slowms: 50})
-----</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. execute <a href="files/insert_large_array.json">insert_large_array.json</a></strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ ./insert_large_array.json</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. check the profile message</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-json" data-lang="json">MongoDB Enterprise repl<span class="hljs-number">-1</span>:PRIMARY&gt; show profile
-
-insert	largeFiles.data <span class="hljs-number">61</span>ms Sat May <span class="hljs-number">18</span> <span class="hljs-number">2019</span> <span class="hljs-number">16</span>:<span class="hljs-number">39</span>:<span class="hljs-number">50</span>
-command:{
-	<span class="hljs-string">&quot;insert&quot;</span> : <span class="hljs-string">&quot;data&quot;</span>,
-	<span class="hljs-string">&quot;ordered&quot;</span> : <span class="hljs-literal">true</span>,
-	<span class="hljs-string">&quot;lsid&quot;</span> : {
-		<span class="hljs-string">&quot;id&quot;</span> : UUID(<span class="hljs-string">&quot;57ebcf4d-4cf5-4914-85aa-e0c927be70e5&quot;</span>)
-	},
-	<span class="hljs-string">&quot;$clusterTime&quot;</span> : {
-		<span class="hljs-string">&quot;clusterTime&quot;</span> : Timestamp(<span class="hljs-number">1558168789</span>, <span class="hljs-number">1</span>),
-		<span class="hljs-string">&quot;signature&quot;</span> : {
-			<span class="hljs-string">&quot;keyId&quot;</span> : NumberLong(<span class="hljs-string">&quot;6691838181387534337&quot;</span>),
-			<span class="hljs-string">&quot;hash&quot;</span> : BinData(<span class="hljs-number">0</span>,<span class="hljs-string">&quot;FJxM1pQaObNVahBwrPceyfQkqYY=&quot;</span>)
-		}
-	},
-	<span class="hljs-string">&quot;$db&quot;</span> : <span class="hljs-string">&quot;largeFiles&quot;</span>,
-	<span class="hljs-string">&quot;$readPreference&quot;</span> : {
-		<span class="hljs-string">&quot;mode&quot;</span> : <span class="hljs-string">&quot;primary&quot;</span>
-	}
-} ninserted:<span class="hljs-number">1</span> keysInserted:<span class="hljs-number">1</span> numYield:<span class="hljs-number">0</span> locks:{
-	<span class="hljs-string">&quot;Global&quot;</span> : {
-		<span class="hljs-string">&quot;acquireCount&quot;</span> : {
-			<span class="hljs-string">&quot;r&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
-			<span class="hljs-string">&quot;w&quot;</span> : NumberLong(<span class="hljs-number">1</span>)
-		}
-	},
-	<span class="hljs-string">&quot;Database&quot;</span> : {
-		<span class="hljs-string">&quot;acquireCount&quot;</span> : {
-			<span class="hljs-string">&quot;w&quot;</span> : NumberLong(<span class="hljs-number">1</span>)
-		}
-	},
-	<span class="hljs-string">&quot;Collection&quot;</span> : {
-		<span class="hljs-string">&quot;acquireCount&quot;</span> : {
-			<span class="hljs-string">&quot;w&quot;</span> : NumberLong(<span class="hljs-number">1</span>)
-		}
-	}
-} responseLength:<span class="hljs-number">230</span> protocol:op_msg client:<span class="hljs-number">127.0</span><span class="hljs-number">.0</span><span class="hljs-number">.1</span> allUsers:[ { <span class="hljs-string">&quot;user&quot;</span> : <span class="hljs-string">&quot;root&quot;</span>, <span class="hljs-string">&quot;db&quot;</span> : <span class="hljs-string">&quot;admin&quot;</span> } ] user:root@admin</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. check more profile data</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">db.system.profile.count()
-db.system.profile.findOne()
-db.system.profile.findOne({op: <span class="hljs-string">&quot;query&quot;</span>})
-db.system.profile.find({responseLength: {<span class="hljs-variable">$gt</span>: 1000}}).count()
-db.system.profile.find({ts: {<span class="hljs-variable">$gt</span>: ISODate(<span class="hljs-string">&quot;2019-05-18T08:36:38.615Z&quot;</span>), <span class="hljs-variable">$lt</span>: ISODate(<span class="hljs-string">&quot;2019-05-18T08:39:00.935Z&quot;</span>)}}).sort({millis: -1})</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>7. serverStatus check basic performance info</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">db.serverStatus().connections
-db.serverStatus().locks
-db.serverStatus().globalLock</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_server_tools">Server Tools</h3>
-<div class="listingblock">
-<div class="title"><strong>1. sample a reddit.json</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -o reddit.json --insecure https://www.reddit.com/r/technology/.json</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. import reddit.json</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongoimport --port 27000 -u root -p mongo --authenticationDatabase admin --collection technology -db reddit --file reddit.json</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>3. export reddit data to csv</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongoexport --host <span class="hljs-string">&quot;repl-1/localhost:27000,localhost:27001,localhost:27002&quot;</span>  -u root -p mongo --authenticationDatabase admin -c technology <span class="hljs-_">-d</span> reddit --type=csv <span class="hljs-_">-f</span> <span class="hljs-string">&quot;bar,foo,zoo&quot;</span> -o reddit.csv</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>4. dump the reddit data as bson</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongodump --host <span class="hljs-string">&quot;repl-1/localhost:27000,localhost:27001,localhost:27002&quot;</span>  -u root -p mongo --authenticationDatabase admin -c technology <span class="hljs-_">-d</span> reddit --out reddit.dump</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>5. start a new mongodb and restore data</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ mongod --dbpath db/ --logpath db/mongod.log --port 27017 --fork --auth
-$ mongo admin --port 27017 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
-$ mongorestore --host <span class="hljs-string">&quot;localhost:27017&quot;</span>  -u root -p mongo --authenticationDatabase admin reddit.dump/</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>6. use bsondump convert bson to json</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">$ bsondump --outFile collection.json reddit.dump/reddit/technology.bson</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_storage_engines">Storage Engines</h3>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 1. <strong>Differences between MMAPv1 and WiredTiger</strong></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Items</th>
-<th class="tableblock halign-left valign-top">MMAPv1</th>
-<th class="tableblock halign-left valign-top">WiredTiger</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Locks/Concurrency</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">collection level in 3.0, databse level between 2.2 - 2.6</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">document level</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Journaling</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ensure writes are atomic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ensures writes make it to disk between checkpoints</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Data Compression</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">not support</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">support snappy and zlib compression algorithms</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disk fragmentation and performance cost</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Low</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all spread">
-<caption class="title">Table 2. <strong>MMAPv1 Vs WiredTiger(<a href="files/engines_pef.py">engines_pef.py</a>, mongostat, mongotop)</strong></caption>
-<colgroup>
-<col style="width: 33.3333%;">
-<col style="width: 33.3333%;">
-<col style="width: 33.3334%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Items</th>
-<th class="tableblock halign-left valign-top">MMAPv1</th>
-<th class="tableblock halign-left valign-top">WiredTiger</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">number of document inserts</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10m</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">10m</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Total disk usage(3 nodes in replica set)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">17G</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5.2 GB</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Disk usage per node</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">5.7G</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1.7G</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">write per seconds</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16k</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16k</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">every total time on bankdata.customers</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">200 ms</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">200 ms</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">system load avg</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">6.82, 6.40, 4.68</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">8.02, 6.07, 4.71</p></td>
-</tr>
-</tbody>
-</table>
-<div class="paragraph">
-<p>The scripts in above comparison:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">//&#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x5B58;&#x50A8;&#x6587;&#x4EF6;&#x53CA;&#x5185;&#x90E8;&#x901A;&#x4FE1;&#x52A0;&#x5BC6;&#x6587;&#x4EF6;
-$ mkdir -p ~/tmp/r{0,1,2}
-$ openssl rand -base64 755 &gt; ~/tmp/keyfile
-$ chmod 400 ~/tmp/keyfile
-
-//&#x542F;&#x52A8;
-$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/tmp/r<span class="hljs-variable">$i</span> --logpath ~/tmp/r<span class="hljs-variable">$i</span>/mongo.log --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
-
-//&#x521D;&#x59CB;&#x5316;
-$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
-
-//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
-$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
-
-//&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
-$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
-$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span>
-
-$ ./engines_pef.py
-$ ./engines_pef_read.py
-
-$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
-localhost:27000   15228    *0     *0     *0      17    32|0  5.0% 62.5%       0 9.84G 1.56G  0|0 1|0  2.10m   6.86m   18 repl-1  PRI May 17 10:53:47.599
-localhost:27001  *17461    *0     *0     *0       0    12|0 12.4% 72.8%       0 10.1G 1.39G  0|0 1|0  1.71k   61.6k   10 repl-1  SEC May 17 10:53:47.709
-localhost:27002  *17547    *0     *0     *0       0    13|0  5.6% 69.1%       0 10.2G 4.97G  0|2 2|0  1.76k   63.3k   10 repl-1  SEC May 17 10:53:47.709
-
-$ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
-                    ns    total    <span class="hljs-built_in">read</span>    write    2019-05-17T10:54:14+08:00
-    bankdata.customers    285ms     0ms    285ms
-        local.oplog.rs     95ms    95ms      0ms
-
-//switch to mmapv1
-$ pkill mongod
-$ rm -fr ~/tmp/r*
-$ mkdir -p ~/tmp/r{0,1,2}
-
-$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 0 1 2 ; <span class="hljs-keyword">do</span> mongod --dbpath ~/tmp/r<span class="hljs-variable">$i</span> --logpath ~/tmp/r<span class="hljs-variable">$i</span>/mongo.log --storageEngine mmapv1 --port 2700<span class="hljs-variable">$i</span> --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; <span class="hljs-keyword">done</span>
-
-//&#x521D;&#x59CB;&#x5316;
-$ mongo admin --port 27000 --eval <span class="hljs-string">&quot;rs.initiate()&quot;</span>
-
-//&#x521B;&#x5EFA;&#x5B89;&#x5168;&#x767B;&#x5F55;&#x8D26;&#x6237;
-$ mongo admin --port 27000 --eval <span class="hljs-string">&apos;db.createUser({user: &quot;root&quot;, pwd: &quot;mongo&quot;, roles: [{ role:&quot;root&quot;, db: &quot;admin&quot; }]})&apos;</span>
-
-//&#x6DFB;&#x52A0;&#x5907;&#x8282;&#x70B9;
-$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27001&quot;)&apos;</span>
-$ mongo admin --port 27000 -u <span class="hljs-string">&quot;root&quot;</span> -p <span class="hljs-string">&quot;mongo&quot;</span> --eval <span class="hljs-string">&apos;rs.add(&quot;localhost:27002&quot;)&apos;</span>
-
-$ ./engines_pef.py
-$ ./engines_pef_read.py
-
-$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
-localhost:27000  15172    *0     *0     *0     238   240|0       0        21.9G 1.06G   2134  0|0  0|0  6.13m   16.3m   18 repl-1  PRI May 17 11:18:30.041
-localhost:27001 *13298    *0     *0     *0       0    12|0       0        21.8G 4.99G   2165  0|0  1|0  1.64k   34.0k   10 repl-1  SEC May 17 11:18:29.110
-localhost:27002 *13316    *0     *0     *0       0    12|0       0        21.8G 4.98G   2022  0|0  0|0  1.64k   34.3k   10 repl-1  SEC May 17 11:18:29.110
-
-$ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
-                    ns    total     <span class="hljs-built_in">read</span>    write    2019-05-17T11:19:33+08:00
-    bankdata.customers    344ms      0ms    344ms
-        local.oplog.rs    108ms    108ms      0ms
-     admin.system.keys      0ms      0ms      0ms</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/wiredtiger.png" alt="wiredtiger.png"></span></p>
-</div>
-<div class="paragraph">
-<p><span class="image"><img src="img/engine-mmapv1.png" alt="engine mmapv1.png"></span></p>
-</div>
-</div>
-</div>
-</div>
                                 
                                 </section>
                             
@@ -1586,14 +553,10 @@ $ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
 
             
                 
-                <a href="security.html" class="navigation navigation-prev " aria-label="Previous page: 安全">
+                <a href="security.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: 安全">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="../python/" class="navigation navigation-next " aria-label="Next page: Python">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -1602,7 +565,7 @@ $ mongotop --port 27000 -u root -p mongo --authenticationDatabase admin
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"DBA","level":"1.6","depth":1,"next":{"title":"Python","level":"1.7","depth":1,"path":"python/README.adoc","ref":"python/README.adoc","articles":[]},"previous":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/dba.adoc","mtime":"2019-07-03T03:32:17.641Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DBA","level":"1.6","depth":1,"previous":{"title":"安全","level":"1.5","depth":1,"path":"dba/security.adoc","ref":"dba/security.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/dba.adoc","mtime":"2019-10-17T09:21:20.783Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-10-17T14:27:21.160Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

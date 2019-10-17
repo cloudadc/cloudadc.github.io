@@ -229,7 +229,20 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="1.4.1" data-path="../dba/sharding.html">
+        <li class="chapter " data-level="1.4.1" data-path="../dba/replication.html">
+            
+                <a href="../dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../dba/sharding.html">
             
                 <a href="../dba/sharding.html">
             
@@ -242,7 +255,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.2" data-path="../dba/opsmanager.html">
+        <li class="chapter " data-level="1.4.3" data-path="../dba/opsmanager.html">
             
                 <a href="../dba/opsmanager.html">
             
@@ -255,7 +268,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.3" data-path="../dba/perf.html">
+        <li class="chapter " data-level="1.4.4" data-path="../dba/perf.html">
             
                 <a href="../dba/perf.html">
             
@@ -268,7 +281,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.4.4" data-path="../dba/troubleshooting.html">
+        <li class="chapter " data-level="1.4.5" data-path="../dba/troubleshooting.html">
             
                 <a href="../dba/troubleshooting.html">
             
@@ -305,19 +318,6 @@
             
                     
                     DBA
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.7" data-path="../python/">
-            
-                <a href="../python/">
-            
-                    
-                    Python
             
                 </a>
             
@@ -379,8 +379,10 @@
 <ul class="sectlevel2">
 <li><a href="#___2">&#x9A71;&#x52A8;&#x7248;&#x672C;</a></li>
 <li><a href="#_callback_api">Callback API</a></li>
+<li><a href="#___3">&#x9519;&#x8BEF;&#x5904;&#x7406;</a></li>
 </ul>
 </li>
+<li><a href="#___4">&#x4F1A;&#x8BDD;&#x9694;&#x79BB;</a></li>
 </ul>
 </div>
 <div class="sect1">
@@ -534,6 +536,55 @@
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="___3">&#x9519;&#x8BEF;&#x5904;&#x7406;</h3>
+<div class="paragraph">
+<p>&#x901A;&#x5E38;&#x6570;&#x636E;&#x5E93;&#x4E8B;&#x52A1;&#x5904;&#x7406;&#x9700;&#x8981;&#x9519;&#x8BEF;&#x5904;&#x7406;&#xFF0C;&#x4EE5;&#x5904;&#x7406;&#x4E8B;&#x52A1;&#x5728;&#x5F00;&#x59CB;&#x3001;&#x63D0;&#x4EA4;&#x9636;&#x6BB5;&#x53EF;&#x80FD;&#x9047;&#x5230;&#x7684;&#x5F02;&#x5E38;&#xFF0C;&#x5E76;&#x5BF9;&#x5F02;&#x5E38;&#x505A;&#x76F8;&#x5E94;&#x5904;&#x7406;&#xFF0C;&#x4F8B;&#x5982;&#x91CD;&#x65B0;&#x63D0;&#x4EA4;&#x7B49;&#x3002; MongoDB &#x63D0;&#x4F9B;&#x4E86;&#x4E24;&#x4E2A;&#x9519;&#x8BEF;&#x6807;&#x7B7E;&#xFF0C;&#x5206;&#x522B;&#x5177;&#x6709;&#x4E0D;&#x540C;&#x7684;&#x542B;&#x4E49;&#xFF1A;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">TransientTransactionError</th>
+<th class="tableblock halign-left valign-top">UnknownTransactionCommitResult</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5728;&#x4E00;&#x4E2A;&#x4E8B;&#x7269;&#x4E2D;&#x7684;&#x5355;&#x4E2A;&#x5199;&#x64CD;&#x4F5C;&#x662F;&#x4E0D;&#x53EF;&#x91CD;&#x8BD5;&#x7684;&#xFF08;&#x5C3D;&#x7BA1;&#x914D;&#x7F6E;&#x4E86;&#x76F8;&#x5E94;&#x7684; retryWrites&#xFF09;&#xFF0C;&#x5982;&#x679C;&#x5F02;&#x5E38;&#x4E2D;&#x7684;&#x9519;&#x8BEF;&#x662F;&#x8FD9;&#x4E2A;&#x6807;&#x7B7E;&#xFF0C;&#x90A3;&#x4E48;&#x9519;&#x8BEF;&#x5F88;&#x53EF;&#x80FD;&#x662F;&#x7531;&#x4E8E;&#x96C6;&#x7FA4;&#x72B6;&#x6001;&#x53D8;&#x5316;&#x3001;&#x4E3B;&#x8282;&#x70B9; step down &#x7B49;&#x9020;&#x6210;&#xFF0C;&#x90A3;&#x4E48;&#x4E8B;&#x7269;&#x91CD;&#x8BD5;&#x9700;&#x8981;&#x4ECE;&#x91CD;&#x65B0;&#x5F00;&#x59CB;&#x63D0;&#x4EA4;&#x5F00;&#x59CB;&#x3002;</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x901A;&#x5E38;&#x53EF;&#x4EE5;&#x5C06;&#x4E8B;&#x7269;&#x63D0;&#x4EA4;&#x8BBE;&#x5B9A;&#x4E3A;&#x53EF;&#x91CD;&#x8BD5;&#xFF0C;&#x8FD9;&#x4E2A;&#x6807;&#x7B7E;&#x663E;&#x793A;&#x4E8B;&#x52A1;&#x63D0;&#x4EA4;&#x7ED3;&#x679C;&#x4E0D;&#x7B26;&#x5408;&#x9884;&#x671F;&#xFF0C;&#x5982;&#x679C;&#x9519;&#x8BEF;&#x5904;&#x7406;&#x4E2D;&#x9047;&#x5230;&#x7684;&#x9519;&#x8BEF;&#x662F;&#x8FD9;&#x4E2A;&#x6807;&#x7B7E;&#xFF0C;&#x90A3;&#x4E48;&#x53EF;&#x4EE5;&#x5C1D;&#x8BD5;&#x91CD;&#x65B0;&#x63D0;&#x4EA4;&#x4E8B;&#x52A1;</p>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">&#x4F1A;&#x8BDD;&#x9694;&#x79BB;</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x90FD;&#x7ED1;&#x5B9A;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x4F1A;&#x8BDD;&#xFF0C;&#x5F00;&#x59CB;&#x4E00;&#x4E2A;&#x4E8B;&#x52A1;&#x662F;&#x4ECE;&#x8FDE;&#x63A5;&#x4F1A;&#x8BDD;&#x5BF9;&#x8C61; Session &#x5F00;&#x59CB;&#x7684;</p>
+</li>
+<li>
+<p>&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x65F6;&#x95F4;&#x70B9;&#xFF0C;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x4F1A;&#x8BDD;&#x5BF9;&#x8C61; Session &#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x8FD0;&#x884C;&#x4E2D;&#x7684;&#x4E8B;&#x52A1;</p>
+</li>
+<li>
+<p>&#x9A71;&#x52A8;&#x4E2D;&#x7684;&#x4E8B;&#x52A1;&#x64CD;&#x4F5C; API &#x90FD;&#x5FC5;&#x987B;&#x7BA1;&#x7406;&#x4E00;&#x4E2A;&#x8FDE;&#x63A5;&#x4F1A;&#x8BDD;&#x5BF9;&#x8C61; Session</p>
+</li>
+<li>
+<p>&#x5982;&#x679C;&#x8FDE;&#x63A5;&#x4F1A;&#x8BDD;&#x5BF9;&#x8C61; Session &#x7ED3;&#x675F;&#xFF0C;&#x5219;&#x5173;&#x8054;&#x7684;&#x4E8B;&#x52A1;&#x56DE;&#x53D6;&#x6D88;&#xFF0C;&#x56DE;&#x6EDA;&#x76F8;&#x5E94;&#x7684;&#x64CD;&#x4F5C;</p>
+</li>
+</ul>
+</div>
 </div>
 </div>
                                 
@@ -578,7 +629,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"分布式事务","level":"1.3.2","depth":2,"next":{"title":"Java","level":"1.3.3","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"previous":{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/transactions.adoc","mtime":"2019-09-03T14:12:48.066Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-09-16T09:40:49.662Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"分布式事务","level":"1.3.2","depth":2,"next":{"title":"Java","level":"1.3.3","depth":2,"path":"dev/java.adoc","ref":"dev/java.adoc","articles":[]},"previous":{"title":"$sum","level":"1.3.1.1","depth":3,"path":"dev/aggregation-sum.adoc","ref":"dev/aggregation-sum.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dev/transactions.adoc","mtime":"2019-10-04T04:52:30.657Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-10-17T14:27:21.160Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

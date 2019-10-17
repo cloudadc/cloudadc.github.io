@@ -16,4 +16,3 @@
 .. link:dba/troubleshooting.adoc[监控]
 . link:dba/security.adoc[安全]
 . link:dba/dba.adoc[DBA]
-. link:python/README.adoc[Python]
