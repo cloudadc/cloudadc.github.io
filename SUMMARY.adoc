@@ -10,6 +10,8 @@
 .. link:dev/java.adoc[Java]
 . link:dba/cluster-admin.adoc[集群管理]
 .. link:dba/replication.adoc[高可用]
+... link:dba/rs-deployments.adoc[部署]
+... link:dba/rs-maintenance.adoc[维护]
 .. link:dba/sharding.adoc[分片]
 .. link:dba/opsmanager.adoc[Ops Manager]
 .. link:dba/perf.adoc[性能调优]

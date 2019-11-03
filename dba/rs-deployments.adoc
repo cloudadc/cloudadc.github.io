@@ -1,0 +1,233 @@
+= 部署
+:toc: manual
+
+== 无安全认证三节点复制集合
+
+[source, json]
+.*1. 三个节点服务器上创建 mongod 配置文件*
+----
+replication:
+   replSetName: "rs0"
+net:
+   bindIp: localhost, mongodbX.example.com
+----
+
+[source, json]
+.*2. 启动*
+----
+sudo mkdir -p /data/db
+sudo chown mongod:mongod /data/db/
+sudo mongod --config mongod.conf 
+----
+
+[source, json]
+.*3. 连接并初始化复制集*
+----
+rs.initiate( {
+   _id : "rs0",
+   members: [
+      { _id: 0, host: "mongodb0.example.com:27017" },
+      { _id: 1, host: "mongodb1.example.com:27017" },
+      { _id: 2, host: "mongodb2.example.com:27017" }
+   ]
+})
+----
+
+[source, json]
+.*4. Mongo Shell 连接，查看复制集配置及状态*
+----
+mongo --host 'rs0/mongodb0.example.com:27017,mongodb1.example.com:27017.mongodb2.example.com:27017'
+rs.conf()
+rs.status()
+----
+
+== 复制集合中添加一个仲裁节点 
+
+[source, json]
+.*1. 启动仲裁节点*
+----
+sudo mkdir /data/arb
+sudo chown mongod:mongod /data/arb
+mongod --port 27017 --dbpath /data/arb --replSet rs0 --bind_ip 0.0.0.0
+----
+
+[source, json]
+.*2. 添加仲裁节点*
+----
+rs.addArb("mongodb3.example.com:27017")
+----
+
+== 调整复制集中节点的优先级 
+
+[source, json]
+----
+cfg = rs.conf()
+
+cfg.members[0].priority = 0.5
+cfg.members[1].priority = 2
+cfg.members[2].priority = 2
+
+rs.reconfig(cfg)
+----
+
+== 阻止一个节点变为主节点
+
+[source, json]
+----
+cfg = rs.conf()
+
+cfg.members[2].priority = 0
+
+rs.reconfig(cfg)
+----
+
+== 配置一个隐藏节点
+
+[source, json]
+----
+cfg = rs.conf()
+
+cfg.members[2].priority = 0
+cfg.members[2].hidden=true
+
+rs.reconfig(cfg)
+----
+
+== 配置一个延迟从节点
+
+[source, json]
+----
+cfg = rs.conf()
+
+cfg.members[2].priority = 0
+cfg.members[2].hidden = true
+cfg.members[2].slaveDelay = 3600
+
+rs.reconfig(cfg)
+----
+
+== 复制集中移除一个节点
+
+*1. 停止要移除的节点*
+
+[source, json]
+.*2. 在主节点上执行如下操作，移除节点*
+----
+cfg = rs.conf()
+
+cfg.members.splice(2,1)
+
+rs.reconfig(cfg)
+----
+
+=== 添加一个节点
+
+[source, json]
+.*在主节点上执行如下操作添加节点*
+----
+rs.add( { host: "mongodb2.example.net:27017", priority: 1, votes: 1 } )
+----
+
+== TODO
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
