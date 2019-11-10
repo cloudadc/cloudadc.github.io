@@ -1,0 +1,15 @@
+= 地理信息
+:toc: manual
+
+== GeoJSON
+
+MongoDB 支持以下类型的 GeoJSON 对象类型：
+
+* 点(Point)
+* 线(LineString)
+* 多边形(Polygon)
+* 多点(MultiPoint)
+* 多线
+* 多个多边形
+* 几何集合
+

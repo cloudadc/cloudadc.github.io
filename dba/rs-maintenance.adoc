@@ -78,7 +78,123 @@ NOTE: 数据拷贝可以基于其他方式或命令
 
 *4. 启动集群*
 
-== TODO  
+== 修改默认 Oplog 大小
+
+Oplog 大小会直接影响高可用数据复制的能力，在生产实践中我们通常需要调整 MongoDB Oplog 大小，从 MongoDB 3.6 开始可以通过管理命令 `replSetResizeOplog` 来动态调整 Oplog 大小，调整完成后不需要停机，不会有业务中断。
+
+通常调整 Oplog 大小首先需要调整从节点 Oplog，然后再调整主节点。本部分说明如何调整一个复制集的默认 Oplog 大小。 
+
+[source, json]
+.*1. 连接到复制集节点（先从节点，后主节点）*
+----
+mongo --host mongodb0.example.com
+----
+
+[source, json]
+.*2. 验证当前  Oplog 大小*
+----
+use local
+db.oplog.rs.stats().maxSize
+----
+
+[source, json]
+.*3. 调整 Oplog 大小*
+----
+db.adminCommand({replSetResizeOplog: 1, size: 30000})
+----
+
+== 常见不停机维护步骤
+
+MongoDB 复制集一主多从架构，维护可以做到不停机，具体维护，例如升级可以先在从节点上进行，让所有从节点进行完成后强制进行一次选举，让未进行维护的主节点变成从节点，然后进行维护操作。本部分说明常见不停机维护的一般步骤。
+
+[source, json]
+.*1. 停止一个从节点*
+----
+use admin
+db.shutdownServer()
+----
+
+[source, json]
+.*2. 以单点方式启动 MongoDB*
+----
+// 1. 修改启动配置文件
+#replication:
+#   replSetName: "rs0"
+net:
+   bindIp: 0.0.0.0
+   port: 27018
+setParameter:
+   skipShardingConfigurationChecks: true
+   disableLogicalSessionCacheRefresh: true
+
+// 2. 单实例启动
+sudo mongod --config mongod-m.conf
+----
+
+[source, json]
+.*3. 执行维护，也可以本地连接*
+----
+mongo --port 27018
+----
+
+[source, json]
+.*4. 维护结束后，重启从节点*
+----
+use admin
+db.shutdownServer()
+
+sudo mongod --config mongod.conf
+----
+
+[source, json]
+.*5. 主节点执行维护操作*
+----
+rs.stepDown()
+----
+
+== TODO
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
+
+[source, json]
+.**
+----
+
+----
 
 [source, json]
 .**

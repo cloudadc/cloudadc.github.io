@@ -8,6 +8,7 @@
 ... link:dev/aggregation-sum.adoc[$sum]
 .. link:dev/transactions.adoc[分布式事务]
 .. link:dev/java.adoc[Java]
+.. link:dev/geo.adoc[地理信息]
 . link:dba/cluster-admin.adoc[集群管理]
 .. link:dba/replication.adoc[高可用]
 ... link:dba/rs-deployments.adoc[部署]
