@@ -1,0 +1,784 @@
+= MongoDB 对话卡片
+:toc: manual
+
+== 智能数据平台
+
+当代数字化战略，数字化转型的核心是数据，数据平台是关键因素，MongoDB智能操作数据平台目的，就是让新型数字化应用开发更快、更简单；运行更可靠、客户体验更好；部署更容易，运维更简单。
+
+image:img/iodp.png[]
+
+== Best way to work with data(为快速开发而生)
+
+MongoDB 的诞生之初的目的就是为了帮助开发者快速开发，MongoDB是当前全球最受开发人员欢迎的的数据库。
+
+=== Easy(易用)
+
+任何开发，数据模型设计都是开发核心工作，MongoDB 的模型采用对象模式，让数据库模型可以和业务对象模型直接映射。
+
+1. 数据库中存储*文档记录*与开发代码中的*对象*天然匹配 - (JSON 文档数据库的由来、车联网等新业务中 OData4 标准、面向对象编程语言 ORM 框架)
+2. 能代表或抽象任意形式的数据
+3. 操作简单
+4. 20 种数据 JSON 数据类型
+5. 丰富的驱动生态
+
+[source, bash]
+.*0. 准备*
+----
+// 启动数据库，创建用户
+$ mongod --dbpath data/db --auth
+
+$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
+
+// 安装 nodejs 及驱动
+$ node -v
+v10.15.3
+
+$ npm install mongodb
+----
+
+[source, javaScript]
+.*1-A: 插入 NodeJS 中对象 doc1（link:files/easy-insert-doc1.js[easy-insert-doc1.js]）*
+----
+var doc1 = {
+    "name": "Alice Smith",
+    "balance": 99.99
+}
+
+$ node easy-insert-doc1.js
+----
+
+[source, json]
+.*1-B: 查看数据库中的对象*
+----
+db.easy.findOne({ "name": "Alice Smith"})
+{
+	"_id" : ObjectId("5cce7a2d60aee811ef4dfc06"),
+	"name" : "Alice Smith",
+	"balance" : 99.99
+}
+----
+
+[source, javaScript]
+.*2-A: 插入 NodeJS 中对象 doc2（link:files/easy-insert-doc2.js[easy-insert-doc2.js]）*
+----
+var doc2 = {
+    "name": "Bob Brown",
+    "balance": 492.45,
+    "accountNo": 489275482,
+    "accountType": 2,
+    "phone": [ "555-3456325", "1800-mongodb" ],
+    "address": {
+       "building": "MongoDB HQ",
+       "city": "NYC",
+       "zip": 10036
+    }
+}
+----
+
+[source, json]
+.*2-B: 查看数据库中的对象*
+----
+db.easy.findOne({ "name": "Bob Brown"})
+{
+	"_id" : ObjectId("5cce7c5c573f5412ad66a0ba"),
+	"name" : "Bob Brown",
+	"balance" : 492.45,
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+----
+
+[source, javaScript]
+.*3-A:  插入 NodeJS 中多个对象（link:files/easy-insert-multiple.js[easy-insert-multiple.js]）*
+----
+$ node easy-insert-multiple.js
+----
+
+[source, json]
+.*3-B: 查看数据库中的多个对象*
+----
+db.easy.find({"name": "Bob Brown", "address.city": "NYC"}).pretty()
+{
+	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"name" : "Bob Brown",
+	"balance" : NumberDecimal("492.450000000000"),
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+...
+----
+
+[source, javaScript]
+.*4-A: 查找并替换*
+----
+doc = db.easy.findOne({"name": "Alice Smith"})
+db.easy.replaceOne ({"_id": doc._id}, {"name": "Imposter", "balance": 10000000, "message": "Nothing to see here!"})
+----
+
+[source, json]
+.*4-B: 查看数据库中的对象*
+----
+db.easy.findOne ({"_id": doc._id})
+{
+	"_id" : ObjectId("5cb6dcdc0c8075db42407f90"),
+	"name" : "Imposter",
+	"balance" : 10000000,
+	"message" : "Nothing to see here!"
+}
+----
+
+[source, javaScript]
+.*5-A: 查找并更新*
+----
+doc = db.easy.findOne({"name": "Bob Brown"})
+db.easy.updateOne ({"_id": doc._id}, {$set: {"balance": NumberDecimal(10000000)}})
+----
+
+[source, json]
+.*5-B: 查看数据库中的对象*
+----
+db.easy.findOne ({"_id": doc._id})
+{
+	"_id" : ObjectId("5cb6dd320c8075db42407f91"),
+	"name" : "Bob Brown",
+	"balance" : NumberDecimal("10000000.0000000"),
+	"accountNo" : 489275482,
+	"accountType" : 2,
+	"phone" : [
+		"555-3456325",
+		"1800-mongodb"
+	],
+	"address" : {
+		"building" : "MongoDB HQ",
+		"city" : "NYC",
+		"zip" : 10036
+	}
+}
+----
+
+[source, javaScript]
+.*6-A: 删除对象*
+----
+db.easy.deleteMany ({"name": "Alice Smith"})
+----
+
+[source, json]
+.*6-B: 查看数据库中的对象*
+----
+db.easy.findOne ({"name": "Alice Smith"})
+null
+----
+
+=== Flexible(灵活)
+
+在开发中，特别是新业务开发中，另一个很大的挑战，要不断调整数据模型来适应业务的变化，这个在传统关系数据库开发中，是非常耗时和复杂的操作，而 MongoDB 数据模型可灵活更改，应对业务变化轻而易举。
+
+无需改表就可实现模型变化，具体包括：
+
+* 添加字段，直接插入，无需改表
+* 同一个表中，可保存不同属性的记录
+* 不同版本数据，可以在表中和平共存
+
+比如，我做电商业务，开始只买画，产品表中的记录只有画的属性，名字、尺寸、颜色：
+
+[source, json]
+----
+var paintDoc = {
+	"product_name" : "Acme Paint",
+	"color" : [
+		"Red",
+		"Green"
+	],
+	"size_oz" : [
+		8,
+		32
+	],
+	"finish" : [
+		"satin",
+		"eggshell"
+	]
+}
+
+db.retail.insertOne(paintDoc);
+db.retail.findOne({product_name: "Acme Paint"}, {_id: 0})
+----
+
+之后，我开始卖衣服，需要有以衣服的尺寸、材料等新属性，无需修改表，可以将以衣服的记录，插入
+
+[source, json]
+----
+var shirtDoc = {
+	"product_name" : "T-shirt",
+	"size" : [
+		"S",
+		"M",
+		"L",
+		"XL"
+	],
+	"color" : [
+		"Heather Gray"
+	],
+	"material" : "100% cotton",
+	"wash" : "cold",
+	"dry" : "tumble dry low"
+}
+
+db.retail.insertOne(shirtDoc);
+db.retail.findOne({product_name: "T-shirt"}, {_id: 0})
+----
+
+然后，我又开始买自行车
+
+[source, json]
+----
+var bikeDoc = {
+	"product_name" : "Mountain Bike",
+	"brake_style" : "mechanical disc",
+	"color" : "grey",
+	"frame_material" : "aluminum",
+	"no_speeds" : 21,
+	"package_height" : "7.5x32.9x55",
+	"weight_lbs" : 44.05,
+	"suspension_type" : "dual",
+	"wheel_size_in" : 26
+}
+
+db.retail.insertOne(bikeDoc);
+db.retail.findOne({product_name: "Mountain Bike"}, {_id: 0})
+----
+
+这也就是为什么，几乎所有新型电商的产品库，都是采用的 MongoDB 的原因，这个特性也带了另一个好处，就是可以在一个表中，保持不同版本的数据，而且彼此互不影响，这个特点，在手机APP开发和物联网开发上，尤其重要因为手机 APP 和物联网，都会用很多版本的终端的运行，每个版本，都可能上传不同的数据结构，数据库必须能够支持多种数据版本，在同一个表中运行。
+
+
+=== Fast(高效)
+
+本部分通过 mongod、mongo、compass 等组件说明 MongoDB 支持更大的数据量处理能力，为应用提供更佳性能，支持 *PB* 级数据处理。 
+
+[source, python]
+.*1. 启动 mongod 创建用户名密码*
+----
+$ mongod --dbpath data/db --auth
+
+$ mongo admin --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{role: "root", db: "admin"}]})'
+----
+
+[source, python]
+.*2. 运行 link:etc/files/insert_accounts_one.py[insert_accounts_one.py] 插入 1m 条数据*
+----
+$ ./insert_accounts_one.py 
+1000000 records inserted
+----
+
+*3. 查看性能指标*
+
+image:img/iodp-fast-insert-one.png[]
+
+[source, python]
+.*4. 运行 link:files/insert_accounts_bulk.py[insert_accounts_bulk.py] 批量插入 1m 条数据*
+----
+$ ./insert_accounts_bulk.py
+1000000 records inserted
+----
+
+*5. 查看性能指标*
+
+image:img/iodp-fast-inset-bulk.png[]
+
+NOTE: 可以看到十几秒时间内一条一条插入 1m 条数据(400 MB)完成，批量插入数秒完成插入，且两种插入性能指标变化不大，说明 *MongoDB 能够轻松应对百万级别的数据插入操作*。
+
+[source, python]
+.*6. 全表扫描查询*
+----
+> var result = db.customers.explain(1).count({manager:"Barry Mongo"})
+> var extract = {"winningPlan": result.queryPlanner.winningPlan.inputStage.stage, "totalDocsExamined": result.executionStats.totalDocsExamined, "executionTimeMillis": result.executionStats.executionTimeMillis}
+> extract
+{
+	"winningPlan" : "EOF",
+	"totalDocsExamined" : 0,
+	"executionTimeMillis" : 0
+}
+----
+
+NOTE: 可以看到全表扫描 1m 条数据花费了 383 毫秒。
+
+[source, json]
+.*7. 创建索引后执行同样查看*
+----
+> db.customers.createIndex({manager: 1})
+> var result = db.customers.explain(1).count({manager:"Barry Mongo"})
+> var extract = {"winningPlan": result.queryPlanner.winningPlan.inputStage.stage, "totalDocsExamined": result.executionStats.totalDocsExamined, "executionTimeMillis": result.executionStats.executionTimeMillis}
+> extract
+{
+	"winningPlan" : "COUNT_SCAN",
+	"totalDocsExamined" : 0,
+	"executionTimeMillis" : 3
+}
+----
+
+NOTE: 可以看到索引命中查询 1m 条数据花费的时间小于 1 毫秒，综上*MongoDB 能够轻松应对百万级别的数据读操作*。
+
+=== Versatile(强大)
+
+MongoDB 提供丰富的功能让开发者在一个平台解决绝大部分问题，除了常见聚合查询，现代数据分析数组查询、图搜索、位置搜索、分桶查询都可支持。
+
+[source, json]
+.*1. 执行 link:files/insert.py[insert.py] 导入数据*
+----
+$ ./insert.py 
+
+Adding company and customer records - may take about 30 seconds...
+
+50029 company records added
+
+50001 customer records added
+----
+
+[source, json]
+.*2. 查询 customers*
+----
+> db.customers.findOne({firstname: 'Mandy', lastname: 'Morrison'})
+{
+	"_id" : 123456,
+	"balance" : 89788,
+	"lastname" : "Morrison",
+	"pending_transactions" : [
+		{
+			"amount" : 6423,
+			"to_party" : "Atlantic Ltd"
+		},
+		{
+			"amount" : 7582,
+			"to_party" : "Lewis Group PLC"
+		}
+	],
+	"firstname" : "Mandy"
+}
+
+----
+
+[source, json]
+.*3. 查询 companies*
+----
+> db.companies.find({_id: 'Atlantic Ltd'}).pretty()
+{
+	"_id" : "Atlantic Ltd",
+	"part_of" : "Pacific Co",
+	"watch" : false,
+	"name" : "Atlantic Ltd"
+}
+
+> db.companies.find({_id: 'Antartic LLP'}).pretty()
+{
+	"_id" : "Antartic LLP",
+	"part_of" : "",
+	"watch" : true,
+	"name" : "Antartic LLP"
+}
+----
+
+[source, json]
+.*4. 运行聚合流水线*
+----
+var cust_id = 123456
+
+db.customers.aggregate([
+    {$match: {'_id': cust_id}},
+        {$graphLookup: {
+            from: 'companies',
+            startWith: '$pending_transactions.to_party',
+            connectFromField: 'part_of',
+            connectToField: '_id',
+            depthField: 'depth',
+            as: 'org_hierarchy'
+        }}
+    ]).pretty()
+----
+
+[source, json]
+.*5. 运行聚合流水线*
+----
+var cust_id = 123456
+
+db.customers.aggregate([
+    // Look at specific customer account only
+    {$match: {'_id': cust_id}},
+
+    // Build list of ancestor companies for each pending transaction in the account
+    {$graphLookup: {
+        from: 'companies',
+        startWith: '$pending_transactions.to_party',
+        connectFromField: 'part_of',
+        connectToField: '_id',
+        depthField: 'depth',
+        as: 'org_hierarchy'
+    }},
+
+    // Expand the companies array to show each found company as a separate line item
+    {$unwind: '$org_hierarchy'},
+
+    // Filter out any company line items that don't have a watch flag set
+    {$match: {'org_hierarchy.watch': true}},
+
+    // Group together summary information with all the flagged companies held in an array
+    {$group: {
+        _id: '$_id',
+        firstname: {$first: '$firstname'},
+        lastname: {$first: '$lastname'},
+        watch_flag_company_alerts: {$push: "$org_hierarchy._id"}
+    }}
+]).pretty()
+----
+
+== Intelligently put data where you want it(为高效可靠运行而设计)
+
+=== Availability(高可用)
+
+MongoDB 简单易行，与生俱来的高可用架构。为保证服务的可靠性，MongoDB采用分布式架构，可以跨服务器、机架、区域和大洲的部署，整个架构，不存在任何单点故障，和传统关系数据库比，整个高可用架构无需任何额外配置，默认部署就支持节点互相接管。
+
+[source, bash]
+.*1. 启动一个三节点复制子集*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+----
+
+[source, text]
+.*2. 执行插入 2m 条数据(link:files/insert_accounts_ha.py[insert_accounts_ha.py])*
+----
+$ ./insert_accounts_ha.py 
+----
+
+[source, text]
+.*3. 停止主节点后重启*
+----
+$ kill -9 1501
+$ mongod --dbpath ~/tmp/r0 --logpath ~/tmp/r0/mongo.log --port 27000 --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1
+----
+
+=== Scalability(分布式灵活扩展)
+
+[source, bash]
+.*1. 启动一个两分片的集群*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/ra{0,1,2}
+$ mkdir -p ~/tmp/rb{0,1,2}
+$ mkdir -p ~/tmp/cs{0,1,2}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动 ConfigServer，初始化，创建管理用户，并添加备节点
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/tmp/cs$i --logpath ~/tmp/cs$i/mongo.log --port 2600$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-cs ; done
+
+$ mongo admin --port 26000 --eval "rs.initiate()"
+
+$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("localhost:26001")'
+$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("localhost:26002")'
+
+//启动 mongos，并查看分片状态
+$ mongos --configdb 'repl-cs/localhost:26000,localhost:26001,localhost:26002' --logpath ~/tmp/mongos.log --port 27017 --fork --keyFile ~/tmp/keyfile
+
+$ mongo admin -u root -p mongo --eval 'sh.status()'
+
+//启动分片a，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/ra$i --logpath ~/tmp/ra$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-a ; done
+
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+//启动分片b，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/rb$i --logpath ~/tmp/rb$i/mongo.log --port 2800$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-b ; done
+
+$ mongo admin --port 28000 --eval "rs.initiate()"
+
+$ mongo admin --port 28000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 28000 -u "root" -p "mongo" --eval 'rs.add("localhost:28001")'
+$ mongo admin --port 28000 -u "root" -p "mongo" --eval 'rs.add("localhost:28002")'
+
+//配置分片，并查看分片状态
+$ mongo admin -u root -p mongo --eval 'sh.addShard("repl-a/localhost:27000,localhost:27001,localhost:27002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("repl-b/localhost:28000,localhost:28001,localhost:28002")'
+
+$ mongo admin -u root -p mongo --eval 'sh.status()'
+----
+
+[source, javascript]
+.*2. 创建一个分片集合，并创建 shard key*
+----
+use bankdata
+sh.enableSharding("bankdata")
+sh.shardCollection("bankdata.accounts", { accountNo: 1 })
+----
+
+[source, javascript]
+.*3. 插入一些数据*
+----
+var doc = {
+   "name": "John Doe",
+   "balance": 99.99
+}
+for (var i = 0; i < 100000; i++) {
+   doc.accountNo = i
+   db.accounts.insertOne( doc )
+}
+
+db.accounts.getShardDistribution()
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 7.34MiB docs : 100000 chunks : 1
+ estimated data per chunk : 7.34MiB
+ estimated docs per chunk : 100000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 1
+ Shard repl-b contains 100% data, 100% docs in cluster, avg obj size on shard : 77B
+----
+
+[source, javascript]
+.*4. 模拟大量数据导入，手动创建多个 chunk(默认只有当 chunk 的大小大于 64 M 时才开始移动)*
+----
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(20000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(40000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(60000)})
+sh.splitAt("bankdata.accounts", {"accountNo": NumberLong(80000)})
+----
+
+如上会创建 5 个 chunk，会触 Chunk 的再平衡，最终结果是一个分片两个 Chunks，另一个分片三个 Chunks。
+
+[source, javascript]
+.*5. 查看统计数据*
+----
+db.accounts.getShardDistribution()
+
+Shard repl-a at repl-a/localhost:27000,localhost:27001,localhost:27002
+ data : 2.93MiB docs : 40000 chunks : 2
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Shard repl-b at repl-b/localhost:28000,localhost:28001,localhost:28002
+ data : 4.4MiB docs : 60000 chunks : 3
+ estimated data per chunk : 1.46MiB
+ estimated docs per chunk : 20000
+
+Totals
+ data : 7.34MiB docs : 100000 chunks : 5
+ Shard repl-a contains 40% data, 40% docs in cluster, avg obj size on shard : 77B
+ Shard repl-b contains 60% data, 60% docs in cluster, avg obj size on shard : 77B
+----
+
+=== Workload Isolation(负载隔离)
+
+负载隔离指读和写操作负载隔离，实时操作和实时分析隔离。
+
+[source, bash]
+.*1. 启动一个三节点复制子集*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/r{0,1,2,3,4}
+$ openssl rand -base64 755 > ~/tmp/keyfile
+$ chmod 400 ~/tmp/keyfile
+
+//启动
+$ for i in 0 1 2 3 4 ; do mongod --dbpath ~/tmp/r$i --logpath ~/tmp/r$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/keyfile --replSet repl-1 ; done
+
+//初始化
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+//创建安全登录账户
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+//添加备节点
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27003")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27004")'
+----
+
+[source, javascript]
+.*2. 配置负载隔离*
+----
+cfg = rs.config();
+cfg.members[0].priority=1;
+cfg.members[0].tags = {"use": "op"};
+cfg.members[1].priority=1;
+cfg.members[1].tags = {"use": "op"};
+cfg.members[2].priority=1;
+cfg.members[2].tags = {"use": "op"};
+cfg.members[3].priority=0;
+cfg.members[3].tags = {"use": "analytics"};
+cfg.members[4].priority=0;
+cfg.members[4].tags = {"use": "analytics"};
+rs.reconfig(cfg);
+----
+
+[source, bash]
+.*3. 分别进行读和写操作(link:files/insert_data.py[insert_data.py], link:etc/files/read_data.py[read_data.py])*
+----
+$ ./insert_data.py
+$ ./read_data.py
+----
+
+[source, bash]
+.*4. mongostat 查看读写操作的所对应的节点*
+----
+$ mongostat --port 27000 --discover -u root -p mongo --authenticationDatabase admin
+           host insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn    set repl                time
+localhost:27000      2    *0     *0     *0      16    28|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  24.4k   83.8k   26 repl-1  PRI Apr 30 18:08:23.648
+
+           host insert query update delete getmore command dirty used flushes vsize   res qrw arw net_in net_out conn    set repl                time
+localhost:27000      2    *0     *0     *0      16    33|0  0.0% 0.0%       0 5.10G 31.0M 0|0 1|0  25.5k   86.3k   26 repl-1  PRI Apr 30 18:08:24.645
+localhost:27001     *2    *0     *0     *0       0    13|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  1.61k   67.3k   12 repl-1  SEC Apr 30 18:08:23.711
+localhost:27002     *2    *0     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  1.41k   66.4k   12 repl-1  SEC Apr 30 18:08:23.714
+localhost:27003     *2     2     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 29.0M 0|0 1|0  2.08k   68.3k   13 repl-1  SEC Apr 30 18:08:23.707
+localhost:27004     *2     3     *0     *0       0    12|0  0.0% 0.0%       0 4.97G 28.0M 0|0 1|0  2.41k   69.0k   13 repl-1  SEC Apr 30 18:08:23.708
+----
+
+=== Locality(本地读取)
+
+MongoDB 支持读和写在不同的地理位置。
+
+[source, bash]
+.*1. 启动一个跨地理位置的分片集群*
+----
+//创建数据库存储文件及内部通信加密文件
+$ mkdir -p ~/tmp/cluster/config/{c0,c1,c2}
+$ mkdir -p ~/tmp/cluster/EU/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/US/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/APAC/{m0,m1,m2}
+$ mkdir -p ~/tmp/cluster/{s0,s1}
+
+$ openssl rand -base64 755 > ~/tmp/cluster/keyfile
+$ chmod 400 ~/tmp/cluster/keyfile
+
+//启动 EU 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/EU/m$i --logpath ~/tmp/cluster/EU/m$i/mongo.log --port 2400$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet EU ; done
+
+$ mongo admin --port 24000 --eval "rs.initiate()"
+
+$ mongo admin --port 24000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.add("localhost:24001")'
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.add("localhost:24002")'
+
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 24000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 US 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/US/m$i --logpath ~/tmp/cluster/US/m$i/mongo.log --port 2500$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet US ; done
+
+$ mongo admin --port 25000 --eval "rs.initiate()"
+
+$ mongo admin --port 25000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.add("localhost:25001")'
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.add("localhost:25002")'
+
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 25000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 APAC 分片，初始化，创建管理账户，添加备节点
+$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/tmp/cluster/APAC/m$i --logpath ~/tmp/cluster/APAC/m$i/mongo.log --port 2600$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet APAC ; done
+
+$ mongo admin --port 26000 --eval "rs.initiate()"
+
+$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.add("localhost:26001")'
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.add("localhost:26002")'
+
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 26000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 ConfigServer，初始化，创建管理用户，并添加备节点
+$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/tmp/cluster/config/c$i --logpath ~/tmp/cluster/config/c$i/mongo.log --port 2700$i --fork --auth --keyFile ~/tmp/cluster/keyfile --replSet configSvr ; done
+
+$ mongo admin --port 27000 --eval "rs.initiate()"
+
+$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27001")'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.add("localhost:27002")'
+
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.isMaster()'
+$ mongo admin --port 27000 -u "root" -p "mongo" --eval 'rs.status()'
+
+//启动 mongos，配置分片
+$ mongos --configdb 'configSvr/localhost:27000,localhost:27001,localhost:27002' --logpath ~/tmp/cluster/s0/mongos.log --port 27017 --fork --keyFile ~/tmp/cluster/keyfile
+$ mongos --configdb 'configSvr/localhost:27000,localhost:27001,localhost:27002' --logpath ~/tmp/cluster/s1/mongos.log --port 27018 --fork --keyFile ~/tmp/cluster/keyfile
+
+$ mongo admin -u root -p mongo --eval 'sh.addShard("EU/localhost:24000,localhost:24001,localhost:24002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("US/localhost:25000,localhost:25001,localhost:25002")'
+$ mongo admin -u root -p mongo --eval 'sh.addShard("APAC/localhost:26000,localhost:26001,localhost:26002")'
+
+$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
+$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
+----
+
+[source, bash]
+.*2. 初始化跨区分片*
+----
+$ mongo admin --port 27017 -u root -p mongo --eval '
+sh.addShardToZone("EU", "EU");
+sh.addShardToZone("US", "US");
+sh.addShardToZone("APAC", "APAC");
+sh.enableSharding("customers");
+sh.shardCollection("customers.users", { region_code: 1, _id: 1 });
+sh.updateZoneKeyRange("customers.users", { region_code: "EU", _id: MinKey},{ region_code: "EU", _id: MaxKey }, "EU");
+sh.updateZoneKeyRange("customers.users", { region_code: "US", _id: MinKey},{ region_code: "US", _id: MaxKey }, "US");
+sh.updateZoneKeyRange("customers.users", { region_code: "APAC", _id: MinKey},{ region_code: "APAC", _id: MaxKey }, "APAC");
+sh.status();
+'
+----
+
+[source, javascript]
+.*3. 插入数据*
+----
+use customers
+db.users.insert({firstName:"John", lastName:"Doe", region_code:"US"})
+db.users.insert({firstName:"Julien", lastName:"Dupont", region_code:"EU"})
+db.users.insert({firstName:"Kylin", lastName:"Soong", region_code:"APAC"})
+----
+
+== Freedom to run anywhere(为随处部署而建)
+
+

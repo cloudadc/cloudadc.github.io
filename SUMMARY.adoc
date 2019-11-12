@@ -1,7 +1,10 @@
 = 目录
 
 . link:README.adoc[MongoDB]
-.. link:presentation.adoc[为什么 MongoDB]
+.. link:viewpoint/presentation.adoc[为什么 MongoDB]
+.. link:viewpoint/oversea.adoc[MongoDB 助力企业出海]
+.. link:viewpoint/td.adoc[Teradata 优化]
+.. link:viewpoint/cards.adoc[MongoDB 对话卡片]
 . link:dba/basic.adoc[基础]
 . link:dev/README.adoc[开发]
 .. link:dev/aggregation.adoc[Aggregation]
