@@ -1,3 +1,16 @@
 = Teradata 优化
 :toc: manual
 
+== 背景
+
+Teradata 在数据管理和数据分析领域有超过 40 年的历史，特别针对金融客户 Teradata 有独到的优势，特别是在金融领域的业务分析，基于利润领域建模等，Teradata 的前身是 CityBank 的高级技术实验室(Advanced Technology Group)，Teradata 公司成立于 1979 年，目前公司增长的 3 大支柱：业务分析、(云)产品、咨询服务，2019 全年预计年收入为 2.3 B 美金。
+
+MongoDB 作为全球领先的现代通用数据平台，MongoDB 优势在帮助开发人员及其所构建的应用充分发挥软件和数据的力量，我们提出的基于 MongoDB 对 Teradata 进行优化，不是使用 MongoDB 替换 Teradata，而是使用 MongoDB 构建一个操作型数据层，将一些频繁访问的 MongoDB 数据复制到这个操作型数据层，同时对应用侧做微调，将查询重新定位到该操作数据层。这样就相当于将 Teradata 上的一部分负载 offload 到 MongoDB, 增加了业务敏捷性，降低了总体成本.
+
+== Teradata offload 案例
+
+让我们来看一下西班牙银行替换 Teradata 和 Microstrategy 来增长业务和降低成本的案例。
+
+西班牙银行在以 Teradata 和 Microstrategy 为主的数据分析平台上去实现一个新的功能或做一个业务决策需要好几天，抑制了收入增长；一些分支机构需要一个应用程序来提供客户的单一视图以及对新产品和服务的实时建议，同时访问 Teradata 和 Microstrategy 中的数据有数分钟的延迟。
+
+那么西班牙银行是怎么解决这些问题的？ 

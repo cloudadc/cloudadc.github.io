@@ -3,173 +3,274 @@
 
 == 概述
 
-本文档目的时说如何通过 MongoDB Ops Manager 监控和警告功能对一个存在的 MongoDB 分片集群进行导入管理。整体架构如下图：
+本文档说明如何安装一个可用于生产的 MongoDB Ops Manager, 以及如何通过 Ops Manager 监控和警告的功能对一个 MongoDB 分片集群进行管理。具体内容包括：
 
-image:img/ops-demo-arch.png[]
+* MongoDB Ops Manager 4.1 安装
+* 基本监控报警展示
+* HTTPS 配置
+* 备份和 恢复
 
-* Ops Manager 和对应的应用数据库部署在 opsmgr.example.com Linux 服务器上
-* MongoDB 分片集群部署在 mongod.example.com Linux 服务器上
-* Ops Manager 导入已经存在的分片集群，并通过 http 服务访问查看监控 Metrics
+本部分操作可以在 AWS Linux 或 RHEL 7 上进行。如果所有操作在 AWS 上，所使用到的 AWS  服务包括：
 
-== 软件下载 & 操作系统准备
+* EC2 - 运行 Ops Manager 及所需的组件、数据库等
+* Route 53 - 确保 EC2 节点之间可以通过域名访问
+* VPC - 确保 Ops Manager 及所需的组件在虚拟私有网络。
 
-[source, bash]
-.*1. link:https://www.mongodb.com/download-center/enterprise[点击官方下载页面]，下载如下 rpm 包*
-----
-mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm	
-mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm	
-mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm	
-mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm
-----
+详细关于 EC2、Route 53、VPC 参照 AWS 相关文档及 说明。
 
 [source, bash]
-.*2. 配置 Ops Manager 服务器主机名 opsmgr.example.com*
+.*确保 aws 命令行已安装，相关认证完毕，可以通过命令行执行命令启动，配置 EC2 等*
 ----
-hostnamectl set-hostname opsmgr.example.com
+$ aws --version
+aws-cli/1.16.204 Python/2.7.10 Darwin/18.7.0 botocore/1.12.194
 ----
+
+== MongoDB Ops Manager 安装
+
+=== 安装架构 
+
+Ops Manager 安装架构如下图：
+
+image:img/ops-manager-ha-single-database.png[]
+
+本部分采用简单高可用的生产部署架构，详细参照 link:https://docs.opsmanager.mongodb.com/v4.1/core/deployments/#production-installs[MongoDB 官方文档]。
+
+=== 环境准备
+
+如安装架构所示，准备三台服务器，相关配置如下
+
+|===
+|主机编号 |域名 |CPU |内存 |磁盘
+
+|Host 1
+|host01.example.com
+|4
+|16 GB
+|80 GB
+
+|Host 2
+|host02.example.com
+|4
+|16 GB
+|80 GB
+
+|Host 3
+|host03.example.com
+|4
+|16 GB
+|80 GB
+|===
 
 [source, bash]
-.*3. 配置 Ops Manager 服务器静态 IP*
+.*AWS 上操作脚步（如果基于 RHEL 则忽略次步骤）*
 ----
-nmcli connection modify eth0 ipv4.addresses 192.168.33.100/24
-nmcli connection modify eth0 ipv4.gateway 192.168.33.1
-nmcli connection modify eth0 ipv4.method manual
-nmcli connection modify eth0 connection.autoconnect yes
-nmcli connection reload
-nmcli connection up eth0
-----
+// set hostname
+sudo hostnamectl set-hostname host01.example.com
+sudo hostnamectl set-hostname host02.example.com
+sudo hostnamectl set-hostname host03.example.com
 
-[source, bash]
-.*4. 配置分片集群主机名 mongod.example.com*
-----
-hostnamectl set-hostname mongod.example.com
-----
+// register a DNS A record hostname with private IP to Route 53
+PRIVATEIPS="IP01 IP02 IP03"
+HOSTNUM=1
+for IP in $PRIVATEIPS
+do
+ export FQDN="host0$HOSTNUM.example.com"
+ echo "Registering $host as $FQDN"
+cat <<EOF> newhost0$HOSTNUM.json
+{
+  "Comment": "CREATE an A record ",
+  "Changes": [{
+    "Action": "UPSERT",
+    "ResourceRecordSet": {
+      "Name": "$FQDN",
+      "Type": "A",
+      "TTL": 300,
+      "ResourceRecords": [{ "Value":"$IP"}]
+    }
+  }]
+}
+EOF
+aws route53 change-resource-record-sets --hosted-zone-id XXXOOOZZZJJ --change-batch file://newhost0$HOSTNUM.json 
+let "HOSTNUM=HOSTNUM+1"
+done
 
-[source, bash]
-.*5. 配置分片集群静态 IP*
-----
-nmcli connection modify eth0 ipv4.addresses 192.168.33.101/24
-nmcli connection modify eth0 ipv4.gateway 192.168.33.1
-nmcli connection modify eth0 ipv4.method manual
-nmcli connection modify eth0 connection.autoconnect yes
-nmcli connection reload
-nmcli connection up eth0
-----
-
-[source, bash]
-.*6. 两台服务器上分别执行如下命令添加静态域名解析映射*
-----
-echo "192.168.33.101  mongod.example.com" >> /etc/hosts
-echo "192.168.33.100  opsmgr.example.com" >> /etc/hosts
-----
-
-[source, bash]
-.*7. 两台服务器上分别执行如下命令验证静态域名解析映射*
-----
-for i in opsmgr mongod ; do ping $i.example.com -c3 ; done
-----
-
-[source, bash]
-.*8. 两台服务器上创建 mongod 用户*
-----
-// root 权限下常见用户，并添加用户为 sudo 用户
-useradd mongod
-passwd mongod
-usermod -aG wheel mongod
-exit
-
-//切换到 mongod，创建目录
-su - mongod
-mkdir rpms
-----
-
-[source, bash]
-.*9. 拷贝第一步下载完成的 rpm 包到两台服务器*
-----
-scp *.rpm mongod@opsmgr.example.com:~/rpms
-scp mongodb-enterprise-*.rpm mongod@mongod.example.com:~/rpms
-----
-
-== Ops Manager 安装
-
-本部分所有操作在 Ops Manager 服务器上进行。
-
-=== 依赖应用数据库安装
-
-[source, bash]
-.*1. DB 安装*
-----
-sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
-sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
-sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y
+// check in 3 hosts, to make sure the DNS is work as expect, the referenced A record IP will list hints the DNS work as expected.
+for i in 1 2 3 ; do dig host0$i.example.com +short ; done
 ----
 
 [source, bash]
-.*2. 配置并启动数据库*
+.*分别在三台服务器上挂载磁盘，执行 MongoDB 生产部署配置*
 ----
-//创建数据库存储文件及内部通信加密文件
-$ mkdir -p ~/data/r{0,1,2}
-$ openssl rand -base64 755 > ~/data/keyfile
-$ chmod 400 ~/data/keyfile
+sudo mkfs -t xfs /dev/nvme1n1
+sudo mkdir /data
+sudo mount /dev/nvme1n1 /data
+grep -q /dev/nvme1n1 /etc/fstab || echo "/dev/nvme1n1       /data          xfs     defaults,noatime   1  1" | sudo tee --append /etc/fstab
+sudo findmnt --verify 
 
-//创建安全登录账户
-$ mongod --port 27000 --dbpath ~/data/r0/
-$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
+grep -q 'vm.zone_reclaim_mode' /etc/sysctl.conf || echo "vm.zone_reclaim_mode=0
+" | sudo tee --append /etc/sysctl.conf
+sudo sysctl -w  vm.zone_reclaim_mode=0
 
-//启动
-$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; done
+grep -q 'vm.swappiness' /etc/sysctl.conf || echo "vm.swappiness=1" | sudo tee --append /etc/sysctl.conf
+sudo sysctl -w  vm.swappiness=1
 
-//初始化
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.initiate()'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("opsmgr.example.com:27001")'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("opsmgr.example.com:27002")'
+for limit in fsize cpu as memlock
+do
+  grep "mongodb" /etc/security/limits.conf | grep -q $limit || echo -e "mongod     hard   $limit    unlimited\nmongod     soft    $limit   unlimited" | sudo tee --append /etc/security/limits.conf
+done
 
-//集群初始化验证
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.isMaster()'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.status()'
+for limit in nofile noproc
+do
+  grep "mongodb" /etc/security/limits.conf | grep -q $limit || echo -e "mongod     hard   $limit    64000\nmongod     soft    $limit   64000" | sudo tee --append /etc/security/limits.conf
+done
+
+sudo reboot
 ----
 
-=== 安装
+=== 安装 appDB
+
+本部分在三个 host 上都执行。
 
 [source, bash]
-.*1. Ops 安装*
+.*1. 配置 yum 源（如果离线安装，可提前下载 rpm 包）*
 ----
-sudo yum localinstall mongodb-mms-4.0.12.50517.20190605T1533Z-1.x86_64.rpm
-----
-
-[source, bash]
-.*2. 配置 Ops 连接数据库（/opt/mongodb/mms/conf/conf-mms.properties）*
-----
-mongo.mongoUri=mongodb://root:mongo@opsmgr.example.com:27000,opsmgr.example.com:27001,opsmgr.example.com:27002/admin?replicaSet=repl-app-db&maxPoolSize=150
-----
-
-[source, bash]
-.*3. 启动 Ops Manager*
-----
-$ sudo systemctl start mongodb-mms.service
+cat << 'ENDOFDOC' | sudo tee /etc/yum.repos.d/mongodb-enterprise.repo
+[mongodb-enterprise]
+name=MongoDB Enterprise Repository
+baseurl=https://repo.mongodb.com/yum/amazon/2/mongodb-enterprise/4.0/$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+ENDOFDOC
 ----
 
 [source, bash]
-.*4. 查看 Ops Manager 服务监听的端口*
+.*2. 安装 MongoDB*
 ----
-$ netstat -antulop | grep 8080
-tcp6       0      0 :::8080                 :::*                    LISTEN      -                    off (0.00/0/0)
+sudo yum install -y mongodb-enterprise
 ----
 
-=== 初始化配置
+[source, bash]
+.*3. 创建数据库目录*
+----
+sudo mkdir /data/appdb
+sudo chown mongod:mongod /data/appdb
+----
 
-*1. 访问 http://opsmgr.example.com:8080 时，点击 Register 链接注册一个全局管理账户*
+[source, bash]
+.*4. 创建配置文件*
+----
+cat << 'ENDCONF' | sudo tee /etc/mongod.conf
+# mongod.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# where to write logging data.
+systemLog:
+  destination: file
+  logAppend: true
+  path: /data/appdb/mongod.log
+
+# Where and how to store data.
+storage:
+  dbPath: /data/appdb
+  journal:
+    enabled: true
+  wiredTiger:
+    engineConfig:
+       cacheSizeGB: 2
+
+
+# how the process runs
+processManagement:
+  fork: true  # fork and run in background
+  pidFilePath: /var/run/mongodb/mongod.pid  # location of pidfile
+  timeZoneInfo: /usr/share/zoneinfo
+
+# network interfaces
+net:
+  port: 27017
+  bindIpAll: true
+
+replication:
+  replSetName: appdbRS
+ENDCONF
+----
+
+NOET: 生产环境下最佳实践配置安全，启用内部认证。
+
+[source, bash]
+.*5. 启动 MongoDB*
+----
+sudo systemctl start mongod
+sudo systemctl enable mongod
+----
+
+[source, bash]
+.*6. 初始化复制集*
+----
+mongo -eval 'rs.initiate()'
+mongo -eval 'rs.add("host02.mongosa.net:27017")'
+mongo -eval 'rs.add("host03.mongosa.net:27017")'
+----
+
+=== Ops Manager 安装 
+
+[source, bash]
+.*1. 到 https://www.mongodb.com/subscription/downloads/archived 下载相应的版本*
+----
+$ curl -OL https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm
+$ ls
+mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm
+----
+
+[source, bash]
+.*2. 安装*
+----
+$ sudo yum localinstall mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm -y
+----
+
+[source, bash]
+.*3. 编辑 /opt/mongodb/mms/conf/conf-mms.properties，配置 appDB*
+----
+mongo.mongoUri=mongodb://host01.example.com:27017,host02.example.com:27017,host03.example.com:27017/?maxPoolSize=150&replicaSet=appdbRS
+----
+
+[source, bash]
+.*4. 启动 Ops Manager*
+----
+$ sudo service mongodb-mms start
+----
+
+[source, bash]
+.*5. 查看 Ops Manager HTTP 服务监听的端口*
+----
+$ sudo netstat -antulop | grep 8080
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      3258/mms-app         off (0.00/0/0)
+----
+
+=== Ops Manager 初始化配置
+
+Ops Manager 安装成功后 HTTP 服务会启动，通过 HTTP 服务可以完成对 Ops Manager 初始化配置。
+
+*1. 访问 http://host02.example.com:8080 时，点击 Register 链接注册一个全局管理账户*
 
 image:img/ops-register.png[]
 
-选择 `password1!` 为密码，在弹出的页面根据提示完成配置：
+在弹出的页面配置如下：
+
+* Email Address : kylin.soong@mongodb.com 
+* Password      : password1!
+* First Name    : Kylin
+* Last Name     : Soong
 
 *2. 注册完成初次登陆会定向到 Configure Ops Manager 页面*
 
 在 Configure Ops Manager 页面完成初始化配置
 
 * Web Server
-** URL To Access Ops Manager - http://opsmgr.example.com:8080
+** URL To Access Ops Manager - http://host02.example.com:8080
 ** Client Certificate Mode   - None
 ** 其它项使用默认配置
 
@@ -229,11 +330,11 @@ image:img/ops-register.png[]
 
 image:img/opsmgr-install-finished.png[]
 
-== Agent 安装
+=== Agent 安装
 
 NOTE: 在 Ops Manager 新版本中 Agent 不需要手动安装，本部分可以跳过。
 
-=== 安装 Automation Agent 
+==== 安装 Automation Agent 
 
 NOTE: Automation Agent 可以在需要部署导入时安装
 
@@ -262,7 +363,7 @@ sudo systemctl start mongodb-mms-automation-agent.service
 
 NOTE: 部署界面有 安装 agent 的介绍。
 
-=== 安装 Monitoring Agent
+==== 安装 Monitoring Agent
 
 NOTE: 可以在创建完 Project 后执行这部分。
 
@@ -297,13 +398,13 @@ globalAuthPassword=mongo
 sudo systemctl start mongodb-mms-monitoring-agent.service
 ----
 
-=== 安装 Backup Agent
+=== 创建备份数据库
 
-[source, bash]
-.*TODO*
-----
-//TODO
-----
+在 Ops Manager 创建一个 Project `'blockstore'
+
+image:img/blockstore-project.png[]
+
+然后在这个工程下创建一个 三节点复制集。 
 
 == 准备测试集群
 

@@ -103,6 +103,51 @@ db.oplog.rs.stats().maxSize
 db.adminCommand({replSetResizeOplog: 1, size: 30000})
 ----
 
+== 3.4 及以前版本如何调整复制集 Oplog 的大小
+
+在集群运行状态下如果需要调整 Oplog 的大小，在 MongoDB 3.4 版本下需要通过如下步骤完成：
+
+1. 选择一个从节点，执行 db.shutdownServer() 停止服务
+2. 修改 mongod 的配置文件将 replication 下的 replSetName 注释掉（为了可以单实例运行 mongod）
+3. 修改 net.port 配置（确保单实例运行 mongod 监听到不同的端口）
+4. 基于修改完的配置文件单实例运行 mongod
+5. 备份 oplog.rs 集合（例如执行 mongodump --db local --collection 'oplog.rs' --port 37017）
+6. 将当前 oplog.rs 中的最后一条数据备份（db.temp.save( db.oplog.rs.find( { }, { ts: 1, h: 1 } ).sort( {$natural : -1} ).limit(1).next() )）
+7. 删除 oplog.rs 集合
+8. 创建一个新的 oplog.rs 集合，并指定大小（db.runCommand( { create: "oplog.rs", capped: true, size: (50 * 1024 * 1024 * 1024) } )），50 * 1024 * 1024 * 1024 的大小为 50 GB
+9. 将备份集合中的最后一条数据添加到新创建的 oplog.rs 集合中（db.oplog.rs.save( db.temp.findOne() )）
+10. 停止单实例运行 mongod
+11. 对照第 2 步，将注释掉的 replSetName 取消，确保和原始配置一致
+12. 对照第 3 步，将 net.port  配置为和初始端口一致
+13. 基于更新后的配置文件启动 mongod
+14. 确保 mongod 启动完成加入分片复制集后在主节点执行 rs.stepDown()
+15. 重复步骤 1 - 14，确保所有节点都重新设定 Oplog 完成。
+
+[source, json]
+.*相关命令*
+----
+db.shutdownServer()
+
+mongod --config mongod.conf
+
+mongodump --db local --collection 'oplog.rs' --port 27005 -o oplog.rs.dump
+
+use local
+db.temp.drop()
+db.temp.save( db.oplog.rs.find( { }, { ts: 1, h: 1 } ).sort( {$natural : -1} ).limit(1).next() )
+db.temp.find()
+
+db.oplog.rs.drop()
+db.runCommand( { create: "oplog.rs", capped: true, size: (50 * 1024 * 1024 * 1024) } )
+db.oplog.rs.save( db.temp.findOne() )
+db.oplog.rs.find()
+db.temp.drop()
+
+use admin
+db.shutdownServer()
+----
+
+
 == 常见不停机维护步骤
 
 MongoDB 复制集一主多从架构，维护可以做到不停机，具体维护，例如升级可以先在从节点上进行，让所有从节点进行完成后强制进行一次选举，让未进行维护的主节点变成从节点，然后进行维护操作。本部分说明常见不停机维护的一般步骤。
