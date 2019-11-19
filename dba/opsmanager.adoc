@@ -398,106 +398,78 @@ globalAuthPassword=mongo
 sudo systemctl start mongodb-mms-monitoring-agent.service
 ----
 
-=== 创建备份数据库
+=== 创建 MongoDB HA Blockstore
 
-在 Ops Manager 创建一个 Project `'blockstore'
+MongoDB Ops Manager 支持的数据备份选择包括：
+
+1. 文件系统 + SAN
+2. 文件系统 + NAS
+3. AWS S3 Blockstore
+4. MongoDB HA Blockstore
+5. MongoDB Blockstore
+
+关于不同的备份选择的优缺点参照 link:https://docs.opsmanager.mongodb.com/v4.0/core/backup-preparations/#backup-configuration-options[官方翁当]，本部分选择 MongoDB HA Blockstore。
+
+首先在 Ops Manager 创建一个 Project `blockstore'
 
 image:img/blockstore-project.png[]
 
-然后在这个工程下创建一个 三节点复制集。 
-
-== 准备测试集群
-
-NOTE: 本部分集群为了测试使用，与 Ops Manager 安装不相关，本部分所有操作在 mongod.example.com 服务器上进行。
+然后在这个工程下创建一个 MongoDB 三节点复制集，分别运行在三个 Host 上，监听的端口都是 27018：
 
 [source, bash]
-.*MongoDB 安装*
 ----
-sudo yum localinstall mongodb-enterprise-server-4.0.10-1.el7.x86_64.rpm -y
-sudo yum localinstall mongodb-enterprise-tools-4.0.10-1.el7.x86_64.rpm -y
-sudo yum localinstall mongodb-enterprise-shell-4.0.10-1.el7.x86_64.rpm -y
+host01.example.com:27018,host02.example.com:27018,host03.example.com:27018
 ----
 
-=== 分片集群
+=== Backup 配置
+
+要开启 Ops Manager 的备份功能，需要完成 Backup 配置。Backup 配置主要包括：
+
+* HEAD DB - HEAD DB 中的数据和生产部署中的数据一致，它根据 link:https://docs.opsmanager.mongodb.com/v4.0/core/backup-preparations/#snapshot-frequency-and-retention[快照策略]，周期性生成快照。配置包括 HEAD 目录等。
+* Blockstore - 使用上面步骤准备的 MongoDB HA Blockstore，具体配置包括连接 URL，认证等
 
 [source, bash]
-.*执行如下脚本构建一个 2 分片、2 mongos、1 ConfigServer 集群*
+.*1. 在 Ops Manager 的安装 Host 上创建一个 HEAD 目录*
 ----
-//创建数据库存储文件及内部通信加密文件
-$ mkdir -p ~/data/ra{0,1,2}
-$ mkdir -p ~/data/rb{0,1,2}
-$ mkdir -p ~/data/cs{0,1,2}
-$ openssl rand -base64 755 > ~/data/keyfile
-$ chmod 400 ~/data/keyfile
-
-//启动 ConfigServer，初始化，创建管理用户，并添加备节点
-$ mongod --port 26000 --dbpath ~/data/cs0/
-$ mongo admin --port 26000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --configsvr --dbpath ~/data/cs$i --logpath ~/data/cs$i/mongo.log --port 2600$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-cs ; done
-
-$ mongo admin --port 26000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("mongod.example.com:26001")'
-$ mongo admin --port 26000 -u root -p mongo --eval 'rs.add("mongod.example.com:26002")'
-
-//启动 mongos，并查看分片状态
-$ mongos --configdb 'repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002' --logpath ~/data/mongos1.log --port 27017 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
-$ mongos --configdb 'repl-cs/mongod.example.com:26000,mongod.example.com:26001,mongod.example.com:26002' --logpath ~/data/mongos2.log --port 27018 --bind_ip 0.0.0.0 --fork --keyFile ~/data/keyfile
-
-$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
-$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
-
-//启动分片a，初始化，创建管理账户，添加备节点
-$ mongod --port 27000 --dbpath ~/data/ra0/
-$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/ra$i --logpath ~/data/ra$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-a ; done
-
-$ mongo admin --port 27000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27001")'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27002")'
-
-//启动分片b，初始化，创建管理账户，添加备节点
-$ mongod --port 28000 --dbpath ~/data/rb0/
-$ mongo admin --port 28000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-$ for i in 0 1 2 ; do mongod --shardsvr --dbpath ~/data/rb$i --logpath ~/data/rb$i/mongo.log --port 2800$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-b ; done
-
-$ mongo admin --port 28000 -u root -p mongo --eval "rs.initiate()"
-$ mongo admin --port 28000 -u root -p mongo --eval 'rs.add("mongod.example.com")'
-$ mongo admin --port 28000 -u root -p mongo --eval 'rs.add("mongod.example.com")'
-
-//配置分片，并查看分片状态
-$ mongo admin --port 27017 -u root -p mongo --eval 'sh.addShard("repl-a/mongod.example.com:27000,mongod.example.com:27001,mongod.example.com:27002")'
-$ mongo admin --port 27017 -u root -p mongo --eval 'sh.addShard("repl-b/mongod.example.com:28000,mongod.example.com:28001,mongod.example.com:28002")'
-
-$ mongo admin --port 27017 -u root -p mongo --eval 'sh.status()'
-$ mongo admin --port 27018 -u root -p mongo --eval 'sh.status()'
+sudo mkdir /data/heads
+sudo chown mongodb-mms:mongodb-mms /data/heads
 ----
 
-=== 三节点复制集
+*2. Backup Initial Configuration*
+
+在 Ops Manger 右上角点击 *Admin*，在最左边导航栏选择 *Backup*，在弹出界面中 Head Directory 输入框中输入 `/data/heads`
+
+image:img/opsmgr-config-backup-head.png[]
+
+点击 *Set* 按钮，然后继续点击 *Enable Daemon* 按钮，
+
+image:img/opsmgr-config-a-blockstore.png[]
+
+在弹出的界面上选择 *Configure a Blockstore*，然后在 <hostname>:<port> 输入
 
 [source, bash]
-.*执行如下脚本构建一个 3 节点复制集*
 ----
-//创建数据库存储文件及内部通信加密文件
-$ mkdir -p ~/data/r{0,1,2}
-$ openssl rand -base64 755 > ~/data/keyfile
-$ chmod 400 ~/data/keyfile
-
-//创建安全登录账户
-$ mongod --port 27000 --dbpath ~/data/r0/
-$ mongo admin --port 27000 --eval 'db.createUser({user: "root", pwd: "mongo", roles: [{ role:"root", db: "admin" }]})'
-
-//启动
-$ for i in 0 1 2 ; do mongod --dbpath ~/data/r$i --logpath ~/data/r$i/mongo.log --port 2700$i --bind_ip 0.0.0.0 --fork --auth --keyFile ~/data/keyfile --replSet repl-app-db ; done
-
-//初始化
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.initiate()'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27001")'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.add("mongod.example.com:27002")'
-
-//集群初始化验证
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.isMaster()'
-$ mongo admin --port 27000 -u root -p mongo --eval 'rs.status()'
+host01.example.com:27018,host02.example.com:27018,host03.example.com:27018
 ----
+
+配置完其他输入项后点击 *Save* 完成 Backup 配置。
+
+== 备份
+
+=== 备份一个集群
+
+*1. 点击 Backup*
+
+* 在 Ops Manager 控制台点击左边 *Backup*，进入 Backup 配置界面
+
+image:img/ops-backup-setting.png[]
+
+* 点击 *Begin Setup* 按钮开始备份一个集群
+* 点击 *Next* 按钮进入 Configration 界面开始配置备份
+* 点击 *Next* 按钮进入 Monitor Agent 验证
+* 点击 *Next* 按钮进入 Backup Agent 验证
+* 点击 *Next* 按钮进入 Enable Backup 界面
+
 
 == 导入一个存在的集群
 
@@ -637,4 +609,26 @@ image:img/opsmgr-data-insert-doc.png[]
 该页面会列出一定时间段内 Ops Manager 检测到的慢查询。
 
 image:img/opsmgr-perf-advisor.png[]
+
+
+== TODO 
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
 
