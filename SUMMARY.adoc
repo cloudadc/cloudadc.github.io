@@ -2,6 +2,7 @@
 
 . link:README.adoc[MongoDB]
 .. link:viewpoint/presentation.adoc[为什么 MongoDB]
+.. link:viewpoint/5thingsfornosql.adoc[NOSQL 选择五维度]
 .. link:viewpoint/oversea.adoc[MongoDB 助力企业出海]
 .. link:viewpoint/td.adoc[Teradata 优化]
 .. link:viewpoint/cards.adoc[MongoDB 对话卡片]
