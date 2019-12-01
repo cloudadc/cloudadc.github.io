@@ -16,3 +16,28 @@ MongoDB 作为全球领先的现代通用数据平台，MongoDB 优势在帮助�
 那么西班牙银行是怎么解决这些问题的？ 基于 MongoDB 构建一个客户单一视图，MongoDB 模型的灵活性和扩展能力能够快速适应新的业务需求；高效，查询返回在毫秒级，MongoDB 聚合框架提供了实时分析的能力；分布式架构，以及普通硬件运行，降低了总体成本，提高了服务可用度。
 
 整体来看西班牙银行基于  Teradata 和 Microstrategy 替换 Teradata 极大了节约了总成本；应用的开发和部署可以在 6 个月内完成，新的业务决策可以容易的部署和执行，为公司带来了新的收入；目前数据平台的容量，允许分支机构可以在很短时间导入所有客户数据，提高用户体验。
+
+== Teradata 核心组件
+
+[cols="2,5a"]
+|===
+|名称 | 解释
+
+|DATA MART(DM)
+|
+* 数据仓库的一个子集，数据集市是数据仓库逻辑模型的面向业务的切片，可为一小组用户提供服务。 许多数据集市仅需要数据仓库中完整表中的一部分数据。 例如，集市可能仅具有销售交易，产品和库存记录。 大多数数据集市只有5-20个表，而不是4,000个表。
+* 数据集市通常是非规范化，通常保留的是对数据进行排序、聚合和汇总的结果，而不是保留所有数据。
+* 一些数据集市每周或每月完全重新加载；删除所有数据并刷新它们相对容易，例如报告仅查看最近 30 天的交易。
+
+|Master data management(MDM)
+|
+* MDB 是一种定义和管理企业/组织关键数据的方法，以提供数据集成，单一参考点等，通常这些数据被用来做一些关键决策。
+* MDB 的目的是从数据分析平台获取最大的价值
+* *Gartner* -  Master data management (MDM) is a technology-enabled discipline in which business and IT work together to ensure the uniformity, accuracy, stewardship, semantic consistency and accountability of the enterprise’s official shared master data assets. Master data is the consistent and uniform set of identifiers and extended attributes that describes the core entities of the enterprise including customers, prospects, citizens, suppliers, sites, hierarchies and chart of accounts.
+
+|Operational Data Store(ODS)
+|
+* ODS 主要用来做操作型报告/分析，通常是多个事务型系统数据（生产数据）的一个快照用来支持操作型报告/分析。它使企业/组织能够将来自各种来源的原始格式的数据组合到一个目标中，以使其可用于快速业务报告/分析。
+* ODS 是企业数据仓库中数据的一个重要来源。
+* 数据仓库用来做一些战略性的决策，ODS 做一些短期 day to day 的决策。
+|===

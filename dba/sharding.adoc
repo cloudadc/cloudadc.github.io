@@ -3,152 +3,149 @@
 
 == Chunk
 
-=== 修改 Chunk 默认大小
+[cols="2,5a"]
+|===
+|条目 | 说明
 
+|修改 Chunk 默认大小
+|
 Chunk 默认大小为 64 MB，允许 Chunk 大小的范围是 1MB - 1024MB。
 
+连接到 mongos,修改 Chunk 大小为 100 MB
+
 [source, javascript]
 ----
-// 连接到 mongos
-
-//修改 Chunk 大小为 1MB
 use config
-db.settings.save( { _id:"chunksize", value: 1 } )
+db.settings.save( { _id:"chunksize", value: 100 } )
 ----
 
-=== 配置集合分片
+|配置集合分片
+|
+执行如下命令，如果集合不为空，需要基于片键创建索引。
+
+[source, javascript]
+----
+sh.enableSharding("DB")
+sh.shardCollection("DB.COLLECTION", {X: 1})
+----
+
+通过 admin command 也可以执行集合分片
 
 [source, javascript]
 ----
-sh.enableSharding("testSharding")
-db.adminCommand({shardCollection: "testSharding.people", key: {x: 1}})
-
-//集合分片后会创建一个 Chunk 在主分片
-use config
-db.chunks.find({"ns" : "testSharding.people"}).pretty()
-{
-	"_id" : "testSharding.people-x_MinKey",
-	"ns" : "testSharding.people",
-	"min" : {
-		"x" : { "$minKey" : 1 }
-	},
-	"max" : {
-		"x" : { "$maxKey" : 1 }
-	},
-	"shard" : "repl-b",
-	"lastmod" : Timestamp(1, 0),
-	"lastmodEpoch" : ObjectId("5d79bb8e1d79c9b0a46a5b1d"),
-	"history" : [
-		{
-			"validAfter" : Timestamp(1568258958, 6),
-			"shard" : "repl-b"
-		}
-	]
-}
+db.adminCommand({shardCollection: "DB.COLLECTION", key: {X: 1}})
 ----
 
-=== 向初始化的 chunk 添加数据
+|jumbo chunk
+|当片键是一个不变的值时，chunk 是不会分裂的，运行 link:files/jumbo.js[jumbo.js]，它会查人 1秒条文档，约 1GB，其中 accountNo 为一不变的值，运行如下命令会产生一个 jumbo chunk
+[source, javascript]
+----
+sh.enableSharding("testJumbo")
+sh.shardCollection("testJumbo.account", {accountNo: 1})
+use testJumbo
+load("jumbo.js")
+----
 
-[source, java]
-.*1. 执行如下命令插入 500 条数据*
-----
-java -jar target/bulkLoad-jar-with-dependencies.jar -u "mongodb://localhost:27017" -d testSharding -c people -f people.json -s -n 500 -k x --start 0 -m
-----
+|Chunk 分裂
+|当 Chunk 的大小大于 Chunk Size 或 大于一个 Chunk 允许的最大文档数目时，Chunk 就会分裂。
+
+执行 link:files/splits.js[splits.js]，它会查人 200k 条文档，约 200 MB，其中 accountNo 为片键，单调递增，构建输出提示查看 chunk 分裂情况：
 
 [source, javascript]
-.*2. 查看分片 Chunk 分布情况*
 ----
-// 执行 sh.status()
-sh.status()
-...
-        {  "_id" : "testSharding",  "primary" : "repl-b",  "partitioned" : true,  "version" : {  "uuid" : UUID("07ea271e-9ae7-4588-9f9b-7ad64ddf899d"),  "lastMod" : 1 } }
-                testSharding.people
-                        shard key: { "x" : 1 }
-                        unique: false
-                        balancing: true
-                        chunks:
-                                repl-b	1
-                        { "x" : { "$minKey" : 1 } } -->> { "x" : { "$maxKey" : 1 } } on : repl-b Timestamp(1, 0) 
-
-// 查询 chunks 集合
-use config
-db.chunks.find({"ns" : "testSharding.people"}).pretty()
+sh.enableSharding("testSplits")
+sh.shardCollection("testSplits.account", {accountNo: 1})
+use testSplits
+load("splits.js")
 ----
 
-=== Chunk 分裂
+|手动 Chunk 分裂
+|本部分手动进行 Chunk 分裂
 
-当 Chunk 的大小大于 Chunk Size 或 大于一个 Chunk 允许的最大文档数目时，Chunk 就会分裂。
+创建分片集合：
 
 [source, javascript]
-.*1. 执行如下命令插入 500 条数据*
 ----
-java -jar target/bulkLoad-jar-with-dependencies.jar -u "mongodb://localhost:27017" -d testSharding -c people -f people.json -s -n 1100 -k x --start 500 -m
+sh.enableSharding("testSplitsManually")
+sh.shardCollection("testSplitsManually.account", {accountNo: 1})
 ----
 
+停止 Balancer 的运行
+
 [source, javascript]
-.*2. 查看分片 Chunk 分布情况*
 ----
-//集合分片后会创建一个 Chunk 在主分片
-use config
-db.chunks.find({"ns" : "testSharding.people"}).pretty()
-{
-	"_id" : "testSharding.people-x_MinKey",
-	"lastmod" : Timestamp(2, 0),
-	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
-	"ns" : "testSharding.people",
-	"min" : {
-		"x" : { "$minKey" : 1 }
-	},
-	"max" : {
-		"x" : "1"
-	},
-	"shard" : "repl-c",
-	"history" : [
-		{
-			"validAfter" : Timestamp(1568611132, 15),
-			"shard" : "repl-c"
-		}
-	]
-}
-{
-	"_id" : "testSharding.people-x_\"1\"",
-	"lastmod" : Timestamp(2, 1),
-	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
-	"ns" : "testSharding.people",
-	"min" : {
-		"x" : "1"
-	},
-	"max" : {
-		"x" : "93"
-	},
-	"shard" : "repl-b",
-	"history" : [
-		{
-			"validAfter" : Timestamp(1568611061, 6),
-			"shard" : "repl-b"
-		}
-	]
-}
-{
-	"_id" : "testSharding.people-x_\"93\"",
-	"lastmod" : Timestamp(1, 3),
-	"lastmodEpoch" : ObjectId("5d7f1af51d79c9b0a46c237d"),
-	"ns" : "testSharding.people",
-	"min" : {
-		"x" : "93"
-	},
-	"max" : {
-		"x" : { "$maxKey" : 1 }
-	},
-	"shard" : "repl-b",
-	"history" : [
-		{
-			"validAfter" : Timestamp(1568611061, 6),
-			"shard" : "repl-b"
-		}
-	]
-}
+sh.disableBalancing("testSplitsManually.account")
 ----
+
+执行 link:files/splitsManually.js[splitsManually.js]，进行手动 Chunk 分裂
+
+[source, javascript]
+----
+load("splitsManually.js")
+----
+
+查看 Chunk 分布情况
+
+[source, javascript]
+----
+db.chunks.find({ns: "testSplitsManually.account"}, {_id: 0, min: 1, max: 1, shard: 1})
+{ "min" : { "accountNo" : { "$minKey" : 1 } }, "max" : { "accountNo" : 10000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 10000 }, "max" : { "accountNo" : 20000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 20000 }, "max" : { "accountNo" : 30000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 30000 }, "max" : { "accountNo" : 40000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 40000 }, "max" : { "accountNo" : 50000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 50000 }, "max" : { "accountNo" : 60000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 60000 }, "max" : { "accountNo" : 70000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 70000 }, "max" : { "accountNo" : 80000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 80000 }, "max" : { "accountNo" : 90000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 90000 }, "max" : { "accountNo" : 100000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 100000 }, "max" : { "accountNo" : 110000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 110000 }, "max" : { "accountNo" : 120000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 120000 }, "max" : { "accountNo" : 130000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 130000 }, "max" : { "accountNo" : 140000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 140000 }, "max" : { "accountNo" : 150000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 150000 }, "max" : { "accountNo" : 160000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 160000 }, "max" : { "accountNo" : 170000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 170000 }, "max" : { "accountNo" : 180000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 180000 }, "max" : { "accountNo" : 190000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 190000 }, "max" : { "accountNo" : 200000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 200000 }, "max" : { "accountNo" : 210000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 210000 }, "max" : { "accountNo" : 220000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 220000 }, "max" : { "accountNo" : 230000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 230000 }, "max" : { "accountNo" : 240000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 240000 }, "max" : { "accountNo" : 250000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 250000 }, "max" : { "accountNo" : 260000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 260000 }, "max" : { "accountNo" : 270000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 270000 }, "max" : { "accountNo" : 280000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 280000 }, "max" : { "accountNo" : 290000 }, "shard" : "myShard_1" }
+{ "min" : { "accountNo" : 290000 }, "max" : { "accountNo" : { "$maxKey" : 1 } }, "shard" : "myShard_1" }
+----
+
+执行 link:files/splitsManuallyLoad.js[splitsManuallyLoad.js] 导入数据
+
+[source, javascript]
+----
+use testSplitsManually
+load("splitsManuallyLoad.js")
+----
+
+启用 Balancer
+
+[source, javascript]
+----
+sh.enableBalancing("testSplitsManually.account")
+----
+
+查看最终数据的分布
+
+[source, javascript]
+----
+db.chunks.aggregate([{$match: {"ns" : "testSplitsManually.account"}}, { $group: { _id: { shard: "$shard" }, count: { $sum: 1 } } }, { $sort : { "_id.shard" : 1 } } ])
+{ "_id" : { "shard" : "myShard_0" }, "count" : 15 }
+{ "_id" : { "shard" : "myShard_1" }, "count" : 15 }
+----
+
+|===
 
 === Chunk 常见 Troubleshooting 步骤
 

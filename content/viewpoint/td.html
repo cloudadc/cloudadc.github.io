@@ -120,7 +120,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.1.2" data-path="oversea.html">
+        <li class="chapter " data-level="1.1.2" data-path="5thingsfornosql.html">
+            
+                <a href="5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3" data-path="oversea.html">
             
                 <a href="oversea.html">
             
@@ -133,7 +146,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.1.3" data-path="td.html">
+        <li class="chapter active" data-level="1.1.4" data-path="td.html">
             
                 <a href="td.html">
             
@@ -146,7 +159,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.1.4" data-path="cards.html">
+        <li class="chapter " data-level="1.1.5" data-path="cards.html">
             
                 <a href="cards.html">
             
@@ -455,7 +468,109 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="teradata-&#x4F18;&#x5316;">Teradata &#x4F18;&#x5316;</h1>
-
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x80CC;&#x666F;</a></li>
+<li><a href="#_teradata_offload">Teradata offload &#x6848;&#x4F8B;</a></li>
+<li><a href="#_teradata">Teradata &#x6838;&#x5FC3;&#x7EC4;&#x4EF6;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x80CC;&#x666F;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Teradata &#x5728;&#x6570;&#x636E;&#x7BA1;&#x7406;&#x548C;&#x6570;&#x636E;&#x5206;&#x6790;&#x9886;&#x57DF;&#x6709;&#x8D85;&#x8FC7; 40 &#x5E74;&#x7684;&#x5386;&#x53F2;&#xFF0C;&#x7279;&#x522B;&#x9488;&#x5BF9;&#x91D1;&#x878D;&#x5BA2;&#x6237; Teradata &#x6709;&#x72EC;&#x5230;&#x7684;&#x4F18;&#x52BF;&#xFF0C;&#x7279;&#x522B;&#x662F;&#x5728;&#x91D1;&#x878D;&#x9886;&#x57DF;&#x7684;&#x4E1A;&#x52A1;&#x5206;&#x6790;&#xFF0C;&#x57FA;&#x4E8E;&#x5229;&#x6DA6;&#x9886;&#x57DF;&#x5EFA;&#x6A21;&#x7B49;&#xFF0C;Teradata &#x7684;&#x524D;&#x8EAB;&#x662F; CityBank &#x7684;&#x9AD8;&#x7EA7;&#x6280;&#x672F;&#x5B9E;&#x9A8C;&#x5BA4;(Advanced Technology Group)&#xFF0C;Teradata &#x516C;&#x53F8;&#x6210;&#x7ACB;&#x4E8E; 1979 &#x5E74;&#xFF0C;&#x76EE;&#x524D;&#x516C;&#x53F8;&#x589E;&#x957F;&#x7684; 3 &#x5927;&#x652F;&#x67F1;&#xFF1A;&#x4E1A;&#x52A1;&#x5206;&#x6790;&#x3001;(&#x4E91;)&#x4EA7;&#x54C1;&#x3001;&#x54A8;&#x8BE2;&#x670D;&#x52A1;&#xFF0C;2019 &#x5168;&#x5E74;&#x9884;&#x8BA1;&#x5E74;&#x6536;&#x5165;&#x4E3A; 2.3 B &#x7F8E;&#x91D1;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>MongoDB &#x4F5C;&#x4E3A;&#x5168;&#x7403;&#x9886;&#x5148;&#x7684;&#x73B0;&#x4EE3;&#x901A;&#x7528;&#x6570;&#x636E;&#x5E73;&#x53F0;&#xFF0C;MongoDB &#x4F18;&#x52BF;&#x5728;&#x5E2E;&#x52A9;&#x5F00;&#x53D1;&#x4EBA;&#x5458;&#x53CA;&#x5176;&#x6240;&#x6784;&#x5EFA;&#x7684;&#x5E94;&#x7528;&#x5145;&#x5206;&#x53D1;&#x6325;&#x8F6F;&#x4EF6;&#x548C;&#x6570;&#x636E;&#x7684;&#x529B;&#x91CF;&#xFF0C;&#x6211;&#x4EEC;&#x63D0;&#x51FA;&#x7684;&#x57FA;&#x4E8E; MongoDB &#x5BF9; Teradata &#x8FDB;&#x884C;&#x4F18;&#x5316;&#xFF0C;&#x4E0D;&#x662F;&#x4F7F;&#x7528; MongoDB &#x66FF;&#x6362; Teradata&#xFF0C;&#x800C;&#x662F;&#x4F7F;&#x7528; MongoDB &#x6784;&#x5EFA;&#x4E00;&#x4E2A;&#x64CD;&#x4F5C;&#x578B;&#x6570;&#x636E;&#x5C42;&#xFF0C;&#x5C06;&#x4E00;&#x4E9B;&#x9891;&#x7E41;&#x8BBF;&#x95EE;&#x7684; MongoDB &#x6570;&#x636E;&#x590D;&#x5236;&#x5230;&#x8FD9;&#x4E2A;&#x64CD;&#x4F5C;&#x578B;&#x6570;&#x636E;&#x5C42;&#xFF0C;&#x540C;&#x65F6;&#x5BF9;&#x5E94;&#x7528;&#x4FA7;&#x505A;&#x5FAE;&#x8C03;&#xFF0C;&#x5C06;&#x67E5;&#x8BE2;&#x91CD;&#x65B0;&#x5B9A;&#x4F4D;&#x5230;&#x8BE5;&#x64CD;&#x4F5C;&#x6570;&#x636E;&#x5C42;&#x3002;&#x8FD9;&#x6837;&#x5C31;&#x76F8;&#x5F53;&#x4E8E;&#x5C06; Teradata &#x4E0A;&#x7684;&#x4E00;&#x90E8;&#x5206;&#x8D1F;&#x8F7D; offload &#x5230; MongoDB, &#x589E;&#x52A0;&#x4E86;&#x4E1A;&#x52A1;&#x654F;&#x6377;&#x6027;&#xFF0C;&#x964D;&#x4F4E;&#x4E86;&#x603B;&#x4F53;&#x6210;&#x672C;.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_teradata_offload">Teradata offload &#x6848;&#x4F8B;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x8BA9;&#x6211;&#x4EEC;&#x6765;&#x770B;&#x4E00;&#x4E0B;&#x897F;&#x73ED;&#x7259;&#x94F6;&#x884C;&#x66FF;&#x6362; Teradata &#x548C; Microstrategy &#x6765;&#x589E;&#x957F;&#x4E1A;&#x52A1;&#x548C;&#x964D;&#x4F4E;&#x6210;&#x672C;&#x7684;&#x6848;&#x4F8B;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x897F;&#x73ED;&#x7259;&#x94F6;&#x884C;&#x5728;&#x4EE5; Teradata &#x548C; Microstrategy &#x4E3A;&#x4E3B;&#x7684;&#x6570;&#x636E;&#x5206;&#x6790;&#x5E73;&#x53F0;&#x4E0A;&#x53BB;&#x5B9E;&#x73B0;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x529F;&#x80FD;&#x6216;&#x505A;&#x4E00;&#x4E2A;&#x4E1A;&#x52A1;&#x51B3;&#x7B56;&#x9700;&#x8981;&#x597D;&#x51E0;&#x5929;&#xFF0C;&#x6291;&#x5236;&#x4E86;&#x6536;&#x5165;&#x589E;&#x957F;&#xFF1B;&#x4E00;&#x4E9B;&#x5206;&#x652F;&#x673A;&#x6784;&#x9700;&#x8981;&#x4E00;&#x4E2A;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x6765;&#x63D0;&#x4F9B;&#x5BA2;&#x6237;&#x7684;&#x5355;&#x4E00;&#x89C6;&#x56FE;&#x4EE5;&#x53CA;&#x5BF9;&#x65B0;&#x4EA7;&#x54C1;&#x548C;&#x670D;&#x52A1;&#x7684;&#x5B9E;&#x65F6;&#x5EFA;&#x8BAE;&#xFF0C;&#x540C;&#x65F6;&#x8BBF;&#x95EE; Teradata &#x548C; Microstrategy &#x4E2D;&#x7684;&#x6570;&#x636E;&#x6709;&#x6570;&#x5206;&#x949F;&#x7684;&#x5EF6;&#x8FDF;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x90A3;&#x4E48;&#x897F;&#x73ED;&#x7259;&#x94F6;&#x884C;&#x662F;&#x600E;&#x4E48;&#x89E3;&#x51B3;&#x8FD9;&#x4E9B;&#x95EE;&#x9898;&#x7684;&#xFF1F; &#x57FA;&#x4E8E; MongoDB &#x6784;&#x5EFA;&#x4E00;&#x4E2A;&#x5BA2;&#x6237;&#x5355;&#x4E00;&#x89C6;&#x56FE;&#xFF0C;MongoDB &#x6A21;&#x578B;&#x7684;&#x7075;&#x6D3B;&#x6027;&#x548C;&#x6269;&#x5C55;&#x80FD;&#x529B;&#x80FD;&#x591F;&#x5FEB;&#x901F;&#x9002;&#x5E94;&#x65B0;&#x7684;&#x4E1A;&#x52A1;&#x9700;&#x6C42;&#xFF1B;&#x9AD8;&#x6548;&#xFF0C;&#x67E5;&#x8BE2;&#x8FD4;&#x56DE;&#x5728;&#x6BEB;&#x79D2;&#x7EA7;&#xFF0C;MongoDB &#x805A;&#x5408;&#x6846;&#x67B6;&#x63D0;&#x4F9B;&#x4E86;&#x5B9E;&#x65F6;&#x5206;&#x6790;&#x7684;&#x80FD;&#x529B;&#xFF1B;&#x5206;&#x5E03;&#x5F0F;&#x67B6;&#x6784;&#xFF0C;&#x4EE5;&#x53CA;&#x666E;&#x901A;&#x786C;&#x4EF6;&#x8FD0;&#x884C;&#xFF0C;&#x964D;&#x4F4E;&#x4E86;&#x603B;&#x4F53;&#x6210;&#x672C;&#xFF0C;&#x63D0;&#x9AD8;&#x4E86;&#x670D;&#x52A1;&#x53EF;&#x7528;&#x5EA6;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x6574;&#x4F53;&#x6765;&#x770B;&#x897F;&#x73ED;&#x7259;&#x94F6;&#x884C;&#x57FA;&#x4E8E;  Teradata &#x548C; Microstrategy &#x66FF;&#x6362; Teradata &#x6781;&#x5927;&#x4E86;&#x8282;&#x7EA6;&#x4E86;&#x603B;&#x6210;&#x672C;&#xFF1B;&#x5E94;&#x7528;&#x7684;&#x5F00;&#x53D1;&#x548C;&#x90E8;&#x7F72;&#x53EF;&#x4EE5;&#x5728; 6 &#x4E2A;&#x6708;&#x5185;&#x5B8C;&#x6210;&#xFF0C;&#x65B0;&#x7684;&#x4E1A;&#x52A1;&#x51B3;&#x7B56;&#x53EF;&#x4EE5;&#x5BB9;&#x6613;&#x7684;&#x90E8;&#x7F72;&#x548C;&#x6267;&#x884C;&#xFF0C;&#x4E3A;&#x516C;&#x53F8;&#x5E26;&#x6765;&#x4E86;&#x65B0;&#x7684;&#x6536;&#x5165;&#xFF1B;&#x76EE;&#x524D;&#x6570;&#x636E;&#x5E73;&#x53F0;&#x7684;&#x5BB9;&#x91CF;&#xFF0C;&#x5141;&#x8BB8;&#x5206;&#x652F;&#x673A;&#x6784;&#x53EF;&#x4EE5;&#x5728;&#x5F88;&#x77ED;&#x65F6;&#x95F4;&#x5BFC;&#x5165;&#x6240;&#x6709;&#x5BA2;&#x6237;&#x6570;&#x636E;&#xFF0C;&#x63D0;&#x9AD8;&#x7528;&#x6237;&#x4F53;&#x9A8C;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_teradata">Teradata &#x6838;&#x5FC3;&#x7EC4;&#x4EF6;</h2>
+<div class="sectionbody">
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x540D;&#x79F0;</th>
+<th class="tableblock halign-left valign-top">&#x89E3;&#x91CA;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DATA MART(DM)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>&#x6570;&#x636E;&#x4ED3;&#x5E93;&#x7684;&#x4E00;&#x4E2A;&#x5B50;&#x96C6;&#xFF0C;&#x6570;&#x636E;&#x96C6;&#x5E02;&#x662F;&#x6570;&#x636E;&#x4ED3;&#x5E93;&#x903B;&#x8F91;&#x6A21;&#x578B;&#x7684;&#x9762;&#x5411;&#x4E1A;&#x52A1;&#x7684;&#x5207;&#x7247;&#xFF0C;&#x53EF;&#x4E3A;&#x4E00;&#x5C0F;&#x7EC4;&#x7528;&#x6237;&#x63D0;&#x4F9B;&#x670D;&#x52A1;&#x3002; &#x8BB8;&#x591A;&#x6570;&#x636E;&#x96C6;&#x5E02;&#x4EC5;&#x9700;&#x8981;&#x6570;&#x636E;&#x4ED3;&#x5E93;&#x4E2D;&#x5B8C;&#x6574;&#x8868;&#x4E2D;&#x7684;&#x4E00;&#x90E8;&#x5206;&#x6570;&#x636E;&#x3002; &#x4F8B;&#x5982;&#xFF0C;&#x96C6;&#x5E02;&#x53EF;&#x80FD;&#x4EC5;&#x5177;&#x6709;&#x9500;&#x552E;&#x4EA4;&#x6613;&#xFF0C;&#x4EA7;&#x54C1;&#x548C;&#x5E93;&#x5B58;&#x8BB0;&#x5F55;&#x3002; &#x5927;&#x591A;&#x6570;&#x6570;&#x636E;&#x96C6;&#x5E02;&#x53EA;&#x6709;5-20&#x4E2A;&#x8868;&#xFF0C;&#x800C;&#x4E0D;&#x662F;4,000&#x4E2A;&#x8868;&#x3002;</p>
+</li>
+<li>
+<p>&#x6570;&#x636E;&#x96C6;&#x5E02;&#x901A;&#x5E38;&#x662F;&#x975E;&#x89C4;&#x8303;&#x5316;&#xFF0C;&#x901A;&#x5E38;&#x4FDD;&#x7559;&#x7684;&#x662F;&#x5BF9;&#x6570;&#x636E;&#x8FDB;&#x884C;&#x6392;&#x5E8F;&#x3001;&#x805A;&#x5408;&#x548C;&#x6C47;&#x603B;&#x7684;&#x7ED3;&#x679C;&#xFF0C;&#x800C;&#x4E0D;&#x662F;&#x4FDD;&#x7559;&#x6240;&#x6709;&#x6570;&#x636E;&#x3002;</p>
+</li>
+<li>
+<p>&#x4E00;&#x4E9B;&#x6570;&#x636E;&#x96C6;&#x5E02;&#x6BCF;&#x5468;&#x6216;&#x6BCF;&#x6708;&#x5B8C;&#x5168;&#x91CD;&#x65B0;&#x52A0;&#x8F7D;&#xFF1B;&#x5220;&#x9664;&#x6240;&#x6709;&#x6570;&#x636E;&#x5E76;&#x5237;&#x65B0;&#x5B83;&#x4EEC;&#x76F8;&#x5BF9;&#x5BB9;&#x6613;&#xFF0C;&#x4F8B;&#x5982;&#x62A5;&#x544A;&#x4EC5;&#x67E5;&#x770B;&#x6700;&#x8FD1; 30 &#x5929;&#x7684;&#x4EA4;&#x6613;&#x3002;</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Master data management(MDM)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>MDB &#x662F;&#x4E00;&#x79CD;&#x5B9A;&#x4E49;&#x548C;&#x7BA1;&#x7406;&#x4F01;&#x4E1A;/&#x7EC4;&#x7EC7;&#x5173;&#x952E;&#x6570;&#x636E;&#x7684;&#x65B9;&#x6CD5;&#xFF0C;&#x4EE5;&#x63D0;&#x4F9B;&#x6570;&#x636E;&#x96C6;&#x6210;&#xFF0C;&#x5355;&#x4E00;&#x53C2;&#x8003;&#x70B9;&#x7B49;&#xFF0C;&#x901A;&#x5E38;&#x8FD9;&#x4E9B;&#x6570;&#x636E;&#x88AB;&#x7528;&#x6765;&#x505A;&#x4E00;&#x4E9B;&#x5173;&#x952E;&#x51B3;&#x7B56;&#x3002;</p>
+</li>
+<li>
+<p>MDB &#x7684;&#x76EE;&#x7684;&#x662F;&#x4ECE;&#x6570;&#x636E;&#x5206;&#x6790;&#x5E73;&#x53F0;&#x83B7;&#x53D6;&#x6700;&#x5927;&#x7684;&#x4EF7;&#x503C;</p>
+</li>
+<li>
+<p><strong>Gartner</strong> -  Master data management (MDM) is a technology-enabled discipline in which business and IT work together to ensure the uniformity, accuracy, stewardship, semantic consistency and accountability of the enterprise&#x2019;s official shared master data assets. Master data is the consistent and uniform set of identifiers and extended attributes that describes the core entities of the enterprise including customers, prospects, citizens, suppliers, sites, hierarchies and chart of accounts.</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Operational Data Store(ODS)</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="ulist">
+<ul>
+<li>
+<p>ODS &#x4E3B;&#x8981;&#x7528;&#x6765;&#x505A;&#x64CD;&#x4F5C;&#x578B;&#x62A5;&#x544A;/&#x5206;&#x6790;&#xFF0C;&#x901A;&#x5E38;&#x662F;&#x591A;&#x4E2A;&#x4E8B;&#x52A1;&#x578B;&#x7CFB;&#x7EDF;&#x6570;&#x636E;&#xFF08;&#x751F;&#x4EA7;&#x6570;&#x636E;&#xFF09;&#x7684;&#x4E00;&#x4E2A;&#x5FEB;&#x7167;&#x7528;&#x6765;&#x652F;&#x6301;&#x64CD;&#x4F5C;&#x578B;&#x62A5;&#x544A;/&#x5206;&#x6790;&#x3002;&#x5B83;&#x4F7F;&#x4F01;&#x4E1A;/&#x7EC4;&#x7EC7;&#x80FD;&#x591F;&#x5C06;&#x6765;&#x81EA;&#x5404;&#x79CD;&#x6765;&#x6E90;&#x7684;&#x539F;&#x59CB;&#x683C;&#x5F0F;&#x7684;&#x6570;&#x636E;&#x7EC4;&#x5408;&#x5230;&#x4E00;&#x4E2A;&#x76EE;&#x6807;&#x4E2D;&#xFF0C;&#x4EE5;&#x4F7F;&#x5176;&#x53EF;&#x7528;&#x4E8E;&#x5FEB;&#x901F;&#x4E1A;&#x52A1;&#x62A5;&#x544A;/&#x5206;&#x6790;&#x3002;</p>
+</li>
+<li>
+<p>ODS &#x662F;&#x4F01;&#x4E1A;&#x6570;&#x636E;&#x4ED3;&#x5E93;&#x4E2D;&#x6570;&#x636E;&#x7684;&#x4E00;&#x4E2A;&#x91CD;&#x8981;&#x6765;&#x6E90;&#x3002;</p>
+</li>
+<li>
+<p>&#x6570;&#x636E;&#x4ED3;&#x5E93;&#x7528;&#x6765;&#x505A;&#x4E00;&#x4E9B;&#x6218;&#x7565;&#x6027;&#x7684;&#x51B3;&#x7B56;&#xFF0C;ODS &#x505A;&#x4E00;&#x4E9B;&#x77ED;&#x671F; day to day &#x7684;&#x51B3;&#x7B56;&#x3002;</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
                                 
                                 </section>
                             
@@ -498,7 +613,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Teradata 优化","level":"1.1.3","depth":2,"next":{"title":"MongoDB 对话卡片","level":"1.1.4","depth":2,"path":"viewpoint/cards.adoc","ref":"viewpoint/cards.adoc","articles":[]},"previous":{"title":"MongoDB 助力企业出海","level":"1.1.2","depth":2,"path":"viewpoint/oversea.adoc","ref":"viewpoint/oversea.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"viewpoint/td.adoc","mtime":"2019-11-12T06:02:13.202Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-11-12T07:28:00.242Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Teradata 优化","level":"1.1.4","depth":2,"next":{"title":"MongoDB 对话卡片","level":"1.1.5","depth":2,"path":"viewpoint/cards.adoc","ref":"viewpoint/cards.adoc","articles":[]},"previous":{"title":"MongoDB 助力企业出海","level":"1.1.3","depth":2,"path":"viewpoint/oversea.adoc","ref":"viewpoint/oversea.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"viewpoint/td.adoc","mtime":"2019-11-25T02:31:17.777Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-12-01T14:24:09.568Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

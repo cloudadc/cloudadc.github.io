@@ -120,7 +120,20 @@
             
         </li>
     
-        <li class="chapter " data-level="1.1.2" data-path="../viewpoint/oversea.html">
+        <li class="chapter " data-level="1.1.2" data-path="../viewpoint/5thingsfornosql.html">
+            
+                <a href="../viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.1.3" data-path="../viewpoint/oversea.html">
             
                 <a href="../viewpoint/oversea.html">
             
@@ -133,7 +146,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.1.3" data-path="../viewpoint/td.html">
+        <li class="chapter " data-level="1.1.4" data-path="../viewpoint/td.html">
             
                 <a href="../viewpoint/td.html">
             
@@ -146,7 +159,7 @@
             
         </li>
     
-        <li class="chapter " data-level="1.1.4" data-path="../viewpoint/cards.html">
+        <li class="chapter " data-level="1.1.5" data-path="../viewpoint/cards.html">
             
                 <a href="../viewpoint/cards.html">
             
@@ -460,20 +473,16 @@
 <ul class="sectlevel1">
 <li><a href="#_chunk">Chunk</a>
 <ul class="sectlevel2">
-<li><a href="#__chunk">&#x4FEE;&#x6539; Chunk &#x9ED8;&#x8BA4;&#x5927;&#x5C0F;</a></li>
-<li><a href="#__">&#x914D;&#x7F6E;&#x96C6;&#x5408;&#x5206;&#x7247;</a></li>
-<li><a href="#__chunk_2">&#x5411;&#x521D;&#x59CB;&#x5316;&#x7684; chunk &#x6DFB;&#x52A0;&#x6570;&#x636E;</a></li>
-<li><a href="#_chunk_2">Chunk &#x5206;&#x88C2;</a></li>
 <li><a href="#_chunk_troubleshooting">Chunk &#x5E38;&#x89C1; Troubleshooting &#x6B65;&#x9AA4;</a></li>
-<li><a href="#__chunk_3">&#x624B;&#x52A8;&#x8FC1;&#x79FB; chunk</a></li>
-<li><a href="#___2">&#x5C06;&#x65B0;&#x6570;&#x636E;&#x5F15;&#x5BFC;&#x5230;&#x65B0;&#x7684;&#x5206;&#x7247;&#x4E0A;</a></li>
+<li><a href="#__chunk">&#x624B;&#x52A8;&#x8FC1;&#x79FB; chunk</a></li>
+<li><a href="#__">&#x5C06;&#x65B0;&#x6570;&#x636E;&#x5F15;&#x5BFC;&#x5230;&#x65B0;&#x7684;&#x5206;&#x7247;&#x4E0A;</a></li>
 </ul>
 </li>
-<li><a href="#___3">&#x7247;&#x952E;&#x9009;&#x62E9;</a>
+<li><a href="#___2">&#x7247;&#x952E;&#x9009;&#x62E9;</a>
 <ul class="sectlevel2">
-<li><a href="#___4">&#x7247;&#x952E;&#x9009;&#x62E9;&#x4E09;&#x539F;&#x5219;</a></li>
-<li><a href="#___5">&#x5355;&#x8C03;&#x9012;&#x589E;/&#x9012;&#x51CF;&#x7247;&#x952E;&#x6613;&#x9020;&#x6210;&#x6570;&#x636E;&#x5206;&#x914D;&#x4E0D;&#x5747;</a></li>
-<li><a href="#___6">&#x8BFB;&#x5199;&#x8D1F;&#x8F7D;&#x5F71;&#x54CD;&#x7247;&#x952E;&#x9009;&#x62E9;</a></li>
+<li><a href="#___3">&#x7247;&#x952E;&#x9009;&#x62E9;&#x4E09;&#x539F;&#x5219;</a></li>
+<li><a href="#___4">&#x5355;&#x8C03;&#x9012;&#x589E;/&#x9012;&#x51CF;&#x7247;&#x952E;&#x6613;&#x9020;&#x6210;&#x6570;&#x636E;&#x5206;&#x914D;&#x4E0D;&#x5747;</a></li>
+<li><a href="#___5">&#x8BFB;&#x5199;&#x8D1F;&#x8F7D;&#x5F71;&#x54CD;&#x7247;&#x952E;&#x9009;&#x62E9;</a></li>
 </ul>
 </li>
 <li><a href="#_todo">TODO</a></li>
@@ -482,159 +491,182 @@
 <div class="sect1">
 <h2 id="_chunk">Chunk</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="__chunk">&#x4FEE;&#x6539; Chunk &#x9ED8;&#x8BA4;&#x5927;&#x5C0F;</h3>
-<div class="paragraph">
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 71.4286%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x6761;&#x76EE;</th>
+<th class="tableblock halign-left valign-top">&#x8BF4;&#x660E;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x4FEE;&#x6539; Chunk &#x9ED8;&#x8BA4;&#x5927;&#x5C0F;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>Chunk &#x9ED8;&#x8BA4;&#x5927;&#x5C0F;&#x4E3A; 64 MB&#xFF0C;&#x5141;&#x8BB8; Chunk &#x5927;&#x5C0F;&#x7684;&#x8303;&#x56F4;&#x662F; 1MB - 1024MB&#x3002;</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-comment">// &#x8FDE;&#x63A5;&#x5230; mongos</span>
-
-<span class="hljs-comment">//&#x4FEE;&#x6539; Chunk &#x5927;&#x5C0F;&#x4E3A; 1MB</span>
-use config
-db.settings.save( { _id:<span class="hljs-string">&quot;chunksize&quot;</span>, value: <span class="hljs-number">1</span> } )</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="__">&#x914D;&#x7F6E;&#x96C6;&#x5408;&#x5206;&#x7247;</h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableSharding(<span class="hljs-string">&quot;testSharding&quot;</span>)
-db.adminCommand({shardCollection: <span class="hljs-string">&quot;testSharding.people&quot;</span>, key: {x: <span class="hljs-number">1</span>}})
-
-<span class="hljs-comment">//&#x96C6;&#x5408;&#x5206;&#x7247;&#x540E;&#x4F1A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Chunk &#x5728;&#x4E3B;&#x5206;&#x7247;</span>
-use config
-db.chunks.find({<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>}).pretty()
-{
-	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testSharding.people-x_MinKey&quot;</span>,
-	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>,
-	<span class="hljs-string">&quot;min&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }
-	},
-	<span class="hljs-string">&quot;max&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> }
-	},
-	<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,
-	<span class="hljs-string">&quot;lastmod&quot;</span> : Timestamp(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>),
-	<span class="hljs-string">&quot;lastmodEpoch&quot;</span> : ObjectId(<span class="hljs-string">&quot;5d79bb8e1d79c9b0a46a5b1d&quot;</span>),
-	<span class="hljs-string">&quot;history&quot;</span> : [
-		{
-			<span class="hljs-string">&quot;validAfter&quot;</span> : Timestamp(<span class="hljs-number">1568258958</span>, <span class="hljs-number">6</span>),
-			<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>
-		}
-	]
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="__chunk_2">&#x5411;&#x521D;&#x59CB;&#x5316;&#x7684; chunk &#x6DFB;&#x52A0;&#x6570;&#x636E;</h3>
-<div class="listingblock">
-<div class="title"><strong>1. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x63D2;&#x5165; 500 &#x6761;&#x6570;&#x636E;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">java -jar target/bulkLoad-jar-with-dependencies.jar -u <span class="hljs-string">&quot;mongodb://localhost:27017&quot;</span> -d testSharding -c people -f people.json -s -n <span class="hljs-number">500</span> -k x --start <span class="hljs-number">0</span> -m</code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title"><strong>2. &#x67E5;&#x770B;&#x5206;&#x7247; Chunk &#x5206;&#x5E03;&#x60C5;&#x51B5;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-comment">// &#x6267;&#x884C; sh.status()</span>
-sh.status()
-...
-        {  <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testSharding&quot;</span>,  <span class="hljs-string">&quot;primary&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,  <span class="hljs-string">&quot;partitioned&quot;</span> : <span class="hljs-literal">true</span>,  <span class="hljs-string">&quot;version&quot;</span> : {  <span class="hljs-string">&quot;uuid&quot;</span> : UUID(<span class="hljs-string">&quot;07ea271e-9ae7-4588-9f9b-7ad64ddf899d&quot;</span>),  <span class="hljs-string">&quot;lastMod&quot;</span> : <span class="hljs-number">1</span> } }
-                testSharding.people
-                        shard key: { <span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-number">1</span> }
-                        unique: <span class="hljs-literal">false</span>
-                        balancing: <span class="hljs-literal">true</span>
-                        chunks:
-                                repl-b	<span class="hljs-number">1</span>
-                        { <span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> } } --&gt;&gt; { <span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } } on : repl-b Timestamp(<span class="hljs-number">1</span>, <span class="hljs-number">0</span>)
-
-<span class="hljs-comment">// &#x67E5;&#x8BE2; chunks &#x96C6;&#x5408;</span>
-use config
-db.chunks.find({<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>}).pretty()</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_chunk_2">Chunk &#x5206;&#x88C2;</h3>
 <div class="paragraph">
+<p>&#x8FDE;&#x63A5;&#x5230; mongos,&#x4FEE;&#x6539; Chunk &#x5927;&#x5C0F;&#x4E3A; 100 MB</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">use config
+db.settings.save( { _id:<span class="hljs-string">&quot;chunksize&quot;</span>, value: <span class="hljs-number">100</span> } )</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x914D;&#x7F6E;&#x96C6;&#x5408;&#x5206;&#x7247;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#xFF0C;&#x5982;&#x679C;&#x96C6;&#x5408;&#x4E0D;&#x4E3A;&#x7A7A;&#xFF0C;&#x9700;&#x8981;&#x57FA;&#x4E8E;&#x7247;&#x952E;&#x521B;&#x5EFA;&#x7D22;&#x5F15;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableSharding(<span class="hljs-string">&quot;DB&quot;</span>)
+sh.shardCollection(<span class="hljs-string">&quot;DB.COLLECTION&quot;</span>, {X: <span class="hljs-number">1</span>})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x901A;&#x8FC7; admin command &#x4E5F;&#x53EF;&#x4EE5;&#x6267;&#x884C;&#x96C6;&#x5408;&#x5206;&#x7247;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.adminCommand({shardCollection: <span class="hljs-string">&quot;DB.COLLECTION&quot;</span>, key: {X: <span class="hljs-number">1</span>}})</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">jumbo chunk</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x5F53;&#x7247;&#x952E;&#x662F;&#x4E00;&#x4E2A;&#x4E0D;&#x53D8;&#x7684;&#x503C;&#x65F6;&#xFF0C;chunk &#x662F;&#x4E0D;&#x4F1A;&#x5206;&#x88C2;&#x7684;&#xFF0C;&#x8FD0;&#x884C; <a href="files/jumbo.js">jumbo.js</a>&#xFF0C;&#x5B83;&#x4F1A;&#x67E5;&#x4EBA; 1&#x79D2;&#x6761;&#x6587;&#x6863;&#xFF0C;&#x7EA6; 1GB&#xFF0C;&#x5176;&#x4E2D; accountNo &#x4E3A;&#x4E00;&#x4E0D;&#x53D8;&#x7684;&#x503C;&#xFF0C;&#x8FD0;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x4F1A;&#x4EA7;&#x751F;&#x4E00;&#x4E2A; jumbo chunk</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableSharding(<span class="hljs-string">&quot;testJumbo&quot;</span>)
+sh.shardCollection(<span class="hljs-string">&quot;testJumbo.account&quot;</span>, {accountNo: <span class="hljs-number">1</span>})
+use testJumbo
+load(<span class="hljs-string">&quot;jumbo.js&quot;</span>)</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chunk &#x5206;&#x88C2;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>&#x5F53; Chunk &#x7684;&#x5927;&#x5C0F;&#x5927;&#x4E8E; Chunk Size &#x6216; &#x5927;&#x4E8E;&#x4E00;&#x4E2A; Chunk &#x5141;&#x8BB8;&#x7684;&#x6700;&#x5927;&#x6587;&#x6863;&#x6570;&#x76EE;&#x65F6;&#xFF0C;Chunk &#x5C31;&#x4F1A;&#x5206;&#x88C2;&#x3002;</p>
 </div>
-<div class="listingblock">
-<div class="title"><strong>1. &#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x63D2;&#x5165; 500 &#x6761;&#x6570;&#x636E;</strong></div>
-<div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript">java -jar target/bulkLoad-jar-<span class="hljs-keyword">with</span>-dependencies.jar -u <span class="hljs-string">&quot;mongodb://localhost:27017&quot;</span> -d testSharding -c people -f people.json -s -n <span class="hljs-number">1100</span> -k x --start <span class="hljs-number">500</span> -m</code></pre>
-</div>
+<div class="paragraph">
+<p>&#x6267;&#x884C; <a href="files/splits.js">splits.js</a>&#xFF0C;&#x5B83;&#x4F1A;&#x67E5;&#x4EBA; 200k &#x6761;&#x6587;&#x6863;&#xFF0C;&#x7EA6; 200 MB&#xFF0C;&#x5176;&#x4E2D; accountNo &#x4E3A;&#x7247;&#x952E;&#xFF0C;&#x5355;&#x8C03;&#x9012;&#x589E;&#xFF0C;&#x6784;&#x5EFA;&#x8F93;&#x51FA;&#x63D0;&#x793A;&#x67E5;&#x770B; chunk &#x5206;&#x88C2;&#x60C5;&#x51B5;&#xFF1A;</p>
 </div>
 <div class="listingblock">
-<div class="title"><strong>2. &#x67E5;&#x770B;&#x5206;&#x7247; Chunk &#x5206;&#x5E03;&#x60C5;&#x51B5;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-javascript" data-lang="javascript"><span class="hljs-comment">//&#x96C6;&#x5408;&#x5206;&#x7247;&#x540E;&#x4F1A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Chunk &#x5728;&#x4E3B;&#x5206;&#x7247;</span>
-use config
-db.chunks.find({<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>}).pretty()
-{
-	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testSharding.people-x_MinKey&quot;</span>,
-	<span class="hljs-string">&quot;lastmod&quot;</span> : Timestamp(<span class="hljs-number">2</span>, <span class="hljs-number">0</span>),
-	<span class="hljs-string">&quot;lastmodEpoch&quot;</span> : ObjectId(<span class="hljs-string">&quot;5d7f1af51d79c9b0a46c237d&quot;</span>),
-	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>,
-	<span class="hljs-string">&quot;min&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> }
-	},
-	<span class="hljs-string">&quot;max&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-string">&quot;1&quot;</span>
-	},
-	<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-c&quot;</span>,
-	<span class="hljs-string">&quot;history&quot;</span> : [
-		{
-			<span class="hljs-string">&quot;validAfter&quot;</span> : Timestamp(<span class="hljs-number">1568611132</span>, <span class="hljs-number">15</span>),
-			<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-c&quot;</span>
-		}
-	]
-}
-{
-	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testSharding.people-x_\&quot;1\&quot;&quot;</span>,
-	<span class="hljs-string">&quot;lastmod&quot;</span> : Timestamp(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>),
-	<span class="hljs-string">&quot;lastmodEpoch&quot;</span> : ObjectId(<span class="hljs-string">&quot;5d7f1af51d79c9b0a46c237d&quot;</span>),
-	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>,
-	<span class="hljs-string">&quot;min&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-string">&quot;1&quot;</span>
-	},
-	<span class="hljs-string">&quot;max&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-string">&quot;93&quot;</span>
-	},
-	<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,
-	<span class="hljs-string">&quot;history&quot;</span> : [
-		{
-			<span class="hljs-string">&quot;validAfter&quot;</span> : Timestamp(<span class="hljs-number">1568611061</span>, <span class="hljs-number">6</span>),
-			<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>
-		}
-	]
-}
-{
-	<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;testSharding.people-x_\&quot;93\&quot;&quot;</span>,
-	<span class="hljs-string">&quot;lastmod&quot;</span> : Timestamp(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>),
-	<span class="hljs-string">&quot;lastmodEpoch&quot;</span> : ObjectId(<span class="hljs-string">&quot;5d7f1af51d79c9b0a46c237d&quot;</span>),
-	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSharding.people&quot;</span>,
-	<span class="hljs-string">&quot;min&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : <span class="hljs-string">&quot;93&quot;</span>
-	},
-	<span class="hljs-string">&quot;max&quot;</span> : {
-		<span class="hljs-string">&quot;x&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> }
-	},
-	<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>,
-	<span class="hljs-string">&quot;history&quot;</span> : [
-		{
-			<span class="hljs-string">&quot;validAfter&quot;</span> : Timestamp(<span class="hljs-number">1568611061</span>, <span class="hljs-number">6</span>),
-			<span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;repl-b&quot;</span>
-		}
-	]
-}</code></pre>
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableSharding(<span class="hljs-string">&quot;testSplits&quot;</span>)
+sh.shardCollection(<span class="hljs-string">&quot;testSplits.account&quot;</span>, {accountNo: <span class="hljs-number">1</span>})
+use testSplits
+load(<span class="hljs-string">&quot;splits.js&quot;</span>)</code></pre>
+</div>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x624B;&#x52A8; Chunk &#x5206;&#x88C2;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x624B;&#x52A8;&#x8FDB;&#x884C; Chunk &#x5206;&#x88C2;</p>
+</div>
+<div class="paragraph">
+<p>&#x521B;&#x5EFA;&#x5206;&#x7247;&#x96C6;&#x5408;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableSharding(<span class="hljs-string">&quot;testSplitsManually&quot;</span>)
+sh.shardCollection(<span class="hljs-string">&quot;testSplitsManually.account&quot;</span>, {accountNo: <span class="hljs-number">1</span>})</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>&#x505C;&#x6B62; Balancer &#x7684;&#x8FD0;&#x884C;</p>
 </div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.disableBalancing(<span class="hljs-string">&quot;testSplitsManually.account&quot;</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x6267;&#x884C; <a href="files/splitsManually.js">splitsManually.js</a>&#xFF0C;&#x8FDB;&#x884C;&#x624B;&#x52A8; Chunk &#x5206;&#x88C2;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">load(<span class="hljs-string">&quot;splitsManually.js&quot;</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x67E5;&#x770B; Chunk &#x5206;&#x5E03;&#x60C5;&#x51B5;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.chunks.find({ns: <span class="hljs-string">&quot;testSplitsManually.account&quot;</span>}, {_id: <span class="hljs-number">0</span>, min: <span class="hljs-number">1</span>, max: <span class="hljs-number">1</span>, shard: <span class="hljs-number">1</span>})
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : { <span class="hljs-string">&quot;$minKey&quot;</span> : <span class="hljs-number">1</span> } }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">10000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">10000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">20000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">20000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">30000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">30000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">40000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">40000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">50000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">50000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">60000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">60000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">70000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">70000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">80000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">80000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">90000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">90000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">100000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">100000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">110000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">110000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">120000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">120000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">130000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">130000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">140000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">140000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">150000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">150000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">160000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">160000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">170000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">170000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">180000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">180000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">190000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">190000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">200000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">200000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">210000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">210000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">220000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">220000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">230000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">230000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">240000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">240000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">250000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">250000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">260000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">260000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">270000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">270000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">280000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">280000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">290000</span> }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }
+{ <span class="hljs-string">&quot;min&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : <span class="hljs-number">290000</span> }, <span class="hljs-string">&quot;max&quot;</span> : { <span class="hljs-string">&quot;accountNo&quot;</span> : { <span class="hljs-string">&quot;$maxKey&quot;</span> : <span class="hljs-number">1</span> } }, <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x6267;&#x884C; <a href="files/splitsManuallyLoad.js">splitsManuallyLoad.js</a> &#x5BFC;&#x5165;&#x6570;&#x636E;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">use testSplitsManually
+load(<span class="hljs-string">&quot;splitsManuallyLoad.js&quot;</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x542F;&#x7528; Balancer</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">sh.enableBalancing(<span class="hljs-string">&quot;testSplitsManually.account&quot;</span>)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x67E5;&#x770B;&#x6700;&#x7EC8;&#x6570;&#x636E;&#x7684;&#x5206;&#x5E03;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javascript" data-lang="javascript">db.chunks.aggregate([{$match: {<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;testSplitsManually.account&quot;</span>}}, { $group: { _id: { shard: <span class="hljs-string">&quot;$shard&quot;</span> }, count: { $sum: <span class="hljs-number">1</span> } } }, { $sort : { <span class="hljs-string">&quot;_id.shard&quot;</span> : <span class="hljs-number">1</span> } } ])
+{ <span class="hljs-string">&quot;_id&quot;</span> : { <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_0&quot;</span> }, <span class="hljs-string">&quot;count&quot;</span> : <span class="hljs-number">15</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : { <span class="hljs-string">&quot;shard&quot;</span> : <span class="hljs-string">&quot;myShard_1&quot;</span> }, <span class="hljs-string">&quot;count&quot;</span> : <span class="hljs-number">15</span> }</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
 <div class="sect2">
 <h3 id="_chunk_troubleshooting">Chunk &#x5E38;&#x89C1; Troubleshooting &#x6B65;&#x9AA4;</h3>
 <div class="listingblock">
@@ -681,7 +713,7 @@ db.collections.count({key: {x: <span class="hljs-number">1</span>}, dropped: <sp
 </div>
 </div>
 <div class="sect2">
-<h3 id="__chunk_3">&#x624B;&#x52A8;&#x8FC1;&#x79FB; chunk</h3>
+<h3 id="__chunk">&#x624B;&#x52A8;&#x8FC1;&#x79FB; chunk</h3>
 <div class="paragraph">
 <p>chunk &#x7684;&#x79FB;&#x52A8;&#x6709;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;&#xFF1A;Balancer &#x5747;&#x8861;&#x5668;&#xFF0C;&#x624B;&#x52A8;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x8BF4;&#x660E;&#x5982;&#x4F55;&#x624B;&#x52A8;&#x8FC1;&#x79FB; chunk&#x3002;</p>
 </div>
@@ -692,7 +724,7 @@ db.collections.count({key: {x: <span class="hljs-number">1</span>}, dropped: <sp
 </div>
 </div>
 <div class="sect2">
-<h3 id="___2">&#x5C06;&#x65B0;&#x6570;&#x636E;&#x5F15;&#x5BFC;&#x5230;&#x65B0;&#x7684;&#x5206;&#x7247;&#x4E0A;</h3>
+<h3 id="__">&#x5C06;&#x65B0;&#x6570;&#x636E;&#x5F15;&#x5BFC;&#x5230;&#x65B0;&#x7684;&#x5206;&#x7247;&#x4E0A;</h3>
 <div class="paragraph">
 <p>&#x901A;&#x8FC7;&#x5206;&#x7247;&#x96C6;&#x6807;&#x7B7E;&#x53EF;&#x4EE5;&#x5728;&#x65B0;&#x96C6;&#x5408;&#x4E0A;&#x5C06;&#x6570;&#x636E;&#x5F15;&#x5BFC;&#x5230;&#x65B0;&#x5206;&#x7247;&#x4E0A;&#x3002;&#x7531;&#x4E8E;&#x6BCF;&#x5929;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#xFF0C;&#x6570;&#x91CF;&#x8F83;&#x5927;&#xFF0C;&#x4F7F;&#x7528;&#x811A;&#x672C;&#x5B8C;&#x6210;&#x5206;&#x914D;&#x5DE5;&#x4F5C;&#x3002;</p>
 </div>
@@ -738,10 +770,10 @@ db.collections.find({dropped: <span class="hljs-literal">false</span>}).forEach(
 </div>
 </div>
 <div class="sect1">
-<h2 id="___3">&#x7247;&#x952E;&#x9009;&#x62E9;</h2>
+<h2 id="___2">&#x7247;&#x952E;&#x9009;&#x62E9;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="___4">&#x7247;&#x952E;&#x9009;&#x62E9;&#x4E09;&#x539F;&#x5219;</h3>
+<h3 id="___3">&#x7247;&#x952E;&#x9009;&#x62E9;&#x4E09;&#x539F;&#x5219;</h3>
 <div class="paragraph">
 <p>Shard Key &#x51B3;&#x5B9A;&#x5982;&#x4F55;&#x5C06;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x4E2D;&#x7684;&#x6587;&#x6863;&#x5206;&#x53D1;&#x5230;&#x4E0D;&#x540C;&#x7684;&#x5206;&#x7247;&#xFF0C;Shard Key &#x9700;&#x8981;&#x662F;&#x4E00;&#x4E2A;&#x7D22;&#x5F15;&#x7684;&#x5B57;&#x6BB5;&#x6216;&#x7D22;&#x5F15;&#x7684;&#x590D;&#x5408;&#x5B57;&#x6BB5;&#x3002;&#x5C06;&#x4E00;&#x4E2A;&#x96C6;&#x5408;&#x8FDB;&#x884C;&#x5206;&#x7247;&#x8BED;&#x6CD5;&#x5982;&#x4E0B;:</p>
 </div>
@@ -780,7 +812,7 @@ db.collections.find({dropped: <span class="hljs-literal">false</span>}).forEach(
 </div>
 </div>
 <div class="sect2">
-<h3 id="___5">&#x5355;&#x8C03;&#x9012;&#x589E;/&#x9012;&#x51CF;&#x7247;&#x952E;&#x6613;&#x9020;&#x6210;&#x6570;&#x636E;&#x5206;&#x914D;&#x4E0D;&#x5747;</h3>
+<h3 id="___4">&#x5355;&#x8C03;&#x9012;&#x589E;/&#x9012;&#x51CF;&#x7247;&#x952E;&#x6613;&#x9020;&#x6210;&#x6570;&#x636E;&#x5206;&#x914D;&#x4E0D;&#x5747;</h3>
 <div class="paragraph">
 <p>&#x5355;&#x8C03;&#x9012;&#x589E;&#x6216;&#x9012;&#x51CF;&#x7684;&#x7247;&#x952E;&#xFF08;&#x4EE5;&#x4E0B;&#x7B80;&#x79F0;&#x5355;&#x8C03;&#x7247;&#x952E;&#xFF09;&#x56E0;&#x4E3A;&#x65B0;&#x503C;&#x603B;&#x662F;&#x4F4D;&#x4E8E;&#x6574;&#x4E2A;&#x503C;&#x57DF;&#x7684;&#x4E0A;&#x9650;&#xFF08;&#x9012;&#x589E;&#xFF09;&#x6216;&#x4E0B;&#x9650;&#xFF08;&#x9012;&#x51CF;&#xFF09;&#x5904;&#xFF0C;&#x9020;&#x6210;&#x65E0;&#x8BBA;&#x54EA;&#x4E2A;&#x7247;&#x62E5;&#x6709;&#x4E0A;&#x9650;&#x6216;&#x4E0B;&#x9650;&#x5904;&#x7684;&#x6570;&#x636E;&#x5757;&#xFF0C;&#x65B0;&#x6587;&#x6863;&#x59CB;&#x7EC8;&#x4F1A;&#x88AB;&#x5206;&#x914D;&#x5230;&#x90A3;&#x4E2A;&#x5206;&#x7247;&#x4E0A;&#x3002;&#x4E00;&#x65B9;&#x9762;&#x8FD9;&#x6837;&#x4F1A;&#x9020;&#x6210;&#x8BE5;&#x5206;&#x7247;&#x6210;&#x4E3A;&#x5199;&#x5165;&#x70ED;&#x70B9;&#xFF0C;&#x65E0;&#x6CD5;&#x5206;&#x6563;&#x5199;&#x5165;&#x538B;&#x529B;&#x3002;&#x53E6;&#x5916;&#x4E00;&#x65B9;&#x9762;&#x6301;&#x7EED;&#x5BF9;&#x8BE5;&#x7247;&#x7684;&#x5199;&#x5165;&#x4F1A;&#x4F7F;&#x6570;&#x636E;&#x5206;&#x5E03;&#x6781;&#x4E0D;&#x5747;&#x5300;&#xFF0C;&#x9700;&#x8981;&#x4F9D;&#x8D56;&#x5747;&#x8861;&#x5668;&#x5728;&#x540E;&#x671F;&#x5C06;&#x6570;&#x636E;&#x79FB;&#x52A8;&#x5230;&#x5176;&#x4ED6;&#x5206;&#x7247;&#x8FBE;&#x5230;&#x5747;&#x8861;&#x7684;&#x76EE;&#x7684;&#x3002;&#x4ECE;&#x53E6;&#x4E00;&#x4E2A;&#x89D2;&#x5EA6;&#x8BB2;&#xFF0C;&#x5982;&#x679C;&#x6570;&#x636E;&#x4E00;&#x5F00;&#x59CB;&#x5C31;&#x80FD;&#x591F;&#x5206;&#x6563;&#x5199;&#x5165;&#x5230;&#x4E0D;&#x540C;&#x7684;&#x5206;&#x7247;&#x4E0A;&#xFF0C;&#x5219;&#x4E0D;&#x9700;&#x8981;&#x901A;&#x8FC7;&#x91CD;&#x65B0;&#x642C;&#x8FC1;&#x6765;&#x5747;&#x8861;&#x6570;&#x636E;&#xFF0C;&#x5373;&#x7701;&#x53BB;&#x4E86;&#x5747;&#x8861;&#x5BF9;&#x8D44;&#x6E90;&#x5E26;&#x6765;&#x7684;&#x989D;&#x5916;&#x6D88;&#x8017;&#x3002;&#x56E0;&#x6B64;&#xFF0C;&#x5355;&#x8C03;&#x7247;&#x952E;&#x65E0;&#x8BBA;&#x5BF9;&#x6027;&#x80FD;&#x6216;&#x6C34;&#x5E73;&#x6269;&#x5C55;&#x90FD;&#x4F1A;&#x9020;&#x6210;&#x4E0D;&#x5229;&#x5F71;&#x54CD;&#xFF0C;&#x9009;&#x62E9;&#x7247;&#x952E;&#x65F6;&#x5E94;&#x5F53;&#x907F;&#x514D;&#x3002;</p>
 </div>
@@ -805,7 +837,7 @@ db.collections.find({dropped: <span class="hljs-literal">false</span>}).forEach(
 </div>
 </div>
 <div class="sect2">
-<h3 id="___6">&#x8BFB;&#x5199;&#x8D1F;&#x8F7D;&#x5F71;&#x54CD;&#x7247;&#x952E;&#x9009;&#x62E9;</h3>
+<h3 id="___5">&#x8BFB;&#x5199;&#x8D1F;&#x8F7D;&#x5F71;&#x54CD;&#x7247;&#x952E;&#x9009;&#x62E9;</h3>
 <div class="paragraph">
 <p>&#x9009;&#x62E9;&#x5206;&#x7247;&#x952E;&#x65F6;&#xFF0C;&#x9700;&#x8981;&#x8003;&#x8651;&#x6700;&#x4E3B;&#x8981;&#x7684;&#x56E0;&#x7D20;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;&#x660E;&#x767D;&#x96C6;&#x7FA4;&#x7684;&#x8BFB;&#x5199;&#x8D1F;&#x8F7D;&#x3002;</p>
 </div>
@@ -890,7 +922,7 @@ db.collections.find({dropped: <span class="hljs-literal">false</span>}).forEach(
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"分片","level":"1.4.2","depth":2,"next":{"title":"Ops Manager","level":"1.4.3","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]},"previous":{"title":"维护","level":"1.4.1.2","depth":3,"path":"dba/rs-maintenance.adoc","ref":"dba/rs-maintenance.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/sharding.adoc","mtime":"2019-10-31T07:55:16.360Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-11-12T07:28:00.242Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"分片","level":"1.4.2","depth":2,"next":{"title":"Ops Manager","level":"1.4.3","depth":2,"path":"dba/opsmanager.adoc","ref":"dba/opsmanager.adoc","articles":[]},"previous":{"title":"维护","level":"1.4.1.2","depth":3,"path":"dba/rs-maintenance.adoc","ref":"dba/rs-maintenance.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"dba/sharding.adoc","mtime":"2019-12-01T04:37:47.613Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2019-12-01T14:24:09.568Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
