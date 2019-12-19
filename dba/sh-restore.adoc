@@ -1,0 +1,173 @@
+= 基于 Delayed Secondary 实现时间点恢复
+:toc: manual
+
+== 环境准备
+
+=== 初始化一个有 Delayed Secondary 节点的分片集群
+
+[source, bash]
+.*1. 创建一个分片集群，其中单分片中 mongod 的数量为 4*
+----
+ mlaunch --config 1 --mongos 1 --replicaset --nodes 4 --sharded sh_1
+----
+
+[source, bash]
+.*2. 连接到分片主节点，配置一个 Delayed Secondary 节点，设定延迟的时间为 3 分钟*
+----
+mongo --port 27018
+
+cfg = rs.conf()
+cfg.members[3].priority = 0
+cfg.members[3].hidden = true
+cfg.members[3].slaveDelay = 180
+rs.reconfig(cfg)
+----
+
+=== 向集群里插入数据
+
+[source, bash]
+.*1. 连接到 mongos, 插入数据*
+----
+mongo
+
+var doc = {
+   "name": "Kylin Soong",
+   "balance": 99.99
+}
+for (var i = 0; i < 20000; i++) {
+   doc.accountNo = i
+   db.account.insertOne( doc )
+}
+----
+
+[source, bash]
+.*2. 等待 3 分钟后，在Delayed Secondary 节点查看数据已经存在*
+----
+mongo --port 27021
+
+db.account.count()
+20000
+
+db.account.find({accountNo: 10001})
+{ "_id" : ObjectId("5df98ad3ba9be09784784b20"), "name" : "Kylin Soong", "balance" : 99.99, "accountNo" : 10001 }
+----
+
+=== 人为制造误删除操作
+
+[source, bash]
+.*1. 登录 mongos, 删除 accountNo 为 10000 的记录*
+----
+db.account.remove({accountNo: 10001})
+WriteResult({ "nRemoved" : 1 })
+----
+
+[source, bash]
+.*2. mongs 上查询，确保数据已经删除*
+----
+db.account.find({accountNo: 10001})
+----
+
+== 记录恢复时间点，复制 DS 节点的数据文件
+
+[source, bash]
+.*1. 连接到 DS 节点，确保数据存在，记录时间点*
+----
+db.account.find({accountNo: 10001})
+{ "_id" : ObjectId("5df98ad3ba9be09784784b21"), "name" : "Kylin Soong", "balance" : 99.99, "accountNo" : 10001 }
+
+use local
+db.oplog.rs.find().sort({$natural: -1}).limit(1).next().ts
+Timestamp(1576645449, 1)
+----
+
+[source, bash]
+.2. 停止 DS 节点**
+----
+use admin
+db.shutdownServer({force: true})
+----
+
+[source, bash]
+.*3. 拷贝 DS 节点数据文件到新位置*
+----
+mkdir duplicateDS
+
+cp -r data/sh_1/rs4/* duplicateDS/
+----
+
+[source, bash]
+.*4. 单节点启动，指向新数据文件*
+----
+mongod --dbpath duplicateDS/db --logpath duplicateDS/mongod.log --port 28001 --fork  --wiredTigerCacheSizeGB 1
+----
+
+[source, bash]
+.*5. 删除 local 数据库*
+----
+mongo --port 28001
+
+use local
+db.dropDatabase()
+----
+
+[source, bash]
+.*6. 以复制集启动*
+----
+use admin
+db.shutdownServer()
+
+mongod --replSet sh_restore  --dbpath duplicateDS/db --logpath duplicateDS/mongod.log --port 28001 --fork  --wiredTigerCacheSizeGB 1
+----
+
+[source, bash]
+.*7. 初始化新复制集*
+----
+rs.initiate()
+----
+
+== 获取主节点上增量 Ops Log
+
+[source, bash]
+.*1. 使用 mongodump 在分片集群的主节点上获取增量 Ops Log*
+----
+mongodump --host 127.0.0.1:27018 -d local -c oplog.rs -q '{"ts": {"$gt": {"$timestamp": {"t": 1576645449, "i": 1}}}}' 
+----
+
+NOTE: 时间点是 DS 上所获取到的时间。
+
+== 找出恢复时间点
+
+[source, bash]
+.*1. 使用 bsondump 查看Ops Log*
+----
+bsondump dump/local/oplog.rs.bson
+...
+{"ts":{"$timestamp":{"t":1576646969,"i":1}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"n","ns":"","wall":{"$date":{"$numberLong":"1576646969858"}},"o":{"msg":"periodic noop"}}
+{"ts":{"$timestamp":{"t":1576646979,"i":1}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53b5"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":2}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53b6"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":3}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53b7"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":4}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53b8"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":5}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53b9"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":6}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53ba"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":7}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53bb"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":8}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53bc"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":9}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979722"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53bd"}}}
+{"ts":{"$timestamp":{"t":1576646979,"i":10}},"t":{"$numberLong":"1"},"h":{"$numberLong":"0"},"v":{"$numberInt":"2"},"op":"d","ns":"test.account","ui":{"$binary":{"base64":"80MbK3/1QvGwfEvch7y6zQ==","subType":"04"}},"wall":{"$date":{"$numberLong":"1576646979723"}},"o":{"_id":{"$oid":"5df9b2f7bceee8cb722b53be"}}}
+----
+
+NOTE: 如上恢复时间点为 1576646979。
+
+== 执行恢复
+
+[source, bash]
+.*1. 创建一个空目录*
+----
+mkdir empty
+----
+
+[source, bash]
+.*2. 执行恢复*
+----
+mongorestore -h 127.0.0.1:28001 --oplogReplay --oplogFile dump/local/oplog.rs.bson --oplogLimit '1576646969:1' empty/
+----
+

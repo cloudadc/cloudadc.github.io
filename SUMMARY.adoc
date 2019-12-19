@@ -18,6 +18,7 @@
 ... link:dba/rs-deployments.adoc[部署]
 ... link:dba/rs-maintenance.adoc[维护]
 .. link:dba/sharding.adoc[分片]
+... link:dba/sh-restore.adoc[基于 Delayed Secondary 时间点恢复]
 .. link:dba/opsmanager.adoc[Ops Manager]
 .. link:dba/perf.adoc[性能调优]
 .. link:dba/troubleshooting.adoc[监控]
