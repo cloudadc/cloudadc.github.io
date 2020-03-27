@@ -1,0 +1,880 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>高可用 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="rs-deployments.html" />
+    
+    
+    <link rel="prev" href="cluster-admin.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../viewpoint/presentation.html">
+            
+                <a href="../viewpoint/presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../viewpoint/5thingsfornosql.html">
+            
+                <a href="../viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../viewpoint/oversea.html">
+            
+                <a href="../viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../viewpoint/td.html">
+            
+                <a href="../viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../viewpoint/cards.html">
+            
+                <a href="../viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="basic.html">
+            
+                <a href="basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../dev/">
+            
+                <a href="../dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../dev/aggregation.html">
+            
+                <a href="../dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1.1" data-path="../dev/aggregation-sum.html">
+            
+                <a href="../dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../dev/transactions.html">
+            
+                <a href="../dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../dev/java.html">
+            
+                <a href="../dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../dev/geo.html">
+            
+                <a href="../dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cluster-admin.html">
+            
+                <a href="cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.8.1" data-path="replication.html">
+            
+                <a href="replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1.1" data-path="rs-deployments.html">
+            
+                <a href="rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.1.2" data-path="rs-maintenance.html">
+            
+                <a href="rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.2.1" data-path="sh-restore.html">
+            
+                <a href="sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="opsmanager.html">
+            
+                <a href="opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dba.html">
+            
+                <a href="dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../elastic/">
+            
+                <a href="../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >高可用</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x9AD8;&#x53EF;&#x7528;">&#x9AD8;&#x53EF;&#x7528;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</a></li>
+<li><a href="#_oplog">Oplog</a>
+<ul class="sectlevel2">
+<li><a href="#_oplog_2">Oplog &#x793A;&#x4F8B;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x4E3B;&#x8282;&#x70B9;&#x9009;&#x4E3E;&#x6307;&#x7684;&#x662F;&#x5728;&#x4E00;&#x4E2A;&#x590D;&#x5236;&#x96C6;&#x4E2D;&#xFF0C;&#x5F53;&#x4E3B;&#x8282;&#x70B9;&#x53D1;&#x751F;&#x5F02;&#x5E38;&#x6216;&#x5B95;&#x673A;&#x540E;&#xFF0C;&#x96C6;&#x7FA4;&#x4E2D;&#x5176;&#x4ED6;&#x8282;&#x70B9;&#x4F1A;&#x9009;&#x4E3E;&#x51FA;&#x4E00;&#x4E2A;&#x65B0;&#x7684;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x4ECE;&#x800C;&#x4FDD;&#x969C;&#x96C6;&#x7FA4;&#x7EE7;&#x7EED;&#x53EF;&#x7528;&#xFF0C;&#x8FD9;&#x4E5F;&#x662F; MongoDB &#x590D;&#x5236;&#x96C6;&#x9AD8;&#x53EF;&#x7528;&#x4E3B;&#x8981;&#x4FDD;&#x969C;&#x673A;&#x5236;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x901A;&#x5E38;&#x9009;&#x4E3E;&#x7684;&#x6D41;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x7B2C;&#x4E00;&#x4E2A;&#x53D1;&#x73B0;&#x4E3B;&#x8282;&#x70B9;&#x5931;&#x8D25;&#x7684;&#x4ECE;&#x8282;&#x70B9;&#x4F1A;&#x53D1;&#x8D77;&#x9009;&#x4E3E;&#xFF0C;&#x5B83;&#x4F1A;&#x901A;&#x77E5;&#x5176;&#x4ED6;&#x8282;&#x70B9;&#x9009;&#x4E3E;&#x5F00;&#x59CB;&#xFF0C;&#x5E76;&#x4E14;&#x9009;&#x4E3E;&#x5B83;&#x81EA;&#x5DF1;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;</p>
+</li>
+<li>
+<p>&#x7B2C;&#x4E00;&#x4E2A;&#x53D1;&#x73B0;&#x4E3B;&#x8282;&#x70B9;&#x5931;&#x8D25;&#x7684;&#x4ECE;&#x8282;&#x70B9;&#x5982;&#x679C;&#x987A;&#x5229;&#x88AB;&#x9009;&#x4E3E;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x5219;&#x9009;&#x4E3E;&#x7ED3;&#x675F;</p>
+</li>
+<li>
+<p>&#x7B2C;&#x4E00;&#x4E2A;&#x53D1;&#x73B0;&#x4E3B;&#x8282;&#x70B9;&#x5931;&#x8D25;&#x7684;&#x4ECE;&#x8282;&#x70B9;&#x5982;&#x679C;&#x6CA1;&#x6709;&#x88AB;&#x9009;&#x4E3E;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x5219;&#x7B2C;&#x4E8C;&#x4E2A;&#x53D1;&#x73B0;&#x4E3B;&#x8282;&#x70B9;&#x5931;&#x8D25;&#x7684;&#x4ECE;&#x8282;&#x70B9;&#x53D1;&#x8D77;&#x9009;&#x4E3E;&#xFF0C;&#x5E76;&#x901A;&#x77E5;&#x5176;&#x4ED6;&#x8282;&#x70B9;&#x9009;&#x4E3E;&#x5B83;&#x81EA;&#x5DF1;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;</p>
+</li>
+<li>
+<p>&#x8FD9;&#x6837;&#x5FAA;&#x73AF;&#x77E5;&#x9053;&#x9009;&#x4E3E;&#x7ED3;&#x675F;</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>&#x590D;&#x5236;&#x96C6;&#x9009;&#x4E3E;&#x6240;&#x5FC5;&#x987B;&#x9075;&#x5FAA;&#x7684;&#x539F;&#x5219;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x66F4;&#x65B0;&#x5230;&#x6700;&#x65B0;&#x7684; optime &#x8282;&#x70B9;&#x4F1A;&#x4F18;&#x5148;&#x9009;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;</p>
+</li>
+<li>
+<p>&#x590D;&#x5236;&#x96C6;&#x4E2D;&#x5B58;&#x6D3B;&#x7684;&#x51E0;&#x70B9;&#x6570;&#x5927;&#x4E8E;&#x6216;&#x7B49;&#x4E8E;&#x5927;&#x591A;&#x6570;&#x8282;&#x70B9;&#x6570;</p>
+</li>
+<li>
+<p>&#x8282;&#x70B9;&#x4E2D; priority &#x5C5E;&#x6027;&#x4F1A;&#x5F71;&#x54CD;&#x4E3B;&#x8282;&#x70B9;&#x7684;&#x9009;&#x4E3E;&#xFF0C;&#x901A;&#x5E38; priority &#x9AD8;&#x4F1A;&#x88AB;&#x9009;&#x4E3A;&#x4E3B;&#x8282;&#x70B9;</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>&#x590D;&#x5236;&#x96C6;&#x8282;&#x70B9;&#x603B;&#x6570;&#x4E3A;&#x5947;&#x6570;&#x4E5F;&#x4E0E;&#x9009;&#x4E3E;&#x6709;&#x5173;&#xFF0C;&#x4E3A;&#x5947;&#x6570;&#x53EF;&#x4EE5;&#x786E;&#x4FDD;&#x5728;&#x8111;&#x88C2;&#xFF08;&#x590D;&#x5236;&#x96C6;&#x88AB;&#x9694;&#x79BB;&#x6210;&#x4E86;&#x4E24;&#x90E8;&#x5206;&#xFF09;&#x7684;&#x60C5;&#x51B5;&#x4E0B;&#xFF0C;&#x4E5F;&#x53EF;&#x4EE5;&#x6B63;&#x5E38;&#x9009;&#x4E3E;&#x3002;</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_oplog">Oplog</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_oplog_2">Oplog &#x793A;&#x4F8B;</h3>
+<div class="listingblock">
+<div class="title"><strong>db.test.insert({_id: 1, value: 1})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570588262</span>, <span class="hljs-number">2</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;-3162705877901309764&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;i&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:31:02.766Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">1</span>
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({_id: 1}, {$inc: {value: 10}})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570588425</span>, <span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1203673023540594040&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;o2&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>
+	},
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:33:45.404Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;$set&quot;</span> : {
+			<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">11</span>
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({}, {$set: {name: &quot;foo&quot;}})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570588832</span>, <span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;6515094169908862103&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;o2&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>
+	},
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:40:32.722Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;$set&quot;</span> : {
+			<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;foo&quot;</span>
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({}, {$set: {name: &quot;bar&quot;}}, {multi: true})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{ <span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589237</span>, <span class="hljs-number">1</span>), <span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>), <span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;-1220821550137650221&quot;</span>), <span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>, <span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>, <span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>, <span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>), <span class="hljs-string">&quot;o2&quot;</span> : { <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span> }, <span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:47:17.242Z&quot;</span>), <span class="hljs-string">&quot;o&quot;</span> : { <span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;$set&quot;</span> : { <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;bar&quot;</span> } } }
+{ <span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589237</span>, <span class="hljs-number">2</span>), <span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>), <span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;3321497765907076362&quot;</span>), <span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>, <span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>, <span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>, <span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>), <span class="hljs-string">&quot;o2&quot;</span> : { <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">2</span> }, <span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:47:17.242Z&quot;</span>), <span class="hljs-string">&quot;o&quot;</span> : { <span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;$set&quot;</span> : { <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;bar&quot;</span> } } }
+{ <span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589237</span>, <span class="hljs-number">3</span>), <span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>), <span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;2492957690417542532&quot;</span>), <span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>, <span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>, <span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>, <span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>), <span class="hljs-string">&quot;o2&quot;</span> : { <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">3</span> }, <span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:47:17.242Z&quot;</span>), <span class="hljs-string">&quot;o&quot;</span> : { <span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;$set&quot;</span> : { <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;bar&quot;</span> } } }</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({_id: 1}, {$push: {array: &quot;a&quot;}}</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589551</span>, <span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;6092504800295097491&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;o2&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>
+	},
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:52:31.794Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;$set&quot;</span> : {
+			<span class="hljs-string">&quot;array&quot;</span> : [
+				<span class="hljs-string">&quot;a&quot;</span>
+			]
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({_id: 1}, {$push: {array: &quot;b&quot;}})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589838</span>, <span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;-3567419863364947058&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;o2&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>
+	},
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:57:18.724Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;$set&quot;</span> : {
+			<span class="hljs-string">&quot;array.1&quot;</span> : <span class="hljs-string">&quot;b&quot;</span>
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.update({_id: 1}, {$addToSet: {array: &quot;e&quot;}})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570589955</span>, <span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;2739338538944730109&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;u&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.test&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;o2&quot;</span> : {
+		<span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>
+	},
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T02:59:15.200Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;$v&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;$set&quot;</span> : {
+			<span class="hljs-string">&quot;array&quot;</span> : [
+				<span class="hljs-string">&quot;a&quot;</span>,
+				<span class="hljs-string">&quot;b&quot;</span>,
+				<span class="hljs-string">&quot;c&quot;</span>,
+				<span class="hljs-string">&quot;e&quot;</span>
+			]
+		}
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>db.test.createIndex({value: 1})</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">{
+	<span class="hljs-string">&quot;ts&quot;</span> : Timestamp(<span class="hljs-number">1570590200</span>, <span class="hljs-number">2</span>),
+	<span class="hljs-string">&quot;t&quot;</span> : NumberLong(<span class="hljs-number">1</span>),
+	<span class="hljs-string">&quot;h&quot;</span> : NumberLong(<span class="hljs-string">&quot;5745853766514684235&quot;</span>),
+	<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+	<span class="hljs-string">&quot;op&quot;</span> : <span class="hljs-string">&quot;c&quot;</span>,
+	<span class="hljs-string">&quot;ns&quot;</span> : <span class="hljs-string">&quot;test.$cmd&quot;</span>,
+	<span class="hljs-string">&quot;ui&quot;</span> : UUID(<span class="hljs-string">&quot;5ea14ede-676a-4be2-9334-eb54042b762b&quot;</span>),
+	<span class="hljs-string">&quot;wall&quot;</span> : ISODate(<span class="hljs-string">&quot;2019-10-09T03:03:20.170Z&quot;</span>),
+	<span class="hljs-string">&quot;o&quot;</span> : {
+		<span class="hljs-string">&quot;createIndexes&quot;</span> : <span class="hljs-string">&quot;test&quot;</span>,
+		<span class="hljs-string">&quot;v&quot;</span> : <span class="hljs-number">2</span>,
+		<span class="hljs-string">&quot;key&quot;</span> : {
+			<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">1</span>
+		},
+		<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;value_1&quot;</span>
+	}
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json"></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="cluster-admin.html" class="navigation navigation-prev " aria-label="Previous page: 集群管理">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="rs-deployments.html" class="navigation navigation-next " aria-label="Next page: 部署">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"高可用","level":"1.2.8.1","depth":3,"next":{"title":"部署","level":"1.2.8.1.1","depth":4,"path":"mongo/dba/rs-deployments.adoc","ref":"mongo/dba/rs-deployments.adoc","articles":[]},"previous":{"title":"集群管理","level":"1.2.8","depth":2,"path":"mongo/dba/cluster-admin.adoc","ref":"mongo/dba/cluster-admin.adoc","articles":[{"title":"高可用","level":"1.2.8.1","depth":3,"path":"mongo/dba/replication.adoc","ref":"mongo/dba/replication.adoc","articles":[{"title":"部署","level":"1.2.8.1.1","depth":4,"path":"mongo/dba/rs-deployments.adoc","ref":"mongo/dba/rs-deployments.adoc","articles":[]},{"title":"维护","level":"1.2.8.1.2","depth":4,"path":"mongo/dba/rs-maintenance.adoc","ref":"mongo/dba/rs-maintenance.adoc","articles":[]}]},{"title":"分片","level":"1.2.8.2","depth":3,"path":"mongo/dba/sharding.adoc","ref":"mongo/dba/sharding.adoc","articles":[{"title":"基于 Delayed Secondary 时间点恢复","level":"1.2.8.2.1","depth":4,"path":"mongo/dba/sh-restore.adoc","ref":"mongo/dba/sh-restore.adoc","articles":[]}]},{"title":"Ops Manager","level":"1.2.8.3","depth":3,"path":"mongo/dba/opsmanager.adoc","ref":"mongo/dba/opsmanager.adoc","articles":[]},{"title":"性能调优","level":"1.2.8.4","depth":3,"path":"mongo/dba/perf.adoc","ref":"mongo/dba/perf.adoc","articles":[]},{"title":"监控","level":"1.2.8.5","depth":3,"path":"mongo/dba/troubleshooting.adoc","ref":"mongo/dba/troubleshooting.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"mongo/dba/replication.adoc","mtime":"2020-03-27T12:12:09.929Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-27T18:59:38.975Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

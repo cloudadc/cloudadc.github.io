@@ -1,0 +1,1792 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Aggregation · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="aggregation-sum.html" />
+    
+    
+    <link rel="prev" href="./" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../viewpoint/presentation.html">
+            
+                <a href="../viewpoint/presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../viewpoint/5thingsfornosql.html">
+            
+                <a href="../viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../viewpoint/oversea.html">
+            
+                <a href="../viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../viewpoint/td.html">
+            
+                <a href="../viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../viewpoint/cards.html">
+            
+                <a href="../viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="../dba/basic.html">
+            
+                <a href="../dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.7.1" data-path="aggregation.html">
+            
+                <a href="aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1.1" data-path="aggregation-sum.html">
+            
+                <a href="aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="transactions.html">
+            
+                <a href="transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="java.html">
+            
+                <a href="java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="geo.html">
+            
+                <a href="geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="../dba/cluster-admin.html">
+            
+                <a href="../dba/cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="../dba/replication.html">
+            
+                <a href="../dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1.1" data-path="../dba/rs-deployments.html">
+            
+                <a href="../dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.1.2" data-path="../dba/rs-maintenance.html">
+            
+                <a href="../dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="../dba/sharding.html">
+            
+                <a href="../dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.2.1" data-path="../dba/sh-restore.html">
+            
+                <a href="../dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="../dba/opsmanager.html">
+            
+                <a href="../dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="../dba/perf.html">
+            
+                <a href="../dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="../dba/troubleshooting.html">
+            
+                <a href="../dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="../dba/security.html">
+            
+                <a href="../dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="../dba/dba.html">
+            
+                <a href="../dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../elastic/">
+            
+                <a href="../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Aggregation</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="aggregation-framework">Aggregation Framework</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x6D4B;&#x8BD5;&#x6570;&#x636E;</a>
+<ul class="sectlevel2">
+<li><a href="#_solarsystem">solarSystem(&#x592A;&#x9633;&#x7CFB;)</a></li>
+<li><a href="#_movies">movies(&#x7535;&#x5F71;)</a></li>
+<li><a href="#_nycfacilities">nycFacilities(&#x7EBD;&#x7EA6;&#x5E02;&#x516C;&#x5171;&#x8BBE;&#x65BD;)</a></li>
+<li><a href="#_parent_reference">parent_reference</a></li>
+</ul>
+</li>
+<li><a href="#__match_project">$match, $project</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x4E0D;&#x662F;&#x6052;&#x661F;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x603B;&#x6570;</a></li>
+<li><a href="#__40_40">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6EE1;&#x8DB3;&#x5927;&#x6C14;&#x5C42;&#x4E2D;&#x6709;&#x6C27;&#x6C14;&#xFF0C;&#x5730;&#x8868;&#x5E73;&#x5747;&#x6E29;&#x5EA6; -40 &#x5230; 40 &#x4E4B;&#x95F4;&#xFF0C;&#x4E14;&#x6709;&#x6708;&#x4EAE;&#x7684;&#x661F;&#x7403;</a></li>
+<li><a href="#___3">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x548C;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;</a></li>
+<li><a href="#___4">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x548C;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x8F93;&#x51FA;&#x4E3A;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;</a></li>
+<li><a href="#___5">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#x3001;&#x91CD;&#x91CF;&#x3001;&#x534A;&#x5F84;&#x53CA;&#x8DDD;&#x79BB;&#x592A;&#x9633;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x4EE5;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x8F93;&#x51FA;</a></li>
+<li><a href="#__imdb_7_crime_horror_pg_g_english_japanese">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; imdb &#x8BC4;&#x5206;&#x81F3;&#x5C11;&#x4E3A; 7&#xFF0C;&#x4F53;&#x88C1;&#x4E0D;&#x662F; &quot;Crime&quot; &#x6216; &quot;Horror&quot;&#xFF0C;&#x8BC4;&#x7EA7;&#x662F; &quot;PG&quot; &#x6216; &quot;G&quot;&#xFF0C;&#x4E14;&#x8BED;&#x8A00;&#x5305;&#x62EC; &quot;English&quot; &#x548C; &quot;Japanese&quot;</a></li>
+<li><a href="#__imdb_7_crime_horror_pg_g_english_japanese_title_rated">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; imdb &#x8BC4;&#x5206;&#x81F3;&#x5C11;&#x4E3A; 7&#xFF0C;&#x4F53;&#x88C1;&#x4E0D;&#x662F; &quot;Crime&quot; &#x6216; &quot;Horror&quot;&#xFF0C;&#x8BC4;&#x7EA7;&#x662F; &quot;PG&quot; &#x6216; &quot;G&quot;&#xFF0C;&#x4E14;&#x8BED;&#x8A00;&#x5305;&#x62EC; &quot;English&quot; &#x548C; &quot;Japanese&quot;&#xFF0C;&#x8F93;&#x51FA;&#x4EC5;&#x663E;&#x793A; title &#x548C; rated &#x5C5E;&#x6027;</a></li>
+<li><a href="#__title">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; title &#x4EC5;&#x4E3A;&#x4E00;&#x4E2A;&#x5B57;&#x7684;&#x7535;&#x5F71;</a></li>
+<li><a href="#__cast_director_writer">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3;&#x540C;&#x4E00;&#x4E2A;&#x4EBA;&#x5373;&#x662F; cast&#xFF0C;&#x53C8;&#x662F; director&#xFF0C;&#x8FD8;&#x662F; writer</a></li>
+</ul>
+</li>
+<li><a href="#__addfields_geonear">$addFields, $geoNear</a>
+<ul class="sectlevel2">
+<li><a href="#___6">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#x3001;&#x91CD;&#x91CF;&#x3001;&#x534A;&#x5F84;&#x53CA;&#x8DDD;&#x79BB;&#x592A;&#x9633;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x4EE5;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x8F93;&#x51FA;</a></li>
+<li><a href="#___7">&#x67E5;&#x8BE2;&#x7EBD;&#x7EA6;&#x65F6;&#x4EE3;&#x5E7F;&#x573A;&#x9644;&#x8FD1;&#x7684;&#x516C;&#x5171;&#x8BBE;&#x65BD;</a></li>
+<li><a href="#___8">&#x67E5;&#x8BE2;&#x7EBD;&#x7EA6;&#x65F6;&#x4EE3;&#x5E7F;&#x573A;&#x9644;&#x8FD1;&#x7684;&#x533B;&#x9662;</a></li>
+</ul>
+</li>
+<li><a href="#__sort_skip_limit_count">$sort, $skip, $limit, $count</a>
+<ul class="sectlevel2">
+<li><a href="#__5">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x4EC5;&#x8F93;&#x51FA; 5 &#x6761;&#x8BB0;&#x5F55;</a></li>
+<li><a href="#__5_2">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x4E14;&#x8DF3;&#x8FC7;&#x524D; 5 &#x6761;&#x8BB0;&#x5F55;</a></li>
+<li><a href="#___9">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x884C;&#x661F;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x884C;&#x661F;&#x7684;&#x6570;&#x91CF;</a></li>
+<li><a href="#___10">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x5E76;&#x4EE5;&#x6708;&#x7403;&#x7684;&#x6570;&#x91CF;&#x964D;&#x5E8F;&#x6392;&#x5E8F;</a></li>
+<li><a href="#___11">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#x3001;&#x548C;&#x662F;&#x5426;&#x6709;&#x78C1;&#x573A;&#xFF0C;&#x5E76;&#x4EE5;&#x6708;&#x7403;&#x7684;&#x6570;&#x91CF;&#x548C;&#x662F;&#x5426;&#x6709;&#x78C1;&#x573A;&#x964D;&#x5E8F;&#x6392;&#x5E8F;</a></li>
+<li><a href="#___12">&#x67E5;&#x627E;&#x62CD;&#x5E8F;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5B57;&#x6BB5;</a></li>
+</ul>
+</li>
+<li><a href="#__group_sum_avg">$group, $sum, $avg</a>
+<ul class="sectlevel2">
+<li><a href="#___13">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5E74;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x6BCF;&#x5E74;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;</a></li>
+<li><a href="#___14">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5E74;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x7EDF;&#x8BA1;&#x6BCF;&#x5E74;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;&#xFF0C;&#x5E76;&#x6309;&#x7167;&#x6BCF;&#x5E74;&#x7535;&#x5F71;&#x603B;&#x6570;&#x7531;&#x591A;&#x5230;&#x5C11;&#x6392;&#x5E8F;</a></li>
+<li><a href="#___15">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5BFC;&#x6F14;&#x7684;&#x6570;&#x91CF;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x7EDF;&#x8BA1;&#x7535;&#x5F71;&#x7684;&#x6570;&#x91CF;&#xFF0C;&#x5E76;&#x4EE5;&#x5BFC;&#x6F14;&#x7684;&#x6570;&#x91CF;&#x7531;&#x591A;&#x5230;&#x5C11;&#x6392;&#x5E8F;</a></li>
+<li><a href="#__oscar_imdb">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x81F3;&#x5C11;&#x83B7;&#x7684;&#x4E00;&#x6B21;Oscar&#x5956;&#xFF0C;&#x8BA1;&#x7B97;&#x6700;&#x9AD8;&#x3001;&#x6700;&#x4F4E;&#x3001;&#x5E73;&#x5747; imdb &#x8BC4;&#x5206;</a></li>
+</ul>
+</li>
+<li><a href="#__unwind">$unwind</a>
+<ul class="sectlevel2">
+<li><a href="#__2010_2015_imdb_90">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA; 2010 &#x5230; 2015 &#x5E74;&#x95F4; imdb &#x8BC4;&#x5206;&#x6700;&#x9AD8;&#x7C7B;&#x578B;&#xFF0C;&#x4E14;&#x7535;&#x5F71;&#x957F;&#x5EA6;&#x5927;&#x4E8E; 90 &#x5206;&#x949F;</a></li>
+<li><a href="#___16">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA;&#x6240;&#x6709;&#x82F1;&#x6587;&#x7535;&#x5F71;&#x4E2D;&#x6392;&#x540D;&#x6700;&#x9AD8;&#x7684;&#x6F14;&#x5458;&#xFF0C;&#x5E76;&#x8BA1;&#x7B97;&#x53C2;&#x6F14;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;&#xFF0C;&#x53CA;&#x5E73;&#x5747;&#x8BC4;&#x5206;</a></li>
+</ul>
+</li>
+<li><a href="#__lookup_graphlookup">$lookup, $graphLookup</a>
+<ul class="sectlevel2">
+<li><a href="#___17">&#x67E5;&#x8BE2;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#xFF0C;&#x5C06;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#x4E2D;&#x822A;&#x7A7A;&#x516C;&#x53F8;&#x5C5E;&#x6027;&#x66FF;&#x6362;&#x6210;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;</a></li>
+<li><a href="#__boeing_747_airbus_a380">&#x67E5;&#x8BE2;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#xFF0C;&#x67E5;&#x627E;&#x51FA;&#x8DEF;&#x5F84;&#x4F7F;&#x7528; Boeing 747 &#x6216; Airbus A380 &#x7684;&#x822A;&#x7A7A;&#x516C;&#x53F8;</a></li>
+<li><a href="#__parent_reference_eliot">&#x67E5;&#x8BE2; parent_reference&#xFF0C;&#x83B7;&#x53D6;&#x6240;&#x6709;&#x6C47;&#x62A5;&#x7ED9; Eliot &#x7684;&#x4EBA;</a></li>
+<li><a href="#__parent_reference_shannon">&#x67E5;&#x8BE2; parent_reference&#xFF0C;&#x83B7;&#x53D6; Shannon &#x7684;&#x6240;&#x6709;&#x8001;&#x677F;</a></li>
+</ul>
+</li>
+<li><a href="#__bucket_bucketauto_sortbycount">$bucket, $bucketAuto, $sortByCount</a>
+<ul class="sectlevel2">
+<li><a href="#__imdb_0_5_8">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA; imdb &#x8BC4;&#x5206;&#x4E3A; 0&#xFF0C;5&#xFF0C;8&#xFF0C;&#x53CA;&#x6CA1;&#x6709;&#x8BC4;&#x5206;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;</a></li>
+<li><a href="#__imdb_10_metacritic_10">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA;&#x5728;imdb &#x8BC4;&#x5206;&#x6700;&#x70ED;&#x524D; 10 &#x548C; metacritic &#x6700;&#x70ED;&#x524D; 10 &#x7684;&#x7535;&#x5F71;</a></li>
+</ul>
+</li>
+<li><a href="#__redact_out">$redact, $out</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x6D4B;&#x8BD5;&#x6570;&#x636E;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_solarsystem">solarSystem(&#x592A;&#x9633;&#x7CFB;)</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/solar-system.png" alt="solar system.png"></span></p>
+</div>
+<div class="paragraph">
+<p>solarSystem collection &#x4E2D;&#x5305;&#x62EC;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x6052;&#x661F;&#x548C;&#x884C;&#x661F;&#x7684;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x6BCF;&#x4E2A;&#x661F;&#x7403;&#x5305;&#x542B;&#x7684;&#x5177;&#x4F53;&#x5C5E;&#x6027;&#x6709;&#x540D;&#x79F0;&#x3001;&#x7C7B;&#x578B;&#x3001;&#x534A;&#x5F84;&#xFF0C;&#x91CD;&#x91CF;&#xFF0C;&#x8DDD;&#x79BB;&#x592A;&#x9633;&#x7684;&#x8DDD;&#x79BB;&#x7B49;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x793A;&#x4F8B;&#xFF1A;&#x67E5;&#x8BE2;&#x5730;&#x7403;&#x7684;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.solarSystem.find({<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>}).pretty()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;59a06674c8df9f3cd2ee7d54&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>,
+	<span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;Terrestrial planet&quot;</span>,
+	<span class="hljs-string">&quot;orderFromSun&quot;</span> : <span class="hljs-number">3</span>,
+	<span class="hljs-string">&quot;radius&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">6378.137</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;km&quot;</span>
+	},
+	<span class="hljs-string">&quot;mass&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">5.9723e+24</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;kg&quot;</span>
+	},
+	<span class="hljs-string">&quot;sma&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">149600000</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;km&quot;</span>
+	},
+	<span class="hljs-string">&quot;orbitalPeriod&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;years&quot;</span>
+	},
+	<span class="hljs-string">&quot;eccentricity&quot;</span> : <span class="hljs-number">0.0167</span>,
+	<span class="hljs-string">&quot;meanOrbitalVelocity&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">29.78</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;km/sec&quot;</span>
+	},
+	<span class="hljs-string">&quot;rotationPeriod&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">1</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;days&quot;</span>
+	},
+	<span class="hljs-string">&quot;inclinationOfAxis&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">23.45</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;degrees&quot;</span>
+	},
+	<span class="hljs-string">&quot;meanTemperature&quot;</span> : <span class="hljs-number">15</span>,
+	<span class="hljs-string">&quot;gravity&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">9.8</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;m/s^2&quot;</span>
+	},
+	<span class="hljs-string">&quot;escapeVelocity&quot;</span> : {
+		<span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">11.18</span>,
+		<span class="hljs-string">&quot;units&quot;</span> : <span class="hljs-string">&quot;km/sec&quot;</span>
+	},
+	<span class="hljs-string">&quot;meanDensity&quot;</span> : <span class="hljs-number">5.52</span>,
+	<span class="hljs-string">&quot;atmosphericComposition&quot;</span> : <span class="hljs-string">&quot;N2+O2&quot;</span>,
+	<span class="hljs-string">&quot;numberOfMoons&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;hasRings&quot;</span> : <span class="hljs-literal">false</span>,
+	<span class="hljs-string">&quot;hasMagneticField&quot;</span> : <span class="hljs-literal">true</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_movies">movies(&#x7535;&#x5F71;)</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/hero_poster.jpg" alt="hero poster.jpg"></span></p>
+</div>
+<div class="paragraph">
+<p>movies collection &#x4E2D;&#x5305;&#x62EC;&#x7535;&#x5F71;&#x7684;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x4E0B;&#x6240;&#x793A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>title - &#x7535;&#x5F71;&#x7684;&#x540D;&#x79F0;</p>
+</li>
+<li>
+<p>year - &#x4E0A;&#x6620;&#x7684;&#x5E74;&#x4EE3;</p>
+</li>
+<li>
+<p>cast - &#x4E3B;&#x6F14;</p>
+</li>
+<li>
+<p>type - &#x7C7B;&#x578B;</p>
+</li>
+<li>
+<p>directors - &#x5BFC;&#x6F14;</p>
+</li>
+<li>
+<p>imdb - imdb &#x7684;&#x8BC4;&#x5206;</p>
+</li>
+<li>
+<p>countries - &#x56FD;&#x5BB6;</p>
+</li>
+<li>
+<p>genres - &#x4F53;&#x88C1;</p>
+</li>
+<li>
+<p>tomatoes - &#x70C2;&#x756A;&#x8304;&#x8BC4;&#x5206;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.movies.findOne()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;573a1390f29313caabcd421c&quot;</span>),
+	<span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;A Turn of the Century Illusionist&quot;</span>,
+	<span class="hljs-string">&quot;year&quot;</span> : <span class="hljs-number">1899</span>,
+	<span class="hljs-string">&quot;runtime&quot;</span> : <span class="hljs-number">1</span>,
+	<span class="hljs-string">&quot;cast&quot;</span> : [
+		<span class="hljs-string">&quot;Georges M&#xFFFD;li&#xFFFD;s&quot;</span>
+	],
+	<span class="hljs-string">&quot;lastupdated&quot;</span> : <span class="hljs-string">&quot;2015-08-29 00:21:21.547000000&quot;</span>,
+	<span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;movie&quot;</span>,
+	<span class="hljs-string">&quot;directors&quot;</span> : [
+		<span class="hljs-string">&quot;Georges M&#xFFFD;li&#xFFFD;s&quot;</span>
+	],
+	<span class="hljs-string">&quot;imdb&quot;</span> : {
+		<span class="hljs-string">&quot;rating&quot;</span> : <span class="hljs-number">6.6</span>,
+		<span class="hljs-string">&quot;votes&quot;</span> : <span class="hljs-number">580</span>,
+		<span class="hljs-string">&quot;id&quot;</span> : <span class="hljs-number">246</span>
+	},
+	<span class="hljs-string">&quot;countries&quot;</span> : [
+		<span class="hljs-string">&quot;France&quot;</span>
+	],
+	<span class="hljs-string">&quot;genres&quot;</span> : [
+		<span class="hljs-string">&quot;Short&quot;</span>
+	],
+	<span class="hljs-string">&quot;tomatoes&quot;</span> : {
+		<span class="hljs-string">&quot;viewer&quot;</span> : {
+			<span class="hljs-string">&quot;rating&quot;</span> : <span class="hljs-number">3.8</span>,
+			<span class="hljs-string">&quot;numReviews&quot;</span> : <span class="hljs-number">32</span>
+		},
+		<span class="hljs-string">&quot;lastUpdated&quot;</span> : ISODate(<span class="hljs-string">&quot;2015-08-20T18:46:44Z&quot;</span>)
+	}
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nycfacilities">nycFacilities(&#x7EBD;&#x7EA6;&#x5E02;&#x516C;&#x5171;&#x8BBE;&#x65BD;)</h3>
+<div class="paragraph">
+<p>nycFacilities collection &#x4E2D;&#x5305;&#x62EC;&#x7EBD;&#x7EA6;&#x5E02;&#x7684;&#x516C;&#x5171;&#x8BBE;&#x65BD;&#xFF0C;&#x5177;&#x4F53;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>name - &#x540D;&#x79F0;</p>
+</li>
+<li>
+<p>address - &#x5730;&#x5740;</p>
+</li>
+<li>
+<p>borough - &#x533A;</p>
+</li>
+<li>
+<p>location - &#x5730;&#x5740;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.nycFacilities.findOne()
+{
+	<span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;59a57f72ea2da4c51ef35c5e&quot;</span>),
+	<span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Joan Of Arc Park&quot;</span>,
+	<span class="hljs-string">&quot;address&quot;</span> : {
+		<span class="hljs-string">&quot;number&quot;</span> : <span class="hljs-string">&quot;&quot;</span>,
+		<span class="hljs-string">&quot;street&quot;</span> : <span class="hljs-string">&quot;&quot;</span>,
+		<span class="hljs-string">&quot;city&quot;</span> : <span class="hljs-string">&quot;New York&quot;</span>,
+		<span class="hljs-string">&quot;zipcode&quot;</span> : <span class="hljs-string">&quot;10024&quot;</span>
+	},
+	<span class="hljs-string">&quot;borough&quot;</span> : <span class="hljs-string">&quot;Manhattan&quot;</span>,
+	<span class="hljs-string">&quot;location&quot;</span> : {
+		<span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;Point&quot;</span>,
+		<span class="hljs-string">&quot;coordinates&quot;</span> : [
+			<span class="hljs-number">-73.976521</span>,
+			<span class="hljs-number">40.79415</span>
+		]
+	},
+	<span class="hljs-string">&quot;domain&quot;</span> : <span class="hljs-string">&quot;Parks, Gardens, and Historical Sites&quot;</span>,
+	<span class="hljs-string">&quot;group&quot;</span> : <span class="hljs-string">&quot;Parks and Plazas&quot;</span>,
+	<span class="hljs-string">&quot;specialty&quot;</span> : <span class="hljs-string">&quot;Streetscapes, Plazas, and Malls&quot;</span>,
+	<span class="hljs-string">&quot;type&quot;</span> : <span class="hljs-string">&quot;Triangle/Plaza&quot;</span>
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_parent_reference">parent_reference</h3>
+<div class="paragraph">
+<p>parent_reference &#x96C6;&#x5408;&#x4E2D;&#x4FDD;&#x5B58;&#x7684;&#x662F; MongoDB &#x516C;&#x53F8;&#x7BA1;&#x7406;&#x5C42;&#x4FE1;&#x606F;&#xFF0C;&#x5982;&#x4E0B;&#xFF0C;reports_to &#x4EE3;&#x8868;&#x7740;&#x5BF9;&#x5E94;&#x7684;&#x6C47;&#x62A5;&#x5173;&#x7CFB;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-json" data-lang="json">db.parent_reference.find()
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">2</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Eliot&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;CTO&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">1</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">3</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Meagen&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;CMO&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">1</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">6</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Ron&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP PM&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">2</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">7</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Elyse&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;COO&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">2</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">4</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Carlos&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;CRO&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">1</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Dev&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;CEO&quot;</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">5</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Andrew&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP Eng&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">2</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">8</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Richard&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP PS&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">1</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">9</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Shannon&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP Education&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">5</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">10</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Dan&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP Core Engineering&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">5</span> }
+{ <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">11</span>, <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Cailin&quot;</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-string">&quot;VP Cloud Engineering&quot;</span>, <span class="hljs-string">&quot;reports_to&quot;</span> : <span class="hljs-number">5</span> }</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__match_project">$match, $project</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x4E0D;&#x662F;&#x6052;&#x661F;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x603B;&#x6570;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">db.solarSystem.aggregate([{
+   $match: {
+     type: {$ne: &quot;Star&quot;}
+     }
+   }, {
+   $count: &quot;planets&quot;
+   }
+])</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__40_40">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6EE1;&#x8DB3;&#x5927;&#x6C14;&#x5C42;&#x4E2D;&#x6709;&#x6C27;&#x6C14;&#xFF0C;&#x5730;&#x8868;&#x5E73;&#x5747;&#x6E29;&#x5EA6; -40 &#x5230; 40 &#x4E4B;&#x95F4;&#xFF0C;&#x4E14;&#x6709;&#x6708;&#x4EAE;&#x7684;&#x661F;&#x7403;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">db.solarSystem.aggregate([{
+  &quot;$match&quot;: {
+    &quot;atmosphericComposition&quot;: { &quot;$in&quot;: [/O2/] },
+    &quot;meanTemperature&quot;: { $gte: -40, &quot;$lte&quot;: 40 }
+  }
+}, {
+  &quot;$project&quot;: {
+    &quot;_id&quot;: 0,
+    &quot;name&quot;: 1,
+    &quot;hasMoons&quot;: { &quot;$gt&quot;: [&quot;$numberOfMoons&quot;, 0] }
+  }
+}], { &quot;allowDiskUse&quot;: true});</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x548C;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {_id: <span class="hljs-number">0</span>, name: <span class="hljs-number">1</span>, <span class="hljs-string">&quot;gravity.value&quot;</span>: <span class="hljs-number">1</span>}
+  }
+];
+
+db.solarSystem.aggregate(pipeline);
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Uranus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">8.87</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mercury&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">3.24</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">9.8</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Jupiter&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">24.79</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Venus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">8.87</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mars&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">3.71</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Sun&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">274</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Saturn&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">10.44</span> } }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Neptune&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : { <span class="hljs-string">&quot;value&quot;</span> : <span class="hljs-number">11.15</span> } }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x548C;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x8F93;&#x51FA;&#x4E3A;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {_id: <span class="hljs-number">0</span>, name: <span class="hljs-number">1</span>, gravity: <span class="hljs-string">&quot;$gravity.value&quot;</span>}
+  }
+];
+
+db.solarSystem.aggregate(pipeline);
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Uranus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mercury&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.24</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">9.8</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Jupiter&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">24.79</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Venus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mars&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.71</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Sun&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">274</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Saturn&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">10.44</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Neptune&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">11.15</span> }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#x3001;&#x91CD;&#x91CF;&#x3001;&#x534A;&#x5F84;&#x53CA;&#x8DDD;&#x79BB;&#x592A;&#x9633;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x4EE5;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x8F93;&#x51FA;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      gravity: <span class="hljs-string">&quot;$gravity.value&quot;</span>,
+      <span class="hljs-string">&quot;mass&quot;</span>: <span class="hljs-string">&quot;$mass.value&quot;</span>,
+      <span class="hljs-string">&quot;radius&quot;</span>: <span class="hljs-string">&quot;$radius.value&quot;</span>,
+      <span class="hljs-string">&quot;sma&quot;</span>: <span class="hljs-string">&quot;$sma.value&quot;</span>
+    }
+  }
+];
+
+db.solarSystem.aggregate(pipeline)
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Uranus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">8.6813e+25</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">25559</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">2872460000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mercury&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.24</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">3.3e+23</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">4879</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">57910000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">9.8</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">5.9723e+24</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">6378.137</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">149600000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Jupiter&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">24.79</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.89819e+27</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">71492</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">778570000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Venus&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">4.8675e+24</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">6051.8</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">108210000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mars&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.71</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">6.4171e+23</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">3396.2</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">227920000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Sun&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">274</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.9885e+30</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">695700</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">0</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Saturn&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">10.44</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">5.6834e+26</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">60268</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">1433530000</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Neptune&quot;</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">11.15</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.02413e+26</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">24765</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">4495060000</span> }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__imdb_7_crime_horror_pg_g_english_japanese">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; imdb &#x8BC4;&#x5206;&#x81F3;&#x5C11;&#x4E3A; 7&#xFF0C;&#x4F53;&#x88C1;&#x4E0D;&#x662F; &quot;Crime&quot; &#x6216; &quot;Horror&quot;&#xFF0C;&#x8BC4;&#x7EA7;&#x662F; &quot;PG&quot; &#x6216; &quot;G&quot;&#xFF0C;&#x4E14;&#x8BED;&#x8A00;&#x5305;&#x62EC; &quot;English&quot; &#x548C; &quot;Japanese&quot;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+    { $match :
+            { $and : [
+                    { <span class="hljs-string">&quot;imdb.rating&quot;</span> : { $gte : <span class="hljs-number">7</span> }},
+                        { <span class="hljs-string">&quot;genres&quot;</span> :
+                            { $nin :[ <span class="hljs-string">&quot;Crime&quot;</span>, <span class="hljs-string">&quot;Horror&quot;</span> ]}
+                        },
+                        { <span class="hljs-string">&quot;rated&quot;</span> :
+                                { $<span class="hljs-keyword">in</span> : [ <span class="hljs-string">&quot;PG&quot;</span>, <span class="hljs-string">&quot;G&quot;</span> ]}
+                        },
+                        { <span class="hljs-string">&quot;languages&quot;</span> :
+                                { $all : [ <span class="hljs-string">&quot;English&quot;</span>, <span class="hljs-string">&quot;Japanese&quot;</span> ]}
+                        }
+                ]}
+        }
+];
+
+<span class="hljs-keyword">var</span> count = db.movies.aggregate(pipeline).itcount();
+print(<span class="hljs-string">&quot;Documents fetched by the pipeline: &quot;</span> + count);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__imdb_7_crime_horror_pg_g_english_japanese_title_rated">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; imdb &#x8BC4;&#x5206;&#x81F3;&#x5C11;&#x4E3A; 7&#xFF0C;&#x4F53;&#x88C1;&#x4E0D;&#x662F; &quot;Crime&quot; &#x6216; &quot;Horror&quot;&#xFF0C;&#x8BC4;&#x7EA7;&#x662F; &quot;PG&quot; &#x6216; &quot;G&quot;&#xFF0C;&#x4E14;&#x8BED;&#x8A00;&#x5305;&#x62EC; &quot;English&quot; &#x548C; &quot;Japanese&quot;&#xFF0C;&#x8F93;&#x51FA;&#x4EC5;&#x663E;&#x793A; title &#x548C; rated &#x5C5E;&#x6027;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+    { $match :
+            { $and : [
+                    { <span class="hljs-string">&quot;imdb.rating&quot;</span> : { $gte : <span class="hljs-number">7</span> }},
+                        { <span class="hljs-string">&quot;genres&quot;</span> :
+                            { $nin :[ <span class="hljs-string">&quot;Crime&quot;</span>, <span class="hljs-string">&quot;Horror&quot;</span> ]}
+                        },
+                        { <span class="hljs-string">&quot;rated&quot;</span> :
+                                { $<span class="hljs-keyword">in</span> : [ <span class="hljs-string">&quot;PG&quot;</span>, <span class="hljs-string">&quot;G&quot;</span> ]}
+                        },
+                        { <span class="hljs-string">&quot;languages&quot;</span> :
+                                { $all : [ <span class="hljs-string">&quot;English&quot;</span>, <span class="hljs-string">&quot;Japanese&quot;</span> ]}
+                        }
+                ]}
+        },
+        { $project : { <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-number">0</span>, <span class="hljs-string">&quot;title&quot;</span> : <span class="hljs-number">1</span>, <span class="hljs-string">&quot;rated&quot;</span> : <span class="hljs-number">1</span>}}
+];
+
+<span class="hljs-keyword">var</span> count = db.movies.aggregate(pipeline).itcount();
+print(<span class="hljs-string">&quot;Documents fetched by the pipeline: &quot;</span> + count);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__title">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3; title &#x4EC5;&#x4E3A;&#x4E00;&#x4E2A;&#x5B57;&#x7684;&#x7535;&#x5F71;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+        { $project :
+        { <span class="hljs-string">&quot;titleWords&quot;</span> :
+                    { $size :
+                            { $split : [ <span class="hljs-string">&quot;$title&quot;</span> , <span class="hljs-string">&quot; &quot;</span> ] }
+                        }
+                }
+        },
+    { $match : { <span class="hljs-string">&quot;titleWords&quot;</span> : {$eq: <span class="hljs-number">1</span>}} }
+];
+
+db.movies.aggregate(pipeline).itcount()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__cast_director_writer">&#x67E5;&#x627E;&#x7535;&#x5F71;&#x4E2D;&#x6EE1;&#x8DB3;&#x540C;&#x4E00;&#x4E2A;&#x4EBA;&#x5373;&#x662F; cast&#xFF0C;&#x53C8;&#x662F; director&#xFF0C;&#x8FD8;&#x662F; writer</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {
+      <span class="hljs-string">&quot;writers&quot;</span>: {$elemMatch: {$exists: <span class="hljs-literal">true</span>}},
+      <span class="hljs-string">&quot;cast&quot;</span>: {$elemMatch: {$exists: <span class="hljs-literal">true</span>}},
+      <span class="hljs-string">&quot;directors&quot;</span>: {$elemMatch: {$exists: <span class="hljs-literal">true</span>}}
+    }
+  },
+  {
+    $project: {
+      <span class="hljs-string">&quot;writers&quot;</span>: {
+        $map: {
+          input: <span class="hljs-string">&quot;$writers&quot;</span>,
+          <span class="hljs-keyword">as</span>: <span class="hljs-string">&quot;writer&quot;</span>,
+          <span class="hljs-keyword">in</span>: {
+            $arrayElemAt: [{$split: [<span class="hljs-string">&quot;$$writer&quot;</span>, <span class="hljs-string">&quot; (&quot;</span>]}, <span class="hljs-number">0</span>]
+          }
+        }
+      },
+      <span class="hljs-string">&quot;cast&quot;</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-string">&quot;directors&quot;</span> : <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $project: {
+      <span class="hljs-string">&quot;laborOfLove&quot;</span>: {
+        $gt: [{$size: {$setIntersection: [<span class="hljs-string">&quot;$writers&quot;</span>, <span class="hljs-string">&quot;$cast&quot;</span>, <span class="hljs-string">&quot;$directors&quot;</span>]}}, <span class="hljs-number">0</span>]
+      }
+    }
+  },
+  {
+    $match: {
+      <span class="hljs-string">&quot;laborOfLove&quot;</span> : {$eq: <span class="hljs-literal">true</span>}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline).itcount()</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__addfields_geonear">$addFields, $geoNear</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___6">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x5F15;&#x529B;&#x7684;&#x5927;&#x5C0F;&#x3001;&#x91CD;&#x91CF;&#x3001;&#x534A;&#x5F84;&#x53CA;&#x8DDD;&#x79BB;&#x592A;&#x9633;&#x7684;&#x8DDD;&#x79BB;&#xFF0C;&#x5E76;&#x4E14;&#x683C;&#x5F0F;&#x5316;&#x4EE5;&#x4E00;&#x4E2A;&#x5C5E;&#x6027;&#x8F93;&#x51FA;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      gravity: <span class="hljs-number">1</span>,
+      mass: <span class="hljs-number">1</span>,
+      radius:<span class="hljs-number">1</span>,
+      sma: <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $addFields: {
+      <span class="hljs-string">&quot;gravity&quot;</span>: <span class="hljs-string">&quot;$gravity.value&quot;</span>,
+      <span class="hljs-string">&quot;mass&quot;</span>: <span class="hljs-string">&quot;$mass.value&quot;</span>,
+      <span class="hljs-string">&quot;radius&quot;</span>: <span class="hljs-string">&quot;$radius.value&quot;</span>,
+      <span class="hljs-string">&quot;sma&quot;</span>: <span class="hljs-string">&quot;$sma.value&quot;</span>
+    }
+  }
+];
+
+db.solarSystem.aggregate(pipeline)
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Uranus&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">25559</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">8.6813e+25</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">2872460000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mercury&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">4879</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">3.3e+23</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">57910000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.24</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Earth&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">6378.137</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">5.9723e+24</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">149600000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">9.8</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Jupiter&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">71492</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.89819e+27</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">778570000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">24.79</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Venus&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">6051.8</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">4.8675e+24</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">108210000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">8.87</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Mars&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">3396.2</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">6.4171e+23</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">227920000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">3.71</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Sun&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">695700</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.9885e+30</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">0</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">274</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Saturn&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">60268</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">5.6834e+26</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">1433530000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">10.44</span> }
+{ <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Neptune&quot;</span>, <span class="hljs-string">&quot;radius&quot;</span> : <span class="hljs-number">24765</span>, <span class="hljs-string">&quot;mass&quot;</span> : <span class="hljs-number">1.02413e+26</span>, <span class="hljs-string">&quot;sma&quot;</span> : <span class="hljs-number">4495060000</span>, <span class="hljs-string">&quot;gravity&quot;</span> : <span class="hljs-number">11.15</span> }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x67E5;&#x8BE2;&#x7EBD;&#x7EA6;&#x65F6;&#x4EE3;&#x5E7F;&#x573A;&#x9644;&#x8FD1;&#x7684;&#x516C;&#x5171;&#x8BBE;&#x65BD;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $geoNear: {
+      <span class="hljs-string">&quot;near&quot;</span>: {
+        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Point&quot;</span>,
+        <span class="hljs-string">&quot;coordinates&quot;</span>: [<span class="hljs-number">-73.98769766092299</span>, <span class="hljs-number">40.757345233626594</span>]
+      },
+      <span class="hljs-string">&quot;distanceField&quot;</span>: <span class="hljs-string">&quot;distanceFromTimeSquire&quot;</span>,
+      <span class="hljs-string">&quot;spherical&quot;</span>: <span class="hljs-literal">true</span>
+    }
+  }
+];
+
+db.nycFacilities.aggregate(pipeline).itcount()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___8">&#x67E5;&#x8BE2;&#x7EBD;&#x7EA6;&#x65F6;&#x4EE3;&#x5E7F;&#x573A;&#x9644;&#x8FD1;&#x7684;&#x533B;&#x9662;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $geoNear: {
+      <span class="hljs-string">&quot;near&quot;</span>: {
+        <span class="hljs-string">&quot;type&quot;</span>: <span class="hljs-string">&quot;Point&quot;</span>,
+        <span class="hljs-string">&quot;coordinates&quot;</span>: [<span class="hljs-number">-73.98769766092299</span>, <span class="hljs-number">40.757345233626594</span>]
+      },
+      <span class="hljs-string">&quot;distanceField&quot;</span>: <span class="hljs-string">&quot;distanceFromTimeSquire&quot;</span>,
+      <span class="hljs-string">&quot;spherical&quot;</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-string">&quot;query&quot;</span>: { type: <span class="hljs-string">&quot;Hospital&quot;</span> },
+      <span class="hljs-string">&quot;limit&quot;</span>: <span class="hljs-number">5</span>
+    }
+  }
+];
+
+db.nycFacilities.aggregate(pipeline).itcount()</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__sort_skip_limit_count">$sort, $skip, $limit, $count</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__5">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x4EC5;&#x8F93;&#x51FA; 5 &#x6761;&#x8BB0;&#x5F55;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      numberOfMoons: <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $limit: <span class="hljs-number">5</span>
+  }
+];
+
+db.solarSystem.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__5_2">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x4E14;&#x8DF3;&#x8FC7;&#x524D; 5 &#x6761;&#x8BB0;&#x5F55;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      numberOfMoons: <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $skip: <span class="hljs-number">5</span>
+  }
+];
+
+db.solarSystem.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___9">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x884C;&#x661F;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x884C;&#x661F;&#x7684;&#x6570;&#x91CF;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {<span class="hljs-string">&quot;type&quot;</span>: {$eq: <span class="hljs-string">&quot;Terrestrial planet&quot;</span>}}
+  },
+  {
+    $count: <span class="hljs-string">&quot;terrestrial planets&quot;</span>
+  }
+];
+
+db.solarSystem.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___10">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x548C;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#xFF0C;&#x5E76;&#x4EE5;&#x6708;&#x7403;&#x7684;&#x6570;&#x91CF;&#x964D;&#x5E8F;&#x6392;&#x5E8F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      numberOfMoons: <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $sort: {numberOfMoons: <span class="hljs-number">-1</span>}
+  }
+];
+
+db.solarSystem.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___11">&#x67E5;&#x8BE2;&#x592A;&#x9633;&#x7CFB;&#x4E2D;&#x6240;&#x6709;&#x7684;&#x661F;&#x7403;&#xFF0C;&#x53EA;&#x663E;&#x793A;&#x661F;&#x7403;&#x7684;&#x540D;&#x79F0;&#x3001;&#x9644;&#x8FD1;&#x7684;&#x6708;&#x7403;&#x3001;&#x548C;&#x662F;&#x5426;&#x6709;&#x78C1;&#x573A;&#xFF0C;&#x5E76;&#x4EE5;&#x6708;&#x7403;&#x7684;&#x6570;&#x91CF;&#x548C;&#x662F;&#x5426;&#x6709;&#x78C1;&#x573A;&#x964D;&#x5E8F;&#x6392;&#x5E8F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $project: {
+      _id: <span class="hljs-number">0</span>,
+      name: <span class="hljs-number">1</span>,
+      hasMagneticField: <span class="hljs-number">1</span>,
+      numberOfMoons: <span class="hljs-number">1</span>
+    }
+  },
+  {
+    $sort: {hasMagneticField: <span class="hljs-number">-1</span>, numberOfMoons: <span class="hljs-number">-1</span>}
+  }
+];
+
+db.solarSystem.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___12">&#x67E5;&#x627E;&#x62CD;&#x5E8F;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5B57;&#x6BB5;</h3>
+<div class="paragraph">
+<p>&#x67E5;&#x627E;&#x62CD;&#x5E8F;&#x7535;&#x5F71;&#xFF0C;&#x5E76;&#x6DFB;&#x52A0;&#x5B57;&#x6BB5;&#x4F7F;&#x6EE1;&#x8DB3;&#x5982;&#x4E0B;&#x6761;&#x4EF6;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>movies released in the USA</p>
+</li>
+<li>
+<p>tomatoes.viewer.rating greater than or equal to 3</p>
+</li>
+<li>
+<p>calculate a new field called num_favs that represets how many favorites appear in the cast field of the movie</p>
+</li>
+<li>
+<p>Sort your results by num_favs, tomatoes.viewer.rating, and title, all in descending order</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> favorites = [
+  <span class="hljs-string">&quot;Sandra Bullock&quot;</span>,
+  <span class="hljs-string">&quot;Tom Hanks&quot;</span>,
+  <span class="hljs-string">&quot;Julia Roberts&quot;</span>,
+  <span class="hljs-string">&quot;Kevin Spacey&quot;</span>,
+  <span class="hljs-string">&quot;George Clooney&quot;</span>
+];
+<span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {
+      <span class="hljs-string">&quot;tomatoes.viewer.rating&quot;</span>: {$gte: <span class="hljs-number">3</span>},
+      <span class="hljs-string">&quot;cast&quot;</span>: {$exists: <span class="hljs-literal">true</span>}
+    }
+  },
+  {
+    $addFields: {
+      <span class="hljs-string">&quot;num_favs&quot;</span>: {$size: {
+          $setIntersection: [<span class="hljs-string">&quot;$cast&quot;</span>, favorites]
+        }
+      }
+    }
+  },
+  {
+    $sort: {
+      <span class="hljs-string">&quot;num_favs&quot;</span>: <span class="hljs-number">-1</span>,
+      <span class="hljs-string">&quot;tomatoes.viewer.rating&quot;</span>: <span class="hljs-number">-1</span>,
+      <span class="hljs-string">&quot;title&quot;</span>: <span class="hljs-number">-1</span>
+    }
+  },
+  {
+    $skip: <span class="hljs-number">25</span>
+  },
+  {
+    $project: {_id: <span class="hljs-number">0</span>, title: <span class="hljs-number">1</span>}
+  },
+  {
+    $limit: <span class="hljs-number">3</span>
+  }
+];
+
+db.movies.aggregate(pipeline, { allowDiskUse : <span class="hljs-literal">true</span> })</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x67E5;&#x627E;&#x7535;&#x5F71;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Calculate an average rating for each movie in our collection where English is an available language</p>
+</li>
+<li>
+<p>the minimum imdb.rating is at least 1</p>
+</li>
+<li>
+<p>the minimum imdb.votes is at least 1, and it was released in 1990 or after.</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+    { $match : {
+            <span class="hljs-string">&quot;languages&quot;</span> : <span class="hljs-string">&quot;English&quot;</span>,
+            <span class="hljs-string">&quot;imdb.rating&quot;</span> : { $gte : <span class="hljs-number">1</span> },
+                <span class="hljs-string">&quot;imdb.votes&quot;</span> : { $gte : <span class="hljs-number">1</span> },
+                <span class="hljs-string">&quot;year&quot;</span> : { $gte : <span class="hljs-number">1990</span> }
+                }
+        },
+        { $addFields :
+            { <span class="hljs-string">&quot;scaled_votes&quot;</span> :
+                { $add: [
+                <span class="hljs-number">1</span>,
+                { $multiply: [
+                    <span class="hljs-number">9</span>,
+                    { $divide: [
+                        { $subtract: [ <span class="hljs-string">&quot;$imdb.votes&quot;</span> , <span class="hljs-number">5</span>] },
+                        { $subtract: [<span class="hljs-number">1521105</span>, <span class="hljs-number">5</span>] }
+                    ]}
+                ]}
+                    ]}
+                }
+        },
+        { $addFields : { <span class="hljs-string">&quot;normalized_rating&quot;</span> : { $avg : [ <span class="hljs-string">&quot;$scaled_votes&quot;</span>, <span class="hljs-string">&quot;$imdb.rating&quot;</span> ] } } },
+        { $sort : { <span class="hljs-string">&quot;normalized_rating&quot;</span> : <span class="hljs-number">1</span> } }
+];</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__group_sum_avg">$group, $sum, $avg</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___13">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5E74;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x5E76;&#x7EDF;&#x8BA1;&#x6BCF;&#x5E74;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $group: {
+      _id: <span class="hljs-string">&quot;$year&quot;</span>,
+      <span class="hljs-string">&quot;numFilmsThisYear&quot;</span>: {$sum: <span class="hljs-number">1</span>}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___14">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5E74;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x7EDF;&#x8BA1;&#x6BCF;&#x5E74;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;&#xFF0C;&#x5E76;&#x6309;&#x7167;&#x6BCF;&#x5E74;&#x7535;&#x5F71;&#x603B;&#x6570;&#x7531;&#x591A;&#x5230;&#x5C11;&#x6392;&#x5E8F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $group: {
+      _id: <span class="hljs-string">&quot;$year&quot;</span>,
+      <span class="hljs-string">&quot;numFilmsThisYear&quot;</span>: {$sum: <span class="hljs-number">1</span>}
+    }
+  },
+  {
+    $sort: {<span class="hljs-string">&quot;numFilmsThisYear&quot;</span>: <span class="hljs-number">-1</span>}
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___15">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x6309;&#x5BFC;&#x6F14;&#x7684;&#x6570;&#x91CF;&#x5C06;&#x7535;&#x5F71;&#x5206;&#x7C7B;&#xFF0C;&#x7EDF;&#x8BA1;&#x7535;&#x5F71;&#x7684;&#x6570;&#x91CF;&#xFF0C;&#x5E76;&#x4EE5;&#x5BFC;&#x6F14;&#x7684;&#x6570;&#x91CF;&#x7531;&#x591A;&#x5230;&#x5C11;&#x6392;&#x5E8F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline =  [
+  {
+    $group: {
+      _id: {
+        <span class="hljs-string">&quot;numDirectors&quot;</span>: {$cond: [{<span class="hljs-string">&quot;$isArray&quot;</span>: <span class="hljs-string">&quot;$directors&quot;</span>}, {<span class="hljs-string">&quot;$size&quot;</span>: <span class="hljs-string">&quot;$directors&quot;</span>}, <span class="hljs-number">0</span>]}
+      },
+      <span class="hljs-string">&quot;numFilms&quot;</span>: {$sum: <span class="hljs-number">1</span>},
+      <span class="hljs-string">&quot;averageMetacritic&quot;</span>: { <span class="hljs-string">&quot;$avg&quot;</span>: <span class="hljs-string">&quot;$metacritic&quot;</span> }
+    }
+  },
+  {
+    $sort: {<span class="hljs-string">&quot;_id.numDirectors&quot;</span>: <span class="hljs-number">-1</span>}
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__oscar_imdb">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x81F3;&#x5C11;&#x83B7;&#x7684;&#x4E00;&#x6B21;Oscar&#x5956;&#xFF0C;&#x8BA1;&#x7B97;&#x6700;&#x9AD8;&#x3001;&#x6700;&#x4F4E;&#x3001;&#x5E73;&#x5747; imdb &#x8BC4;&#x5206;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {<span class="hljs-string">&quot;awards&quot;</span>: {$regex: <span class="hljs-regexp">/Won \d+ Oscar/</span>}}
+  },
+  {
+    $group: {
+      _id: <span class="hljs-literal">null</span>,
+      <span class="hljs-string">&quot;highest_rating&quot;</span>: {$max: <span class="hljs-string">&quot;$imdb.rating&quot;</span>},
+      <span class="hljs-string">&quot;lowest_rating&quot;</span>: {$min: <span class="hljs-string">&quot;$imdb.rating&quot;</span>},
+      <span class="hljs-string">&quot;average_rating&quot;</span>: {$avg: <span class="hljs-string">&quot;$imdb.rating&quot;</span>},
+      <span class="hljs-string">&quot;deviation&quot;</span>: {$stdDevSamp: <span class="hljs-string">&quot;$imdb.rating&quot;</span>}
+    }
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__unwind">$unwind</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__2010_2015_imdb_90">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA; 2010 &#x5230; 2015 &#x5E74;&#x95F4; imdb &#x8BC4;&#x5206;&#x6700;&#x9AD8;&#x7C7B;&#x578B;&#xFF0C;&#x4E14;&#x7535;&#x5F71;&#x957F;&#x5EA6;&#x5927;&#x4E8E; 90 &#x5206;&#x949F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {
+      <span class="hljs-string">&quot;imdb.rating&quot;</span>: {$gt: <span class="hljs-number">0</span>},
+      <span class="hljs-string">&quot;year&quot;</span>: {$gte: <span class="hljs-number">2010</span>, $lte: <span class="hljs-number">2015</span>},
+      <span class="hljs-string">&quot;runtime&quot;</span>: {$gte: <span class="hljs-number">90</span>}
+    }
+  },
+  {
+    $unwind: <span class="hljs-string">&quot;$genres&quot;</span>
+  },
+  {
+    $group: {
+      _id: {
+        <span class="hljs-string">&quot;year&quot;</span>: <span class="hljs-string">&quot;$year&quot;</span>,
+        <span class="hljs-string">&quot;genre&quot;</span>: <span class="hljs-string">&quot;$genres&quot;</span>
+      },
+      <span class="hljs-string">&quot;average_rating&quot;</span>: {
+        <span class="hljs-string">&quot;$avg&quot;</span>: <span class="hljs-string">&quot;$imdb.rating&quot;</span>
+      }
+    }
+  },
+  {
+    $sort: {
+      <span class="hljs-string">&quot;_id.year&quot;</span>: <span class="hljs-number">-1</span>, <span class="hljs-string">&quot;average_rating&quot;</span>: <span class="hljs-number">-1</span>
+    }
+  },
+  {
+    $group: {
+      <span class="hljs-string">&quot;_id&quot;</span>: <span class="hljs-string">&quot;$_id.year&quot;</span>,
+      <span class="hljs-string">&quot;genre&quot;</span>: { <span class="hljs-string">&quot;$first&quot;</span>: <span class="hljs-string">&quot;$_id.genre&quot;</span> },
+      <span class="hljs-string">&quot;average_rating&quot;</span>: { <span class="hljs-string">&quot;$first&quot;</span>: <span class="hljs-string">&quot;$average_rating&quot;</span> }
+    }
+  },
+  {
+    $sort: {_id: <span class="hljs-number">-1</span>}
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___16">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA;&#x6240;&#x6709;&#x82F1;&#x6587;&#x7535;&#x5F71;&#x4E2D;&#x6392;&#x540D;&#x6700;&#x9AD8;&#x7684;&#x6F14;&#x5458;&#xFF0C;&#x5E76;&#x8BA1;&#x7B97;&#x53C2;&#x6F14;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;&#xFF0C;&#x53CA;&#x5E73;&#x5747;&#x8BC4;&#x5206;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+    { $unwind : <span class="hljs-string">&quot;$cast&quot;</span> },
+        { $group: {
+            <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;$cast&quot;</span>,
+                <span class="hljs-string">&quot;numFilms&quot;</span> : { $sum : <span class="hljs-number">1</span> },
+                <span class="hljs-string">&quot;average&quot;</span> : { $avg : <span class="hljs-string">&quot;$imdb.rating&quot;</span> }
+                }
+        },
+        { $sort : { <span class="hljs-string">&quot;numFilms&quot;</span> : <span class="hljs-number">-1</span> } },
+        { $limit : <span class="hljs-number">1</span> }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__lookup_graphlookup">$lookup, $graphLookup</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___17">&#x67E5;&#x8BE2;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#xFF0C;&#x5C06;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#x4E2D;&#x822A;&#x7A7A;&#x516C;&#x53F8;&#x5C5E;&#x6027;&#x66FF;&#x6362;&#x6210;&#x8BE6;&#x7EC6;&#x4FE1;&#x606F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $lookup: {
+      <span class="hljs-keyword">from</span>: <span class="hljs-string">&quot;air_airlines&quot;</span>,
+      localField: <span class="hljs-string">&quot;airlines&quot;</span>,
+      foreignField: <span class="hljs-string">&quot;name&quot;</span>,
+      <span class="hljs-keyword">as</span>: <span class="hljs-string">&quot;airlines&quot;</span>
+    }
+  }
+];
+
+db.air_alliances.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__boeing_747_airbus_a380">&#x67E5;&#x8BE2;&#x822A;&#x7A7A;&#x8054;&#x76DF;&#xFF0C;&#x67E5;&#x627E;&#x51FA;&#x8DEF;&#x5F84;&#x4F7F;&#x7528; Boeing 747 &#x6216; Airbus A380 &#x7684;&#x822A;&#x7A7A;&#x516C;&#x53F8;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $unwind: <span class="hljs-string">&quot;$airlines&quot;</span>
+  },
+  {
+    $lookup: {
+      <span class="hljs-keyword">from</span>: <span class="hljs-string">&quot;air_routes&quot;</span>,
+      localField: <span class="hljs-string">&quot;airlines&quot;</span>,
+      foreignField: <span class="hljs-string">&quot;airline.name&quot;</span>,
+      <span class="hljs-keyword">as</span>: <span class="hljs-string">&quot;routes&quot;</span>
+    }
+  },
+  {
+    $unwind: <span class="hljs-string">&quot;$routes&quot;</span>
+  },
+  {
+    $match: {
+      <span class="hljs-string">&quot;routes.airplane&quot;</span>: {$<span class="hljs-keyword">in</span>: [ <span class="hljs-string">&quot;747&quot;</span>, <span class="hljs-string">&quot;380&quot;</span> ]}
+    }
+  },
+  {
+    $group: {
+      <span class="hljs-string">&quot;_id&quot;</span> : <span class="hljs-string">&quot;$name&quot;</span>,
+      <span class="hljs-string">&quot;routes_count&quot;</span> : { $sum : <span class="hljs-number">1</span> }
+    }
+  },
+  {
+    $sort : {<span class="hljs-string">&quot;routes_count&quot;</span>: <span class="hljs-number">-1</span> }
+  }
+];
+
+ db.air_alliances.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__parent_reference_eliot">&#x67E5;&#x8BE2; parent_reference&#xFF0C;&#x83B7;&#x53D6;&#x6240;&#x6709;&#x6C47;&#x62A5;&#x7ED9; Eliot &#x7684;&#x4EBA;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {name: <span class="hljs-string">&apos;Eliot&apos;</span>}
+  },
+  {
+    $graphLookup: {
+      <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;parent_reference&apos;</span>,
+      startWith: <span class="hljs-string">&apos;$_id&apos;</span>,
+      connectFromField: <span class="hljs-string">&apos;_id&apos;</span>,
+      connectToField: <span class="hljs-string">&apos;reports_to&apos;</span>,
+      <span class="hljs-keyword">as</span>: <span class="hljs-string">&apos;all_reports&apos;</span>
+    }
+  }
+];
+
+db.parent_reference.aggregate(pipeline).pretty()</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__parent_reference_shannon">&#x67E5;&#x8BE2; parent_reference&#xFF0C;&#x83B7;&#x53D6; Shannon &#x7684;&#x6240;&#x6709;&#x8001;&#x677F;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {name: <span class="hljs-string">&apos;Shannon&apos;</span>}
+  },
+  {
+    $graphLookup: {
+      <span class="hljs-keyword">from</span>: <span class="hljs-string">&apos;parent_reference&apos;</span>,
+      startWith: <span class="hljs-string">&apos;$reports_to&apos;</span>,
+      connectFromField: <span class="hljs-string">&apos;reports_to&apos;</span>,
+      connectToField: <span class="hljs-string">&apos;_id&apos;</span>,
+      <span class="hljs-keyword">as</span>: <span class="hljs-string">&apos;bosses&apos;</span>
+    }
+  }
+];
+
+db.parent_reference.aggregate(pipeline).pretty()</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__bucket_bucketauto_sortbycount">$bucket, $bucketAuto, $sortByCount</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__imdb_0_5_8">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA; imdb &#x8BC4;&#x5206;&#x4E3A; 0&#xFF0C;5&#xFF0C;8&#xFF0C;&#x53CA;&#x6CA1;&#x6709;&#x8BC4;&#x5206;&#x7684;&#x7535;&#x5F71;&#x603B;&#x6570;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $bucket: {
+      groupBy: <span class="hljs-string">&quot;$imdb.rating&quot;</span>,
+      boundaries: [<span class="hljs-number">0</span>, <span class="hljs-number">5</span>, <span class="hljs-number">8</span>, <span class="hljs-literal">Infinity</span>],
+      <span class="hljs-keyword">default</span>: <span class="hljs-string">&quot;not rated&quot;</span>
+    }
+  }
+];
+
+db.movies.aggregate(pipeline)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__imdb_10_metacritic_10">&#x67E5;&#x8BE2;&#x7535;&#x5F71;&#xFF0C;&#x627E;&#x51FA;&#x5728;imdb &#x8BC4;&#x5206;&#x6700;&#x70ED;&#x524D; 10 &#x548C; metacritic &#x6700;&#x70ED;&#x524D; 10 &#x7684;&#x7535;&#x5F71;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"><span class="hljs-keyword">var</span> pipeline = [
+  {
+    $match: {
+      <span class="hljs-string">&quot;imdb.rating&quot;</span>: {$gt: <span class="hljs-number">0</span>},
+      <span class="hljs-string">&quot;metacritic&quot;</span>: {$gt: <span class="hljs-number">0</span>}
+    }
+  },
+  {
+    $facet: {
+      <span class="hljs-string">&quot;topTenImdb&quot;</span>: [{$sort: {<span class="hljs-string">&quot;imdb.rating&quot;</span>: <span class="hljs-number">-1</span>}}, {$limit: <span class="hljs-number">10</span>}],
+      <span class="hljs-string">&quot;topTenMetacritic&quot;</span>: [{$sort: {<span class="hljs-string">&quot;metacritic&quot;</span>: <span class="hljs-number">-1</span> }}, {$limit: <span class="hljs-number">10</span>}]
+    }
+  },
+  {
+    $project: {
+      <span class="hljs-string">&quot;commonTopFilms&quot;</span>: {
+        $size: {$setIntersection: [<span class="hljs-string">&quot;$topTenImdb&quot;</span>, <span class="hljs-string">&quot;$topTenMetacritic&quot;</span>]}
+      }
+    }
+  }
+];
+
+<span class="hljs-keyword">var</span> result = db.movies.aggregate(pipeline);
+print(<span class="hljs-string">&quot;Result: &quot;</span>);
+<span class="hljs-keyword">while</span> (result.hasNext()) {
+        printjson(result.next());
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__redact_out">$redact, $out</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-javaScript" data-lang="javaScript"></code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: 开发">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="aggregation-sum.html" class="navigation navigation-next " aria-label="Next page: $sum">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Aggregation","level":"1.2.7.1","depth":3,"next":{"title":"$sum","level":"1.2.7.1.1","depth":4,"path":"mongo/dev/aggregation-sum.adoc","ref":"mongo/dev/aggregation-sum.adoc","articles":[]},"previous":{"title":"开发","level":"1.2.7","depth":2,"path":"mongo/dev/README.adoc","ref":"mongo/dev/README.adoc","articles":[{"title":"Aggregation","level":"1.2.7.1","depth":3,"path":"mongo/dev/aggregation.adoc","ref":"mongo/dev/aggregation.adoc","articles":[{"title":"$sum","level":"1.2.7.1.1","depth":4,"path":"mongo/dev/aggregation-sum.adoc","ref":"mongo/dev/aggregation-sum.adoc","articles":[]}]},{"title":"分布式事务","level":"1.2.7.2","depth":3,"path":"mongo/dev/transactions.adoc","ref":"mongo/dev/transactions.adoc","articles":[]},{"title":"Java","level":"1.2.7.3","depth":3,"path":"mongo/dev/java.adoc","ref":"mongo/dev/java.adoc","articles":[]},{"title":"地理信息","level":"1.2.7.4","depth":3,"path":"mongo/dev/geo.adoc","ref":"mongo/dev/geo.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"mongo/dev/aggregation.adoc","mtime":"2020-03-27T12:12:09.931Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-27T18:59:38.975Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

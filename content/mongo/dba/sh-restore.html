@@ -1,0 +1,838 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>基于 Delayed Secondary 时间点恢复 · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="opsmanager.html" />
+    
+    
+    <link rel="prev" href="sharding.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../viewpoint/presentation.html">
+            
+                <a href="../viewpoint/presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../viewpoint/5thingsfornosql.html">
+            
+                <a href="../viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../viewpoint/oversea.html">
+            
+                <a href="../viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../viewpoint/td.html">
+            
+                <a href="../viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../viewpoint/cards.html">
+            
+                <a href="../viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="basic.html">
+            
+                <a href="basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../dev/">
+            
+                <a href="../dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../dev/aggregation.html">
+            
+                <a href="../dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1.1" data-path="../dev/aggregation-sum.html">
+            
+                <a href="../dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../dev/transactions.html">
+            
+                <a href="../dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../dev/java.html">
+            
+                <a href="../dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../dev/geo.html">
+            
+                <a href="../dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cluster-admin.html">
+            
+                <a href="cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="replication.html">
+            
+                <a href="replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1.1" data-path="rs-deployments.html">
+            
+                <a href="rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.1.2" data-path="rs-maintenance.html">
+            
+                <a href="rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.8.2.1" data-path="sh-restore.html">
+            
+                <a href="sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.3" data-path="opsmanager.html">
+            
+                <a href="opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dba.html">
+            
+                <a href="dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../elastic/">
+            
+                <a href="../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >基于 Delayed Secondary 时间点恢复</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x57FA;&#x4E8E;-delayed-secondary-&#x5B9E;&#x73B0;&#x65F6;&#x95F4;&#x70B9;&#x6062;&#x590D;">&#x57FA;&#x4E8E; Delayed Secondary &#x5B9E;&#x73B0;&#x65F6;&#x95F4;&#x70B9;&#x6062;&#x590D;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x73AF;&#x5883;&#x51C6;&#x5907;</a>
+<ul class="sectlevel2">
+<li><a href="#__delayed_secondary">&#x521D;&#x59CB;&#x5316;&#x4E00;&#x4E2A;&#x6709; Delayed Secondary &#x8282;&#x70B9;&#x7684;&#x5206;&#x7247;&#x96C6;&#x7FA4;</a></li>
+<li><a href="#___2">&#x5411;&#x96C6;&#x7FA4;&#x91CC;&#x63D2;&#x5165;&#x6570;&#x636E;</a></li>
+<li><a href="#___3">&#x4EBA;&#x4E3A;&#x5236;&#x9020;&#x8BEF;&#x5220;&#x9664;&#x64CD;&#x4F5C;</a></li>
+</ul>
+</li>
+<li><a href="#__ds">&#x8BB0;&#x5F55;&#x6062;&#x590D;&#x65F6;&#x95F4;&#x70B9;&#xFF0C;&#x590D;&#x5236; DS &#x8282;&#x70B9;&#x7684;&#x6570;&#x636E;&#x6587;&#x4EF6;</a></li>
+<li><a href="#__ops_log">&#x83B7;&#x53D6;&#x4E3B;&#x8282;&#x70B9;&#x4E0A;&#x589E;&#x91CF; Ops Log</a></li>
+<li><a href="#___4">&#x627E;&#x51FA;&#x6062;&#x590D;&#x65F6;&#x95F4;&#x70B9;</a></li>
+<li><a href="#___5">&#x6267;&#x884C;&#x6062;&#x590D;</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x73AF;&#x5883;&#x51C6;&#x5907;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__delayed_secondary">&#x521D;&#x59CB;&#x5316;&#x4E00;&#x4E2A;&#x6709; Delayed Secondary &#x8282;&#x70B9;&#x7684;&#x5206;&#x7247;&#x96C6;&#x7FA4;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#xFF0C;&#x5176;&#x4E2D;&#x5355;&#x5206;&#x7247;&#x4E2D; mongod &#x7684;&#x6570;&#x91CF;&#x4E3A; 4</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"> mlaunch --config 1 --mongos 1 --replicaset --nodes 4 --sharded sh_1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8FDE;&#x63A5;&#x5230;&#x5206;&#x7247;&#x4E3B;&#x8282;&#x70B9;&#xFF0C;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Delayed Secondary &#x8282;&#x70B9;&#xFF0C;&#x8BBE;&#x5B9A;&#x5EF6;&#x8FDF;&#x7684;&#x65F6;&#x95F4;&#x4E3A; 3 &#x5206;&#x949F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo --port 27018
+
+cfg = rs.conf()
+cfg.members[3].priority = 0
+cfg.members[3].hidden = <span class="hljs-literal">true</span>
+cfg.members[3].slaveDelay = 180
+rs.reconfig(cfg)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x5411;&#x96C6;&#x7FA4;&#x91CC;&#x63D2;&#x5165;&#x6570;&#x636E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230; mongos, &#x63D2;&#x5165;&#x6570;&#x636E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo
+
+var doc = {
+   <span class="hljs-string">&quot;name&quot;</span>: <span class="hljs-string">&quot;Kylin Soong&quot;</span>,
+   <span class="hljs-string">&quot;balance&quot;</span>: 99.99
+}
+<span class="hljs-keyword">for</span> (var i = 0; i &lt; 20000; i++) {
+   doc.accountNo = i
+   db.account.insertOne( doc )
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x7B49;&#x5F85; 3 &#x5206;&#x949F;&#x540E;&#xFF0C;&#x5728;Delayed Secondary &#x8282;&#x70B9;&#x67E5;&#x770B;&#x6570;&#x636E;&#x5DF2;&#x7ECF;&#x5B58;&#x5728;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo --port 27021
+
+db.account.count()
+20000
+
+db.account.find({accountNo: 10001})
+{ <span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5df98ad3ba9be09784784b20&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Kylin Soong&quot;</span>, <span class="hljs-string">&quot;balance&quot;</span> : 99.99, <span class="hljs-string">&quot;accountNo&quot;</span> : 10001 }</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x4EBA;&#x4E3A;&#x5236;&#x9020;&#x8BEF;&#x5220;&#x9664;&#x64CD;&#x4F5C;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x767B;&#x5F55; mongos, &#x5220;&#x9664; accountNo &#x4E3A; 10000 &#x7684;&#x8BB0;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.account.remove({accountNo: 10001})
+WriteResult({ <span class="hljs-string">&quot;nRemoved&quot;</span> : 1 })</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. mongs &#x4E0A;&#x67E5;&#x8BE2;&#xFF0C;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x5DF2;&#x7ECF;&#x5220;&#x9664;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.account.find({accountNo: 10001})</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__ds">&#x8BB0;&#x5F55;&#x6062;&#x590D;&#x65F6;&#x95F4;&#x70B9;&#xFF0C;&#x590D;&#x5236; DS &#x8282;&#x70B9;&#x7684;&#x6570;&#x636E;&#x6587;&#x4EF6;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x8FDE;&#x63A5;&#x5230; DS &#x8282;&#x70B9;&#xFF0C;&#x786E;&#x4FDD;&#x6570;&#x636E;&#x5B58;&#x5728;&#xFF0C;&#x8BB0;&#x5F55;&#x65F6;&#x95F4;&#x70B9;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.account.find({accountNo: 10001})
+{ <span class="hljs-string">&quot;_id&quot;</span> : ObjectId(<span class="hljs-string">&quot;5df98ad3ba9be09784784b21&quot;</span>), <span class="hljs-string">&quot;name&quot;</span> : <span class="hljs-string">&quot;Kylin Soong&quot;</span>, <span class="hljs-string">&quot;balance&quot;</span> : 99.99, <span class="hljs-string">&quot;accountNo&quot;</span> : 10001 }
+
+use <span class="hljs-built_in">local</span>
+db.oplog.rs.find().sort({<span class="hljs-variable">$natural</span>: -1}).limit(1).next().ts
+Timestamp(1576645449, 1)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">2. &#x505C;&#x6B62; DS &#x8282;&#x70B9;**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use admin
+db.shutdownServer({force: <span class="hljs-literal">true</span>})</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x62F7;&#x8D1D; DS &#x8282;&#x70B9;&#x6570;&#x636E;&#x6587;&#x4EF6;&#x5230;&#x65B0;&#x4F4D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir duplicateDS
+
+cp -r data/sh_1/rs4/* duplicateDS/</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x5355;&#x8282;&#x70B9;&#x542F;&#x52A8;&#xFF0C;&#x6307;&#x5411;&#x65B0;&#x6570;&#x636E;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongod --dbpath duplicateDS/db --logpath duplicateDS/mongod.log --port 28001 --fork  --wiredTigerCacheSizeGB 1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5220;&#x9664; local &#x6570;&#x636E;&#x5E93;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo --port 28001
+
+use <span class="hljs-built_in">local</span>
+db.dropDatabase()</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x4EE5;&#x590D;&#x5236;&#x96C6;&#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use admin
+db.shutdownServer()
+
+mongod --replSet sh_restore  --dbpath duplicateDS/db --logpath duplicateDS/mongod.log --port 28001 --fork  --wiredTigerCacheSizeGB 1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521D;&#x59CB;&#x5316;&#x65B0;&#x590D;&#x5236;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">rs.initiate()</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="__ops_log">&#x83B7;&#x53D6;&#x4E3B;&#x8282;&#x70B9;&#x4E0A;&#x589E;&#x91CF; Ops Log</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x4F7F;&#x7528; mongodump &#x5728;&#x5206;&#x7247;&#x96C6;&#x7FA4;&#x7684;&#x4E3B;&#x8282;&#x70B9;&#x4E0A;&#x83B7;&#x53D6;&#x589E;&#x91CF; Ops Log</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongodump --host 127.0.0.1:27018 <span class="hljs-_">-d</span> <span class="hljs-built_in">local</span> -c oplog.rs -q <span class="hljs-string">&apos;{&quot;ts&quot;: {&quot;$gt&quot;: {&quot;$timestamp&quot;: {&quot;t&quot;: 1576645449, &quot;i&quot;: 1}}}}&apos;</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x65F6;&#x95F4;&#x70B9;&#x662F; DS &#x4E0A;&#x6240;&#x83B7;&#x53D6;&#x5230;&#x7684;&#x65F6;&#x95F4;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">&#x627E;&#x51FA;&#x6062;&#x590D;&#x65F6;&#x95F4;&#x70B9;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x4F7F;&#x7528; bsondump &#x67E5;&#x770B;Ops Log</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">bsondump dump/<span class="hljs-built_in">local</span>/oplog.rs.bson
+...
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646969,<span class="hljs-string">&quot;i&quot;</span>:1}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;n&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;&quot;</span>,<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646969858&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;msg&quot;</span>:<span class="hljs-string">&quot;periodic noop&quot;</span>}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:1}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53b5&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:2}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53b6&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:3}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53b7&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:4}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53b8&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:5}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53b9&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:6}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53ba&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:7}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53bb&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:8}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53bc&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:9}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979722&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53bd&quot;</span>}}}
+{<span class="hljs-string">&quot;ts&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$timestamp</span>&quot;</span>:{<span class="hljs-string">&quot;t&quot;</span>:1576646979,<span class="hljs-string">&quot;i&quot;</span>:10}},<span class="hljs-string">&quot;t&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>},<span class="hljs-string">&quot;h&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;0&quot;</span>},<span class="hljs-string">&quot;v&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberInt</span>&quot;</span>:<span class="hljs-string">&quot;2&quot;</span>},<span class="hljs-string">&quot;op&quot;</span>:<span class="hljs-string">&quot;d&quot;</span>,<span class="hljs-string">&quot;ns&quot;</span>:<span class="hljs-string">&quot;test.account&quot;</span>,<span class="hljs-string">&quot;ui&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$binary</span>&quot;</span>:{<span class="hljs-string">&quot;base64&quot;</span>:<span class="hljs-string">&quot;80MbK3/1QvGwfEvch7y6zQ==&quot;</span>,<span class="hljs-string">&quot;subType&quot;</span>:<span class="hljs-string">&quot;04&quot;</span>}},<span class="hljs-string">&quot;wall&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$date</span>&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$numberLong</span>&quot;</span>:<span class="hljs-string">&quot;1576646979723&quot;</span>}},<span class="hljs-string">&quot;o&quot;</span>:{<span class="hljs-string">&quot;_id&quot;</span>:{<span class="hljs-string">&quot;<span class="hljs-variable">$oid</span>&quot;</span>:<span class="hljs-string">&quot;5df9b2f7bceee8cb722b53be&quot;</span>}}}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x4E0A;&#x6062;&#x590D;&#x65F6;&#x95F4;&#x70B9;&#x4E3A; 1576646979&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___5">&#x6267;&#x884C;&#x6062;&#x590D;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x7A7A;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mkdir empty</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6267;&#x884C;&#x6062;&#x590D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongorestore -h 127.0.0.1:28001 --oplogReplay --oplogFile dump/<span class="hljs-built_in">local</span>/oplog.rs.bson --oplogLimit <span class="hljs-string">&apos;1576646969:1&apos;</span> empty/</code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="sharding.html" class="navigation navigation-prev " aria-label="Previous page: 分片">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="opsmanager.html" class="navigation navigation-next " aria-label="Next page: Ops Manager">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"基于 Delayed Secondary 时间点恢复","level":"1.2.8.2.1","depth":4,"next":{"title":"Ops Manager","level":"1.2.8.3","depth":3,"path":"mongo/dba/opsmanager.adoc","ref":"mongo/dba/opsmanager.adoc","articles":[]},"previous":{"title":"分片","level":"1.2.8.2","depth":3,"path":"mongo/dba/sharding.adoc","ref":"mongo/dba/sharding.adoc","articles":[{"title":"基于 Delayed Secondary 时间点恢复","level":"1.2.8.2.1","depth":4,"path":"mongo/dba/sh-restore.adoc","ref":"mongo/dba/sh-restore.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"mongo/dba/sh-restore.adoc","mtime":"2020-03-27T12:12:09.930Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-27T18:59:38.975Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

@@ -1,0 +1,1730 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Ops Manager · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="perf.html" />
+    
+    
+    <link rel="prev" href="sh-restore.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../viewpoint/presentation.html">
+            
+                <a href="../viewpoint/presentation.html">
+            
+                    
+                    为什么 MongoDB
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../viewpoint/5thingsfornosql.html">
+            
+                <a href="../viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../viewpoint/oversea.html">
+            
+                <a href="../viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../viewpoint/td.html">
+            
+                <a href="../viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.5" data-path="../viewpoint/cards.html">
+            
+                <a href="../viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.6" data-path="basic.html">
+            
+                <a href="basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7" data-path="../dev/">
+            
+                <a href="../dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1" data-path="../dev/aggregation.html">
+            
+                <a href="../dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.7.1.1" data-path="../dev/aggregation-sum.html">
+            
+                <a href="../dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.2" data-path="../dev/transactions.html">
+            
+                <a href="../dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.3" data-path="../dev/java.html">
+            
+                <a href="../dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.7.4" data-path="../dev/geo.html">
+            
+                <a href="../dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8" data-path="cluster-admin.html">
+            
+                <a href="cluster-admin.html">
+            
+                    
+                    集群管理
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1" data-path="replication.html">
+            
+                <a href="replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.1.1" data-path="rs-deployments.html">
+            
+                <a href="rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.1.2" data-path="rs-maintenance.html">
+            
+                <a href="rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.2" data-path="sharding.html">
+            
+                <a href="sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.8.2.1" data-path="sh-restore.html">
+            
+                <a href="sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.8.3" data-path="opsmanager.html">
+            
+                <a href="opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.4" data-path="perf.html">
+            
+                <a href="perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.8.5" data-path="troubleshooting.html">
+            
+                <a href="troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.9" data-path="security.html">
+            
+                <a href="security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.10" data-path="dba.html">
+            
+                <a href="dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../elastic/">
+            
+                <a href="../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >Ops Manager</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="ops-manager">Ops Manager</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x6982;&#x8FF0;</a></li>
+<li><a href="#_mongodb_ops_manager">MongoDB Ops Manager &#x5B89;&#x88C5;</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x5B89;&#x88C5;&#x67B6;&#x6784;</a></li>
+<li><a href="#___3">&#x73AF;&#x5883;&#x51C6;&#x5907;</a></li>
+<li><a href="#__appdb">&#x5B89;&#x88C5; appDB</a></li>
+<li><a href="#_ops_manager">Ops Manager &#x5B89;&#x88C5;</a></li>
+<li><a href="#_ops_manager_2">Ops Manager &#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</a></li>
+<li><a href="#_agent">Agent &#x5B89;&#x88C5;</a></li>
+<li><a href="#__mongodb_ha_blockstore">&#x521B;&#x5EFA; MongoDB HA Blockstore</a></li>
+<li><a href="#_backup">Backup &#x914D;&#x7F6E;</a></li>
+</ul>
+</li>
+<li><a href="#___4">&#x5907;&#x4EFD;</a>
+<ul class="sectlevel2">
+<li><a href="#___5">&#x5907;&#x4EFD;&#x4E00;&#x4E2A;&#x96C6;&#x7FA4;</a></li>
+</ul>
+</li>
+<li><a href="#___6">&#x5BFC;&#x5165;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x96C6;&#x7FA4;</a>
+<ul class="sectlevel2">
+<li><a href="#__clustermonitor">&#x521B;&#x5EFA; clusterMonitor &#x7528;&#x6237;</a></li>
+<li><a href="#__project">&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Project</a></li>
+<li><a href="#___7">&#x6267;&#x884C;&#x5BFC;&#x5165;</a></li>
+</ul>
+</li>
+<li><a href="#_ops_manager_3">Ops Manager &#x81EA;&#x52A8;&#x5316;&#x7BA1;&#x7406;</a>
+<ul class="sectlevel2">
+<li><a href="#_overview">Overview</a></li>
+<li><a href="#_real_time">Real Time</a></li>
+<li><a href="#_metrics">Metrics</a></li>
+<li><a href="#_data">Data</a></li>
+<li><a href="#_performance_advisor">Performance Advisor</a></li>
+</ul>
+</li>
+<li><a href="#_todo">TODO</a></li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x6982;&#x8FF0;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x6587;&#x6863;&#x8BF4;&#x660E;&#x5982;&#x4F55;&#x5B89;&#x88C5;&#x4E00;&#x4E2A;&#x53EF;&#x7528;&#x4E8E;&#x751F;&#x4EA7;&#x7684; MongoDB Ops Manager, &#x4EE5;&#x53CA;&#x5982;&#x4F55;&#x901A;&#x8FC7; Ops Manager &#x76D1;&#x63A7;&#x548C;&#x8B66;&#x544A;&#x7684;&#x529F;&#x80FD;&#x5BF9;&#x4E00;&#x4E2A; MongoDB &#x5206;&#x7247;&#x96C6;&#x7FA4;&#x8FDB;&#x884C;&#x7BA1;&#x7406;&#x3002;&#x5177;&#x4F53;&#x5185;&#x5BB9;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>MongoDB Ops Manager 4.1 &#x5B89;&#x88C5;</p>
+</li>
+<li>
+<p>&#x57FA;&#x672C;&#x76D1;&#x63A7;&#x62A5;&#x8B66;&#x5C55;&#x793A;</p>
+</li>
+<li>
+<p>HTTPS &#x914D;&#x7F6E;</p>
+</li>
+<li>
+<p>&#x5907;&#x4EFD;&#x548C; &#x6062;&#x590D;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x64CD;&#x4F5C;&#x53EF;&#x4EE5;&#x5728; AWS Linux &#x6216; RHEL 7 &#x4E0A;&#x8FDB;&#x884C;&#x3002;&#x5982;&#x679C;&#x6240;&#x6709;&#x64CD;&#x4F5C;&#x5728; AWS &#x4E0A;&#xFF0C;&#x6240;&#x4F7F;&#x7528;&#x5230;&#x7684; AWS  &#x670D;&#x52A1;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>EC2 - &#x8FD0;&#x884C; Ops Manager &#x53CA;&#x6240;&#x9700;&#x7684;&#x7EC4;&#x4EF6;&#x3001;&#x6570;&#x636E;&#x5E93;&#x7B49;</p>
+</li>
+<li>
+<p>Route 53 - &#x786E;&#x4FDD; EC2 &#x8282;&#x70B9;&#x4E4B;&#x95F4;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x57DF;&#x540D;&#x8BBF;&#x95EE;</p>
+</li>
+<li>
+<p>VPC - &#x786E;&#x4FDD; Ops Manager &#x53CA;&#x6240;&#x9700;&#x7684;&#x7EC4;&#x4EF6;&#x5728;&#x865A;&#x62DF;&#x79C1;&#x6709;&#x7F51;&#x7EDC;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x8BE6;&#x7EC6;&#x5173;&#x4E8E; EC2&#x3001;Route 53&#x3001;VPC &#x53C2;&#x7167; AWS &#x76F8;&#x5173;&#x6587;&#x6863;&#x53CA; &#x8BF4;&#x660E;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x786E;&#x4FDD; aws &#x547D;&#x4EE4;&#x884C;&#x5DF2;&#x5B89;&#x88C5;&#xFF0C;&#x76F8;&#x5173;&#x8BA4;&#x8BC1;&#x5B8C;&#x6BD5;&#xFF0C;&#x53EF;&#x4EE5;&#x901A;&#x8FC7;&#x547D;&#x4EE4;&#x884C;&#x6267;&#x884C;&#x547D;&#x4EE4;&#x542F;&#x52A8;&#xFF0C;&#x914D;&#x7F6E; EC2 &#x7B49;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ aws --version
+aws-cli/1.16.204 Python/2.7.10 Darwin/18.7.0 botocore/1.12.194</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_mongodb_ops_manager">MongoDB Ops Manager &#x5B89;&#x88C5;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___2">&#x5B89;&#x88C5;&#x67B6;&#x6784;</h3>
+<div class="paragraph">
+<p>Ops Manager &#x5B89;&#x88C5;&#x67B6;&#x6784;&#x5982;&#x4E0B;&#x56FE;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-manager-ha-single-database.png" alt="ops manager ha single database.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x91C7;&#x7528;&#x7B80;&#x5355;&#x9AD8;&#x53EF;&#x7528;&#x7684;&#x751F;&#x4EA7;&#x90E8;&#x7F72;&#x67B6;&#x6784;&#xFF0C;&#x8BE6;&#x7EC6;&#x53C2;&#x7167; <a href="https://docs.opsmanager.mongodb.com/v4.1/core/deployments/#production-installs" target="_blank">MongoDB &#x5B98;&#x65B9;&#x6587;&#x6863;</a>&#x3002;</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x73AF;&#x5883;&#x51C6;&#x5907;</h3>
+<div class="paragraph">
+<p>&#x5982;&#x5B89;&#x88C5;&#x67B6;&#x6784;&#x6240;&#x793A;&#xFF0C;&#x51C6;&#x5907;&#x4E09;&#x53F0;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x76F8;&#x5173;&#x914D;&#x7F6E;&#x5982;&#x4E0B;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">&#x4E3B;&#x673A;&#x7F16;&#x53F7;</th>
+<th class="tableblock halign-left valign-top">&#x57DF;&#x540D;</th>
+<th class="tableblock halign-left valign-top">CPU</th>
+<th class="tableblock halign-left valign-top">&#x5185;&#x5B58;</th>
+<th class="tableblock halign-left valign-top">&#x78C1;&#x76D8;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host 1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host01.example.com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16 GB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">80 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host 2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host02.example.com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16 GB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">80 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Host 3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">host03.example.com</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16 GB</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">80 GB</p></td>
+</tr>
+</tbody>
+</table>
+<div class="listingblock">
+<div class="title"><strong>AWS &#x4E0A;&#x64CD;&#x4F5C;&#x811A;&#x6B65;&#xFF08;&#x5982;&#x679C;&#x57FA;&#x4E8E; RHEL &#x5219;&#x5FFD;&#x7565;&#x6B21;&#x6B65;&#x9AA4;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// <span class="hljs-built_in">set</span> hostname
+sudo hostnamectl <span class="hljs-built_in">set</span>-hostname host01.example.com
+sudo hostnamectl <span class="hljs-built_in">set</span>-hostname host02.example.com
+sudo hostnamectl <span class="hljs-built_in">set</span>-hostname host03.example.com
+
+// register a DNS A record hostname with private IP to Route 53
+PRIVATEIPS=<span class="hljs-string">&quot;IP01 IP02 IP03&quot;</span>
+HOSTNUM=1
+<span class="hljs-keyword">for</span> IP <span class="hljs-keyword">in</span> <span class="hljs-variable">$PRIVATEIPS</span>
+<span class="hljs-keyword">do</span>
+ <span class="hljs-built_in">export</span> FQDN=<span class="hljs-string">&quot;host0<span class="hljs-variable">$HOSTNUM</span>.example.com&quot;</span>
+ <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;Registering <span class="hljs-variable">$host</span> as <span class="hljs-variable">$FQDN</span>&quot;</span>
+cat &lt;&lt;EOF&gt; newhost0<span class="hljs-variable">$HOSTNUM</span>.json
+{
+  <span class="hljs-string">&quot;Comment&quot;</span>: <span class="hljs-string">&quot;CREATE an A record &quot;</span>,
+  <span class="hljs-string">&quot;Changes&quot;</span>: [{
+    <span class="hljs-string">&quot;Action&quot;</span>: <span class="hljs-string">&quot;UPSERT&quot;</span>,
+    <span class="hljs-string">&quot;ResourceRecordSet&quot;</span>: {
+      <span class="hljs-string">&quot;Name&quot;</span>: <span class="hljs-string">&quot;<span class="hljs-variable">$FQDN</span>&quot;</span>,
+      <span class="hljs-string">&quot;Type&quot;</span>: <span class="hljs-string">&quot;A&quot;</span>,
+      <span class="hljs-string">&quot;TTL&quot;</span>: 300,
+      <span class="hljs-string">&quot;ResourceRecords&quot;</span>: [{ <span class="hljs-string">&quot;Value&quot;</span>:<span class="hljs-string">&quot;<span class="hljs-variable">$IP</span>&quot;</span>}]
+    }
+  }]
+}
+EOF
+aws route53 change-resource-record-sets --hosted-zone-id XXXOOOZZZJJ --change-batch file://newhost0<span class="hljs-variable">$HOSTNUM</span>.json
+<span class="hljs-built_in">let</span> <span class="hljs-string">&quot;HOSTNUM=HOSTNUM+1&quot;</span>
+<span class="hljs-keyword">done</span>
+
+// check <span class="hljs-keyword">in</span> 3 hosts, to make sure the DNS is work as expect, the referenced A record IP will list hints the DNS work as expected.
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 1 2 3 ; <span class="hljs-keyword">do</span> dig host0<span class="hljs-variable">$i</span>.example.com +short ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x5206;&#x522B;&#x5728;&#x4E09;&#x53F0;&#x670D;&#x52A1;&#x5668;&#x4E0A;&#x6302;&#x8F7D;&#x78C1;&#x76D8;&#xFF0C;&#x6267;&#x884C; MongoDB &#x751F;&#x4EA7;&#x90E8;&#x7F72;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo mkfs -t xfs /dev/nvme1n1
+sudo mkdir /data
+sudo mount /dev/nvme1n1 /data
+grep -q /dev/nvme1n1 /etc/fstab || <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;/dev/nvme1n1       /data          xfs     defaults,noatime   1  1&quot;</span> | sudo tee --append /etc/fstab
+sudo findmnt --verify
+
+grep -q <span class="hljs-string">&apos;vm.zone_reclaim_mode&apos;</span> /etc/sysctl.conf || <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;vm.zone_reclaim_mode=0
+&quot;</span> | sudo tee --append /etc/sysctl.conf
+sudo sysctl -w  vm.zone_reclaim_mode=0
+
+grep -q <span class="hljs-string">&apos;vm.swappiness&apos;</span> /etc/sysctl.conf || <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;vm.swappiness=1&quot;</span> | sudo tee --append /etc/sysctl.conf
+sudo sysctl -w  vm.swappiness=1
+
+<span class="hljs-keyword">for</span> <span class="hljs-built_in">limit</span> <span class="hljs-keyword">in</span> fsize cpu as memlock
+<span class="hljs-keyword">do</span>
+  grep <span class="hljs-string">&quot;mongodb&quot;</span> /etc/security/limits.conf | grep -q <span class="hljs-variable">$limit</span> || <span class="hljs-built_in">echo</span> <span class="hljs-_">-e</span> <span class="hljs-string">&quot;mongod     hard   <span class="hljs-variable">$limit</span>    unlimited\nmongod     soft    <span class="hljs-variable">$limit</span>   unlimited&quot;</span> | sudo tee --append /etc/security/limits.conf
+<span class="hljs-keyword">done</span>
+
+<span class="hljs-keyword">for</span> <span class="hljs-built_in">limit</span> <span class="hljs-keyword">in</span> nofile noproc
+<span class="hljs-keyword">do</span>
+  grep <span class="hljs-string">&quot;mongodb&quot;</span> /etc/security/limits.conf | grep -q <span class="hljs-variable">$limit</span> || <span class="hljs-built_in">echo</span> <span class="hljs-_">-e</span> <span class="hljs-string">&quot;mongod     hard   <span class="hljs-variable">$limit</span>    64000\nmongod     soft    <span class="hljs-variable">$limit</span>   64000&quot;</span> | sudo tee --append /etc/security/limits.conf
+<span class="hljs-keyword">done</span>
+
+sudo reboot</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__appdb">&#x5B89;&#x88C5; appDB</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E09;&#x4E2A; host &#x4E0A;&#x90FD;&#x6267;&#x884C;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x914D;&#x7F6E; yum &#x6E90;&#xFF08;&#x5982;&#x679C;&#x79BB;&#x7EBF;&#x5B89;&#x88C5;&#xFF0C;&#x53EF;&#x63D0;&#x524D;&#x4E0B;&#x8F7D; rpm &#x5305;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">cat &lt;&lt; <span class="hljs-string">&apos;ENDOFDOC&apos;</span> | sudo tee /etc/yum.repos.d/mongodb-enterprise.repo
+[mongodb-enterprise]
+name=MongoDB Enterprise Repository
+baseurl=https://repo.mongodb.com/yum/amazon/2/mongodb-enterprise/4.0/<span class="hljs-variable">$basearch</span>/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+ENDOFDOC</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5B89;&#x88C5; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo yum install -y mongodb-enterprise</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x6570;&#x636E;&#x5E93;&#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo mkdir /data/appdb
+sudo chown mongod:mongod /data/appdb</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x914D;&#x7F6E;&#x6587;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">cat &lt;&lt; <span class="hljs-string">&apos;ENDCONF&apos;</span> | sudo tee /etc/mongod.conf
+<span class="hljs-comment"># mongod.conf</span>
+
+<span class="hljs-comment"># for documentation of all options, see:</span>
+<span class="hljs-comment">#   http://docs.mongodb.org/manual/reference/configuration-options/</span>
+
+<span class="hljs-comment"># where to write logging data.</span>
+systemLog:
+  destination: file
+  <span class="hljs-built_in">log</span>Append: <span class="hljs-literal">true</span>
+  path: /data/appdb/mongod.log
+
+<span class="hljs-comment"># Where and how to store data.</span>
+storage:
+  dbPath: /data/appdb
+  journal:
+    enabled: <span class="hljs-literal">true</span>
+  wiredTiger:
+    engineConfig:
+       cacheSizeGB: 2
+
+
+<span class="hljs-comment"># how the process runs</span>
+processManagement:
+  fork: <span class="hljs-literal">true</span>  <span class="hljs-comment"># fork and run in background</span>
+  pidFilePath: /var/run/mongodb/mongod.pid  <span class="hljs-comment"># location of pidfile</span>
+  timeZoneInfo: /usr/share/zoneinfo
+
+<span class="hljs-comment"># network interfaces</span>
+net:
+  port: 27017
+  <span class="hljs-built_in">bind</span>IpAll: <span class="hljs-literal">true</span>
+
+replication:
+  replSetName: appdbRS
+ENDCONF</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>NOET: &#x751F;&#x4EA7;&#x73AF;&#x5883;&#x4E0B;&#x6700;&#x4F73;&#x5B9E;&#x8DF5;&#x914D;&#x7F6E;&#x5B89;&#x5168;&#xFF0C;&#x542F;&#x7528;&#x5185;&#x90E8;&#x8BA4;&#x8BC1;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x542F;&#x52A8; MongoDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl start mongod
+sudo systemctl <span class="hljs-built_in">enable</span> mongod</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x521D;&#x59CB;&#x5316;&#x590D;&#x5236;&#x96C6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo -eval <span class="hljs-string">&apos;rs.initiate()&apos;</span>
+mongo -eval <span class="hljs-string">&apos;rs.add(&quot;host02.mongosa.net:27017&quot;)&apos;</span>
+mongo -eval <span class="hljs-string">&apos;rs.add(&quot;host03.mongosa.net:27017&quot;)&apos;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ops_manager">Ops Manager &#x5B89;&#x88C5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5230; <a href="https://www.mongodb.com/subscription/downloads/archived" class="bare" target="_blank">https://www.mongodb.com/subscription/downloads/archived</a> &#x4E0B;&#x8F7D;&#x76F8;&#x5E94;&#x7684;&#x7248;&#x672C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -OL https://downloads.mongodb.com/on-prem-mms/rpm/mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm
+$ ls
+mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo yum localinstall mongodb-mms-4.0.16.50586.20191101T1422Z-1.x86_64.rpm -y</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x7F16;&#x8F91; /opt/mongodb/mms/conf/conf-mms.properties&#xFF0C;&#x914D;&#x7F6E; appDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">mongo.mongoUri=mongodb://host01.example.com:27017,host02.example.com:27017,host03.example.com:27017/?maxPoolSize=150&amp;replicaSet=appdbRS</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x542F;&#x52A8; Ops Manager</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo service mongodb-mms start</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B; Ops Manager HTTP &#x670D;&#x52A1;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo netstat -antulop | grep 8080
+tcp        0      0 0.0.0.0:8080            0.0.0.0:*               LISTEN      3258/mms-app         off (0.00/0/0)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ops_manager_2">Ops Manager &#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</h3>
+<div class="paragraph">
+<p>Ops Manager &#x5B89;&#x88C5;&#x6210;&#x529F;&#x540E; HTTP &#x670D;&#x52A1;&#x4F1A;&#x542F;&#x52A8;&#xFF0C;&#x901A;&#x8FC7; HTTP &#x670D;&#x52A1;&#x53EF;&#x4EE5;&#x5B8C;&#x6210;&#x5BF9; Ops Manager &#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><strong>1. &#x8BBF;&#x95EE; <a href="http://host02.example.com:8080" class="bare" target="_blank">http://host02.example.com:8080</a> &#x65F6;&#xFF0C;&#x70B9;&#x51FB; Register &#x94FE;&#x63A5;&#x6CE8;&#x518C;&#x4E00;&#x4E2A;&#x5168;&#x5C40;&#x7BA1;&#x7406;&#x8D26;&#x6237;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-register.png" alt="ops register.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684;&#x9875;&#x9762;&#x914D;&#x7F6E;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Email Address : <a href="mailto:kylin.soong@mongodb.com" target="_blank">kylin.soong@mongodb.com</a></p>
+</li>
+<li>
+<p>Password      : password1!</p>
+</li>
+<li>
+<p>First Name    : Kylin</p>
+</li>
+<li>
+<p>Last Name     : Soong</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>2. &#x6CE8;&#x518C;&#x5B8C;&#x6210;&#x521D;&#x6B21;&#x767B;&#x9646;&#x4F1A;&#x5B9A;&#x5411;&#x5230; Configure Ops Manager &#x9875;&#x9762;</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728; Configure Ops Manager &#x9875;&#x9762;&#x5B8C;&#x6210;&#x521D;&#x59CB;&#x5316;&#x914D;&#x7F6E;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Web Server</p>
+<div class="ulist">
+<ul>
+<li>
+<p>URL To Access Ops Manager - <a href="http://host02.example.com:8080" class="bare" target="_blank">http://host02.example.com:8080</a></p>
+</li>
+<li>
+<p>Client Certificate Mode   - None</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Email&#xFF08;&#x672C;&#x90E8;&#x5206;&#x9700;&#x8981;&#x5BF9;&#x63A5;&#x76F8;&#x5173;&#x90AE;&#x4EF6;&#x670D;&#x52A1;&#x5668;&#xFF09;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&quot;From&quot; Email Address                - <a href="mailto:opsmanager@example.com" target="_blank">opsmanager@example.com</a></p>
+</li>
+<li>
+<p>&quot;Reply To&quot; Email Address            - <a href="mailto:admin@example.com" target="_blank">admin@example.com</a></p>
+</li>
+<li>
+<p>Admin Email Address                 - <a href="mailto:admin@example.com" target="_blank">admin@example.com</a></p>
+</li>
+<li>
+<p>Email Delivery Method Configuration - SMTP Email Server</p>
+</li>
+<li>
+<p>Transport                           - smtp</p>
+</li>
+<li>
+<p>SMTP Server Hostname                - smtp.example.com</p>
+</li>
+<li>
+<p>SMTP Server Port                    - 587</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>User Authentication</p>
+<div class="ulist">
+<ul>
+<li>
+<p>User Authentication Method - Application Database</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Multi-Factor Authentication (MFA)</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Other Authentication Options</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Permissions</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Backup Snapshots</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Backup Snapshots Schedule</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Snapshot Interval (Hours)                  - 24</p>
+</li>
+<li>
+<p>Base Retention Of Snapshots (In Days)      - 2</p>
+</li>
+<li>
+<p>Daily Retention Of Snapshots (In Days)     - No daily retention</p>
+</li>
+<li>
+<p>Weekly Retention Of Snapshots (In Weeks)   - 2</p>
+</li>
+<li>
+<p>Monthly Retention Of Snapshots (In Months) - 1</p>
+</li>
+<li>
+<p>&#x5176;&#x5B83;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>KMIP Server Configuration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Queryable Snapshot Configuration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>HTTP/HTTPS Proxy</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Twilio Integration</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>MongoDB Version Management</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Alerts</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x6240;&#x6709;&#x9879;&#x4F7F;&#x7528;&#x9ED8;&#x8BA4;&#x914D;&#x7F6E;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>&#x914D;&#x7F6E;&#x5B8C;&#x6210;&#x540E;&#x8FDB;&#x5165;&#x5230;&#x5982;&#x4E0B;Deployment &#x754C;&#x9762;</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-install-finished.png" alt="opsmgr install finished.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_agent">Agent &#x5B89;&#x88C5;</h3>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5728; Ops Manager &#x65B0;&#x7248;&#x672C;&#x4E2D; Agent &#x4E0D;&#x9700;&#x8981;&#x624B;&#x52A8;&#x5B89;&#x88C5;&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x53EF;&#x4EE5;&#x8DF3;&#x8FC7;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="__automation_agent">&#x5B89;&#x88C5; Automation Agent</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+Automation Agent &#x53EF;&#x4EE5;&#x5728;&#x9700;&#x8981;&#x90E8;&#x7F72;&#x5BFC;&#x5165;&#x65F6;&#x5B89;&#x88C5;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#xFF0C;&#x9009;&#x62E9; <strong>Deployment</strong> &#x2192; <strong>Agents</strong> &#x2192; <strong>Downloads &amp; Settings</strong>&#xFF0C;&#x9009;&#x62E9;&#x76F8;&#x5E94;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x4F8B;&#x5982; <code>Automation Agent Installation Instructions</code>&#xFF0C;&#x5728;&#x5F39;&#x51FA;&#x7684;&#x754C;&#x9762;&#x6839;&#x636E;&#x6B65;&#x9AA4;&#x5B8C;&#x6210; agent &#x5B89;&#x88C5;&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl -OL http://opsmgr.example.com:8080/download/agent/automation/mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+
+$ sudo chmod a+x mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm
+$ sudo yum localinstall mongodb-mms-automation-agent-manager-5.4.19.5537-1.x86_64.rhel7.rpm</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; key</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo vi /etc/mongodb-mms/automation-agent.config</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl start mongodb-mms-automation-agent.service</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x90E8;&#x7F72;&#x754C;&#x9762;&#x6709; &#x5B89;&#x88C5; agent &#x7684;&#x4ECB;&#x7ECD;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="__monitoring_agent">&#x5B89;&#x88C5; Monitoring Agent</h4>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x53EF;&#x4EE5;&#x5728;&#x521B;&#x5EFA;&#x5B8C; Project &#x540E;&#x6267;&#x884C;&#x8FD9;&#x90E8;&#x5206;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#xFF0C;&#x9009;&#x62E9; <strong>Deployment</strong> &#x2192; <strong>Agents</strong> &#x2192; <strong>Downloads &amp; Settings</strong>&#xFF0C;&#x9009;&#x62E9;&#x76F8;&#x5E94;&#x7684;&#x7248;&#x672C;&#xFF0C;&#x4F8B;&#x5982; Install or Update the Monitoring Agent&#x3002;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl -OL http://opsmgr.example.com:8080/download/agent/monitoring/mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm
+
+chmod 777 mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm
+
+sudo yum localinstall mongodb-mms-monitoring-agent-6.6.2.466-1.x86_64.rhel7.rpm -y</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x914D;&#x7F6E; key, &#x7528;&#x6237;&#x540D;&#xFF0C;&#x5BC6;&#x7801;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo vi /etc/mongodb-mms/monitoring-agent.config
+
+mmsGroupId=5d08a1af8a49a31b324ec641
+mmsApiKey=5d08a41a8a49a31b324ec86d3dd0a7d168167e4fdb7ec454c450666b
+mmsBaseUrl=http://opsmgr.example.com:8080
+
+globalAuthUsername=mms-monitoring-agent
+globalAuthPassword=mongo</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x542F;&#x52A8;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl start mongodb-mms-monitoring-agent.service</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__mongodb_ha_blockstore">&#x521B;&#x5EFA; MongoDB HA Blockstore</h3>
+<div class="paragraph">
+<p>MongoDB Ops Manager &#x652F;&#x6301;&#x7684;&#x6570;&#x636E;&#x5907;&#x4EFD;&#x9009;&#x62E9;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>&#x6587;&#x4EF6;&#x7CFB;&#x7EDF; + SAN</p>
+</li>
+<li>
+<p>&#x6587;&#x4EF6;&#x7CFB;&#x7EDF; + NAS</p>
+</li>
+<li>
+<p>AWS S3 Blockstore</p>
+</li>
+<li>
+<p>MongoDB HA Blockstore</p>
+</li>
+<li>
+<p>MongoDB Blockstore</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>&#x5173;&#x4E8E;&#x4E0D;&#x540C;&#x7684;&#x5907;&#x4EFD;&#x9009;&#x62E9;&#x7684;&#x4F18;&#x7F3A;&#x70B9;&#x53C2;&#x7167; <a href="https://docs.opsmanager.mongodb.com/v4.0/core/backup-preparations/#backup-configuration-options" target="_blank">&#x5B98;&#x65B9;&#x7FC1;&#x5F53;</a>&#xFF0C;&#x672C;&#x90E8;&#x5206;&#x9009;&#x62E9; MongoDB HA Blockstore&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x9996;&#x5148;&#x5728; Ops Manager &#x521B;&#x5EFA;&#x4E00;&#x4E2A; Project `blockstore&apos;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/blockstore-project.png" alt="blockstore project.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x7136;&#x540E;&#x5728;&#x8FD9;&#x4E2A;&#x5DE5;&#x7A0B;&#x4E0B;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; MongoDB &#x4E09;&#x8282;&#x70B9;&#x590D;&#x5236;&#x96C6;&#xFF0C;&#x5206;&#x522B;&#x8FD0;&#x884C;&#x5728;&#x4E09;&#x4E2A; Host &#x4E0A;&#xFF0C;&#x76D1;&#x542C;&#x7684;&#x7AEF;&#x53E3;&#x90FD;&#x662F; 27018&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">host01.example.com:27018,host02.example.com:27018,host03.example.com:27018</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_backup">Backup &#x914D;&#x7F6E;</h3>
+<div class="paragraph">
+<p>&#x8981;&#x5F00;&#x542F; Ops Manager &#x7684;&#x5907;&#x4EFD;&#x529F;&#x80FD;&#xFF0C;&#x9700;&#x8981;&#x5B8C;&#x6210; Backup &#x914D;&#x7F6E;&#x3002;Backup &#x914D;&#x7F6E;&#x4E3B;&#x8981;&#x5305;&#x62EC;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HEAD DB - HEAD DB &#x4E2D;&#x7684;&#x6570;&#x636E;&#x548C;&#x751F;&#x4EA7;&#x90E8;&#x7F72;&#x4E2D;&#x7684;&#x6570;&#x636E;&#x4E00;&#x81F4;&#xFF0C;&#x5B83;&#x6839;&#x636E; <a href="https://docs.opsmanager.mongodb.com/v4.0/core/backup-preparations/#snapshot-frequency-and-retention" target="_blank">&#x5FEB;&#x7167;&#x7B56;&#x7565;</a>&#xFF0C;&#x5468;&#x671F;&#x6027;&#x751F;&#x6210;&#x5FEB;&#x7167;&#x3002;&#x914D;&#x7F6E;&#x5305;&#x62EC; HEAD &#x76EE;&#x5F55;&#x7B49;&#x3002;</p>
+</li>
+<li>
+<p>Blockstore - &#x4F7F;&#x7528;&#x4E0A;&#x9762;&#x6B65;&#x9AA4;&#x51C6;&#x5907;&#x7684; MongoDB HA Blockstore&#xFF0C;&#x5177;&#x4F53;&#x914D;&#x7F6E;&#x5305;&#x62EC;&#x8FDE;&#x63A5; URL&#xFF0C;&#x8BA4;&#x8BC1;&#x7B49;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5728; Ops Manager &#x7684;&#x5B89;&#x88C5; Host &#x4E0A;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; HEAD &#x76EE;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo mkdir /data/heads
+sudo chown mongodb-mms:mongodb-mms /data/heads</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>2. Backup Initial Configuration</strong></p>
+</div>
+<div class="paragraph">
+<p>&#x5728; Ops Manger &#x53F3;&#x4E0A;&#x89D2;&#x70B9;&#x51FB; <strong>Admin</strong>&#xFF0C;&#x5728;&#x6700;&#x5DE6;&#x8FB9;&#x5BFC;&#x822A;&#x680F;&#x9009;&#x62E9; <strong>Backup</strong>&#xFF0C;&#x5728;&#x5F39;&#x51FA;&#x754C;&#x9762;&#x4E2D; Head Directory &#x8F93;&#x5165;&#x6846;&#x4E2D;&#x8F93;&#x5165; <code>/data/heads</code></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-config-backup-head.png" alt="opsmgr config backup head.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; <strong>Set</strong> &#x6309;&#x94AE;&#xFF0C;&#x7136;&#x540E;&#x7EE7;&#x7EED;&#x70B9;&#x51FB; <strong>Enable Daemon</strong> &#x6309;&#x94AE;&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-config-a-blockstore.png" alt="opsmgr config a blockstore.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684;&#x754C;&#x9762;&#x4E0A;&#x9009;&#x62E9; <strong>Configure a Blockstore</strong>&#xFF0C;&#x7136;&#x540E;&#x5728; &lt;hostname&gt;:&lt;port&gt; &#x8F93;&#x5165;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">host01.example.com:27018,host02.example.com:27018,host03.example.com:27018</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x914D;&#x7F6E;&#x5B8C;&#x5176;&#x4ED6;&#x8F93;&#x5165;&#x9879;&#x540E;&#x70B9;&#x51FB; <strong>Save</strong> &#x5B8C;&#x6210; Backup &#x914D;&#x7F6E;&#x3002;</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___4">&#x5907;&#x4EFD;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___5">&#x5907;&#x4EFD;&#x4E00;&#x4E2A;&#x96C6;&#x7FA4;</h3>
+<div class="paragraph">
+<p><strong>1. &#x70B9;&#x51FB; Backup</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5728; Ops Manager &#x63A7;&#x5236;&#x53F0;&#x70B9;&#x51FB;&#x5DE6;&#x8FB9; <strong>Backup</strong>&#xFF0C;&#x8FDB;&#x5165; Backup &#x914D;&#x7F6E;&#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-backup-setting.png" alt="ops backup setting.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Begin Setup</strong> &#x6309;&#x94AE;&#x5F00;&#x59CB;&#x5907;&#x4EFD;&#x4E00;&#x4E2A;&#x96C6;&#x7FA4;</p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Next</strong> &#x6309;&#x94AE;&#x8FDB;&#x5165; Configration &#x754C;&#x9762;&#x5F00;&#x59CB;&#x914D;&#x7F6E;&#x5907;&#x4EFD;</p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Next</strong> &#x6309;&#x94AE;&#x8FDB;&#x5165; Monitor Agent &#x9A8C;&#x8BC1;</p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Next</strong> &#x6309;&#x94AE;&#x8FDB;&#x5165; Backup Agent &#x9A8C;&#x8BC1;</p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Next</strong> &#x6309;&#x94AE;&#x8FDB;&#x5165; Enable Backup &#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___6">&#x5BFC;&#x5165;&#x4E00;&#x4E2A;&#x5B58;&#x5728;&#x7684;&#x96C6;&#x7FA4;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5C06;&#x4E0A;&#x9762;&#x6B65;&#x9AA4;&#x521B;&#x5EFA;&#x7684;&#x6D4B;&#x8BD5;&#x96C6;&#x7FA4;&#x5BFC;&#x5165;&#x5230; Ops Manager.</p>
+</div>
+<div class="sect2">
+<h3 id="__clustermonitor">&#x521B;&#x5EFA; clusterMonitor &#x7528;&#x6237;</h3>
+<div class="listingblock">
+<div class="title"><strong>&#x5728;&#x96C6;&#x7FA4;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5206;&#x7247;&#x590D;&#x5236;&#x96C6;&#xFF0C;ConfigServer &#x590D;&#x5236;&#x96C6;&#x5408;&#x4E2D;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; clusterMonitor &#x7528;&#x6237;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">db.createUser({user: <span class="hljs-string">&quot;mms-monitoring-agent&quot;</span>, <span class="hljs-built_in">pwd</span>: <span class="hljs-string">&quot;mongo&quot;</span>, roles: [{ role:<span class="hljs-string">&quot;clusterMonitor&quot;</span>, db: <span class="hljs-string">&quot;admin&quot;</span> }]})</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>mms-monitoring-agent</code>/<code>mongo</code> &#x7528;&#x6237;&#x4F1A;&#x88AB; Monitor Agent &#x5BFC;&#x5165;&#x96C6;&#x7FA4;&#x65F6;&#x4F7F;&#x7528;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__project">&#x521B;&#x5EFA;&#x4E00;&#x4E2A; Project</h3>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762;&#x521B;&#x5EFA;&#x4E00;&#x4E2A; DEMO project</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-new-project.png" alt="ops new project.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x4ECE; Ops Manager &#x754C;&#x9009;&#x62E9; <code>Deployment</code> &#x2192; <code>Agents</code> &#x2192; <code>All Agents</code> &#x4E0B;&#x5217;&#x8868;&#x4E2D;&#x53EF;&#x770B;&#x5230;&#x5BF9;&#x5E94; Agent</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-agent-lists.png" alt="ops agent lists.png"></span></p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+&#x5982;&#x4E0A;&#x663E;&#x793A;&#x5BFC;&#x5165;&#x6210;&#x529F;&#x540E; Project &#x5BF9;&#x5E94;&#x6240;&#x6709; Agent&#xFF0C;&#x53EF;&#x6267;&#x884C;&#x5B8C;&#x540E;&#x56DE;&#x8FC7;&#x5934;&#x67E5;&#x770B;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x6267;&#x884C;&#x5BFC;&#x5165;</h3>
+<div class="paragraph">
+<p>&#x5728; Ops Manager &#x754C;&#x9762; DEMO Project &#x4E0B;&#x9009;&#x62E9; <code>Deployment</code> &#x2192; <code>Add New</code> &#x2192; <code>Existing MongoDB Deployment</code></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-import-exists.png" alt="ops import exists.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Install an Automation Agent on a single server</strong> &#x754C;&#x9762;&#xFF0C;&#x5728;&#x8BE5;&#x754C;&#x9762;&#x70B9;&#x51FB; <strong>Install Agent</strong> &#x6309;&#x94AE;&#xFF0C;&#x6839;&#x636E;&#x5F39;&#x51FA;&#x7684;&#x8BF4;&#x660E;&#x6B65;&#x9AA4;&#x914D;&#x7F6E;&#x4E00;&#x4E2A; Automation Agent, &#x914D;&#x7F6E;&#x6210;&#x529F;&#x540E;&#x754C;&#x9762;&#x5982;&#x4E0B;&#x754C;&#x9762;&#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-agent.png" alt="ops automation agent.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#x8FDB;&#x5165;&#x5230; <strong>Set up Ops Manager Monitoring</strong> &#x754C;&#x9762;&#xFF0C;Automation Agent &#x4F1A;&#x81EA;&#x52A8;&#x5B89;&#x88C5; Monitoring Agent &#x548C; Backup Agent&#xFF0C;&#x5B89;&#x88C5;&#x5B8C;&#x6210;&#x540E;&#x754C;&#x9762;&#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-all-agent.png" alt="ops all agent.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Import your deployment for monitoring</strong> &#x754C;&#x9762;&#x8F93;&#x5165;&#x76F8;&#x5E94;&#x7684;&#x503C;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Hostname              -  192.168.33.101
+Port                  -  27017
+Enable Authentication -  Yes
+Username              -  mms-monitoring-agent
+Password              -  mongo</pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x5BFC;&#x5165;&#x754C;&#x9762;&#x5F00;&#x59CB; ping &#x64CD;&#x4F5C;&#xFF0C;&#x6267;&#x884C;&#x6210;&#x529F;&#x540E;&#xFF0C;&#x4F1A;&#x6709;&#x5982;&#x4E0B;&#x8F93;&#x51FA;&#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-deployment-found.png" alt="ops deployment found.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165; <strong>Adding your deployment to Ops Manager</strong> &#x754C;&#x9762;&#xFF0C;&#x4F1A;&#x68C0;&#x6D4B;&#x5230;&#x5BFC;&#x5165;&#x7684; Server &#x5982;&#x4E0B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-server-import.png" alt="ops server import.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Do you want to add Ops Manager Automation to this deployment?</strong> &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x5728;&#x9875;&#x9762;&#x7684;&#x5E95;&#x90E8;&#xFF0C;&#x9009;&#x62E9;&#x63A5;&#x53D7; I understand that this requires the installation of an automation agent on each of the servers in my deployment and I have read the requirements/risks above&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-deployments.png" alt="ops automation deployments.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; * Configure authentication for Automation* &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x6839;&#x636E;&#x9875;&#x9762;&#x7684;&#x63D0;&#x793A;&#xFF0C;&#x5728;&#x96C6;&#x7FA4;&#x4E2D;&#x7684;&#x6240;&#x6709;&#x5206;&#x7247;&#x590D;&#x5236;&#x96C6;&#xFF0C;ConfigServer &#x590D;&#x5236;&#x96C6;&#x5408;&#x4E2D;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x547D;&#x4EE4;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x7528;&#x6237;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">use admin
+db.createUser({user: <span class="hljs-string">&apos;mms-automation&apos;</span>, <span class="hljs-built_in">pwd</span>: <span class="hljs-string">&apos;mongo&apos;</span>, roles: [<span class="hljs-string">&apos;clusterAdmin&apos;</span>, <span class="hljs-string">&apos;dbAdminAnyDatabase&apos;</span>, <span class="hljs-string">&apos;readWriteAnyDatabase&apos;</span>, <span class="hljs-string">&apos;restore&apos;</span>, <span class="hljs-string">&apos;userAdminAnyDatabase&apos;</span>]})</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x7136;&#x540E;&#x5728; <code>Provide authentication settings</code> &#x90E8;&#x5206;&#x8F93;&#x5165;&#x4E0A;&#x9762;&#x521B;&#x5EFA;&#x7684;&#x7528;&#x6237;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-automation-user.png" alt="ops automation user.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x7EE7;&#x7EED;&#xFF0C;&#x8FDB;&#x5165;&#x5230; <strong>Install an Automation Agent on each of your servers</strong> &#x9875;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x786E;&#x4FDD;&#x6240;&#x6709;&#x7684;&#x754C;&#x9762;&#x4E0A;&#x90FD;&#x5B89;&#x88C5;&#x4E86; Agent&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5B8C;&#x6210;&#x540E;&#x70B9;&#x51FB; <strong>Initialize Automation</strong> &#x6309;&#x94AE;&#xFF0C;&#x4F1A;&#x8FDB;&#x5165;&#x5230; <strong>Initializing Automation for your Deployment</strong> &#x9875;&#x9762;&#xFF0C;&#x6536;&#x96C6;&#x4FE1;&#x606F;&#x5B8C;&#x6210;&#x540E;&#xFF0C;&#x4F1A;&#x6709;&#x5982;&#x4E0B;&#x8F93;&#x51FA;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-gather-all-process.png" alt="ops gather all process.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB; <strong>Review Deployment</strong> &#x6309;&#x94AE;&#xFF0C;&#x8FDB;&#x5165;&#x5230; Deployment &#x754C;&#x9762;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x70B9;&#x51FB; Deployment &#x754C;&#x9762;&#x4E0A;&#x7AEF;&#x9EC4;&#x8272;&#x80CC;&#x666F;&#x6A2A;&#x6761;&#x4E2D; <strong>REVIEW &amp; DEPLOY</strong> &#x6309;&#x94AE;&#xFF0C;Review &#x76F8;&#x5173;&#x7684;&#x53D8;&#x5316;&#xFF0C;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-confirm-deploy.png" alt="ops confirm deploy.png"></span></p>
+</div>
+<div class="paragraph">
+<p>Review &#x5B8C;&#x6210;&#x540E;&#x70B9;&#x51FB; <strong>Confirm &amp; Deploy</strong> &#x6309;&#x94AE;&#x3002;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5BFC;&#x5165;&#x6210;&#x529F;&#x540E;&#xFF0C;&#x5728; Cluster_0 &#x4E2D;&#x4F1A;&#x6709; 2 &#x4E2A;&#x5206;&#x7247;&#xFF0C;3 &#x4E2A; CONFIGS&#xFF0C;&#x8FDE;&#x4E2A; mongos</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ops-imported-cluster.png" alt="ops imported cluster.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_ops_manager_3">Ops Manager &#x81EA;&#x52A8;&#x5316;&#x7BA1;&#x7406;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_overview">Overview</h3>
+<div class="paragraph">
+<p>&#x5728;&#x90E8;&#x7F72;&#x5B8C;&#x6210;&#x754C;&#x9762;&#xFF0C;&#x5982;&#x679C;&#x70B9;&#x51FB;&#x67D0;&#x4E00;&#x4E2A;&#x590D;&#x5236;&#x96C6;&#xFF0C;&#x4F1A;&#x8FDB;&#x5165;&#x5230; Overview &#x754C;&#x9762;&#xFF0C;&#x8BE5;&#x754C;&#x9762;&#x4E0B;&#x4F1A;&#x6709;&#x6574;&#x4F53;&#x6982;&#x8FF0;&#x754C;&#x9762;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-overview.png" alt="opsmgr overview.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_real_time">Real Time</h3>
+<div class="paragraph">
+<p>&#x8BE5;&#x754C;&#x9762;&#x4E0B;&#x4F1A;&#x6709;&#x5B9E;&#x65F6;&#x7684;&#x76D1;&#x63A7;&#x6570;&#x636E;&#xFF0C;&#x76D1;&#x63A7;&#x9879;&#x76EE;&#x4E3B;&#x8981;&#x6709; 4 &#x4E2A;&#x79CD;&#x7C7B;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x7CFB;&#x7EDF;&#x76F8;&#x5173;: CPU&#x3001;&#x78C1;&#x76D8;&#x4F7F;&#x7528;&#x7387;&#x3001;&#x7CFB;&#x7EDF;&#x5185;&#x5B58;&#x3001;&#x8FDE;&#x63A5;&#x603B;&#x6570;&#x3001;&#x7F51;&#x8DEF;&#x8FDB;&#x51FA;&#x7B49;</p>
+</li>
+<li>
+<p>MongoDB &#x76D1;&#x63A7;&#x6307;&#x6807;: OPERATIONS&#x3001;QUERY EXECUTION TIMES&#x3001;QUERY TARGETING&#x3001;READS &amp; WRITES</p>
+</li>
+<li>
+<p>&#x6700;&#x9AD8;&#x8D1F;&#x8F7D;&#x7684;&#x96C6;&#x5408;&#xFF0C;&#x4E3B;&#x8981;&#x4ECE;&#x8BFB;&#x5199;&#x4E24;&#x4E2A;&#x65B9;&#x9762;&#x53BB;&#x8861;&#x91CF;&#x8D1F;&#x8F7D;</p>
+</li>
+<li>
+<p>&#x6162;&#x64CD;&#x4F5C;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-real-time.png" alt="opsmgr real time.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_metrics">Metrics</h3>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x6839;&#x636E;&#x4E0D;&#x540C;&#x7684;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#xFF0C;&#x6536;&#x96C6;&#x4E00;&#x4E9B;&#x76D1;&#x63A7;&#x9879;&#x76EE;&#xFF0C;&#x5177;&#x4F53;&#x76D1;&#x63A7;&#x9879;&#x6709; 30 &#x591A;&#x79CD;&#xFF0C;&#x5206;&#x4E3A;&#x4E24;&#x7C7B;&#xFF0C;&#x5373;&#x7CFB;&#x7EDF;&#x76F8;&#x5173;&#xFF0C;&#x548C; MongoDB &#x76F8;&#x5173;&#xFF0C;&#x9009;&#x62E9;&#x4EFB;&#x610F;&#x4E00;&#x4E2A;&#x76D1;&#x63A7;&#x9879;&#xFF0C;&#x5BF9;&#x5E94;&#x7684;&#x76D1;&#x63A7;&#x62A5;&#x8868;&#x4F1A;&#x663E;&#x793A;&#x51FA;&#x6765;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-metrics.png" alt="opsmgr metrics.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_data">Data</h3>
+<div class="paragraph">
+<p>&#x5728;&#x8BE5;&#x754C;&#x9762;&#x70B9;&#x51FB; <strong>Create Database</strong> &#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-data-create-db.png" alt="opsmgr data create db.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x540C;&#x6837;&#x5728;&#x8BE5;&#x754C;&#x9762;&#x5982;&#x679C;&#x9009;&#x5B9A;&#x4E00;&#x4E2A;&#x6570;&#x636E;&#x5E93;&#x4E2D;&#x7684;&#x96C6;&#x5408;&#xFF0C;&#x53EF;&#x4EE5;&#x521B;&#x5EFA;&#x6587;&#x6863;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-data-insert-doc.png" alt="opsmgr data insert doc.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_performance_advisor">Performance Advisor</h3>
+<div class="paragraph">
+<p>&#x8BE5;&#x9875;&#x9762;&#x4F1A;&#x5217;&#x51FA;&#x4E00;&#x5B9A;&#x65F6;&#x95F4;&#x6BB5;&#x5185; Ops Manager &#x68C0;&#x6D4B;&#x5230;&#x7684;&#x6162;&#x67E5;&#x8BE2;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/opsmgr-perf-advisor.png" alt="opsmgr perf advisor.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_todo">TODO</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="sh-restore.html" class="navigation navigation-prev " aria-label="Previous page: 基于 Delayed Secondary 时间点恢复">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="perf.html" class="navigation navigation-next " aria-label="Next page: 性能调优">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Ops Manager","level":"1.2.8.3","depth":3,"next":{"title":"性能调优","level":"1.2.8.4","depth":3,"path":"mongo/dba/perf.adoc","ref":"mongo/dba/perf.adoc","articles":[]},"previous":{"title":"基于 Delayed Secondary 时间点恢复","level":"1.2.8.2.1","depth":4,"path":"mongo/dba/sh-restore.adoc","ref":"mongo/dba/sh-restore.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"mongo/dba/opsmanager.adoc","mtime":"2020-03-27T12:12:09.928Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-03-27T18:59:38.975Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
