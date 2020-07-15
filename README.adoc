@@ -1,3 +1,7 @@
-= Cloud Native Application & Delivery Controller
+= 关于 cloudadc 
 :toc: manual
+
+cloudadc 是一个开放性的社区，关注分布式架构的探究和最佳实现、云原生应用、云原生应用交付控制。
+
+
 
