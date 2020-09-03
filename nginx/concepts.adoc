@@ -1,0 +1,324 @@
+= NGINX 入门到精通
+:toc: manual
+
+== 概念
+
+=== 什么是 NGINX
+
+*Igor Sysoev* 于 2004 年开源的一个项目，最初该项目主要要解决的是 *C10K问题*（超过 10,000 个并发连接处理的问题）；后来 NGINX 公司成立，持续开发并创立了一个商业版本 *NGINX Plus*。
+
+Nginx 主要有三种使用场景：
+
+1. *高性能 web 服务器* - 目前超过 50% 的 TOP 1000 网站使用 Nginx。
+2. *反向代理* - SSL/TLS Termination，Content caching and compression
+3。*负载均衡*
+
+=== NGINX vs. Apache
+
+|===
+|NGINX |Apache
+
+|NGINX configuration language — directive based
+|Apache configuration language — directive based
+
+|One processing method
+|Multiple processing methods
+
+|Supports dynamic, third-party modules
+|Supports dynamic, third-party modules
+
+|Similar performance for dynamic content
+|Similar performance for dynamic content
+
+|Faster for serving static files
+|Slower for serving static files
+
+|No concept equivalent to .htaccess files
+|Concept of .htaccess files for directory localized configuration
+|===
+
+=== NGINX vs. NGINX Plus
+
+https://www.nginx.com/products/nginx/
+
+== 安装
+
+=== Installing NGINX on CentOS 7
+
+[source, bash]
+.*1. 创建 `/etc/yum.repos.d/nginx.repo` 内容如下*
+----
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/mainline/centos/7/$basearch/
+gpgcheck=0
+enabled=1
+----
+
+NOTE: 如果选择安装 `stable` 则修改 baseurl 为 http://nginx.org/packages/stable/centos/7/$basearch/
+
+[source, bash]
+.*2. 安装*
+----
+yum update -y
+yum install -y nginx
+----
+
+[source, bash]
+.*3. 开机启动*
+----
+systemctl start nginx && systemctl enable nginx && systemctl status nginx
+----
+
+*4. 访问测试*
+
+image:img/nginx-welcom.png[]
+
+=== Installing NGINX on Ubuntu 16.04
+
+=== 编译安装
+
+[source, bash]
+----
+// download
+wget http://nginx.org/download/nginx-1.17.10.tar.gz
+
+// navigate to folder
+tar -xzvf nginx-1.17.10.tar.gz
+cd nginx-1.17.10/
+
+// install dev tools
+yum groupinstall 'Development Tools'
+yum install zlib-devel -y
+yum install pcre-devel -y
+
+// compile to install
+./configure --help
+./configure --prefix=/opt/nginx
+cat objs/ngx_modules.c
+make
+make install
+----
+
+== 基本使用场景
+
+=== 配置一个静态资源 Web 服务器
+
+[source, bash]
+.*/etc/nginx/conf.d/book.conf*
+----
+server {
+    listen       8080;
+    server_name  book.example.com;
+
+    #charset koi8-r;
+    access_log  /var/log/nginx/book.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/book;
+        autoindex on;
+        #set $limit_rate 10k;
+        index  index.html;
+    }
+
+    error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+}
+----
+
+=== 配置一个具有缓存功能的反向代理
+
+[source, bash]
+.*1. 查看上游服务*
+----
+curl http://192.168.100.71:8080/v3/api-docs
+curl http://192.168.100.71:8080/api/fruits/2
+----
+
+[source, bash]
+.*2. /etc/nginx/conf.d/fruits.conf*
+----
+upstream local {
+    server 192.168.100.71:8080;
+}
+
+proxy_cache_path /var/cache/nginx/cache keys_zone=my_cache:10m;
+
+server {
+    listen       80;
+    server_name  fruits.example.com;
+
+    access_log  /var/log/nginx/fruits.access.log  main;
+
+    location / {
+        proxy_set_header Host            $proxy_host;
+        proxy_set_header X-Real-IP       $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_cache my_cache;
+        proxy_cache_key $host$uri$is_args$args;
+        proxy_cache_valid 200 302 10m;
+
+        proxy_pass http://local;
+    }
+
+}
+----
+
+[source, bash]
+.*3. 訪問測試*
+----
+curl http://192.168.100.11/api/fruits/2
+
+// make sure the cache is working, force shutdown the upstream server, execute curl again
+curl http://192.168.100.11/api/fruits/2
+----
+
+=== 配置 realip 模块
+
+[source, bash]
+.*1. /etc/nginx/conf.d/realip.conf*
+----
+server {
+    listen       80;
+    server_name  realip.example.com;
+
+    access_log  /var/log/nginx/realip.access.log  main;
+    error_log   /var/log/nginx/realip.error.log  debug;
+
+    set_real_ip_from 192.168.100.1;
+    real_ip_recursive on;
+    real_ip_header X-Forwarded-For;
+
+
+    location / {
+        return 200 "Client real ip: $remote_addr\n";
+    }
+
+
+}
+----
+
+[source, bash]
+.*2. 测试*
+----
+$ curl -H 'X-Forwarded-For: 1.1.1.1,192.168.100.1' http://192.168.100.11
+Client real ip: 1.1.1.1
+----
+
+=== 配置一个 HTTP Basic Authentication 的 Web 服务器
+
+[source, bash]
+.*1. 生成密码文件*
+----
+// install
+yum install httpd-tools -y
+
+// generate password file
+htpasswd -cb http-basic-auth.pass  admin admin
+htpasswd -b http-basic-auth.pass user user
+----
+
+[source, bash]
+.*2. /etc/nginx/conf.d/basicauth.conf*
+----
+server {
+    listen       80;
+    server_name  auth.example.com;
+
+    access_log  /var/log/nginx/auth.access.log  main;
+
+    location / {
+        satisfy    any;
+        auth_basic           "BASIC AUTH";
+        auth_basic_user_file http-basic-auth.pass;
+        deny all;
+    }
+
+    location /test {
+        return 200 "YES\n";
+    }
+
+}
+----
+
+[source, bash]
+.*3. 访问测试*
+----
+$ curl -u "admin:admin" http://192.168.100.11/test
+YES
+----
+
+=== TD 
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+== Web Server
+
+
+== Reverse Proxy
+
+
+
+== Load Balancer
+
+
+== 安全
+
+
+== 运维
+
+
+=== Logging
+
+
+=== 性能调优
+
+
+[source, bash]
+.**
+----
+
+----
+
+

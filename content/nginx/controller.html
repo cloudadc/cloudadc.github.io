@@ -1,0 +1,1130 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Nginx Controller · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../dist.html" />
+    
+    
+    <link rel="prev" href="install.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    社区介绍
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/container-ingress">
+            
+                    
+                    容器入口控制
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    Nginx
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="concepts.html">
+            
+                <a href="concepts.html">
+            
+                    
+                    入门到精通
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="install.html">
+            
+                <a href="install.html">
+            
+                    
+                    离线安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.3" data-path="controller.html">
+            
+                <a href="controller.html">
+            
+                    
+                    Nginx Controller
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../dist.html">
+            
+                <a href="../dist.html">
+            
+                    
+                    分布式系统
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../mongo/">
+            
+                <a href="../mongo/">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1" data-path="../mongo/viewpoint/presentation.html">
+            
+                <a href="../mongo/viewpoint/presentation.html">
+            
+                    
+                    定位
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.1.1" data-path="../mongo/viewpoint/5thingsfornosql.html">
+            
+                <a href="../mongo/viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.1.2" data-path="../mongo/viewpoint/oversea.html">
+            
+                <a href="../mongo/viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.1.3" data-path="../mongo/viewpoint/td.html">
+            
+                <a href="../mongo/viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.1.4" data-path="../mongo/viewpoint/cards.html">
+            
+                <a href="../mongo/viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.2" data-path="../mongo/dba/basic.html">
+            
+                <a href="../mongo/dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3" data-path="../mongo/dev/">
+            
+                <a href="../mongo/dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.3.1" data-path="../mongo/dev/aggregation.html">
+            
+                <a href="../mongo/dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3.2" data-path="../mongo/dev/aggregation-sum.html">
+            
+                <a href="../mongo/dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3.3" data-path="../mongo/dev/transactions.html">
+            
+                <a href="../mongo/dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3.4" data-path="../mongo/dev/java.html">
+            
+                <a href="../mongo/dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.3.5" data-path="../mongo/dev/geo.html">
+            
+                <a href="../mongo/dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4" data-path="../mongo/dba/cluster-admin.html">
+            
+                <a href="../mongo/dba/cluster-admin.html">
+            
+                    
+                    运维
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1.4.1" data-path="../mongo/dba/replication.html">
+            
+                <a href="../mongo/dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.2" data-path="../mongo/dba/rs-deployments.html">
+            
+                <a href="../mongo/dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.3" data-path="../mongo/dba/rs-maintenance.html">
+            
+                <a href="../mongo/dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.4" data-path="../mongo/dba/sharding.html">
+            
+                <a href="../mongo/dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.5" data-path="../mongo/dba/dba.html">
+            
+                <a href="../mongo/dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.6" data-path="../mongo/dba/sh-restore.html">
+            
+                <a href="../mongo/dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.7" data-path="../mongo/dba/opsmanager.html">
+            
+                <a href="../mongo/dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.8" data-path="../mongo/dba/perf.html">
+            
+                <a href="../mongo/dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.4.9" data-path="../mongo/dba/troubleshooting.html">
+            
+                <a href="../mongo/dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.1.5" data-path="../mongo/dba/security.html">
+            
+                <a href="../mongo/dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../kafka/">
+            
+                <a href="../kafka/">
+            
+                    
+                    Kafka
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="../kafka/installing/">
+            
+                <a href="../kafka/installing/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../elastic/">
+            
+                <a href="../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../spark/">
+            
+                <a href="../spark/">
+            
+                    
+                    Spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Nginx Controller</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="nginx-controller">Nginx Controller</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_controller_agent">Controller Agent</a>
+<ul class="sectlevel2">
+<li><a href="#__">&#x5B89;&#x88C5;</a></li>
+<li><a href="#__metrics">&#x914D;&#x7F6E; Metrics &#x6536;&#x96C6;</a></li>
+</ul>
+</li>
+<li><a href="#_analytics">Analytics</a>
+<ul class="sectlevel2">
+<li><a href="#_metrics">Metrics &#x5C55;&#x793A;</a></li>
+<li><a href="#__dashboard">&#x81EA;&#x5B9A;&#x5236; Dashboard</a></li>
+<li><a href="#__alert">&#x81EA;&#x5B9A;&#x5236; Alert</a></li>
+</ul>
+</li>
+<li><a href="#_platform">Platform</a>
+<ul class="sectlevel2">
+<li><a href="#_license">License</a></li>
+<li><a href="#___2">&#x7528;&#x6237;&#x548C;&#x89D2;&#x8272;</a></li>
+</ul>
+</li>
+<li><a href="#_services">Services</a>
+<ul class="sectlevel2">
+<li><a href="#__environment">&#x521B;&#x5EFA; Environment</a></li>
+<li><a href="#__gateway">&#x521B;&#x5EFA; Gateway</a></li>
+<li><a href="#__app">&#x521B;&#x5EFA; App</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_controller_agent">Controller Agent</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__">&#x5B89;&#x88C5;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Infrastructure</code> &#x2192; <code>Instances</code> &#x2192; <code>Overview</code>&#xFF0C;&#x70B9;&#x51FB; <code>Create Instance</code> &#x6309;&#x94AE;</p>
+</li>
+<li>
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684; <code>ADD INSTANCE BY INSTALLING AGENT</code> &#x754C;&#x9762;&#x6839;&#x636E;&#x6B65;&#x9AA4;&#x8BF4;&#x660E;&#x914D;&#x7F6E; Controller Agent</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget --no-check-certificate https://nginx-controller.example.com:8443/1.4/install/controller/ -O install.sh
+API_KEY=<span class="hljs-string">&apos;746994a889d9cd83aeeef8fb1a22535d&apos;</span> sh ./install.sh</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x7B49;&#x5F85;&#x51E0;&#x5206;&#x949F;&#x540E; Nginx Controller &#x4F1A;&#x663E;&#x793A; Nginx plus &#x4FE1;&#x606F;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-plus-list.png" alt="nginx controller plus list.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__metrics">&#x914D;&#x7F6E; Metrics &#x6536;&#x96C6;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5728; Nginx Plus &#x8282;&#x70B9;&#x4E0A;&#x7F16;&#x8F91; <code>/etc/nginx/conf.d/default.conf</code>&#xFF0C;&#x5F00;&#x542F; NGINX Plus API &#x8BBF;&#x95EE;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># enable /api/ location with appropriate access control in order</span>
+<span class="hljs-comment"># to make use of NGINX Plus API</span>
+
+location /api/ {
+    api write=on;
+    allow 127.0.0.1;
+    deny all;
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_analytics">Analytics</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_metrics">Metrics &#x5C55;&#x793A;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x5728; Nginx Controller &#x4E0A;&#x9009;&#x62E9; <code>Platform</code> &#x2192; <code>Agent</code>&#xFF0C;&#x5728; <code>Default Agent Settings</code> &#x754C;&#x9762;&#x914D;&#x7F6E; Metrics &#x6536;&#x96C6;&#x65B9;&#x5F0F;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-instances-metric.png" alt="nginx controller instances metric.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__dashboard">&#x81EA;&#x5B9A;&#x5236; Dashboard</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Analytics</code> &#x2192; <code>Dashboards</code> &#x2192; <code>Create Dashboard</code></p>
+</li>
+<li>
+<p>&#x8BBE;&#x5B9A; Dashboard &#x540D;&#x79F0;&#x4E3A; <code>CMBC TEST PROJECT</code></p>
+</li>
+<li>
+<p>&#x5728;&#x65B0;&#x521B;&#x5EFA;&#x7684; Dashboard &#x53F3;&#x4E0A;&#x65B9;&#x70B9;&#x51FB; <code>New Graph</code> &#x6309;&#x94AE;&#xFF0C;&#x5728; <code>EDIT GRAPH</code> &#x9875;&#x9762;&#x7F16;&#x8F91;&#xFF1A;</p>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x540D;&#x79F0;            - <code>TEST</code></p>
+</li>
+<li>
+<p>ADD METRIC      - &#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x4F8B;&#x5982; <code>nginx.http.conn.active</code></p>
+</li>
+<li>
+<p>GET METRIC FROM - &#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x8282;&#x70B9;</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Save</code> &#x6309;&#x94AE;&#x4FDD;&#x5B58;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-custom-dashboard.png" alt="nginx controller custom dashboard.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__alert">&#x81EA;&#x5B9A;&#x5236; Alert</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Analytics</code> &#x2192; <code>Alerts</code> &#x2192; <code>New Alert</code></p>
+</li>
+<li>
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684; <code>CREATE NEW ALERT RULE</code> &#x754C;&#x9762;&#xFF0C;&#x9009;&#x62E9;&#xFF1A;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>TRIGGER ALERT WHEN THE METRIC</strong> - &#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684;&#x53C2;&#x6570;&#xFF0C;&#x4F8B;&#x5982; <code>nginx.http.conn.active</code></p>
+</li>
+<li>
+<p><strong>Is</strong> - &#x5728;&#x4E0B;&#x62C9;&#x83DC;&#x5355;&#x4E2D;&#x9009;&#x62E9; <code>above</code>, <code>below</code>, <code>equal to</code></p>
+</li>
+<li>
+<p><strong>THE THRESHOLD OF</strong> - &#x586B;&#x5199;&#x5177;&#x4F53;&#x6570;&#x636E;&#xFF0C;&#x4F8B;&#x5982; 10000</p>
+</li>
+<li>
+<p><strong>OVER THE PAST</strong> - &#x586B;&#x5199;&#x5177;&#x4F53;&#x7684;&#x65F6;&#x95F4;&#xFF0C;&#x53EF;&#x4EE5;&#x662F;&#x51E0;&#x5206;&#x949F;&#x5230;&#x4E00;&#x5929;</p>
+</li>
+<li>
+<p><strong>APPLY RULE TO</strong> - &#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x7684; instance &#x8282;&#x70B9;</p>
+</li>
+<li>
+<p><strong>SEND EMAIL TO</strong> - &#x9009;&#x62E9;&#x5BF9;&#x5E94;&#x63A5;&#x6536;&#x8B66;&#x544A;&#x7684;&#x90AE;&#x4EF6;&#x5730;&#x5740;</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-alerts.png" alt="nginx controller alerts.png"></span></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_platform">Platform</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_license">License</h3>
+<div class="paragraph">
+<p>&#x9009;&#x62E9; <code>Platform</code> &#x2192; <code>Licenses</code>&#xFF0C;&#x5728; license &#x6FC0;&#x6D3B;&#x754C;&#x9762;&#x9009;&#x62E9; controller_license.txt&#xFF0C;&#x5373;&#x53EF;&#x6FC0;&#x6D3B;&#xFF0C;&#x6FC0;&#x6D3B;&#x540E;&#x754C;&#x9762;&#x5982;&#x4E0B;:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/controller-license-done.png" alt="controller license done.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x7528;&#x6237;&#x548C;&#x89D2;&#x8272;</h3>
+<div class="paragraph">
+<p>Nginx Controller &#x5B89;&#x88C5;&#x8FC7;&#x7A0B;&#x4F1A;&#x5C06;&#x7BA1;&#x7406;&#x5458;&#x7684;&#x90AE;&#x7BB1;&#x4F5C;&#x4E3A;&#x4E00;&#x4E2A;&#x8D85;&#x7EA7;&#x7BA1;&#x7406;&#x5458;&#x7528;&#x6237;&#xFF0C;&#x4F8B;&#x5982; <code>k.song@example.com</code>&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>Nginx Controller &#x9ED8;&#x8BA4;&#x6709;&#x4E09;&#x79CD;&#x89D2;&#x8272;&#xFF1A;<code>admin</code>&#xFF0C;<code>user</code>&#xFF0C;<code>guest</code>&#x3002;&#x53EF;&#x4EE5;&#x81EA;&#x5B9A;&#x4E49;&#x89D2;&#x8272;&#xFF0C;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;&#x9700;&#x8981;&#x521B;&#x5EFA; Environment&#xFF0C;&#x901A;&#x8FC7;&#x81EA;&#x5B9A;&#x5236;&#x89D2;&#x8272;&#x5BF9; environment &#x8FDB;&#x884C;&#x66F4;&#x7EC6;&#x7C92;&#x5EA6;&#x7684;&#x63A7;&#x5236;&#x3002;&#x5982;&#x4E0B;&#x6B65;&#x9AA4;&#x4E3A;&#x81EA;&#x5B9A;&#x4E49;&#x4E00;&#x4E2A; retail &#x9879;&#x76EE;&#x7684; dev &#x89D2;&#x8272;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Platform</code> &#x2192; <code>Roles</code> &#x2192; <code>Create Role</code></p>
+</li>
+<li>
+<p>&#x5728;&#x5F39;&#x51FA;&#x7684; <code>Create Role</code> &#x9875;&#x9762;&#x586B;&#x5199;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong> - <code>retail-dev</code></p>
+</li>
+<li>
+<p><strong>Display Name</strong> - <code>Retail Developer Access</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_services">Services</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__environment">&#x521B;&#x5EFA; Environment</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Services</code> &#x2192; <code>Environments</code> &#x2192; <code>Create Environment</code></p>
+</li>
+<li>
+<p>&#x5728; Edit Environment &#x9875;&#x9762;&#x8F93;&#x5165;&#xFF1A;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong> - app-prod</p>
+</li>
+<li>
+<p><strong>Display Name</strong> - Production Application Environment</p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-environment.png" alt="nginx controller environment.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__gateway">&#x521B;&#x5EFA; Gateway</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Services</code> &#x2192; <code>Gateways</code> &#x2192; <code>Create Gateway</code></p>
+</li>
+<li>
+<p>&#x5728; Configuration &#x9875;&#x9762;&#x914D;&#x7F6E;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong> - fruits</p>
+</li>
+<li>
+<p><strong>Environment</strong> - &#x9009;&#x62E9; Environment&#xFF0C;&#x4F8B;&#x5982; app-prod</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code>&#xFF0C;&#x5728; Placements &#x754C;&#x9762; Instance Refs &#x90E8;&#x5206;&#x9009;&#x62E9; nginx plus &#x5B9E;&#x4F8B;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-create-gate-way.png" alt="nginx controller create gate way.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code>&#xFF0C;&#x5728; Hostnames &#x754C;&#x9762;&#x8F93;&#x5165; hostname <code>http://192.168.100.71</code></p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code></p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code> &#x5230; API Spec &#x754C;&#x9762;&#xFF0C;&#x70B9;&#x51FB;&#x53F3;&#x4E0A;&#x89D2; <code>Publish</code> &#x6309;&#x94AE;&#x53D1;&#x5E03; Gateway</p>
+</li>
+<li>
+<p>Gateway &#x7684;&#x53D1;&#x5E03;&#x8FC7;&#x7A0B;&#x72B6;&#x6001;&#x4F1A;&#x4ECE; <code>configuring</code> &#x53D8;&#x4E3A; <code>configured</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-gateway-configured.png" alt="nginx controller gateway configured.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__app">&#x521B;&#x5EFA; App</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x9009;&#x62E9; <code>Services</code> &#x2192; <code>Apps</code> &#x2192; <code>Create App</code></p>
+</li>
+<li>
+<p>&#x5728; Create App &#x9875;&#x9762;&#x8F93;&#x5165;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong> - fruits-service</p>
+</li>
+<li>
+<p><strong>Environment</strong> - &#x9009;&#x62E9; Environment&#xFF0C;&#x4F8B;&#x5982; app-prod</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; Submit &#x6309;&#x94AE;</p>
+</li>
+<li>
+<p>&#x5728; App &#x5217;&#x8868;&#x4E2D;&#x9009;&#x62E9; <code>fruits-service</code> &#x2192; <code>View</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-app-view.png" alt="nginx controller app view.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB;&#x53F3;&#x4E0A;&#x89D2; <code>Create Component</code> &#x6309;&#x94AE;</p>
+</li>
+<li>
+<p>&#x5728; Create App Component &#x9875;&#x9762;&#x914D;&#x7F6E;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Name</strong> - fruits-service</p>
+</li>
+<li>
+<p><strong>Display Name</strong> - Fruit  App Service</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code>&#xFF0C;&#x5728; Gateway Refs &#x754C;&#x9762;&#x9009;&#x62E9;&#x4E00;&#x4E2A; Gateway</p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code>&#xFF0C;&#x5728; URIs &#x90E8;&#x5206;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A; URI <code>/</code></p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code></p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code></p>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code> &#x5230; Workload Groups &#x754C;&#x9762;&#xFF0C;&#x914D;&#x7F6E;</p>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Workload Group Name</strong> - fruit-service-group</p>
+</li>
+<li>
+<p><strong>LOAD BALANCING METHOD</strong> - &#x9009;&#x62E9;&#x9ED8;&#x8BA4; ROUND_ROBIN</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>&#x70B9;&#x51FB; <code>Add Backend Workload URI</code>&#xFF0C;&#x914D;&#x7F6E; URI &#x4E3A; <a href="http://192.168.100.71:8080" class="bare" target="_blank">http://192.168.100.71:8080</a></p>
+</li>
+<li>
+<p>&#x91CD;&#x590D;&#x4E0A;&#x9762;&#x6B65;&#x9AA4;&#xFF0C;&#x6DFB;&#x52A0;&#x53E6;&#x5916;&#x4E00;&#x4E2A; URI &#x4E3A; <a href="http://192.168.100.72:8080" class="bare" target="_blank">http://192.168.100.72:8080</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/nginx-controller-backend-workgroup.png" alt="nginx controller backend workgroup.png"></span></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x70B9;&#x51FB; <code>Next</code>&#xFF0C;&#x76F4;&#x5230; API Spec &#x754C;&#x9762;&#xFF0C;&#x70B9;&#x51FB;&#x53F3;&#x4E0A;&#x89D2; Publish &#x6309;&#x94AE;</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="install.html" class="navigation navigation-prev " aria-label="Previous page: 离线安装">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../dist.html" class="navigation navigation-next " aria-label="Next page: 分布式系统">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Nginx Controller","level":"1.3.3","depth":2,"next":{"title":"分布式系统","level":"1.4","depth":1,"path":"dist.adoc","ref":"dist.adoc","articles":[{"title":"MongoDB","level":"1.4.1","depth":2,"path":"mongo/README.adoc","ref":"mongo/README.adoc","articles":[{"title":"定位","level":"1.4.1.1","depth":3,"path":"mongo/viewpoint/presentation.adoc","ref":"mongo/viewpoint/presentation.adoc","articles":[{"title":"NOSQL 选择五维度","level":"1.4.1.1.1","depth":4,"path":"mongo/viewpoint/5thingsfornosql.adoc","ref":"mongo/viewpoint/5thingsfornosql.adoc","articles":[]},{"title":"MongoDB 助力企业出海","level":"1.4.1.1.2","depth":4,"path":"mongo/viewpoint/oversea.adoc","ref":"mongo/viewpoint/oversea.adoc","articles":[]},{"title":"Teradata 优化","level":"1.4.1.1.3","depth":4,"path":"mongo/viewpoint/td.adoc","ref":"mongo/viewpoint/td.adoc","articles":[]},{"title":"MongoDB 对话卡片","level":"1.4.1.1.4","depth":4,"path":"mongo/viewpoint/cards.adoc","ref":"mongo/viewpoint/cards.adoc","articles":[]}]},{"title":"基础","level":"1.4.1.2","depth":3,"path":"mongo/dba/basic.adoc","ref":"mongo/dba/basic.adoc","articles":[]},{"title":"开发","level":"1.4.1.3","depth":3,"path":"mongo/dev/README.adoc","ref":"mongo/dev/README.adoc","articles":[{"title":"Aggregation","level":"1.4.1.3.1","depth":4,"path":"mongo/dev/aggregation.adoc","ref":"mongo/dev/aggregation.adoc","articles":[]},{"title":"$sum","level":"1.4.1.3.2","depth":4,"path":"mongo/dev/aggregation-sum.adoc","ref":"mongo/dev/aggregation-sum.adoc","articles":[]},{"title":"分布式事务","level":"1.4.1.3.3","depth":4,"path":"mongo/dev/transactions.adoc","ref":"mongo/dev/transactions.adoc","articles":[]},{"title":"Java","level":"1.4.1.3.4","depth":4,"path":"mongo/dev/java.adoc","ref":"mongo/dev/java.adoc","articles":[]},{"title":"地理信息","level":"1.4.1.3.5","depth":4,"path":"mongo/dev/geo.adoc","ref":"mongo/dev/geo.adoc","articles":[]}]},{"title":"运维","level":"1.4.1.4","depth":3,"path":"mongo/dba/cluster-admin.adoc","ref":"mongo/dba/cluster-admin.adoc","articles":[{"title":"高可用","level":"1.4.1.4.1","depth":4,"path":"mongo/dba/replication.adoc","ref":"mongo/dba/replication.adoc","articles":[]},{"title":"部署","level":"1.4.1.4.2","depth":4,"path":"mongo/dba/rs-deployments.adoc","ref":"mongo/dba/rs-deployments.adoc","articles":[]},{"title":"维护","level":"1.4.1.4.3","depth":4,"path":"mongo/dba/rs-maintenance.adoc","ref":"mongo/dba/rs-maintenance.adoc","articles":[]},{"title":"分片","level":"1.4.1.4.4","depth":4,"path":"mongo/dba/sharding.adoc","ref":"mongo/dba/sharding.adoc","articles":[]},{"title":"DBA","level":"1.4.1.4.5","depth":4,"path":"mongo/dba/dba.adoc","ref":"mongo/dba/dba.adoc","articles":[]},{"title":"基于 Delayed Secondary 时间点恢复","level":"1.4.1.4.6","depth":4,"path":"mongo/dba/sh-restore.adoc","ref":"mongo/dba/sh-restore.adoc","articles":[]},{"title":"Ops Manager","level":"1.4.1.4.7","depth":4,"path":"mongo/dba/opsmanager.adoc","ref":"mongo/dba/opsmanager.adoc","articles":[]},{"title":"性能调优","level":"1.4.1.4.8","depth":4,"path":"mongo/dba/perf.adoc","ref":"mongo/dba/perf.adoc","articles":[]},{"title":"监控","level":"1.4.1.4.9","depth":4,"path":"mongo/dba/troubleshooting.adoc","ref":"mongo/dba/troubleshooting.adoc","articles":[]}]},{"title":"安全","level":"1.4.1.5","depth":3,"path":"mongo/dba/security.adoc","ref":"mongo/dba/security.adoc","articles":[]}]},{"title":"Kafka","level":"1.4.2","depth":2,"path":"kafka/README.adoc","ref":"kafka/README.adoc","articles":[{"title":"安装","level":"1.4.2.1","depth":3,"path":"kafka/installing/README.adoc","ref":"kafka/installing/README.adoc","articles":[]}]},{"title":"ElasticSearch","level":"1.4.3","depth":2,"path":"elastic/README.adoc","ref":"elastic/README.adoc","articles":[]},{"title":"Spark","level":"1.4.4","depth":2,"path":"spark/README.adoc","ref":"spark/README.adoc","articles":[]}]},"previous":{"title":"离线安装","level":"1.3.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"nginx/controller.adoc","mtime":"2020-09-03T09:29:13.490Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2020-09-03T09:35:58.983Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

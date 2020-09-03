@@ -2,6 +2,10 @@
 
 . link:README.adoc[社区介绍]
 . link:https://cloudadc.github.io/container-ingress[容器入口控制]
+. link:nginx/README.adoc[Nginx]
+.. link:nginx/concepts.adoc[入门到精通]
+.. link:nginx/install.adoc[离线安装]
+.. link:nginx/controller.adoc[Nginx Controller]
 . link:dist.adoc[分布式系统]
 .. link:mongo/README.adoc[MongoDB]
 ... link:mongo/viewpoint/presentation.adoc[定位]
