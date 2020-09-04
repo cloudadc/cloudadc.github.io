@@ -1,12 +1,12 @@
-= 目录
+= Table of Contents
 
-. link:README.adoc[社区介绍]
-. link:https://cloudadc.github.io/container-ingress[容器入口控制]
-. link:nginx/README.adoc[Nginx]
+. link:README.adoc[ABOUT]
+. link:https://cloudadc.github.io/container-ingress[CONTAINER INGRESS]
+. link:nginx/README.adoc[NGINX]
 .. link:nginx/concepts.adoc[入门到精通]
 .. link:nginx/install.adoc[离线安装]
 .. link:nginx/controller.adoc[Nginx Controller]
-. link:dist.adoc[分布式系统]
+. link:dist.adoc[DISTRIBUTED]
 .. link:mongo/README.adoc[MongoDB]
 ... link:mongo/viewpoint/presentation.adoc[定位]
 .... link:mongo/viewpoint/5thingsfornosql.adoc[NOSQL 选择五维度]
