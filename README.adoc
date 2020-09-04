@@ -1,7 +1,7 @@
-= 关于 cloudadc 
+= About cloudadc 
 :toc: manual
 
-cloudadc 是一个开放性的社区，关注分布式架构的探究和最佳实现、云原生应用、云原生应用交付控制。
 
+cloudadc is an open community that focuses on the exploration and best implementation of distributed architecture, cloud-native applications, and cloud-native application delivery control.
 
 
