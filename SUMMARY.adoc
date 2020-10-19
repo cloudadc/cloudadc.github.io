@@ -6,6 +6,7 @@
 .. link:nginx/concepts.adoc[入门到精通]
 .. link:nginx/install.adoc[离线安装]
 .. link:nginx/controller.adoc[Nginx Controller]
+.. link:nginx/usecase.adoc[用例]
 . link:dist.adoc[DISTRIBUTED]
 .. link:mongo/README.adoc[MongoDB]
 ... link:mongo/viewpoint/presentation.adoc[定位]

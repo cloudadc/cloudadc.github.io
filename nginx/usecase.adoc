@@ -1,0 +1,92 @@
+= Nginx Plus Use Case
+:toc: manual
+
+== 基础配置
+
+=== 自定义欢迎页面
+
+[source,bash]
+.*1. 自定义欢迎页面*
+----
+echo "Hello Nginx" > /usr/share/nginx/html/index.html 
+----
+
+[source,bash]
+.*2. 访问测试*
+----
+$ curl http://192.168.8.101
+Hello Nginx
+----
+
+=== 启用 API 和 Dashboard
+
+[source,bash]
+.*1. 在conf.d/目录下新建 dashboard.conf，添加如下配置启用 API 和 Dashboard*
+----
+server {
+    listen 8081;
+    location /api {
+      # limit_except GET {
+      #    auth_basic "NGINX Plus API";
+      #    auth_basic_user_file /path/to/passwd/file;
+      # }
+       api write=on;
+        #access_log off;
+    }
+
+    location = /dashboard.html {
+        root   /usr/share/nginx/html;
+        access_log off;
+    }
+    location /swagger-ui {
+        root   /usr/share/nginx/html;
+    }
+}
+----
+
+*2. 测试*
+
+* API - http://192.168.8.101:8081/swagger-ui/
+* Dashboard - http://192.168.8.101:8081/dashboard.html
+
+== 调度算法
+
+=== 轮询
+
+[source,bash]
+.*1. 在conf.d/目录下新建 RoundRobin.conf，添加如下配置*
+----
+upstream lb_methods_round_robin {
+    server 192.168.7.101:80;
+    server 192.168.7.102:80;
+}
+
+server {
+    listen       9001;
+    server_name  roundRobin.example.com;
+
+    access_log  /var/log/nginx/roundRobin.access.log  main;
+
+    location / {
+        proxy_set_header Host            $proxy_host;
+        proxy_set_header X-Real-IP       $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_pass http://lb_methods_round_robin;
+    }
+
+}
+----
+
+[source,bash]
+.*2. 访问测试*
+----
+
+----
+
+[source,bash]
+.**
+----
+
+----
+
