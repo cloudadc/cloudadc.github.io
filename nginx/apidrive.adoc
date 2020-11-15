@@ -1,0 +1,66 @@
+= Nginx Controller
+:toc: manual
+
+== Authentication
+
+[source, bash]
+.*Get session cookie before each api call*
+----
+$ curl -c cookie.txt -X POST -k --url 'https://192.168.71.33/api/v1/platform/login' --header 'Content-Type: application/json' --data '{"credentials": {"type": "BASIC","username": "admin@f5asc.com","password": "F5demo@666"}}'
+----
+
+The comming api call via curl use `-b` to bind the *cookie.txt*:
+
+[source, bash]
+.*curl -b cookie.txt*
+----
+curl -b cookie.txt -X GET -k --url 'https://192.168.71.33/api/v1/<FUNCTION>'
+----
+
+Alternatively, use `-v` to print the cookie:
+
+[source, bash]
+.*Get cookie*
+----
+$ curl  -X POST -v -k --url 'https://192.168.71.33/api/v1/platform/login' --header 'Content-Type: application/json' --data '{"credentials": {"type": "BASIC","username": "admin@f5asc.com","password": "F5demo@666"}}'
+
+< Set-Cookie: session=.eJyUjU1OBCEQRu_yrcEU3eI4vfIQrtwQmh-tBBoCtEnHeHcz47hyNbuql1f1vrD30Ax7LFAQ2K9TfJ7DE6lZau3O8lF5K1e9RrlO-nxyRJpohoC5S44t9A8so-1BwHOvyR5mszlgAQR86K5xHVy2X2CdK_s2rhElUFv5ZB-aGUe9nNhcE8cDApFbH7dH1mfeIJDsPxSy5fS3v0Rtu3twJd9kk8o7X8oTTSSVkqRf6bQotRC94fsnAAD__w-gWLo.X6PyZg.T6dFXHsCKan69a10296y9BcKDoE; Path=/; HttpOnly; Secure; SameSite=Strict
+----
+
+then call api with cookie header
+
+[source, bash]
+----
+curl --cookie "session=.eJyUjU1OBCEQRu_yrcFAZ3q6ZeUhXLkhNfxoJdAQoE06xrubGceVq9lVvbyq94W9h2bZw0BDYL9NZ0fzPJ1nuap1kSd6jnKNl5MkNVG4-CXo6CBgH5JjC_0DZrQ9CHjuNdFhN8oBBhDwobvGdXDZfgE5V_Zt3CJaoLbyyT40O456PaFcE8cDApFbH_dH5DNvEEj0D4VMnP72lzhTd0-u5LtsU3nna3lSk5JaSzW_qsVoZfTyhu-fAAAA__9vtVpl.X6OlhA.9GN1TqQrsDjk-PdVP-PVub59XBs; Path=/; HttpOnly; Secure; SameSite=Strict" -X GET -k --url 'https://192.168.71.33/api/v1/<FUNCZTION>'
+----
+
+== Infrastructure
+
+=== Locations
+
+[source, bash]
+.*1. 查看所有 Locations*
+----
+curl -b cookie.txt -X GET -k --url 'https://192.168.71.33/api/v1/infrastructure/locations'
+----
+
+[source, bash]
+.*2. 创建 Locations*
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+

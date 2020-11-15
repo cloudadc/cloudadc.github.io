@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1                                                                                                                                     
+kind: Ingress                                                                                                                                                      
+metadata:                                                                                                                                                          
+  name: bookinfo 
+  namespace: bookinfo                                                                                                                                         
+spec:                                                                                                                                                              
+  rules:                                                                                                                                                           
+  - host: bookinfo.io                                                                                                                                   
+    http:                                                                                                                                                          
+      paths:                                                                                                                                                       
+      - path: /                                                                                                                                                
+        backend:                                                                                                                                                   
+          serviceName: productpage                                                                                                                                        
+          servicePort: 9080                                                                                                                                          
+
