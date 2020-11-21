@@ -361,16 +361,76 @@ nginx -s reload
 
 *2. 访问测试*
 
-* http://arcadia-finance.io
-* http://arcadia-finance.io/files
-* http://arcadia-finance.io/api
-* http://arcadia-finance.io/app3
+* http://app-protect-arcadia-finance.io
+* http://app-protect-arcadia-finance.io/files
+* http://app-protect-arcadia-finance.io/api
+* http://app-protect-arcadia-finance.io/app3
+
+=== OWASP Top 10 Policy 防护
+
+*1. Policy 配置*
+
+* 下载 - link:files/owasp_top10/nginx.conf[nginx.conf]
+* 下载 - link:files/owasp_top10/policy_owasp_top10.json[policy_owasp_top10.json]
+
+*2. 访问测试*
+
+* SQL 注入
+
+[source, bash]
+----
+id=<script>
+id=1 and if(substr(database(),1,1)='a',sleep(5),1) 
+id=1 and if(substr((select column_name from information_schema.columns where table_schema='test' and table_name='users' limit 0,1),1,1)='a',sleep(5),1) 
+----
+
+image:img/nap-helloworld-request-reject.jpeg[]
 
 === TD
-
 
 [source, bash]
 .**
 ----
 
 ----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+
+
+
