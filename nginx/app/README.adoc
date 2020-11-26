@@ -400,17 +400,26 @@ image:img/nap-helloworld-request-reject.jpeg[]
 
 ----
 
-[source, bash]
-.**
-----
+== Service Mesh
 
-----
+=== CLI 初体验
 
 [source, bash]
-.**
+.*1. 安装*
+----
+gunzip nginx-meshctl_linux.gz
+mv nginx-meshctl_linux /usr/local/bin/nginx-meshctl
+chmod +x /usr/local/bin/nginx-meshctl
 ----
 
+[source, text]
+.*2. 查看版本*
 ----
+# nginx-meshctl version
+nginx-meshctl v0.7.0
+----
+
+=== 安装
 
 [source, bash]
 .**
