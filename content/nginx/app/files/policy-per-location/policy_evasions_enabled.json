@@ -1,0 +1,104 @@
+{
+    "policy":{
+    "name":"evasions_enabled",
+    "template":{
+        "name":"POLICY_TEMPLATE_NGINX_BASE"
+    },
+    "applicationLanguage":"utf-8",
+    "enforcementMode":"blocking",
+    "blocking-settings":{
+        "violations":[
+            {
+                "name":"VIOL_JSON_FORMAT",
+                "alarm":true,
+                "block":true
+            },
+            {
+                "name":"VIOL_EVASION",
+                "alarm":true,
+                "block":true
+            },
+            {
+                "name": "VIOL_ATTACK_SIGNATURE",
+                "alarm": true,
+                "block": true
+            }
+        ],
+        "evasions":[
+            {
+                "description":"Bad unescape",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"Directory traversals",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"Bare byte decoding",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"Apache whitespace",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"Multiple decoding",
+                "enabled":true,
+                "learn":false,
+                "maxDecodingPasses":2
+            },
+            {
+                "description":"IIS Unicode codepoints",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"IIS backslashes",
+                "enabled":true,
+                "learn":false
+            },
+            {
+                "description":"%u decoding",
+                "enabled":true,
+                "learn":false
+            }
+        ]
+    },
+    "json-profiles":[
+            {
+                "defenseAttributes":{
+                    "maximumTotalLengthOfJSONData":"any",
+                    "maximumArrayLength":"any",
+                    "maximumStructureDepth":"any",
+                    "maximumValueLength":"any",
+                    "tolerateJSONParsingWarnings":true
+                },
+                "name":"Default",
+                "handleJsonValuesAsParameters":false,
+                "validationFiles":[
+
+                ],
+                "description":"Default JSON Profile"
+            }
+        ],
+    "signature-settings": {
+            "attackSignatureFalsePositiveMode": "disabled",
+            "minimumAccuracyForAutoAddedSignatures": "low"
+    },
+    "server-technologies": [
+            {
+                "serverTechnologyName": "MongoDB"
+            },
+            {
+                "serverTechnologyName": "Unix/Linux"
+            },
+                        {
+                "serverTechnologyName": "PHP"
+            }
+    ]
+    }
+}

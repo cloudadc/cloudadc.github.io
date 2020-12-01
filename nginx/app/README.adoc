@@ -421,6 +421,8 @@ nginx-meshctl v0.7.0
 
 === 安装
 
+NOTE: 详细安装文档参照 https://docs.nginx.com/nginx-service-mesh/get-started/install/
+
 [source, bash]
 .**
 ----
