@@ -96,7 +96,7 @@ image:img/nginx-plus-ic-dashboard-on-f5.png[]
 kubectl apply -f arcadia-ingress.yaml
 kubectl apply -f bookinfo-ingress.yaml
 ----
-*4. 访问验证*
+*4. 查看发布的业务*
 
 通过 Nginx Plus Dashboard 查看发布的业务
 
