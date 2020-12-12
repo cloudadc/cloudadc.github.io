@@ -11,6 +11,7 @@
 .. link:nginx/app/README.adoc[现代应用]
 . link:https://cloudadc.github.io/nodejs-honeypot/[NODE.JS HONEYPOT]
 . link:dist.adoc[DISTRIBUTED]
+.. link:zk/README.adoc[ZooKeeper]
 .. link:mongo/README.adoc[MongoDB]
 ... link:mongo/viewpoint/presentation.adoc[定位]
 .... link:mongo/viewpoint/5thingsfornosql.adoc[NOSQL 选择五维度]

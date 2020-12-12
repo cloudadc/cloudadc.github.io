@@ -1,0 +1,217 @@
+= Zookeeper 
+:toc: manual
+
+== Clustered (Multi-Server) Setup Script
+
+NOTE: Refer to link:https://zookeeper.apache.org/doc/r3.6.2/zookeeperAdmin.html#sc_zkMulitServerSetup[ZooKeeper Setup] for more information.
+
+=== 安装
+
+[source, text]
+.*1. ZooKeeper ensemble machine preparation*
+----
+# for i in 1 2 3 ; do ssh zk-$i 'hostname ; cat /etc/redhat-release ; sleep 1' ;done
+zk-1
+CentOS Linux release 7.9.2009 (Core)
+zk-2
+CentOS Linux release 7.9.2009 (Core)
+zk-3
+CentOS Linux release 7.9.2009 (Core)
+----
+
+[source, bash]
+.*2. Java JDK Installation*
+----
+for i in 1 2 3 ; do ssh zk-$i 'yum install java-11-openjdk-devel -y' ;done
+for i in 1 2 3 ; do ssh zk-$i 'java --version' ;done
+----
+
+[source, bash]
+.*3. ZooKeeper Server Installation*
+----
+for i in 1 2 3 ; do ssh zk-$i 'tar -xzvf apache-zookeeper-3.6.2-bin.tar.gz -C /opt/' ;done
+----
+
+[source, bash]
+.*4. Configuration*
+----
+for i in 1 2 3 ; do ssh zk-$i 'mkdir /var/lib/zookeeper/' ;done
+
+ssh zk-1 'echo 1 > /var/lib/zookeeper/myid'
+ssh zk-2 'echo 2 > /var/lib/zookeeper/myid'
+ssh zk-3 'echo 3 > /var/lib/zookeeper/myid'
+
+for i in 1 2 3 ; do ssh zk-$i 'cat /var/lib/zookeeper/myid' ;done
+1
+2
+3
+
+// execute the following commands in all 3 machines
+cat << EOF > /opt/apache-zookeeper-3.6.2-bin/conf/zoo.cfg
+tickTime=2000
+dataDir=/var/lib/zookeeper/
+clientPort=2181
+initLimit=10
+syncLimit=5
+server.1=zk-1:2888:3888
+server.2=zk-2:2888:3888
+server.3=zk-3:2888:3888
+EOF
+----
+
+[source, bash]
+.*5. Start and check running status*
+----
+for i in 1 2 3 ; do ssh zk-$i '/opt/apache-zookeeper-3.6.2-bin/bin/zkServer.sh start' ;done
+for i in 1 2 3 ; do ssh zk-$i '/opt/apache-zookeeper-3.6.2-bin/bin/zkServer.sh status' ;done
+----
+
+[source, bash]
+.*6. 安装验证*
+----
+cat /opt/apache-zookeeper-3.6.2-bin/logs/zookeeper-root-server-zk-3.out
+----
+
+=== 运维管理
+
+==== HTTP
+
+浏览器访问 http://10.1.10.6:8080/commands 查看所有可通过 HTTP 操作的命令
+
+[source, bash]
+.*示例：/commands/voting_view 查看所有可参与选举的节点*
+----
+{
+  "current_config" : {
+    "1" : {
+      "server_addresses" : [ "zk-1:2888" ],
+      "election_addresses" : [ "zk-1:3888" ],
+      "client_address" : "0.0.0.0:2181",
+      "learner_type" : "participant"
+    },
+    "2" : {
+      "server_addresses" : [ "zk-2:2888" ],
+      "election_addresses" : [ "zk-2:3888" ],
+      "client_address" : "",
+      "learner_type" : "participant"
+    },
+    "3" : {
+      "server_addresses" : [ "zk-3:2888" ],
+      "election_addresses" : [ "zk-3:3888" ],
+      "client_address" : "",
+      "learner_type" : "participant"
+    }
+  },
+  "command" : "voting_view",
+  "error" : null
+}
+----
+
+[source, bash]
+.*示例：/commands/leader 查看集群 Leader*
+----
+{
+  "is_leader" : false,
+  "leader_id" : 2,
+  "leader_ip" : "zk-2",
+  "command" : "leader",
+  "error" : null
+}
+----
+
+==== CLI
+
+[cols="5a,2"]
+|===
+|Commands |Notes
+
+|
+[source, bash]
+----
+./zkCli.sh -server 10.1.10.7:2181
+----
+|客户端连接 ensemble 节点
+
+|
+[source, bash]
+----
+help
+----
+|查看所有命令
+
+|
+[source, bash]
+----
+ls /
+----
+|查看当前节点数据
+
+|
+[source, bash]
+----
+create /test "value"
+create /test/subpath "value 2"
+----
+|创建节点
+
+|
+[source, bash]
+----
+get /test
+get /test/subpath
+----
+|查看节点数据
+
+|
+[source, bash]
+----
+set /test "value-1"
+----
+|修改节点数据
+
+|
+[source, bash]
+----
+delete /test/subpath
+delete /test
+----
+|删除节点
+
+|
+[source, bash]
+----
+stat /
+----
+|查看状态
+
+|
+[source, bash]
+----
+quit
+----
+|退出命令行
+
+|===
+
+== Java Client
+
+[source, bash]
+.*Get code*
+----
+git clone https://github.com/cloudadc/distribute-dev-framework.git
+----
+
+[source, bash]
+.*Build*
+----
+cd distribute-dev-framework/zookeeper/
+mvn clean install
+----
+
+[source, bash]
+.*Run*
+----
+java -jar java-client/target/zookeeper-java-client-0.0.1.jar 10.1.10.6:2181,10.1.10.7:2181,10.1.10.8:2181
+----
+
+
