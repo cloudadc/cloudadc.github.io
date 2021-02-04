@@ -15,29 +15,21 @@ Arcadia App 是由四个微服务构成，之间的调运关系如下图：
 
 image:img/app-arch.png[]
 
-== 现代应用运行平台
+== 现代应用运行平台 - Kubernetes
 
-=== Kubernetes 上运行现代应用
+=== Bookinfo
 
-* 下载 - link:files/arcadia.yaml[arcadia.yaml]
 * 下载 - link:files/bookinfo.yaml[bookinfo.yaml]
 
 [source, bash]
 .*1. 部署到 Kubernetes*
 ----
-kubectl apply -f arcadia.yaml
 kubectl apply -f bookinfo.yaml
 ----
 
 [source, bash]
 .*2. 查看运行的容器*
 ----
-$ kubectl get pods -n arcadia --no-headers
-app2-699b4d8d74-74g44      1/1   Running   0     4h44m
-app3-7ff6695c8d-8rd8z      1/1   Running   0     4h44m
-backend-74dbfd66d6-k74tk   1/1   Running   0     4h44m
-main-5cd8c9f449-65hqc      1/1   Running   0     4h44m
-
 $ kubectl get pods -n bookinfo
 NAME                              READY   STATUS    RESTARTS   AGE
 details-v1-5d5f85bdc8-vdtv5       1/1     Running   0          35m
@@ -51,12 +43,6 @@ reviews-v3-86cb5cd9dd-zn28t       1/1     Running   0          35m
 [source, bash]
 .*3. 查看 Service*
 ----
-$ kubectl get svc -n arcadia --no-headers
-app2      ClusterIP   10.103.195.163   <none>   80/TCP   4h46m
-app3      ClusterIP   10.98.146.51     <none>   80/TCP   4h46m
-backend   ClusterIP   10.111.163.247   <none>   80/TCP   4h46m
-main      ClusterIP   10.107.33.16     <none>   80/TCP   4h46m
-
 $ kubectl get svc -n bookinfo --no-headers
 details       ClusterIP   10.107.214.230   <none>   9080/TCP   38m
 productpage   ClusterIP   10.98.5.109      <none>   9080/TCP   35m
@@ -64,45 +50,65 @@ ratings       ClusterIP   10.105.48.82     <none>   9080/TCP   38m
 reviews       ClusterIP   10.96.162.226    <none>   9080/TCP   38m
 ----
 
-=== 容器业务发布
+=== Arcadia
 
-本部分采用 F5 CIS + Nginx Plus Ingress Controller 的方式，通过 Ingress 的方式将 Arcadia App 发布出去。
+* 下载 - link:files/arcadia.yaml[arcadia.yaml]
 
-*1. F5 CIS + Nginx Plus 部署*
+[source, bash]
+.*1. 部署到 Kubernetes*
+----
+kubectl apply -f arcadia.yaml
+----
 
-参考 https://cloudadc.github.io/container-ingress/content/nginx-plus-ingress/bigip/#_architectures[连接] 完成部署。
+[source, bash]
+.*2. 查看运行的容器*
+----
+$ kubectl get pods -n arcadia --no-headers
+app2-699b4d8d74-74g44      1/1   Running   0     4h44m
+app3-7ff6695c8d-8rd8z      1/1   Running   0     4h44m
+backend-74dbfd66d6-k74tk   1/1   Running   0     4h44m
+main-5cd8c9f449-65hqc      1/1   Running   0     4h44m
+----
 
-Nginx Plus IC 采用双节点监控集群的方式部署，在 F5 上查看入口视图。
+[source, bash]
+.*3. 查看 Service*
+----
+$ kubectl get svc -n arcadia --no-headers
+app2      ClusterIP   10.103.195.163   <none>   80/TCP   4h46m
+app3      ClusterIP   10.98.146.51     <none>   80/TCP   4h46m
+backend   ClusterIP   10.111.163.247   <none>   80/TCP   4h46m
+main      ClusterIP   10.107.33.16     <none>   80/TCP   4h46m
+----
 
-*2. 查看 F5 上发布 Nginx Plus IC 视图*
+== 容器业务发布 - F5/Nginx
 
-image:img/nginx-plus-ic-on-f5.png[]
+=== Arcadia
 
-根据上图，Nginx Plus IC 共有两个节点（`10.244.1.235:80`，`10.244.2.234:80`），F5 上入口地址为：`192.168.7.40:80`。
+Arcadia 提供在线金融转账、股票交易服务，需要满足金融级别服务发布的要求，具体：
 
-image:img/nginx-plus-ic-dashboard-on-f5.png[]
+* 高性能、高并发访问需求
+* 基于 cookie 的会话保持，且 cookie Key 加密
+* 基于最小连接数的会话保持
+* 请求 /htalth.html，只有当返回中包括 “Arcadia_UP” 时健康检查才算成功
+* 为满足网络监控数据包分析，代理层开启 SNAT
+* 当服务宕机时代理层 HTTP、PING 都不能通 
 
-根据上图，Nginx Plus IC 可视化界面在 F5 上入口地址为：`192.168.7.40:8080`。
+选择 F5 发布 Arcadia 服务，参照 link:https://clouddocs.f5.com/containers/latest/userguide/kubernetes/#installing-cis-manually[链接] 完成 F5 CIS 安装。
 
-*3. 容器业务发布*
-
-* 下载 - link:files/arcadia-ingress.yaml[arcadia-ingress.yaml]
-* 下载 - link:files/bookinfo-ingress.yaml[bookinfo-ingress.yaml]
+* 下载 - link:files/cm-arcadia.yaml[cm-arcadia.yaml]
 
 执行如下命令发布容器业务
 
 [source, bash]
 ----
-kubectl apply -f arcadia-ingress.yaml
-kubectl apply -f bookinfo-ingress.yaml
+kubectl apply -f cm-arcadia.yaml
 ----
-*4. 查看发布的业务*
 
-通过 Nginx Plus Dashboard 查看发布的业务
+发布完成后访问服务，并在 F5 上查看服务拓扑及统计数据：
 
-image:img/nginx-plus-in-dashboard.png[]
+image:img/arcadia-f5.png[]
 
-=== 内网 DNS 配置
+=== PaaS DNS 服务
 
 随着新形态应用、云化应用、容器化应用的发展，内网 DNS 发挥着越来越重要的作用，PaaS 容器内部、DevOps 工具链都需要依赖内部 DNS。本部分在 F5 DNS 上面配置静态域名。
 
@@ -184,10 +190,45 @@ image:img/dns-wideip-list.jpeg[]
 ----
 $ dig bookinfo.io @192.168.7.19 +short
 192.168.7.40
-
-$ dig arcadia-finance.io @192.168.7.19 +short
-192.168.7.40
 ----
+
+=== Bookinfo 
+
+本部分采用 F5 CIS + Nginx Plus Ingress Controller 的方式，通过 Ingress 的方式将 Arcadia App 发布出去。
+
+*1. F5 CIS + Nginx Plus 部署*
+
+参考 https://cloudadc.github.io/container-ingress/content/nginx-plus-ingress/bigip/#_architectures[连接] 完成部署。
+
+Nginx Plus IC 采用双节点监控集群的方式部署，在 F5 上查看入口视图。
+
+*2. 查看 F5 上发布 Nginx Plus IC 视图*
+
+image:img/nginx-plus-ic-on-f5.png[]
+
+根据上图，Nginx Plus IC 共有两个节点（`10.244.1.235:80`，`10.244.2.234:80`），F5 上入口地址为：`192.168.7.40:80`。
+
+image:img/nginx-plus-ic-dashboard-on-f5.png[]
+
+根据上图，Nginx Plus IC 可视化界面在 F5 上入口地址为：`192.168.7.40:8080`。
+
+*3. 容器业务发布*
+
+* 下载 - link:files/arcadia-ingress.yaml[arcadia-ingress.yaml]
+* 下载 - link:files/bookinfo-ingress.yaml[bookinfo-ingress.yaml]
+
+执行如下命令发布容器业务
+
+[source, bash]
+----
+kubectl apply -f arcadia-ingress.yaml
+kubectl apply -f bookinfo-ingress.yaml
+----
+*4. 查看发布的业务*
+
+通过 Nginx Plus Dashboard 查看发布的业务
+
+image:img/nginx-plus-in-dashboard.png[]
 
 === 业务访问
 

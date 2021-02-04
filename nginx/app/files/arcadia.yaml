@@ -59,6 +59,9 @@ metadata:
   labels:
     app: main
     service: main
+    cis.f5.com/as3-app: arcadia_app
+    cis.f5.com/as3-pool: arcadia_pool
+    cis.f5.com/as3-tenant: arcadia
 spec:
   type: ClusterIP
   ports:
