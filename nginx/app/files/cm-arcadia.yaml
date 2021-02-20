@@ -23,6 +23,7 @@ data:
             "template": "generic",
             "arcadia_vs": {
               "class": "Service_HTTP",
+              "iRules": ["arcadia_iRules"],
               "virtualAddresses": [
                 "192.168.200.60"
               ],
@@ -30,11 +31,11 @@ data:
               "serviceDownImmediateAction": "reset",
               "virtualPort": 80,
               "persistenceMethods": [{
-                "use": "cookie_encryption"
+                "use": "arcadia_cookie_encryption"
               }],
-              "pool": "arcadia_pool"
+              "pool": "arcadia_main_pool"
             },
-            "cookie_encryption": {
+            "arcadia_cookie_encryption": {
               "class": "Persist",
               "persistenceMethod": "cookie",
               "encrypt": true,
@@ -44,10 +45,10 @@ data:
                 "protected": "eyJhbGciOiJkaXIiLCJlbmMiOiJub25lIn0="
               }
             },
-            "arcadia_pool": {
+            "arcadia_main_pool": {
               "class": "Pool",
               "monitors": [
-                "tcp"
+                "http"
               ],
               "loadBalancingMode": "least-connections-member",
               "minimumMembersActive": 0,
@@ -57,6 +58,53 @@ data:
                 "serverAddresses": []
               }
               ]
+            },
+            "arcadia_backend_pool": {
+              "class": "Pool",
+              "monitors": [
+                "http"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "minimumMembersActive": 0,
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            },
+            "arcadia_app2_pool": {
+              "class": "Pool",
+              "monitors": [
+                "http"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "minimumMembersActive": 0,
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            },
+            "arcadia_app3_pool": {
+              "class": "Pool",
+              "monitors": [
+                "http"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "minimumMembersActive": 0,
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            },
+            "arcadia_iRules": {
+              "class": "iRule",
+              "remark": "switch between pools",
+              "iRule": "when HTTP_REQUEST {\n if { [HTTP::uri] starts_with \"/files\" } {\n pool arcadia_backend_pool \n } elseif {[HTTP::uri] starts_with \"/api\"} {\n pool arcadia_app2_pool \n } elseif {[HTTP::uri] starts_with \"/app3\"} {\n pool arcadia_app3_pool \n } else { \n pool arcadia_main_pool \n }\n  \n}"
             }
           }
         }
