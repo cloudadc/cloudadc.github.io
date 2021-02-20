@@ -1,0 +1,103 @@
+= Docker 网络 
+:toc: manual
+
+== docker 网络基本概念
+
+[source, bash]
+.*1. 创建并查看网络*
+----
+sudo docker network ls
+sudo docker network create -d bridge test_network
+sudo docker network inspect test_network
+----
+
+[source, bash]
+.*2. 创建容器并查看容器网络*
+----
+sudo docker run -itd --name=test1 nginx
+sudo docker run -itd --name=test2 nginx
+sudo docker inspect test1
+sudo docker inspect test2
+----
+
+|===
+|容器名 |MacAddress |IPAddress |Gateway
+
+|test1
+|02:42:ac:11:00:02
+|172.17.0.2
+|172.17.0.1
+
+|test2
+|02:42:ac:11:00:03
+|172.17.0.3
+|172.17.0.1
+|===
+
+[source, bash]
+.*3. 将容器挂载都特定网络后查看容器网络*
+----
+sudo docker network connect test_network test1
+sudo docker network connect test_network test2
+sudo docker inspect test1
+sudo docker inspect test2
+----
+
+|===
+|容器名 |MacAddress |IPAddress |Gateway
+
+|test1
+|02:42:ac:11:00:02
+|172.18.0.2
+|172.18.0.1
+
+|test2
+|02:42:ac:11:00:03
+|172.18.0.3
+|172.18.0.1
+|===
+
+[source, bash]
+.*4. 服务访问*
+----
+curl 172.18.0.2
+curl 172.18.0.3
+
+$ sudo docker logs test1
+172.18.0.1 - - [20/Feb/2021:05:06:30 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0" "-"
+
+$ sudo docker logs test2
+172.18.0.1 - - [20/Feb/2021:05:06:28 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0" "-"
+----
+
+== TD
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
