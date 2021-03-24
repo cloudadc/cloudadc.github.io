@@ -1,6 +1,57 @@
 = Docker 网络 
 :toc: manual
 
+== CNM 
+
+[source, bash]
+.*1. 查看网络接口*
+----
+$ ip a
+3: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:d7:55:e4:5c brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*2. 查看 bridge 列表*
+----
+$ sudo brctl show
+bridge name     bridge id               STP enabled     interfaces
+docker0         8000.0242d755e45c       no
+----
+
+[source, bash]
+.*3. 创建一个容器*
+----
+sudo docker run -itd --name=test nginx
+----
+
+[source, bash]
+.*4. 再次查看网络接口*
+----
+$ ip a
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 02:42:d7:55:e4:5c brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:d7ff:fe55:e45c/64 scope link 
+       valid_lft forever preferred_lft forever
+5: vetha4a4249@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether b6:23:d6:e4:83:15 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::b423:d6ff:fee4:8315/64 scope link 
+       valid_lft forever preferred_lft forever
+
+----
+
+[source, bash]
+.*5. 查看 bridge 上挂接的网卡*
+----
+$ sudo brctl show
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.0242d755e45c	no		vetha4a4249
+----
+
 == docker 网络基本概念
 
 [source, bash]

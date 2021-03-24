@@ -5,24 +5,70 @@
 
 === 自定义欢迎页面
 
-[source,bash]
-.*1. 自定义欢迎页面*
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|验证自定制默认欢迎页面
+
+|步骤
+|
+* 访问默认欢迎页面(http://192.168.100.71/)
+
+image:img/nginx-default-welcomepage.png[]
+
+* 自定义欢迎页面
+
 ----
-echo "Hello Nginx" > /usr/share/nginx/html/index.html 
+echo "Hello Nginx" > /usr/share/nginx/html/index.html
 ----
 
-[source,bash]
-.*2. 访问测试*
+* 自定义测试界面
+
 ----
-$ curl http://192.168.8.101
+echo "ok" > /usr/share/nginx/html/hello
+----
+
+|结果
+|
+
+[source, bash]
+.*访问默认欢迎页面*
+----
+$ curl http://192.168.100.71
 Hello Nginx
 ----
 
-=== 启用 API 和 Dashboard
-
-[source,bash]
-.*1. 在conf.d/目录下新建 dashboard.conf，添加如下配置启用 API 和 Dashboard*
+[source, bash]
+.*访问定制测试页面*
 ----
+$ curl http://192.168.100.71/hello
+ok
+----
+|===
+
+=== API 及 Dashboard 能力
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 具备 API 能力以及 Dashboard 能力，可视化展示 Nginx Plus 自身及应用交付的状态。
+
+|步骤
+|
+[source, bash]
+.*备份默认配置*
+----
+mv /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak.$(date "+%Y%m%d%H%M%S")
+----
+
+[source, bash]
+.*新建 default.conf 文件*
+----
+cat << EOF > /etc/nginx/conf.d/default.conf
 server {
     listen 8081;
     location /api {
@@ -42,47 +88,594 @@ server {
         root   /usr/share/nginx/html;
     }
 }
+EOF
 ----
 
-*2. 测试*
-
-* API - http://192.168.8.101:8081/swagger-ui/
-* Dashboard - http://192.168.8.101:8081/dashboard.html
-
-== 调度算法
-
-=== 轮询
-
-[source,bash]
-.*1. 在conf.d/目录下新建 RoundRobin.conf，添加如下配置*
+[source, bash]
+.*重新加载*
 ----
-upstream lb_methods_round_robin {
-    server 192.168.7.101:80;
-    server 192.168.7.102:80;
+nginx -s reload
+----
+
+|结果
+|
+* API - http://192.168.100.71:8081/swagger-ui/
+
+image:img/nginx-api.png[]
+
+* Dashboard - http://192.168.100.71:8081/dashboard.html
+
+image:img/nginx-dashboard.png[]
+|===
+
+== 负载均衡
+
+=== 轮询负载算法
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持轮询的调度算法
+
+|步骤
+|
+[source, bash]
+.*默认算法为轮询，新建配置文件rr.conf*
+----
+cat << EOF > /etc/nginx/conf.d/rr.conf
+upstream backend {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080;
+  server 10.1.10.7:8080;
+  server 10.1.10.8:8080;
+}
+server {
+  listen 8082;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backend;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+
+|结果
+|
+
+[source, bash]
+.*命令行访问测试*
+----
+$ for i in {1..100} ; do curl http://192.168.100.71:8082/ -s ; done
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-3
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-3
+----
+
+*Dashboard 上查看统计数据*
+
+image:img/nginx-lb-rr.png[]
+
+|===
+
+=== 最小连接数负载算法
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持最小连接数的调度算法
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 least.conf*
+----
+cat << EOF > /etc/nginx/conf.d/least.conf
+upstream backendLeast {
+  zone upstream_backend 64k;
+  least_conn;
+  server 10.1.10.6:8080;
+  server 10.1.10.7:8080;
+  server 10.1.10.8:8080;
+}
+server {
+  listen 8083;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backendLeast;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+---- 
+
+|结果
+|
+
+[source, bash]
+.*命令行访问测试*
+----
+$ for i in {1..100} ; do curl http://192.168.100.71:8083/ -s ; done
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-3
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-3
+----
+
+*Dashboard 上查看统计数据*
+
+image:img/nginx-lb-least.png[]
+
+|===
+
+=== 权重与优先级负载算法
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持权重优先级的调度算法
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 weight.conf*
+----
+cat << EOF > /etc/nginx/conf.d/weight.conf
+upstream backendWeight {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 weight=5;
+  server 10.1.10.7:8080 weight=2;
+  server 10.1.10.8:8080 backup;
+}
+server { 
+  listen 8084;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backendWeight;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+|结果
+|
+[source, bash]
+.*命令行访问测试*
+----
+$ for i in {1..100} ; do curl http://192.168.100.71:8084/ -s ; done
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-1
+    Server Hostname: server-1
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-1
+    Server Hostname: server-1
+----
+
+*Dashboard 上查看统计数据*
+
+image:img/nginx-lb-weight.png[]
+
+|===
+
+=== IP 哈希负载算法
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持 IP 哈希调度算法
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 iphash.conf*
+----
+cat << EOF > /etc/nginx/conf.d/iphash.conf
+upstream backendIPHash {
+  zone upstream_backend 64k;
+  ip_hash;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 down;
+}
+server {
+  listen 8085;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backendIPHash;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+
+|结果
+|
+[source, bash]
+.*命令行访问测试*
+----
+$ for i in {1..100} ; do curl http://192.168.100.71:8085/ -s ; done
+    Server Hostname: server-2
+    Server Hostname: server-2
+    Server Hostname: server-2
+    Server Hostname: server-2
+    Server Hostname: server-2
+    Server Hostname: server-2
+    Server Hostname: server-2
+----
+
+*Dashboard 上查看统计数据*
+
+image:img/nginx-lb-iphash.png[]
+|===
+
+=== 被动健康检查
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持被动的健康检查
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 health.conf*
+----
+cat << EOF > /etc/nginx/conf.d/health.conf
+upstream backendHealth {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 max_fails=3 fail_timeout=30s;
+  server 10.1.10.7:8080 max_fails=3 fail_timeout=30s;
+  server 10.1.10.8:8080 max_fails=3 fail_timeout=30s;
+}
+server {
+  listen 8086;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backendHealth;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+
+*关闭服务 10.1.10.8:8080*
+
+|结果
+|
+[source, bash]
+.*命令行访问测试*
+----
+$ for i in {1..100} ; do curl http://192.168.100.71:8086/ -s  ; done
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-1
+    Server Hostname: server-2
+    Server Hostname: server-1
+    Server Hostname: server-2
+----
+
+*Dashboard 上查看统计数据*
+
+image:img/nginx-lb-health.png[]
+
+|===
+
+=== 基于 HTTP 的主动健康检查
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持基于 HTTP 的主动健康检查
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 healthHTTP.conf*
+----
+cat << EOF > /etc/nginx/conf.d/healthHTTP.conf
+upstream backendHelthHTTP {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 ;
+}
+
+match server_ok {
+  status 200-399;
+  body ~ "ok";
 }
 
 server {
-    listen       9001;
-    server_name  roundRobin.example.com;
-
-    access_log  /var/log/nginx/roundRobin.access.log  main;
-
-    location / {
-        proxy_set_header Host            $proxy_host;
-        proxy_set_header X-Real-IP       $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-        proxy_pass http://lb_methods_round_robin;
-    }
-
+  listen 8087;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://backendHelthHTTP;
+    health_check uri=/health match=server_ok interval=10 fails=3 passes=1;
+  }
 }
+EOF
 ----
 
-[source,bash]
-.*2. 访问测试*
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
 ----
 
+*关闭服务 10.1.10.8:8080*
+
+|结果
+|
+
+* 等待 30 秒后，在 Dashboard 上查看统计数据
+
+image:img/nginx-lb-health-http.png[]
+
+* 启动服务 10.1.10.8:8080
+
+* 等待 10 秒左右，在 Dashboard 上查看统计数据
+
+image:img/nginx-lb-health-http-recover.png[]
+
+|===
+
+=== 基于 Cookie 的会话保持
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 支持基于 Cookie 的会话保持
+
+|步骤
+|
+[source, bash]
+.*新建配置文件 persisCookie.conf*
 ----
+cat << EOF > /etc/nginx/conf.d/persisCookie.conf
+upstream backendCookie {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 ;
+  sticky cookie srv_id expires=1h path=/;
+}
+
+server {
+  listen 8088;
+  status_zone server_backend;
+  location / { 
+    status_zone location_backend;
+    proxy_pass http://backendCookie;
+    health_check interval=10 fails=3 passes=1;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+
+|结果
+|
+
+* 浏览器访问服务多次，验证会话保持能力，及查看HTTP头中 srv_id Cookie
+
+image:img/nginx-lb-persist-cookie.png[]
+
+* 在 Dashboard 上查看统计数据
+
+image:img/nginx-lb-persist-cookie-db.png[]
+
+|===
+
+== 内容缓存
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plug 内容缓存能力
+
+|步骤
+|
+[source, bash]
+.*新建 cache.conf 文件*
+----
+cat << EOF > /etc/nginx/conf.d/cache.conf
+EOF
+----
+
+[source, bash]
+.*重新加载*
+----
+nginx -s reload
+----
+
+|结果
+|
+
+|===
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|
+
+|步骤
+|
+
+|结果
+|
+
+|===
+
 
 [source,bash]
 .**
