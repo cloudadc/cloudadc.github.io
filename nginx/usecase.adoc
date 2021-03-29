@@ -552,18 +552,325 @@ nginx -s reload
 
 |===
 
-[cols="2,5a"]
+== 性能优化
+
+=== 性能调优一般步骤
+
+[cols="5a,5a"]
 |===
 |ITEM |NOTE
 
 |目的
+|本部分验证性能调优的一般步骤，以及不同步骤对 Nginx 性能的影响。
+
+验证拓扑如下：
+
+* 客户端：wrk软件
+* 反向代理：性能优化对象
+* Web端：NGINX
+
+以上所有节点规格都是 2C 4G。
+
+|OS 参数调优
+|link:file/proc.bash[资源限制设定]
+
+|默认配置性能
+|
+[source, bash]
+.*配置备份*
+----
+mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak.$(date "+%Y%m%d%H%M%S")
+----
+
+[source, bash]
+.*默认配置文件 /etc/nginx/nginx.conf*
+----
+user  nginx;
+worker_processes  1;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile        on;
+
+    keepalive_timeout  65;
+
+
+    include /etc/nginx/conf.d/*.conf;
+}
+----
+
+[source, bash]
+.*Server 配置*
+----
+cat << EOF > /etc/nginx/conf.d/app.conf
+upstream webserver {
+  zone upstream_backend 64k;
+  server 192.168.71.210:80;
+}
+
+
+server {
+  listen 9082;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://webserver;
+  }
+}
+EOF
+----
+
+[source, bash]
+.*WRK 结果*
+----
+$ wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   161.53ms  298.21ms   2.00s    86.69%
+    Req/Sec     2.58k   502.22     6.53k    74.94%
+  1230598 requests in 2.00m, 0.97GB read
+  Socket errors: connect 0, read 49589, write 0, timeout 1933
+Requests/sec:  10249.33
+Transfer/sec:      8.31MB
+----
+
+*Dashboard UI 上统计信息*
+
+image:img/nginx-perf-1.serverZone.png[]
+
+|优化连接数限制
 |
 
-|步骤
+[source, bash]
+.*修改 worker_connections 从默认 1024 到 10000*
+----
+user  nginx;
+worker_processes  1;
+
+worker_rlimit_nofile 30000;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  100000;
+}
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+$ wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   177.90ms  294.22ms   2.00s    85.21%
+    Req/Sec     2.58k   585.26     6.92k    76.87%
+  1231828 requests in 2.00m, 0.98GB read
+  Socket errors: connect 0, read 0, write 0, timeout 1255
+Requests/sec:  10262.24
+Transfer/sec:      8.32MB
+----
+
+|优化 worker 数量 
 |
 
-|结果
+[source, bash]
+.*修改 worker_processes 从 1 到 auto*
+----
+user  nginx;
+worker_processes  auto;
+
+worker_rlimit_nofile 30000;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+
+
+events {
+    worker_connections  100000;
+}
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+$ wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   233.65ms  343.01ms   1.83s    80.99%
+    Req/Sec     3.43k   613.32     6.02k    70.40%
+  1637802 requests in 2.00m, 1.30GB read
+  Socket errors: connect 0, read 0, write 0, timeout 4351
+Requests/sec:  13643.47
+Transfer/sec:     11.06MB
+----
+
+|连接复用
 |
+[source, bash]
+.*配置连接复用*
+----
+upstream webserver {
+  zone upstream_backend 64k;
+  server 192.168.71.210:80;
+  keepalive 128;
+}
+
+server {
+  listen 9082;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://webserver;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+  }
+}
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   103.88ms  285.25ms   2.00s    90.34%
+    Req/Sec     5.82k     1.25k   14.52k    69.75%
+  2779426 requests in 2.00m, 2.20GB read
+  Socket errors: connect 0, read 0, write 0, timeout 6382
+  Non-2xx or 3xx responses: 249
+Requests/sec:  23155.66
+Transfer/sec:     18.77MB
+----
+
+|CPU亲和及worker优先级
+|
+[source, bash]
+.*配置*
+----
+user  nginx;
+worker_processes  2;
+worker_cpu_affinity 0101 1010;
+
+worker_rlimit_nofile 30000;
+
+error_log  /var/log/nginx/error.log notice;
+pid        /var/run/nginx.pid;
+worker_priority -20;
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    97.73ms  277.42ms   2.00s    90.52%
+    Req/Sec     5.01k     1.46k   15.75k    78.92%
+  2391712 requests in 2.00m, 1.89GB read
+  Socket errors: connect 0, read 0, write 0, timeout 5774
+  Non-2xx or 3xx responses: 446
+Requests/sec:  19924.37
+Transfer/sec:     16.15MB
+----
+
+|日志缓存 
+|
+[source, bash]
+.*配置*
+----
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /var/log/nginx/access.log  main buffer=1m;
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   101.26ms  281.45ms   2.00s    90.36%
+    Req/Sec     5.69k     1.36k   18.52k    73.07%
+  2716274 requests in 2.00m, 2.15GB read
+  Socket errors: connect 0, read 0, write 0, timeout 6294
+  Non-2xx or 3xx responses: 460
+Requests/sec:  22617.47
+Transfer/sec:     18.33MB
+----
+
+|Cache
+|
+[source, bash]
+.*配置*
+----
+upstream webserver {
+  zone upstream_backend 64k;
+  server 192.168.71.210:80;
+  keepalive 128;
+}
+
+proxy_cache_path /tmp/cache keys_zone=mycache:10m inactive=60m;
+
+server {
+  listen 9082;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://webserver;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_cache_key $host:$server_port$request_uri;
+    proxy_cache_valid 200 304 1h;
+    proxy_cache mycache;
+  }
+}
+----
+
+[source, bash]
+.*WRK 测试结果*
+----
+wrk -t4 -c800 -d120s http://192.168.71.211:9082
+Running 2m test @ http://192.168.71.211:9082
+  4 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.12ms  127.31ms   1.95s    91.85%
+    Req/Sec    12.16k     2.64k   27.87k    75.58%
+  5806262 requests in 2.00m, 4.60GB read
+  Socket errors: connect 0, read 189, write 0, timeout 275
+Requests/sec:  48372.99
+Transfer/sec:     39.21MB
+----
 
 |===
 
