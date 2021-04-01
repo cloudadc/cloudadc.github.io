@@ -112,34 +112,50 @@ image:img/nginx-dashboard.png[]
 
 === 流量转发中的行为
 
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|空值报文头属性默认被丢弃
+|
+
 [source, bash]
-.*1. 空值报文头属性默认被丢弃*
+.*传递空的 X-Forwarded-For HTTP 头访问，通过应用查看 HTTP 请求头*
 ----
-$ curl http://192.168.100.71:8001/foo -H "X-Forwarded-For: " -s | grep "Request Headers"
+$ curl http://192.168.100.71:8002/foo -H "X-Forwarded-For: "
+
+    Request Headers: {host=[forwardhttp], connection=[close], user-agent=[curl/7.64.1], accept=[*/*]}
+----
+
+[source, bash]
+.*传递非空的 X-Forwarded-For HTTP 头访问，通过应用查看 HTTP 请求头*
+----
+$ curl http://192.168.100.71:8002/foo -H "X-Forwarded-For: 1.1.1.1"
+
+    Request Headers: {host=[forwardhttp], connection=[close], x-forwarded-for=[1.1.1.1], user-agent=[curl/7.64.1], accept=[*/*]}
+----
+
+|包含下划线”_”的报文头将会被静默丢弃
+|
+
+[source, bash]
+.*传递包含下划线的报文头属性访问服务，通过应用查看 HTTP 请求头*
+----
+$ curl http://192.168.100.71:8001/foo -H "underscores_in_headers: test"
+    
     Request Headers: {host=[backendL7HTTP], connection=[close], user-agent=[curl/7.64.1], accept=[*/*]}
-
-$ curl http://192.168.100.71:8001/foo -H "X-Forwarded-For: 1.1.1.1" -s | grep "Request Headers"
-    Request Headers: {host=[backendL7HTTP], connection=[close], x-forwarded-for=[1.1.1.1], user-agent=[curl/7.64.1], accept=[*/*]}
 ----
 
 [source, bash]
-.*2. 包含下划线”_”的报文头将会被静默丢弃*
+.*在 Server 中配置`underscores_in_headers on`后再次执行上面操作*
 ----
-$ curl http://192.168.100.71:8001/foo -H "underscores_in_headers: test" -s | grep "Request Headers"
-    Request Headers: {host=[backendL7HTTP], connection=[close], user-agent=[curl/7.64.1], accept=[*/*]}
-----
-
-在 Server 中配置`underscores_in_headers on`后测试
-
-[source, bash]
-----
-$ curl http://192.168.100.71:8001/foo -H "underscores_in_headers: test" -s | grep "Request Headers"
+$ curl http://192.168.100.71:8001/foo -H "underscores_in_headers: test"
+    
     Request Headers: {host=[backendL7HTTP], connection=[close], underscores_in_headers=[test], user-agent=[curl/7.64.1], accept=[*/*]}
 ----
 
-如下配置是否工作？
-
 [source, bash]
+.*如下配置是否工作？*
 ----
 upstream backendL7_HTTP {
   zone upstream_backend 64k;
@@ -164,35 +180,96 @@ server {
 }
 ----
 
+|Host 报文头替换
+|
 [source, bash]
-.**
+.*直接访问服务，Host 值为 10.1.10.8:8080*
 ----
+$ curl http://10.1.10.8:8080/foo
 
-----
-
-[source, bash]
-.**
-----
-
+    Request Headers: {host=[10.1.10.8:8080], user-agent=[curl/7.64.1], accept=[*/*]}
 ----
 
 [source, bash]
-.**
+.*通过代理访问服务，Host 值修改为 forwardhttp，Host报文头会被重写为$proxy_host变量值，该变量值为proxy_pass指令中所包含的域名或 ip 地址*
+----
+$ curl http://192.168.100.71:8002/foo
+
+    Request Headers: {host=[forwardhttp], connection=[close], user-agent=[curl/7.64.1], accept=[*/*]}
 ----
 
+|Conntection报文头将会被修改为 close，HTTP 1.1 将会被修改为 HTTP 1.0
+|
+[source, bash]
+.*浏览器直接访问服务，Conntection 及 Protocol 信息如下*
+----
+    Protocol: HTTP/1.1
+
+    Request Headers: {host=[10.1.10.6:8080], connection=[keep-alive]
 ----
 
 [source, bash]
-.**
+.*浏览器通过代理访问服务，Conntection 及 Protocol 信息如下*
+----
+    Protocol: HTTP/1.0
+
+    Request Headers: {host=[forwardhttp], connection=[close]
 ----
 
+|===
+
+=== 服务器获取真实客户端IP
+
+[cols="2,5a"]
+|===
+|ITEM |NOTE
+
+|目的
+|Nginx Plus 下服务器端如何获取真实客户端 IP
+
+|操作
+
+[source, bash]
+.*配置*
+----
+upstream clientiphttp {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 ;
+}
+
+server {
+  listen 8003;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_pass http://clientiphttp;
+  }
+}
 ----
 
 [source, bash]
-.**
+.*访问测试*
+----
+$ curl http://192.168.100.71:8003/foo
+
+    Request Headers: {x-real-ip=[192.168.100.1], x-forwarded-proto=[http], host=[192.168.100.71], connection=[close], x-forwarded-for=[192.168.100.1], user-agent=[curl/7.64.1], accept=[*/*]}
 ----
 
+[source, bash]
+.*访问测试*
 ----
+$ curl http://192.168.100.71:8003/foo -H "X-Forwarded-For: 1.1.1.1"
+
+    Request Headers: {x-real-ip=[192.168.100.1], x-forwarded-proto=[http], host=[192.168.100.71], connection=[close], x-forwarded-for=[1.1.1.1, 192.168.100.1], user-agent=[curl/7.64.1], accept=[*/*]}
+----
+
+|===
 
 === 轮询负载算法
 
@@ -1400,6 +1477,71 @@ http {
    "upstream_bytes_sent":"",
    "upstream_bytes_received":"",
    "upstream_connect_time":""
+}
+----
+
+|IP 和端口调试
+|
+[source, bash]
+.*配置*
+----
+upstream forwardhttp {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 ;
+}
+
+log_format json_combined escape=json
+        '{'
+          '"time_local": "$time_local", '
+          '"host": "$host", '
+          '"http_host": "$http_host", '
+          '"proxy_host": "$proxy_host", '
+          '"proxy_port": "$proxy_port", '
+          '"proxy_protocol_addr": "$proxy_protocol_addr", '
+          '"proxy_protocol_port": "$proxy_protocol_port", '
+          '"proxy_protocol_server_addr": "$proxy_protocol_server_addr", '
+          '"proxy_protocol_server_port": "$proxy_protocol_server_port", '
+          '"realip_remote_addr": "$realip_remote_addr", '
+          '"realip_remote_port": "$realip_remote_port", '
+          '"remote_addr": "$remote_addr", '
+          '"remote_port": "$remote_port", '
+          '"server_addr": "$server_addr", '
+          '"server_port": "$server_port", '
+        '}';
+
+
+server {
+  listen 8002;
+  status_zone server_backend;
+  access_log  /var/log/nginx/forward-access.log json_combined;
+  location / {
+    status_zone location_backend;
+    proxy_pass http://forwardhttp;
+  }
+}
+----
+
+[source, json]
+.*日志输出*
+----
+{
+  "time_local": "31/Mar/2021:10:43:58 +0800",
+  "host": "192.168.100.71",
+  "http_host": "192.168.100.71:8002",
+  "proxy_host": "forwardhttp",
+  "proxy_port": "80",
+  "proxy_protocol_addr": "",
+  "proxy_protocol_port": "",
+  "proxy_protocol_server_addr": "",
+  "proxy_protocol_server_port": "",
+  "realip_remote_addr": "192.168.100.1",
+  "realip_remote_port": "49594",
+  "remote_addr": "192.168.100.1",
+  "remote_port": "49594",
+  "server_addr": "192.168.100.71",
+  "server_port": "8002"
 }
 ----
 
