@@ -1,6 +1,25 @@
 = Use Case via Docker
 :toc: manual
 
+== 环境准备
+
+*1. 下载镜像及配置文件*
+
+* 链接: https://pan.baidu.com/s/1hw0h1KUlhSirFBId6kh8mw 
+* 提取码: 1wng
+
+[source, bash]
+----
+$ ls
+backend-0.0.8.tar.gz		env.list			grpc-go-greeting-0.1.tar.gz	nginx-lb.conf			nginx-perf.conf			nginxplus-23-r1.tar.gz
+----
+
+[source, bash]
+.*2. Load 容器镜像*
+----
+for i in $(ls *.tar.gz) ; do docker load -i $i ; done
+----
+
 == 性能调优
 
 [source, bash]
@@ -58,3 +77,35 @@ for i in {1..10} ; do curl http://localhost:8004 ; done
 
 == 负载均衡
 
+[source, bash]
+.*1. 启动微服务*
+----
+docker run -it --rm --name springboot-1 -d cloudadc/backend:0.0.8
+docker run -it --rm --name springboot-2 -d cloudadc/backend:0.0.8
+
+docker run -it --rm --name echoserver-1  -d cloudadc/echoserver:1.1
+docker run -it --rm --name echoserver-2  -d cloudadc/echoserver:1.1
+
+docker run -it --rm --name grpc-server-1 -e PORT=8009 -d cloudadc/grpc-go-greeting:0.1 greeter_server
+docker run -it --rm --name grpc-server-2 -e PORT=8009 -d cloudadc/grpc-go-greeting:0.1 greeter_server
+----
+
+[source, bash]
+.*2. 启动 Nginx Plus*
+----
+docker run -it --rm --name nginx-plus --link webserver --link springboot-1 --link springboot-2 --link echoserver-1 --link echoserver-2 --link grpc-server-1 --link grpc-server-2 -p 8001-8005:8001-8005 -p 8877:8877  -p 8009:8009 -v /Users/ksong/work/nginx/nginx-lb.conf:/etc/nginx/nginx.conf:ro nginxplus:23-r1
+----
+
+[source, bash]
+.*3. 测试*
+----
+http://localhost:8005
+
+./echoclient localhost
+
+docker run --env-file ./env.list cloudadc/grpc-go-greeting:0.1 greeter_client
+----
+
+== 结果截图
+
+image:img/nginx-demo-results.png[]

@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
+  labels:
+    cis_scanner_zone: zone_one
   name: arcadia
 ---
 apiVersion: v1
@@ -11,6 +13,9 @@ metadata:
   labels:
     app: backend
     service: backend
+    cis.f5.com/as3-app: arcadia_app
+    cis.f5.com/as3-pool: arcadia_backend_pool
+    cis.f5.com/as3-tenant: arcadia
 spec:
   type: ClusterIP
   ports:
@@ -59,6 +64,9 @@ metadata:
   labels:
     app: main
     service: main
+    cis.f5.com/as3-app: arcadia_app
+    cis.f5.com/as3-pool: arcadia_main_pool
+    cis.f5.com/as3-tenant: arcadia
 spec:
   type: ClusterIP
   ports:
@@ -108,6 +116,9 @@ metadata:
   labels:
     app: app2
     service: app2
+    cis.f5.com/as3-app: arcadia_app
+    cis.f5.com/as3-pool: arcadia_app2_pool
+    cis.f5.com/as3-tenant: arcadia
 spec:
   type: ClusterIP
   ports:
@@ -155,6 +166,9 @@ metadata:
   labels:
     app: app3
     service: app3
+    cis.f5.com/as3-app: arcadia_app
+    cis.f5.com/as3-pool: arcadia_app3_pool
+    cis.f5.com/as3-tenant: arcadia
 spec:
   type: ClusterIP
   ports:
