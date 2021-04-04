@@ -1,0 +1,189 @@
+= K8S 网络 
+:toc: manual
+
+== kubenet
+
+=== 修改默认的 cni 网络到 kubenet
+
+[source, bash]
+.*1. K8S 安装*
+----
+sudo kubeadm init --pod-network-cidr=192.168.0.0/16
+----
+
+[source, bash]
+.*2. 查看默认的网络*
+----
+$ sudo cat /var/lib/kubelet/kubeadm-flags.env
+KUBELET_KUBEADM_ARGS="--network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2"
+----
+
+[source, bash]
+.*3. 修改默认的 cni 网络到 kubenet*
+----
+sudo sed -i 's/cni/kubenet/' /var/lib/kubelet/kubeadm-flags.env
+----
+
+[source, bash]
+.*4. 重启 kubelet*
+----
+sudo systemctl restart kubelet.service
+----
+
+[source, bash]
+.*5. 验证 kubelet 使用的 network-plugin 为 kubenet*
+----
+$ ps -ef | grep kubelet
+root        771      1  2 15:47 ?        00:00:42 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --network-plugin=kubenet --pod-infra-container-image=k8s.gcr.io/pause:3.2
+----
+
+[source, bash]
+.*6. 查看 nodes*
+----
+$ kubectl get nodes --no-headers
+node-1   Ready   control-plane,master   8m10s   v1.20.5
+----
+
+[source, bash]
+.*7. 查看 Pods*
+----
+$ kubectl get pods --all-namespaces --no-headers
+kube-system   coredns-74ff55c5b-kjbw2          1/1   Running   0     8m40s
+kube-system   coredns-74ff55c5b-vc586          1/1   Running   0     8m40s
+kube-system   etcd-node-1                      1/1   Running   1     8m56s
+kube-system   kube-apiserver-node-1            1/1   Running   2     8m56s
+kube-system   kube-controller-manager-node-1   1/1   Running   1     8m56s
+kube-system   kube-proxy-cxhxp                 1/1   Running   1     8m40s
+kube-system   kube-scheduler-node-1            1/1   Running   1     8m56s
+----
+
+[source, bash]
+.*8. 查看主机空间网络*
+----
+$ ip a
+...
+4: cbr0: <BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP> mtu 1500 qdisc htb state UP group default qlen 1000
+    link/ether 82:8d:06:e8:d7:13 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.1/24 brd 192.168.0.255 scope global cbr0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::808d:6ff:fee8:d713/64 scope link 
+       valid_lft forever preferred_lft forever
+5: veth3b55bb42@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cbr0 state UP group default 
+    link/ether 66:19:1b:53:53:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::6419:1bff:fe53:5302/64 scope link 
+       valid_lft forever preferred_lft forever
+6: vethdfd6e306@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cbr0 state UP group default 
+    link/ether 8e:10:37:e9:f3:71 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8c10:37ff:fee9:f371/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+== TODO
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----

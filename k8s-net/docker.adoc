@@ -1,7 +1,39 @@
 = Docker 网络 
 :toc: manual
 
-== CNM 
+== 常用命令
+
+[source, bash]
+.*docker network*
+----
+docker network create
+
+docker network ls
+
+docker network inspect
+
+docker network rm
+
+// 将一个已经存在的容器加入到一个 docker 网络
+docker network connect
+
+docker network disconnect
+----
+
+[source, bash]
+.*基本命令调试相关*
+----
+docker inspect
+
+docker logs
+
+// 连接到容器主进程，Ctrl +p Ctrl +q 退出主进程
+docker attach
+
+docker exec -it
+----
+
+== CNM 模型
 
 [source, bash]
 .*1. 查看网络接口*
@@ -65,8 +97,8 @@ sudo docker network inspect test_network
 [source, bash]
 .*2. 创建容器并查看容器网络*
 ----
-sudo docker run -itd --name=test1 nginx
-sudo docker run -itd --name=test2 nginx
+sudo docker run -itd --rm --name=test1 nginx
+sudo docker run -itd --rm --name=test2 nginx
 sudo docker inspect test1
 sudo docker inspect test2
 ----
@@ -121,34 +153,654 @@ $ sudo docker logs test2
 172.18.0.1 - - [20/Feb/2021:05:06:28 +0000] "GET / HTTP/1.1" 200 612 "-" "curl/7.58.0" "-"
 ----
 
-== TD
+== Docker Bridge 网络
 
 [source, bash]
-.**
+.*1. 创建两个容器*
 ----
-
-----
-
-[source, bash]
-.**
-----
-
+sudo docker run -itd --rm --name test-1 busybox
+sudo docker run -itd --rm --name test-2 busybox
 ----
 
 [source, bash]
-.**
+.*2. 查看桥接的网络*
 ----
-
-----
-
-[source, bash]
-.**
-----
-
+$ brctl show
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.0242e0910392	no		veth40413c0
+							veth8547cb2
 ----
 
 [source, bash]
-.**
+.*3. 查看 test-1 和 test-2 的 IP 地址*
+----
+$ sudo docker attach test-1
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+15: eth0@if16: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+$ sudo docker attach test-2
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+17: eth0@if18: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
 ----
 
+[source, bash]
+.*4. 从 test-2 ping test-1*
+----
+/ # ping 172.17.0.2 -c3
+PING 172.17.0.2 (172.17.0.2): 56 data bytes
+64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.245 ms
+64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.080 ms
+64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.111 ms
+----
+
+[source, bash]
+.*5. 查看 iptables nat 表*
+----
+$ sudo iptables -t nat -vnL
+Chain PREROUTING (policy ACCEPT 2 packets, 168 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    4  1520 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 74 packets, 4996 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DOCKER     all  --  *      *       0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT 75 packets, 5080 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    1    84 MASQUERADE  all  --  *      !docker0  172.17.0.0/16        0.0.0.0/0           
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 RETURN     all  --  docker0 *       0.0.0.0/0            0.0.0.0/0 
+----
+
+[source, bash]
+.*6. 查看当前 Host 上 Docker 网络*
+----
+$ sudo docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+218fb35eac5f   bridge    bridge    local
+f6dbdda8ec13   host      host      local
+99496b4f2b1d   none      null      local
+----
+
+[source, bash]
+.*8. 创建一个 VLAN*
+----
+$ sudo docker network create --driver bridge isolated_nw
+ea606204201fe22dfe46a94b2762e4b8fe541ff763a353f9a961d9649d60fd12
+----
+
+[source, bash]
+.*9. 再次查看网络*
+----
+$ sudo docker network ls
+NETWORK ID     NAME          DRIVER    SCOPE
+218fb35eac5f   bridge        bridge    local
+f6dbdda8ec13   host          host      local
+ea606204201f   isolated_nw   bridge    local
+99496b4f2b1d   none          null      local
+----
+
+[source, bash]
+.*10. 查看主机网络空间*
+----
+$ ip a
+...
+19: br-ea606204201f: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default 
+    link/ether 02:42:78:b8:80:b8 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.1/16 brd 172.19.255.255 scope global br-ea606204201f
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*11. 使用 isolated_nw 创建容器*
+----
+sudo docker run -itd --rm --name=test-3 --network=isolated_nw  busybox
+----
+
+[source, bash]
+.*12. 查看 test-3 的 IP 地址*
+----
+$ sudo docker attach test-3
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+20: eth0@if21: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:13:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.2/16 brd 172.19.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*13. test-3 中 ping test-2 容器*
+----
+/ # ping 172.17.0.3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+----
+
+[source, bash]
+.*14. 查看 iptables filter 表*
+----
+$ sudo iptables -t filter -vnL
+Chain INPUT (policy ACCEPT 910 packets, 64130 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+  123 10332 DOCKER-USER  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+  123 10332 DOCKER-ISOLATION-STAGE-1  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+    0     0 DOCKER     all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     all  --  br-ea606204201f !br-ea606204201f  0.0.0.0/0            0.0.0.0/0           
+    0     0 ACCEPT     all  --  br-ea606204201f br-ea606204201f  0.0.0.0/0            0.0.0.0/0           
+    8   672 ACCEPT     all  --  *      docker0  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+    1    84 DOCKER     all  --  *      docker0  0.0.0.0/0            0.0.0.0/0           
+    3   252 ACCEPT     all  --  docker0 !docker0  0.0.0.0/0            0.0.0.0/0           
+    1    84 ACCEPT     all  --  docker0 docker0  0.0.0.0/0            0.0.0.0/0           
+
+Chain OUTPUT (policy ACCEPT 602 packets, 61940 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain DOCKER-ISOLATION-STAGE-1 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  123 10332 DOCKER-ISOLATION-STAGE-2  all  --  br-ea606204201f !br-ea606204201f  0.0.0.0/0            0.0.0.0/0           
+    3   252 DOCKER-ISOLATION-STAGE-2  all  --  docker0 !docker0  0.0.0.0/0            0.0.0.0/0           
+   12  1008 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain DOCKER-ISOLATION-STAGE-2 (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 DROP       all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0           
+  123 10332 DROP       all  --  *      docker0  0.0.0.0/0            0.0.0.0/0           
+    3   252 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+
+Chain DOCKER-USER (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+  135 11340 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0 
+----
+
+[source, bash]
+.*15. 连接 test-3 到 docker0*
+----
+sudo docker network connect bridge test-3
+----
+
+[source, bash]
+.*16. 查看新增的主机网络*
+----
+$ ip a
+...
+23: veth0325425@if22: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master docker0 state UP group default 
+    link/ether 7e:9f:e5:0e:27:a1 brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::7c9f:e5ff:fe0e:27a1/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*17. 查看 test-2 IP*
+----
+$ sudo docker attach test-3
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+20: eth0@if21: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:13:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.2/16 brd 172.19.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+22: eth1@if23: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:11:00:04 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.4/16 brd 172.17.255.255 scope global eth1
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*18. 从 test-3 ping test-2*
+----
+/ # ping 172.17.0.3 -c3
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.267 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.128 ms
+64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.118 ms
+----
+
+[source, bash]
+.*19. 停止所有创建的容器*
+----
+for i in 1 2 3 ; do sudo docker stop test-$i ; done
+----
+
+[source, bash]
+.*20. 删除容器网络*
+----
+sudo docker network rm isolated_nw
+----
+
+== 端口映射
+
+[source, bash]
+.*1. 启动容器是 -p 参数指定端口映射*
+----
+sudo docker run -it --rm --name test-1 -p 8080:80 -d nginx
+----
+
+[source, bash]
+.*2. 访问容器*
+----
+curl 127.0.0.1:8080
+
+curl 10.1.10.166:8080
+
+curl 172.17.0.1:8080
+----
+
+[source, bash]
+.*3. 查看 net 表规则*
+----
+$ sudo iptables -t nat -vnL
+Chain PREROUTING (policy ACCEPT 3 packets, 595 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    5  1604 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+
+Chain INPUT (policy ACCEPT 3 packets, 595 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 8 packets, 758 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    2   120 DOCKER     all  --  *      *       0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT 10 packets, 878 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+    1    84 MASQUERADE  all  --  *      !docker0  172.17.0.0/16        0.0.0.0/0           
+    0     0 MASQUERADE  tcp  --  *      *       172.17.0.2           172.17.0.2           tcp dpt:80
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 RETURN     all  --  docker0 *       0.0.0.0/0            0.0.0.0/0           
+    2   120 DNAT       tcp  --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8080 to:172.17.0.2:80
+----
+
+[source, bash]
+.*4. 停止容器*
+----
+sudo docker stop test-1
+----
+
+== CNM 三种网络模型
+
+[source, bash]
+.*1. 查看三种模型*
+----
+$ sudo docker network ls |awk '{print $2}'|awk '(NR>1)'
+bridge
+host
+none
+----
+
+[source, bash]
+.*2. 创建 bridge 类型容器，并查看容器网络*
+----
+$ sudo docker run -it --rm --name test-1 --network bridge -d busybox
+
+$ sudo docker run -it --rm --name test-1 --network bridge -d busybox
+ecab2b0803ae776e2b80913a64d6c041917718ef5ebb2e947f45bad1920adf3a
+kylin@k8s-network-host:~$ sudo docker attach test-1
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+28: eth0@if29: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*3. 创建 none 类型容器，并查看容器网络*
+----
+$ sudo docker run -it --rm --name test-2 --network none -d busybox
+
+$ $ sudo docker attach test-2
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*4. 创建 host 类型容器，并查看容器网络*
+----
+$ sudo docker run -it --rm --name test-3 --network host -d busybox
+
+$ sudo docker attach test-3
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel qlen 1000
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.168/24 brd 10.1.10.255 scope global dynamic ens33
+       valid_lft 1376sec preferred_lft 1376sec
+    inet6 fe80::33d8:84ef:51b0:fe2f/64 scope link 
+       valid_lft forever preferred_lft forever
+3: docker0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue 
+    link/ether 02:42:e0:91:03:92 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:e0ff:fe91:392/64 scope link 
+       valid_lft forever preferred_lft forever
+29: vethb390396@if28: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue master docker0 
+    link/ether 5e:37:53:83:5b:d3 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::5c37:53ff:fe83:5bd3/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. 删除所有创建的容器*
+----
+for i in 1 2 3 ; do sudo docker stop test-$i ; done
+----
+
+== MACVLAN
+
+[source, bash]
+.*1. 创建 MACVLAN 类型的网络*
+----
+sudo docker network create -d macvlan --subnet 10.1.10.0/24 --ip-range 10.1.10.240/28 --gateway 10.1.10.1 -o parent=ens33 macvlan-1
+----
+
+[source, bash]
+.*2. 查看创建的网络*
+----
+$ sudo docker network ls
+NETWORK ID     NAME        DRIVER    SCOPE
+01ff09740af4   bridge      bridge    local
+f6dbdda8ec13   host        host      local
+ffc1e109b33b   macvlan-1   macvlan   local
+99496b4f2b1d   none        null      local
+----
+
+[source, bash]
+.*3. 创建容器*
+----
+sudo docker run -it --rm --network=macvlan-1 --name=test-1 -d busybox
+sudo docker run -it --rm --network=macvlan-1 --name=test-2 -d busybox
+----
+
+[source, bash]
+.*4. 查看容器 test-1 的 IP 地址*
+----
+$ sudo docker attach test-1
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+5: eth0@if2: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:0a:01:0a:f0 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.240/24 brd 10.1.10.255 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. 查看容器 test-2 的 IP 地址*
+----
+$ sudo docker attach test-2
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+8: eth0@if2: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:0a:01:0a:f1 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.241/24 brd 10.1.10.255 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*6. test-1 中 ping test-2*
+----
+/ # ping 10.1.10.241 -c3
+PING 10.1.10.241 (10.1.10.241): 56 data bytes
+64 bytes from 10.1.10.241: seq=0 ttl=64 time=0.103 ms
+64 bytes from 10.1.10.241: seq=1 ttl=64 time=0.103 ms
+64 bytes from 10.1.10.241: seq=2 ttl=64 time=0.072 ms
+----
+
+[source, bash]
+.*7. 创建 MACVLAN 子接口*
+----
+sudo docker network create -d macvlan --subnet 10.1.11.0/24 --gateway 10.1.11.1 -o parent=ens33.50 macvlan.50
+----
+
+[source, bash]
+.*8. 查看主机网络空间*
+----
+$ ip a
+...
+9: ens33.50@ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::20c:29ff:fe10:a96c/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*9. 查看创建的 VLAN 子接口*
+----
+$ ip link show type vlan
+9: ens33.50@ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default 
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+----
+
+[source, bash]
+.*10. 创建一个容器*
+----
+sudo docker run -it --rm -d --network macvlan.50 --name test-3 busybox
+----
+
+[source, bash]
+.*11. 查看 test-3 容器 IP 地址*
+----
+$ sudo docker attach test-3
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+10: eth0@if9: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 02:42:0a:01:0b:02 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.11.2/24 brd 10.1.11.255 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*12. 清空实验环境*
+----
+for i in $(sudo docker ps | awk '{print $1}' | awk '(NR>1)') ; do sudo docker stop $i ; done
+
+sudo docker network rm macvlan-1 macvlan.50
+----
+
+== Docker DNS
+
+[source, bash]
+.*1. 创建容器*
+----
+sudo docker run -it --rm --name test-1 -d busybox
+----
+
+[source, bash]
+.*2. ping 容器名*
+----
+$ sudo docker attach test-1
+/ # ping test-1
+ping: bad address 'test-1'
+----
+
+[source, bash]
+.*3. 查看容器 /etc/resolv.conf*
+----
+/ # cat /etc/resolv.conf 
+# This file is managed by man:systemd-resolved(8). Do not edit.
+#
+# This is a dynamic resolv.conf file for connecting local clients directly to
+# all known uplink DNS servers. This file lists all configured search domains.
+#
+# Third party programs must not access this file directly, but only through the
+# symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a different way,
+# replace this symlink by a static file or a different symlink.
+#
+# See man:systemd-resolved.service(8) for details about the supported modes of
+# operation for /etc/resolv.conf.
+
+nameserver 10.1.10.2
+----
+
+[source, bash]
+.*4. 创建一个新容器*
+----
+sudo docker run -it --rm --name test-2 --hostname test-2 -d busybox
+----
+
+[source, bash]
+.*5. 进入 test-2 主进程，ping 容器名称*
+----
+$ sudo docker attach test-2
+/ # ping test-2
+PING test-2 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.036 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.075 ms
+----
+
+[source, bash]
+.*5. 创建第三个容器*
+----
+sudo docker run -it --rm --name test-3 --hostname test-3 --link test-1 --link test-2  -d busybox
+----
+
+[source, bash]
+.*6. 进入 test-2 主进程，ping test-1 和 test-2*
+----
+$ sudo docker attach test-3
+/ # ping test-1 -c3
+PING test-1 (172.17.0.2): 56 data bytes
+64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.087 ms
+64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.117 ms
+64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.111 ms
+
+--- test-1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.087/0.105/0.117 ms
+/ # ping test-2 -c3
+PING test-2 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.262 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.079 ms
+64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.116 ms
+
+--- test-2 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.079/0.152/0.262 ms
+----
+
+[source, bash]
+.*7. 创建容器，指定 DNS 服务器*
+----
+sudo docker run -it --rm --name test-4 --hostname test-4 --dns 8.8.8.8  -d busybox
+----
+
+[source, bash]
+.*8. 进入到 test-4 主进程，查看 resolv.conf*
+----
+$ sudo docker attach test-4
+/ # cat /etc/resolv.conf 
+nameserver 8.8.8.8
+----
+
+[source, bash]
+.*9. 创建一个 bridge 类型容器网络*
+----
+sudo docker network create test_dns
+----
+
+[source, bash]
+.*10. 创建一个容器使用 test_dns 网络*
+----
+sudo docker run -it --rm --name test-5 --network test_dns -d busybox
+----
+
+[source, bash]
+.*11. 进入 test-5 主进程 ping test-5*
+----
+$ sudo docker attach test-5
+/ # ping test-5 -c3
+PING test-5 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.032 ms
+64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.093 ms
+64 bytes from 172.18.0.2: seq=2 ttl=64 time=0.090 ms
+----
+
+[source, bash]
+.*12. 查看 test-5 的 resolv.conf*
+----
+$ sudo docker attach test-5
+/ # cat /etc/resolv.conf 
+nameserver 127.0.0.11
+options ndots:0
+----
+
+[source, bash]
+.*13. 创建新容器*
+----
+sudo docker run -it --rm --name test-6 --network test_dns -d busybox
+----
+
+[source, bash]
+.*14. 进图到 test-6 ping test-5*
+----
+$ sudo docker attach test-6
+/ # ping test-5 -c3
+PING test-5 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.075 ms
+64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.123 ms
+64 bytes from 172.18.0.2: seq=2 ttl=64 time=0.116 ms
+----
+
+[source, bash]
+.*15. 删除所有创建的容器*
+----
+for i in $(sudo docker ps | awk '{print $1}' | awk '(NR>1)') ; do sudo docker stop $i ; done
+----
+
+[source, bash]
+.*16. 删除容器网络*
+----
+sudo docker network rm test_dns
 ----

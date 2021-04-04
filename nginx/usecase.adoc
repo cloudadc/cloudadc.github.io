@@ -228,7 +228,7 @@ $ curl http://192.168.100.71:8002/foo
 |Nginx Plus 下服务器端如何获取真实客户端 IP
 
 |操作
-
+|
 [source, bash]
 .*配置*
 ----
