@@ -806,7 +806,14 @@
 <li><a href="#_flannel">Flannel</a>
 <ul class="sectlevel2">
 <li><a href="#_flannel_2">Flannel &#x914D;&#x7F6E;</a></li>
-<li><a href="#_td">TD</a></li>
+<li><a href="#_host_gw">host-gw</a></li>
+<li><a href="#__host_gw_vxlan">&#x5207;&#x6362; host-gw &#x5230; vxlan</a></li>
+<li><a href="#_vxlan">VxLAN &#x8C03;&#x8BD5;</a></li>
+</ul>
+</li>
+<li><a href="#_calico">Calico</a>
+<ul class="sectlevel2">
+<li><a href="#_calico_2">Calico &#x914D;&#x7F6E;</a></li>
 </ul>
 </li>
 </ul>
@@ -1916,67 +1923,405 @@ coredns-74ff55c5b<span class="hljs-_">-gt</span>5jh          1/1   Running   0  
 </div>
 </div>
 <div class="sect2">
-<h3 id="_td">TD</h3>
+<h3 id="_host_gw">host-gw</h3>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x4E3B;&#x673A; 1 &#x8DEF;&#x7531;&#x8868;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip route | grep 10.244
+10.244.0.0/24 dev cni0 proto kernel scope link src 10.244.0.1
+10.244.1.0/24 via 10.1.10.10 dev ens33</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x4E3B;&#x673A; 2 &#x8DEF;&#x7531;&#x8868;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip route | grep 10.244
+10.244.0.0/24 via 10.1.10.9 dev ens33
+10.244.1.0/24 dev cni0 proto kernel scope link src 10.244.1.1</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x6D4B;&#x8BD5;&#x5E94;&#x7528;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> busybox.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/busybox.yaml">busybox.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; POD</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-7999578869-p5kbp   1/1   Running   0     6m47s   10.244.1.14   node-2   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-7999578869-pkgtp   1/1   Running   0     4m31s   10.244.0.9    node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>5. &#x5728;&#x4E3B;&#x673A; 2 &#x4E0A;&#x67E5;&#x770B;&#x7F51;&#x7EDC;&#x7A7A;&#x95F4;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:2f:33:85 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.10/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe2f:3385/64 scope link
+       valid_lft forever preferred_lft forever
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether c6:06:e2:8f:2e:25 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c406:e2ff:fe8f:2e25/64 scope link
+       valid_lft forever preferred_lft forever
+6: veth1695e55f@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cni0 state UP group default
+    link/ether c6:a8:ac:da:08:e7 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::c4a8:acff:feda:8e7/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>6. &#x5F00;&#x542F;&#x4E09;&#x4E2A;&#x7EC8;&#x7AEF;&#xFF0C;&#x8FDE;&#x63A5;&#x4E3B;&#x673A; 2&#xFF0C;tcpdump &#x8FC7;&#x6EE4; icmp &#x6570;&#x636E;&#x5305;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo tcpdump -nei ens33 icmp
+sudo tcpdump -nei cni0 icmp
+sudo tcpdump -nei veth1695e55f icmp</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>7. &#x4E3B;&#x673A; 1 &#x4E0A;&#x8FDB;&#x5165; busybox &#x5BB9;&#x5668; ping &#x4E3B;&#x673A; 2 &#x4E0A; POD IP</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span>-7999578869-pkgtp -- sh
+/ <span class="hljs-comment"># ping 10.244.1.14 -c2</span>
+PING 10.244.1.14 (10.244.1.14): 56 data bytes
+64 bytes from 10.244.1.14: seq=0 ttl=62 time=0.739 ms
+64 bytes from 10.244.1.14: seq=1 ttl=62 time=1.106 ms
+
+--- 10.244.1.14 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.739/0.922/1.106 ms</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>8. &#x5206;&#x6790;&#x6B65;&#x9AA4; 6 &#x4E09;&#x4E2A;&#x7EC8;&#x7AEF;&#x4E0A;&#x6570;&#x636E;&#x5305;&#x4FE1;&#x606F;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185063 00:0c:29:10:a9:6c &gt; 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 0, length 64
+18:23:22.185355 00:0c:29:2f:33:85 &gt; 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 0, length 64
+18:23:23.185863 00:0c:29:10:a9:6c &gt; 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 1, length 64
+18:23:23.186051 00:0c:29:2f:33:85 &gt; 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 1, length 64
+
+$ sudo tcpdump -nei cni0 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on cni0, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185150 c6:06:e2:8f:2e:25 &gt; 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 0, length 64
+18:23:22.185344 36:3e:45:9e:50:a9 &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 0, length 64
+18:23:23.185957 c6:06:e2:8f:2e:25 &gt; 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 1, length 64
+18:23:23.186042 36:3e:45:9e:50:a9 &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 1, length 64
+
+$ sudo tcpdump -nei veth1695e55f icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on veth1695e55f, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185162 c6:06:e2:8f:2e:25 &gt; 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 0, length 64
+18:23:22.185331 36:3e:45:9e:50:a9 &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 0, length 64
+18:23:23.185969 c6:06:e2:8f:2e:25 &gt; 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 &gt; 10.244.1.14: ICMP <span class="hljs-built_in">echo</span> request, id 11008, seq 1, length 64
+18:23:23.186032 36:3e:45:9e:50:a9 &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 &gt; 10.244.0.9: ICMP <span class="hljs-built_in">echo</span> reply, id 11008, seq 1, length 64</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>&#x4E09;&#x4E2A;&#x63A5;&#x53E3;&#x90FD;&#x53EF;&#x4EE5;&#x6293;&#x53D6;&#x5230;&#x6570;&#x636E;&#x5305;</p>
+</li>
+<li>
+<p><code>36:3e:45:9e:50:a9</code> &#x4E3A;&#x4E3B;&#x673A; 2 &#x4E0A; POD MAC &#x5730;&#x5740;</p>
+</li>
+<li>
+<p><code>c6:06:e2:8f:2e:25</code> &#x4E3A;&#x4E3B;&#x673A; 2 &#x4E0A; linux bridge cni0 MAC &#x5730;&#x5740;</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+iptables &#x9ED8;&#x8BA4;&#x7684;&#x89C4;&#x5219;&#x4F1A;&#x57FA;&#x4E8E;&#x5168;&#x5C40;&#x7684;&#x8003;&#x8651;&#xFF0C;&#x4E0A;&#x9762;&#x6293;&#x5305; <code>cni0</code> &#x2192; <code>veth1695e55f</code> &#x8FD9;&#x4E2A;&#x4E4B;&#x95F4;&#x7684;&#x8F6C;&#x53D1;&#x662F;&#x7531;&#x4E8E; iptables SNAT &#x89C4;&#x5219;&#x5BFC;&#x81F4;&#x7684;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x5728;&#x4E3B;&#x673A; 2 &#x8DEF;&#x7531;&#x8868;&#x4E0A;&#x5220;&#x9664;&#x4E00;&#x6761;&#x8DEF;&#x7531;&#x8BB0;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo ip r del 10.244.0.0/24 via 10.1.10.9</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>10. &#x7B49;&#x5F85;&#x51E0;&#x79D2;&#x949F;&#x540E;&#x5728;&#x4E3B;&#x673A; 2 &#x4E0A;&#x67E5;&#x770B;&#x8DEF;&#x7531;&#x8868;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip r | grep 10.244
+10.244.0.0/24 via 10.1.10.9 dev ens33
+10.244.1.0/24 dev cni0 proto kernel scope link src 10.244.1.1</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+flannel host-gw &#x6A21;&#x5F0F;&#x4E0B;&#xFF0C;flannel &#x8D1F;&#x8D23;&#x7EF4;&#x62A4;&#x4E3B;&#x673A;&#x8DEF;&#x7531;&#x8868;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__host_gw_vxlan">&#x5207;&#x6362; host-gw &#x5230; vxlan</h3>
+<div class="listingblock">
+<div class="title"><strong>1. CoreDNS POD scale &#x5230; 0</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl scale -n kube-system deploy/coredns --replicas=0</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x5220;&#x9664; host-gw</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl delete <span class="hljs-_">-f</span> kube-flannel-host-gw.yml</code></pre>
 </div>
 </div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA; vxlan</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> kube-flannel.yml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/kube-flannel.yml">kube-flannel.yml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. CoreDNS POD scale &#x5230; 2</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl scale -n kube-system deploy/coredns --replicas=2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x6240;&#x6709;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                             READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-74ff55c5b-chf5p          1/1     Running   0          2m9s    10.244.0.11   node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   coredns-74ff55c5b-rc24f          1/1     Running   0          93s     10.244.1.33   node-2   &lt;none&gt;           &lt;none&gt;
+kube-system   etcd-node-1                      1/1     Running   2          5h48m   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-apiserver-node-1            1/1     Running   2          5h48m   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-controller-manager-node-1   1/1     Running   2          5h48m   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-flannel-ds-tbnf5            1/1     Running   0          5m52s   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-flannel-ds-zm9d7            1/1     Running   0          5m52s   10.1.10.10    node-2   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-proxy-24l9w                 1/1     Running   2          5h48m   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-proxy-gsdwh                 1/1     Running   1          4h30m   10.1.10.10    node-2   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-scheduler-node-1            1/1     Running   2          5h48m   10.1.10.9     node-1   &lt;none&gt;           &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x4E3B;&#x673A; 1 &#x7F51;&#x7EDC;&#x7A7A;&#x95F4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether 86:37:cf:70:96:3d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8437:cfff:fe70:963d/64 scope link
+       valid_lft forever preferred_lft forever
+7: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default
+    link/ether 16:e0:b5:75:8c:4b brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.0/32 brd 10.244.0.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::14e0:b5ff:fe75:8c4b/64 scope link
+       valid_lft forever preferred_lft forever
+9: veth2053e67d@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue master cni0 state UP group default
+    link/ether 86:92:b2:8b:1f:2f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8492:b2ff:fe8b:1f2f/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x4E3B;&#x673A; 2 &#x7F51;&#x7EDC;&#x7A7A;&#x95F4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether 86:37:cf:70:96:3d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8437:cfff:fe70:963d/64 scope link
+       valid_lft forever preferred_lft forever
+7: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default
+    link/ether 16:e0:b5:75:8c:4b brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.0/32 brd 10.244.0.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::14e0:b5ff:fe75:8c4b/64 scope link
+       valid_lft forever preferred_lft forever
+9: veth2053e67d@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue master cni0 state UP group default
+    link/ether 86:92:b2:8b:1f:2f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8492:b2ff:fe8b:1f2f/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_vxlan">VxLAN &#x8C03;&#x8BD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x6D4B;&#x8BD5;&#x5E94;&#x7528;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> busybox.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; POD</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-7999578869-k4bn8   1/1   Running   0     63s     10.244.0.12   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-7999578869-mlk49   1/1   Running   0     4m14s   10.244.1.34   node-2   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x4E3B;&#x673A; 2 &#x4E0A;&#x7684; VxLAN UDP &#x7AEF;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo netstat -antulop | grep 8472
+udp        0      0 0.0.0.0:8472            0.0.0.0:*                           -                    off (0.00/0/0)</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x4E3B;&#x673A; 2 &#x4E0A;&#x7684;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:2f:33:85 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.10/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe2f:3385/64 scope link
+       valid_lft forever preferred_lft forever
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether c6:06:e2:8f:2e:25 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c406:e2ff:fe8f:2e25/64 scope link
+       valid_lft forever preferred_lft forever
+17: flannel.1: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UNKNOWN group default
+    link/ether 0e:46:36:ac:f6:d6 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.0/32 brd 10.244.1.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c46:36ff:feac:f6d6/64 scope link
+       valid_lft forever preferred_lft forever
+27: veth470beb22@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue master cni0 state UP group default
+    link/ether 52:b3:aa:80:1e:c4 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::50b3:aaff:fe80:1ec4/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x4E3B;&#x673A; 2 &#x4E0A;&#x6253;&#x5F00; 5 &#x4E2A;&#x4E2D;&#x65AD;&#xFF0C;&#x4F9D;&#x6B21;&#x6267;&#x884C;&#x5982;&#x4E0B;&#x6293;&#x5305;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo tcpdump -nei ens33 port 8472
+sudo tcpdump -nei ens33 icmp
+sudo tcpdump -nei cni0 icmp
+sudo tcpdump -nei flannel.1 icmp
+sudo tcpdump -nei veth470beb22 icmp</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x5728;&#x4E3B;&#x673A; 1 &#x4E0A;&#x7684; POD &#x4E2D; ping &#x4E3B;&#x673A; 2 POD &#x7684; IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span>-7999578869-k4bn8 -- sh
+/ <span class="hljs-comment"># ping 10.244.1.34 -c2</span>
+PING 10.244.1.34 (10.244.1.34): 56 data bytes
+64 bytes from 10.244.1.34: seq=0 ttl=62 time=0.657 ms
+64 bytes from 10.244.1.34: seq=1 ttl=62 time=0.859 ms
+
+--- 10.244.1.34 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.657/0.758/0.859 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x7B2C; 5 &#x6B65;&#x9AA4;&#x7684;&#x8F93;&#x51FA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo tcpdump -nei ens33 port 8472
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867705 00:0c:29:10:a9:6c &gt; 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 148: 10.1.10.9.36389 &gt; 10.1.10.10.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+16:e0:b5:75:8c:4b &gt; 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 0, length 64
+19:59:38.867967 00:0c:29:2f:33:85 &gt; 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 148: 10.1.10.10.58430 &gt; 10.1.10.9.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+0e:46:36:ac:f6:d6 &gt; 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 0, length 64
+19:59:39.868638 00:0c:29:10:a9:6c &gt; 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 148: 10.1.10.9.36389 &gt; 10.1.10.10.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+16:e0:b5:75:8c:4b &gt; 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 1, length 64
+19:59:39.868907 00:0c:29:2f:33:85 &gt; 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 148: 10.1.10.10.58430 &gt; 10.1.10.9.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+0e:46:36:ac:f6:d6 &gt; 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+
+$ sudo tcpdump -nei cni0 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on cni0, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867909 c6:06:e2:8f:2e:25 &gt; ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 0, length 64
+19:59:38.867941 ee:8d:f9:4a:25:7d &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 0, length 64
+19:59:39.868857 c6:06:e2:8f:2e:25 &gt; ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 1, length 64
+19:59:39.868890 ee:8d:f9:4a:25:7d &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei flannel.1 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on flannel.1, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867886 16:e0:b5:75:8c:4b &gt; 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 0, length 64
+19:59:38.867955 0e:46:36:ac:f6:d6 &gt; 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 0, length 64
+19:59:39.868837 16:e0:b5:75:8c:4b &gt; 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 1, length 64
+19:59:39.868896 0e:46:36:ac:f6:d6 &gt; 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei veth470beb22 icmp
+tcpdump: verbose output suppressed, use -v or -vv <span class="hljs-keyword">for</span> full protocol decode
+listening on veth470beb22, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867916 c6:06:e2:8f:2e:25 &gt; ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 0, length 64
+19:59:38.867936 ee:8d:f9:4a:25:7d &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 0, length 64
+19:59:39.868866 c6:06:e2:8f:2e:25 &gt; ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 &gt; 10.244.1.34: ICMP <span class="hljs-built_in">echo</span> request, id 8448, seq 1, length 64
+19:59:39.868885 ee:8d:f9:4a:25:7d &gt; c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 &gt; 10.244.0.12: ICMP <span class="hljs-built_in">echo</span> reply, id 8448, seq 1, length 64</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x76F8;&#x5173;&#x8C03;&#x8BD5;&#x547D;&#x4EE4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">ip r
+ip n
+bridge fdb
+brctl show</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_calico">Calico</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_calico_2">Calico &#x914D;&#x7F6E;</h3>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -2040,7 +2385,7 @@ coredns-74ff55c5b<span class="hljs-_">-gt</span>5jh          1/1   Running   0  
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"K8S","level":"1.3.2","depth":2,"next":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"Use Case","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]}]},"previous":{"title":"DOCKER","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/k8s.adoc","mtime":"2021-04-05T07:29:57.771Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-05T07:31:19.924Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"K8S","level":"1.3.2","depth":2,"next":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"Use Case","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]}]},"previous":{"title":"DOCKER","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/k8s.adoc","mtime":"2021-04-05T12:11:52.585Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-05T12:14:02.638Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
