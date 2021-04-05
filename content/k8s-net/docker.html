@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Docker · GitBook</title>
+        <title>DOCKER · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -61,7 +61,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../nginx/" />
+    <link rel="next" href="k8s.html" />
     
     
     <link rel="prev" href="./" />
@@ -138,7 +138,20 @@
                 <a href="docker.html">
             
                     
-                    Docker
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="k8s.html">
+            
+                <a href="k8s.html">
+            
+                    
+                    K8S
             
                 </a>
             
@@ -228,7 +241,7 @@
                 <a href="../nginx/usecase.html">
             
                     
-                    用例
+                    Use Case
             
                 </a>
             
@@ -755,7 +768,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Docker</a>
+        <a href=".." >DOCKER</a>
     </h1>
 </div>
 
@@ -774,13 +787,53 @@
 <div id="toc" class="toc">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_cnm">CNM</a></li>
+<li><a href="#__">&#x5E38;&#x7528;&#x547D;&#x4EE4;</a></li>
+<li><a href="#_cnm">CNM &#x6A21;&#x578B;</a></li>
 <li><a href="#_docker">docker &#x7F51;&#x7EDC;&#x57FA;&#x672C;&#x6982;&#x5FF5;</a></li>
-<li><a href="#_td">TD</a></li>
+<li><a href="#_docker_bridge">Docker Bridge &#x7F51;&#x7EDC;</a></li>
+<li><a href="#___2">&#x7AEF;&#x53E3;&#x6620;&#x5C04;</a></li>
+<li><a href="#_cnm_2">CNM &#x4E09;&#x79CD;&#x7F51;&#x7EDC;&#x6A21;&#x578B;</a></li>
+<li><a href="#_macvlan">MACVLAN</a></li>
+<li><a href="#_docker_dns">Docker DNS</a></li>
 </ul>
 </div>
 <div class="sect1">
-<h2 id="_cnm">CNM</h2>
+<h2 id="__">&#x5E38;&#x7528;&#x547D;&#x4EE4;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>docker network</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker network create
+
+docker network ls
+
+docker network inspect
+
+docker network rm
+
+// &#x5C06;&#x4E00;&#x4E2A;&#x5DF2;&#x7ECF;&#x5B58;&#x5728;&#x7684;&#x5BB9;&#x5668;&#x52A0;&#x5165;&#x5230;&#x4E00;&#x4E2A; docker &#x7F51;&#x7EDC;
+docker network connect
+
+docker network disconnect</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x57FA;&#x672C;&#x547D;&#x4EE4;&#x8C03;&#x8BD5;&#x76F8;&#x5173;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">docker inspect
+
+docker logs
+
+// &#x8FDE;&#x63A5;&#x5230;&#x5BB9;&#x5668;&#x4E3B;&#x8FDB;&#x7A0B;&#xFF0C;Ctrl +p Ctrl +q &#x9000;&#x51FA;&#x4E3B;&#x8FDB;&#x7A0B;
+docker attach
+
+docker <span class="hljs-built_in">exec</span> -it</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cnm">CNM &#x6A21;&#x578B;</h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="title"><strong>1. &#x67E5;&#x770B;&#x7F51;&#x7EDC;&#x63A5;&#x53E3;</strong></div>
@@ -846,8 +899,8 @@ sudo docker network inspect <span class="hljs-built_in">test</span>_network</cod
 <div class="listingblock">
 <div class="title"><strong>2. &#x521B;&#x5EFA;&#x5BB9;&#x5668;&#x5E76;&#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -itd --name=<span class="hljs-built_in">test</span>1 nginx
-sudo docker run -itd --name=<span class="hljs-built_in">test</span>2 nginx
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -itd --rm --name=<span class="hljs-built_in">test</span>1 nginx
+sudo docker run -itd --rm --name=<span class="hljs-built_in">test</span>2 nginx
 sudo docker inspect <span class="hljs-built_in">test</span>1
 sudo docker inspect <span class="hljs-built_in">test</span>2</code></pre>
 </div>
@@ -937,36 +990,668 @@ $ sudo docker logs <span class="hljs-built_in">test</span>2
 </div>
 </div>
 <div class="sect1">
-<h2 id="_td">TD</h2>
+<h2 id="_docker_bridge">Docker Bridge &#x7F51;&#x7EDC;</h2>
 <div class="sectionbody">
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E24;&#x4E2A;&#x5BB9;&#x5668;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -itd --rm --name <span class="hljs-built_in">test</span>-1 busybox
+sudo docker run -itd --rm --name <span class="hljs-built_in">test</span>-2 busybox</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x6865;&#x63A5;&#x7684;&#x7F51;&#x7EDC;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ brctl show
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.0242e0910392	no		veth40413c0
+							veth8547cb2</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>3. &#x67E5;&#x770B; test-1 &#x548C; test-2 &#x7684; IP &#x5730;&#x5740;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-1
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+15: eth0@<span class="hljs-keyword">if</span>16: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+
+$ sudo docker attach <span class="hljs-built_in">test</span>-2
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+17: eth0@<span class="hljs-keyword">if</span>18: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:11:00:03 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.3/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>4. &#x4ECE; test-2 ping test-1</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># ping 172.17.0.2 -c3</span>
+PING 172.17.0.2 (172.17.0.2): 56 data bytes
+64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.245 ms
+64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.080 ms
+64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.111 ms</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>5. &#x67E5;&#x770B; iptables nat &#x8868;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL
+Chain PREROUTING (policy ACCEPT 2 packets, 168 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    4  1520 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+
+Chain OUTPUT (policy ACCEPT 74 packets, 4996 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 DOCKER     all  --  *      *       0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT 75 packets, 5080 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    1    84 MASQUERADE  all  --  *      !docker0  172.17.0.0/16        0.0.0.0/0
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 RETURN     all  --  docker0 *       0.0.0.0/0            0.0.0.0/0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B;&#x5F53;&#x524D; Host &#x4E0A; Docker &#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker network ls
+NETWORK ID     NAME      DRIVER    SCOPE
+218fb35eac5f   bridge    bridge    <span class="hljs-built_in">local</span>
+f6dbdda8ec13   host      host      <span class="hljs-built_in">local</span>
+99496b4f2b1d   none      null      <span class="hljs-built_in">local</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; VLAN</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker network create --driver bridge isolated_nw
+ea606204201fe22dfe46a94b2762e4b8fe541ff763a353f9a961d9649d60fd12</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x518D;&#x6B21;&#x67E5;&#x770B;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker network ls
+NETWORK ID     NAME          DRIVER    SCOPE
+218fb35eac5f   bridge        bridge    <span class="hljs-built_in">local</span>
+f6dbdda8ec13   host          host      <span class="hljs-built_in">local</span>
+ea606204201f   isolated_nw   bridge    <span class="hljs-built_in">local</span>
+99496b4f2b1d   none          null      <span class="hljs-built_in">local</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x67E5;&#x770B;&#x4E3B;&#x673A;&#x7F51;&#x7EDC;&#x7A7A;&#x95F4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+19: br-ea606204201f: &lt;NO-CARRIER,BROADCAST,MULTICAST,UP&gt; mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 02:42:78:b8:80:b8 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.1/16 brd 172.19.255.255 scope global br-ea606204201f
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x4F7F;&#x7528; isolated_nw &#x521B;&#x5EFA;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -itd --rm --name=<span class="hljs-built_in">test</span>-3 --network=isolated_nw  busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x67E5;&#x770B; test-3 &#x7684; IP &#x5730;&#x5740;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-3
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+20: eth0@<span class="hljs-keyword">if</span>21: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:13:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.2/16 brd 172.19.255.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. test-3 &#x4E2D; ping test-2 &#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># ping 172.17.0.3</span>
+PING 172.17.0.3 (172.17.0.3): 56 data bytes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>14. &#x67E5;&#x770B; iptables filter &#x8868;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t filter -vnL
+Chain INPUT (policy ACCEPT 910 packets, 64130 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+
+Chain FORWARD (policy DROP 0 packets, 0 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+  123 10332 DOCKER-USER  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+  123 10332 DOCKER-ISOLATION-STAGE-1  all  --  *      *       0.0.0.0/0            0.0.0.0/0
+    0     0 ACCEPT     all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+    0     0 DOCKER     all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0
+    0     0 ACCEPT     all  --  br-ea606204201f !br-ea606204201f  0.0.0.0/0            0.0.0.0/0
+    0     0 ACCEPT     all  --  br-ea606204201f br-ea606204201f  0.0.0.0/0            0.0.0.0/0
+    8   672 ACCEPT     all  --  *      docker0  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+    1    84 DOCKER     all  --  *      docker0  0.0.0.0/0            0.0.0.0/0
+    3   252 ACCEPT     all  --  docker0 !docker0  0.0.0.0/0            0.0.0.0/0
+    1    84 ACCEPT     all  --  docker0 docker0  0.0.0.0/0            0.0.0.0/0
+
+Chain OUTPUT (policy ACCEPT 602 packets, 61940 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+
+Chain DOCKER-ISOLATION-STAGE-1 (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+  123 10332 DOCKER-ISOLATION-STAGE-2  all  --  br-ea606204201f !br-ea606204201f  0.0.0.0/0            0.0.0.0/0
+    3   252 DOCKER-ISOLATION-STAGE-2  all  --  docker0 !docker0  0.0.0.0/0            0.0.0.0/0
+   12  1008 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+Chain DOCKER-ISOLATION-STAGE-2 (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 DROP       all  --  *      br-ea606204201f  0.0.0.0/0            0.0.0.0/0
+  123 10332 DROP       all  --  *      docker0  0.0.0.0/0            0.0.0.0/0
+    3   252 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0
+
+Chain DOCKER-USER (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+  135 11340 RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>15. &#x8FDE;&#x63A5; test-3 &#x5230; docker0</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network connect bridge <span class="hljs-built_in">test</span>-3</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>16. &#x67E5;&#x770B;&#x65B0;&#x589E;&#x7684;&#x4E3B;&#x673A;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+23: veth0325425@<span class="hljs-keyword">if</span>22: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master docker0 state UP group default
+    link/ether 7e:9f:e5:0e:27:a1 brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::7c9f:e5ff:fe0e:27a1/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>17. &#x67E5;&#x770B; test-2 IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-3
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+20: eth0@<span class="hljs-keyword">if</span>21: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:13:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.19.0.2/16 brd 172.19.255.255 scope global eth0
+       valid_lft forever preferred_lft forever
+22: eth1@<span class="hljs-keyword">if</span>23: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:11:00:04 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.4/16 brd 172.17.255.255 scope global eth1
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>18. &#x4ECE; test-3 ping test-2</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># ping 172.17.0.3 -c3</span>
+PING 172.17.0.3 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.267 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.128 ms
+64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.118 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>19. &#x505C;&#x6B62;&#x6240;&#x6709;&#x521B;&#x5EFA;&#x7684;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 1 2 3 ; <span class="hljs-keyword">do</span> sudo docker stop <span class="hljs-built_in">test</span>-<span class="hljs-variable">$i</span> ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>20. &#x5220;&#x9664;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network rm isolated_nw</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x7AEF;&#x53E3;&#x6620;&#x5C04;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x542F;&#x52A8;&#x5BB9;&#x5668;&#x662F; -p &#x53C2;&#x6570;&#x6307;&#x5B9A;&#x7AEF;&#x53E3;&#x6620;&#x5C04;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-1 -p 8080:80 <span class="hljs-_">-d</span> nginx</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8BBF;&#x95EE;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl 127.0.0.1:8080
+
+curl 10.1.10.166:8080
+
+curl 172.17.0.1:8080</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B; net &#x8868;&#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL
+Chain PREROUTING (policy ACCEPT 3 packets, 595 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    5  1604 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+
+Chain INPUT (policy ACCEPT 3 packets, 595 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+
+Chain OUTPUT (policy ACCEPT 8 packets, 758 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    2   120 DOCKER     all  --  *      *       0.0.0.0/0           !127.0.0.0/8          ADDRTYPE match dst-type LOCAL
+
+Chain POSTROUTING (policy ACCEPT 10 packets, 878 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    1    84 MASQUERADE  all  --  *      !docker0  172.17.0.0/16        0.0.0.0/0
+    0     0 MASQUERADE  tcp  --  *      *       172.17.0.2           172.17.0.2           tcp dpt:80
+
+Chain DOCKER (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 RETURN     all  --  docker0 *       0.0.0.0/0            0.0.0.0/0
+    2   120 DNAT       tcp  --  !docker0 *       0.0.0.0/0            0.0.0.0/0            tcp dpt:8080 to:172.17.0.2:80</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x505C;&#x6B62;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker stop <span class="hljs-built_in">test</span>-1</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_cnm_2">CNM &#x4E09;&#x79CD;&#x7F51;&#x7EDC;&#x6A21;&#x578B;</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B;&#x4E09;&#x79CD;&#x6A21;&#x578B;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker network ls |awk <span class="hljs-string">&apos;{print $2}&apos;</span>|awk <span class="hljs-string">&apos;(NR&gt;1)&apos;</span>
+bridge
+host
+none</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; bridge &#x7C7B;&#x578B;&#x5BB9;&#x5668;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-1 --network bridge <span class="hljs-_">-d</span> busybox
+
+$ sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-1 --network bridge <span class="hljs-_">-d</span> busybox
+ecab2b0803ae776e2b80913a64d6c041917718ef5ebb2e947f45bad1920adf3a
+kylin@k8s-network-host:~$ sudo docker attach <span class="hljs-built_in">test</span>-1
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+28: eth0@<span class="hljs-keyword">if</span>29: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:ac:11:00:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.2/16 brd 172.17.255.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA; none &#x7C7B;&#x578B;&#x5BB9;&#x5668;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-2 --network none <span class="hljs-_">-d</span> busybox
+
+$ $ sudo docker attach <span class="hljs-built_in">test</span>-2
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA; host &#x7C7B;&#x578B;&#x5BB9;&#x5668;&#xFF0C;&#x5E76;&#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-3 --network host <span class="hljs-_">-d</span> busybox
+
+$ sudo docker attach <span class="hljs-built_in">test</span>-3
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc fq_codel qlen 1000
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.168/24 brd 10.1.10.255 scope global dynamic ens33
+       valid_lft 1376sec preferred_lft 1376sec
+    inet6 fe80::33d8:84ef:51b0:fe2f/64 scope link
+       valid_lft forever preferred_lft forever
+3: docker0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:e0:91:03:92 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 brd 172.17.255.255 scope global docker0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::42:e0ff:fe91:392/64 scope link
+       valid_lft forever preferred_lft forever
+29: vethb390396@<span class="hljs-keyword">if</span>28: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue master docker0
+    link/ether 5e:37:53:83:5b:d3 brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::5c37:53ff:fe83:5bd3/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5220;&#x9664;&#x6240;&#x6709;&#x521B;&#x5EFA;&#x7684;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> 1 2 3 ; <span class="hljs-keyword">do</span> sudo docker stop <span class="hljs-built_in">test</span>-<span class="hljs-variable">$i</span> ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_macvlan">MACVLAN</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; MACVLAN &#x7C7B;&#x578B;&#x7684;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network create <span class="hljs-_">-d</span> macvlan --subnet 10.1.10.0/24 --ip-range 10.1.10.240/28 --gateway 10.1.10.1 -o parent=ens33 macvlan-1</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker network ls
+NETWORK ID     NAME        DRIVER    SCOPE
+01ff09740af4   bridge      bridge    <span class="hljs-built_in">local</span>
+f6dbdda8ec13   host        host      <span class="hljs-built_in">local</span>
+ffc1e109b33b   macvlan-1   macvlan   <span class="hljs-built_in">local</span>
+99496b4f2b1d   none        null      <span class="hljs-built_in">local</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --network=macvlan-1 --name=<span class="hljs-built_in">test</span>-1 <span class="hljs-_">-d</span> busybox
+sudo docker run -it --rm --network=macvlan-1 --name=<span class="hljs-built_in">test</span>-2 <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x5BB9;&#x5668; test-1 &#x7684; IP &#x5730;&#x5740;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-1
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+5: eth0@<span class="hljs-keyword">if</span>2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:0a:01:0a:f0 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.240/24 brd 10.1.10.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x67E5;&#x770B;&#x5BB9;&#x5668; test-2 &#x7684; IP &#x5730;&#x5740;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-2
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+8: eth0@<span class="hljs-keyword">if</span>2: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:0a:01:0a:f1 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.241/24 brd 10.1.10.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. test-1 &#x4E2D; ping test-2</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># ping 10.1.10.241 -c3</span>
+PING 10.1.10.241 (10.1.10.241): 56 data bytes
+64 bytes from 10.1.10.241: seq=0 ttl=64 time=0.103 ms
+64 bytes from 10.1.10.241: seq=1 ttl=64 time=0.103 ms
+64 bytes from 10.1.10.241: seq=2 ttl=64 time=0.072 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA; MACVLAN &#x5B50;&#x63A5;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network create <span class="hljs-_">-d</span> macvlan --subnet 10.1.11.0/24 --gateway 10.1.11.1 -o parent=ens33.50 macvlan.50</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x67E5;&#x770B;&#x4E3B;&#x673A;&#x7F51;&#x7EDC;&#x7A7A;&#x95F4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+9: ens33.50@ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+    inet6 fe80::20c:29ff:fe10:a96c/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; VLAN &#x5B50;&#x63A5;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip link show <span class="hljs-built_in">type</span> vlan
+9: ens33.50@ens33: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP mode DEFAULT group default
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm <span class="hljs-_">-d</span> --network macvlan.50 --name <span class="hljs-built_in">test</span>-3 busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x67E5;&#x770B; test-3 &#x5BB9;&#x5668; IP &#x5730;&#x5740;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-3
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+10: eth0@<span class="hljs-keyword">if</span>9: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 02:42:0a:01:0b:02 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.11.2/24 brd 10.1.11.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x6E05;&#x7A7A;&#x5B9E;&#x9A8C;&#x73AF;&#x5883;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> $(sudo docker ps | awk <span class="hljs-string">&apos;{print $1}&apos;</span> | awk <span class="hljs-string">&apos;(NR&gt;1)&apos;</span>) ; <span class="hljs-keyword">do</span> sudo docker stop <span class="hljs-variable">$i</span> ; <span class="hljs-keyword">done</span>
+
+sudo docker network rm macvlan-1 macvlan.50</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_docker_dns">Docker DNS</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-1 <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. ping &#x5BB9;&#x5668;&#x540D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-1
+/ <span class="hljs-comment"># ping test-1</span>
+ping: bad address <span class="hljs-string">&apos;test-1&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x5BB9;&#x5668; /etc/resolv.conf</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># cat /etc/resolv.conf</span>
+<span class="hljs-comment"># This file is managed by man:systemd-resolved(8). Do not edit.</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># This is a dynamic resolv.conf file for connecting local clients directly to</span>
+<span class="hljs-comment"># all known uplink DNS servers. This file lists all configured search domains.</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># Third party programs must not access this file directly, but only through the</span>
+<span class="hljs-comment"># symlink at /etc/resolv.conf. To manage man:resolv.conf(5) in a different way,</span>
+<span class="hljs-comment"># replace this symlink by a static file or a different symlink.</span>
+<span class="hljs-comment">#</span>
+<span class="hljs-comment"># See man:systemd-resolved.service(8) for details about the supported modes of</span>
+<span class="hljs-comment"># operation for /etc/resolv.conf.</span>
+
+nameserver 10.1.10.2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x65B0;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-2 --hostname <span class="hljs-built_in">test</span>-2 <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8FDB;&#x5165; test-2 &#x4E3B;&#x8FDB;&#x7A0B;&#xFF0C;ping &#x5BB9;&#x5668;&#x540D;&#x79F0;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-2
+/ <span class="hljs-comment"># ping test-2</span>
+PING <span class="hljs-built_in">test</span>-2 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.036 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.075 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x521B;&#x5EFA;&#x7B2C;&#x4E09;&#x4E2A;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-3 --hostname <span class="hljs-built_in">test</span>-3 --link <span class="hljs-built_in">test</span>-1 --link <span class="hljs-built_in">test</span>-2  <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8FDB;&#x5165; test-2 &#x4E3B;&#x8FDB;&#x7A0B;&#xFF0C;ping test-1 &#x548C; test-2</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-3
+/ <span class="hljs-comment"># ping test-1 -c3</span>
+PING <span class="hljs-built_in">test</span>-1 (172.17.0.2): 56 data bytes
+64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.087 ms
+64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.117 ms
+64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.111 ms
+
+--- <span class="hljs-built_in">test</span>-1 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.087/0.105/0.117 ms
+/ <span class="hljs-comment"># ping test-2 -c3</span>
+PING <span class="hljs-built_in">test</span>-2 (172.17.0.3): 56 data bytes
+64 bytes from 172.17.0.3: seq=0 ttl=64 time=0.262 ms
+64 bytes from 172.17.0.3: seq=1 ttl=64 time=0.079 ms
+64 bytes from 172.17.0.3: seq=2 ttl=64 time=0.116 ms
+
+--- <span class="hljs-built_in">test</span>-2 ping statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+round-trip min/avg/max = 0.079/0.152/0.262 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x5BB9;&#x5668;&#xFF0C;&#x6307;&#x5B9A; DNS &#x670D;&#x52A1;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-4 --hostname <span class="hljs-built_in">test</span>-4 --dns 8.8.8.8  <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x8FDB;&#x5165;&#x5230; test-4 &#x4E3B;&#x8FDB;&#x7A0B;&#xFF0C;&#x67E5;&#x770B; resolv.conf</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-4
+/ <span class="hljs-comment"># cat /etc/resolv.conf</span>
+nameserver 8.8.8.8</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; bridge &#x7C7B;&#x578B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network create <span class="hljs-built_in">test</span>_dns</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x5BB9;&#x5668;&#x4F7F;&#x7528; test_dns &#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-5 --network <span class="hljs-built_in">test</span>_dns <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. &#x8FDB;&#x5165; test-5 &#x4E3B;&#x8FDB;&#x7A0B; ping test-5</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-5
+/ <span class="hljs-comment"># ping test-5 -c3</span>
+PING <span class="hljs-built_in">test</span>-5 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.032 ms
+64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.093 ms
+64 bytes from 172.18.0.2: seq=2 ttl=64 time=0.090 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x67E5;&#x770B; test-5 &#x7684; resolv.conf</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-5
+/ <span class="hljs-comment"># cat /etc/resolv.conf</span>
+nameserver 127.0.0.11
+options ndots:0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>13. &#x521B;&#x5EFA;&#x65B0;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker run -it --rm --name <span class="hljs-built_in">test</span>-6 --network <span class="hljs-built_in">test</span>_dns <span class="hljs-_">-d</span> busybox</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>14. &#x8FDB;&#x56FE;&#x5230; test-6 ping test-5</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo docker attach <span class="hljs-built_in">test</span>-6
+/ <span class="hljs-comment"># ping test-5 -c3</span>
+PING <span class="hljs-built_in">test</span>-5 (172.18.0.2): 56 data bytes
+64 bytes from 172.18.0.2: seq=0 ttl=64 time=0.075 ms
+64 bytes from 172.18.0.2: seq=1 ttl=64 time=0.123 ms
+64 bytes from 172.18.0.2: seq=2 ttl=64 time=0.116 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>15. &#x5220;&#x9664;&#x6240;&#x6709;&#x521B;&#x5EFA;&#x7684;&#x5BB9;&#x5668;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> $(sudo docker ps | awk <span class="hljs-string">&apos;{print $1}&apos;</span> | awk <span class="hljs-string">&apos;(NR&gt;1)&apos;</span>) ; <span class="hljs-keyword">do</span> sudo docker stop <span class="hljs-variable">$i</span> ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>16. &#x5220;&#x9664;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo docker network rm <span class="hljs-built_in">test</span>_dns</code></pre>
 </div>
 </div>
 </div>
@@ -1002,7 +1687,7 @@ $ sudo docker logs <span class="hljs-built_in">test</span>2
                 </a>
                 
                 
-                <a href="../nginx/" class="navigation navigation-next " aria-label="Next page: NGINX">
+                <a href="k8s.html" class="navigation navigation-next " aria-label="Next page: K8S">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1013,7 +1698,7 @@ $ sudo docker logs <span class="hljs-built_in">test</span>2
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Docker","level":"1.3.1","depth":2,"next":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"用例","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]}]},"previous":{"title":"CONTAINER NETWORK","level":"1.3","depth":1,"path":"k8s-net/README.adoc","ref":"k8s-net/README.adoc","articles":[{"title":"Docker","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/docker.adoc","mtime":"2021-03-08T16:02:31.683Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-01T03:32:42.553Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"DOCKER","level":"1.3.1","depth":2,"next":{"title":"K8S","level":"1.3.2","depth":2,"path":"k8s-net/k8s.adoc","ref":"k8s-net/k8s.adoc","articles":[]},"previous":{"title":"CONTAINER NETWORK","level":"1.3","depth":1,"path":"k8s-net/README.adoc","ref":"k8s-net/README.adoc","articles":[{"title":"DOCKER","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]},{"title":"K8S","level":"1.3.2","depth":2,"path":"k8s-net/k8s.adoc","ref":"k8s-net/k8s.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/docker.adoc","mtime":"2021-04-03T15:50:26.798Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-05T07:31:19.924Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>用例 · GitBook</title>
+        <title>Use Case · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -138,7 +138,20 @@
                 <a href="../k8s-net/docker.html">
             
                     
-                    Docker
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../k8s-net/k8s.html">
+            
+                <a href="../k8s-net/k8s.html">
+            
+                    
+                    K8S
             
                 </a>
             
@@ -228,7 +241,7 @@
                 <a href="usecase.html">
             
                     
-                    用例
+                    Use Case
             
                 </a>
             
@@ -755,7 +768,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >用例</a>
+        <a href=".." >Use Case</a>
     </h1>
 </div>
 
@@ -1114,6 +1127,49 @@ server {
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#x76EE;&#x7684;</p></td>
 <td class="tableblock halign-left valign-top"><div><div class="paragraph">
 <p>Nginx Plus &#x4E0B;&#x670D;&#x52A1;&#x5668;&#x7AEF;&#x5982;&#x4F55;&#x83B7;&#x53D6;&#x771F;&#x5B9E;&#x5BA2;&#x6237;&#x7AEF; IP</p>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x64CD;&#x4F5C;</p></td>
+<td class="tableblock halign-left valign-top"><div><div class="listingblock">
+<div class="title"><strong>&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">upstream clientiphttp {
+  zone upstream_backend 64k;
+  server 10.1.10.6:8080 ;
+  server 10.1.10.7:8080 ;
+  server 10.1.10.8:8080 ;
+}
+
+server {
+  listen 8003;
+  status_zone server_backend;
+  location / {
+    status_zone location_backend;
+    proxy_<span class="hljs-built_in">set</span>_header Host <span class="hljs-variable">$host</span>;
+    proxy_<span class="hljs-built_in">set</span>_header X-Forwarded-Proto <span class="hljs-variable">$scheme</span>;
+    proxy_<span class="hljs-built_in">set</span>_header X-Real-IP <span class="hljs-variable">$remote_addr</span>;
+    proxy_<span class="hljs-built_in">set</span>_header X-Forwarded-For <span class="hljs-variable">$proxy_add_x_forwarded_for</span>;
+    proxy_pass http://clientiphttp;
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl http://192.168.100.71:8003/foo
+
+    Request Headers: {x-real-ip=[192.168.100.1], x-forwarded-proto=[http], host=[192.168.100.71], connection=[close], x-forwarded-for=[192.168.100.1], user-agent=[curl/7.64.1], accept=[*/*]}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl http://192.168.100.71:8003/foo -H <span class="hljs-string">&quot;X-Forwarded-For: 1.1.1.1&quot;</span>
+
+    Request Headers: {x-real-ip=[192.168.100.1], x-forwarded-proto=[http], host=[192.168.100.71], connection=[close], x-forwarded-for=[1.1.1.1, 192.168.100.1], user-agent=[curl/7.64.1], accept=[*/*]}</code></pre>
+</div>
 </div></div></td>
 </tr>
 </tbody>
@@ -2842,7 +2898,7 @@ server {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"用例","level":"1.4.4","depth":2,"next":{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]},"previous":{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"nginx/usecase.adoc","mtime":"2021-03-31T03:36:13.651Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-01T03:32:42.553Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Use Case","level":"1.4.4","depth":2,"next":{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]},"previous":{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"nginx/usecase.adoc","mtime":"2021-04-01T06:54:21.273Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-05T07:31:19.924Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

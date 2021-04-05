@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: test-nodeport
+  name: test-nodeport
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 9376
+  selector:
+    app: test-nodeport
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: test-nodeport
+  name: test-nodeport
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: test-nodeport
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: test-nodeport
+    spec:
+      containers:
+      - image: cloudadc/server_hostname:1.0
+        name: hostname
+        ports:
+        - containerPort: 9376

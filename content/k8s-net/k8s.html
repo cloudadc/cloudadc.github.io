@@ -1,0 +1,2099 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>K8S · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-donate/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../nginx/" />
+    
+    
+    <link rel="prev" href="docker.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/container-ingress">
+            
+                    
+                    CONTAINER INGRESS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    CONTAINER NETWORK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="docker.html">
+            
+                <a href="docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.2" data-path="k8s.html">
+            
+                <a href="k8s.html">
+            
+                    
+                    K8S
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../nginx/">
+            
+                <a href="../nginx/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../nginx/concepts.html">
+            
+                <a href="../nginx/concepts.html">
+            
+                    
+                    入门到精通
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../nginx/install.html">
+            
+                <a href="../nginx/install.html">
+            
+                    
+                    离线安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../nginx/controller.html">
+            
+                <a href="../nginx/controller.html">
+            
+                    
+                    Nginx Controller
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="../nginx/apidrive.html">
+            
+                <a href="../nginx/apidrive.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../nginx/usecase.html">
+            
+                <a href="../nginx/usecase.html">
+            
+                    
+                    Use Case
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.4.1" data-path="../nginx/docker.html">
+            
+                <a href="../nginx/docker.html">
+            
+                    
+                    Docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../nginx/app/">
+            
+                <a href="../nginx/app/">
+            
+                    
+                    现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/nodejs-honeypot/">
+            
+                    
+                    NODE.JS HONEYPOT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../dist.html">
+            
+                <a href="../dist.html">
+            
+                    
+                    DISTRIBUTED
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../zk/">
+            
+                <a href="../zk/">
+            
+                    
+                    ZooKeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/distribute-dev-framework/content/dubbo">
+            
+                    
+                    DUBBO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../mongo/">
+            
+                <a href="../mongo/">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.3.1" data-path="../mongo/viewpoint/presentation.html">
+            
+                <a href="../mongo/viewpoint/presentation.html">
+            
+                    
+                    定位
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.3.1.1" data-path="../mongo/viewpoint/5thingsfornosql.html">
+            
+                <a href="../mongo/viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.1.2" data-path="../mongo/viewpoint/oversea.html">
+            
+                <a href="../mongo/viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.1.3" data-path="../mongo/viewpoint/td.html">
+            
+                <a href="../mongo/viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.1.4" data-path="../mongo/viewpoint/cards.html">
+            
+                <a href="../mongo/viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.2" data-path="../mongo/dba/basic.html">
+            
+                <a href="../mongo/dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.3" data-path="../mongo/dev/">
+            
+                <a href="../mongo/dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.3.3.1" data-path="../mongo/dev/aggregation.html">
+            
+                <a href="../mongo/dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.3.2" data-path="../mongo/dev/aggregation-sum.html">
+            
+                <a href="../mongo/dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.3.3" data-path="../mongo/dev/transactions.html">
+            
+                <a href="../mongo/dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.3.4" data-path="../mongo/dev/java.html">
+            
+                <a href="../mongo/dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.3.5" data-path="../mongo/dev/geo.html">
+            
+                <a href="../mongo/dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4" data-path="../mongo/dba/cluster-admin.html">
+            
+                <a href="../mongo/dba/cluster-admin.html">
+            
+                    
+                    运维
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.3.4.1" data-path="../mongo/dba/replication.html">
+            
+                <a href="../mongo/dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.2" data-path="../mongo/dba/rs-deployments.html">
+            
+                <a href="../mongo/dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.3" data-path="../mongo/dba/rs-maintenance.html">
+            
+                <a href="../mongo/dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.4" data-path="../mongo/dba/sharding.html">
+            
+                <a href="../mongo/dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.5" data-path="../mongo/dba/dba.html">
+            
+                <a href="../mongo/dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.6" data-path="../mongo/dba/sh-restore.html">
+            
+                <a href="../mongo/dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.7" data-path="../mongo/dba/opsmanager.html">
+            
+                <a href="../mongo/dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.8" data-path="../mongo/dba/perf.html">
+            
+                <a href="../mongo/dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.4.9" data-path="../mongo/dba/troubleshooting.html">
+            
+                <a href="../mongo/dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3.5" data-path="../mongo/dba/security.html">
+            
+                <a href="../mongo/dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../kafka/">
+            
+                <a href="../kafka/">
+            
+                    
+                    Kafka
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.4.1" data-path="../kafka/installing/">
+            
+                <a href="../kafka/installing/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../elastic/">
+            
+                <a href="../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.6" data-path="../spark/">
+            
+                <a href="../spark/">
+            
+                    
+                    Spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >K8S</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="k8s-&#x7F51;&#x7EDC;">K8S &#x7F51;&#x7EDC;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_kubenet">kubenet</a>
+<ul class="sectlevel2">
+<li><a href="#_kubenet_2">kubenet &#x914D;&#x7F6E;</a></li>
+<li><a href="#_pod">Pod &#x5185;&#x591A;&#x5BB9;&#x5668;&#x4E0B;&#x5730;&#x5740;&#x5206;&#x914D;</a></li>
+<li><a href="#_cluster_ip_service">Cluster IP &#x7C7B;&#x578B; Service</a></li>
+<li><a href="#_cluster_ip_service_2">Cluster IP &#x7C7B;&#x578B; Service &#x8BBF;&#x95EE;&#x8C03;&#x8BD5;</a></li>
+<li><a href="#__clientip_service">&#x57FA;&#x4E8E; ClientIP &#x7C7B;&#x578B;&#x7684; Service</a></li>
+<li><a href="#__cluster_ip_service">&#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x8868;&#x5411;&#x5916;&#x7F51;&#x53D1;&#x5E03; Cluster IP &#x7C7B;&#x578B; Service</a></li>
+<li><a href="#__external_ip_cluster_ip_service">&#x901A;&#x8FC7; External IP &#x5411;&#x5916;&#x7F51;&#x53D1;&#x5E03; Cluster IP &#x7C7B;&#x578B; Service</a></li>
+<li><a href="#_nodeport_service">NodePort &#x7C7B;&#x578B; Service</a></li>
+<li><a href="#_nodeport_service_2">NodePort &#x7C7B;&#x578B; Service &#x8BBF;&#x95EE;&#x8C03;&#x8BD5;</a></li>
+<li><a href="#_k8s_dns">K8S DNS</a></li>
+<li><a href="#_k8s_hostport">K8S HostPort</a></li>
+<li><a href="#_k8s_hostnetwork">K8S HostNetwork</a></li>
+</ul>
+</li>
+<li><a href="#_flannel">Flannel</a>
+<ul class="sectlevel2">
+<li><a href="#_flannel_2">Flannel &#x914D;&#x7F6E;</a></li>
+<li><a href="#_td">TD</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_kubenet">kubenet</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_kubenet_2">kubenet &#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. K8S &#x5B89;&#x88C5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo kubeadm init --pod-network-cidr=192.168.0.0/16</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x9ED8;&#x8BA4;&#x7684; network-plugin</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo cat /var/lib/kubelet/kubeadm-flags.env
+KUBELET_KUBEADM_ARGS=<span class="hljs-string">&quot;--network-plugin=cni --pod-infra-container-image=k8s.gcr.io/pause:3.2&quot;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x4FEE;&#x6539;&#x9ED8;&#x8BA4;&#x7684; cni &#x7F51;&#x7EDC;&#x5230; kubenet</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo sed -i <span class="hljs-string">&apos;s/cni/kubenet/&apos;</span> /var/lib/kubelet/kubeadm-flags.env</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x91CD;&#x542F; kubelet</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo systemctl restart kubelet.service</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x9A8C;&#x8BC1; kubelet &#x4F7F;&#x7528;&#x7684; network-plugin &#x4E3A; kubenet</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ps -ef | grep kubelet
+root        771      1  2 15:47 ?        00:00:42 /usr/bin/kubelet --bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf --kubeconfig=/etc/kubernetes/kubelet.conf --config=/var/lib/kubelet/config.yaml --network-plugin=kubenet --pod-infra-container-image=k8s.gcr.io/pause:3.2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x67E5;&#x770B; nodes</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get nodes --no-headers
+node-1   Ready   control-plane,master   8m10s   v1.20.5</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B; Pods</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods --all-namespaces --no-headers
+kube-system   coredns-74ff55c5b-kjbw2          1/1   Running   0     8m40s
+kube-system   coredns-74ff55c5b-vc586          1/1   Running   0     8m40s
+kube-system   etcd-node-1                      1/1   Running   1     8m56s
+kube-system   kube-apiserver-node-1            1/1   Running   2     8m56s
+kube-system   kube-controller-manager-node-1   1/1   Running   1     8m56s
+kube-system   kube-proxy-cxhxp                 1/1   Running   1     8m40s
+kube-system   kube-scheduler-node-1            1/1   Running   1     8m56s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x67E5;&#x770B;&#x4E3B;&#x673A;&#x7A7A;&#x95F4;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+4: cbr0: &lt;BROADCAST,MULTICAST,PROMISC,UP,LOWER_UP&gt; mtu 1500 qdisc htb state UP group default qlen 1000
+    link/ether 82:8d:06:e8:d7:13 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.1/24 brd 192.168.0.255 scope global cbr0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::808d:6ff:fee8:d713/64 scope link
+       valid_lft forever preferred_lft forever
+5: veth3b55bb42@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cbr0 state UP group default
+    link/ether 66:19:1b:53:53:02 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::6419:1bff:fe53:5302/64 scope link
+       valid_lft forever preferred_lft forever
+6: vethdfd6e306@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cbr0 state UP group default
+    link/ether 8e:10:37:e9:f3:71 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8c10:37ff:fee9:f371/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_pod">Pod &#x5185;&#x591A;&#x5BB9;&#x5668;&#x4E0B;&#x5730;&#x5740;&#x5206;&#x914D;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x591A;&#x5BB9;&#x5668; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> pod.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/pod.yaml">pod.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x4E3B;&#x673A;&#x7F51;&#x7EDC;&#x7A7A;&#x95F4;&#x65B0;&#x589E;&#x52A0;&#x7684;&#x865A;&#x62DF;&#x7F51;&#x5361;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+13: vethe375804a@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cbr0 state UP group default
+    link/ether d6:43:ff:72:e5:73 brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::d443:ffff:fe72:e573/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x767B;&#x5F55; container-1 &#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span> -c container-1 -- sh
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@<span class="hljs-keyword">if</span>13: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether da:28:94:7b:5c:30 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.10/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x767B;&#x5F55; container-2 &#x67E5;&#x770B;&#x5BB9;&#x5668;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span> -c container-2 -- sh
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@<span class="hljs-keyword">if</span>13: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether da:28:94:7b:5c:30 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.10/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5220;&#x9664; test</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl delete <span class="hljs-_">-f</span> pod.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x521B;&#x5EFA;&#x4E24;&#x4E2A; POD</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> deployment.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/deployment.yaml">deployment.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B;&#x4E3B;&#x673A;&#x7F51;&#x7EDC;&#x7A7A;&#x95F4;&#x65B0;&#x589E;&#x52A0;&#x7684;&#x865A;&#x62DF;&#x63A5;&#x53E3;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+14: vethe3d49bdf@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cbr0 state UP group default
+    link/ether 7a:0b:0b:e6:ed:55 brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::780b:bff:fee6:ed55/64 scope link
+       valid_lft forever preferred_lft forever
+15: veth437f1591@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cbr0 state UP group default
+    link/ether 66:9f:3f:3e:e7:f6 brd ff:ff:ff:ff:ff:ff link-netnsid 3
+    inet6 fe80::649f:3fff:fe3e:e7f6/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x67E5;&#x770B; POD  1 &#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span>-6dbc498c76-n4sss -c container-1 -- sh
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@<span class="hljs-keyword">if</span>14: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether e2:a0:5c:6a:43:2f brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.11/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>10. &#x67E5;&#x770B; POD 2 &#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl <span class="hljs-built_in">exec</span> -it <span class="hljs-built_in">test</span>-6dbc498c76-46vk6 -c container-1 -- sh
+/ <span class="hljs-comment"># ip a</span>
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@<span class="hljs-keyword">if</span>15: &lt;BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN&gt; mtu 1500 qdisc noqueue
+    link/ether 36:c5:0b:93:be:a4 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.0.12/24 brd 192.168.0.255 scope global eth0
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>11. K8S &#x8282;&#x70B9;&#x4E0A; tcpdump &#x6355;&#x83B7; icmp &#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo tcpdump -nni cbr0 icmp</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>12. &#x5728; POD 1 &#x7684; container-1 &#x5BB9;&#x5668; ping POD 2 &#x7684; container-1</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">ping 192.168.0.12</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cluster_ip_service">Cluster IP &#x7C7B;&#x578B; Service</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B; Service IP &#x6BB5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ps -ef | grep apiserver | grep service-cluster-ip-range
+root       5626   5597  4 20:43 ?        00:06:25 kube-apiserver --advertise-address=10.1.10.9 --allow-privileged=<span class="hljs-literal">true</span> --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=<span class="hljs-literal">true</span> --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key --etcd-servers=https://127.0.0.1:2379 --insecure-port=0 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>--service-cluster-ip-range=10.96.0.0/12</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> service.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/service.yaml">service.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; POD &#x540D;&#x79F0;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods --no-headers | awk <span class="hljs-string">&apos;{print $1}&apos;</span>
+<span class="hljs-built_in">test</span>-service-6f6f8db499-ntkcc
+<span class="hljs-built_in">test</span>-service-6f6f8db499<span class="hljs-_">-s</span>2dwn</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B; Service IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-service --no-headers | awk <span class="hljs-string">&apos;{print $3}&apos;</span>
+10.107.168.72</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5} ; <span class="hljs-keyword">do</span> curl 10.107.168.72 ; <span class="hljs-keyword">done</span>
+<span class="hljs-built_in">test</span>-service-6f6f8db499<span class="hljs-_">-s</span>2dwn
+<span class="hljs-built_in">test</span>-service-6f6f8db499-ntkcc
+<span class="hljs-built_in">test</span>-service-6f6f8db499<span class="hljs-_">-s</span>2dwn
+<span class="hljs-built_in">test</span>-service-6f6f8db499-ntkcc
+<span class="hljs-built_in">test</span>-service-6f6f8db499<span class="hljs-_">-s</span>2dwn</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x6DFB;&#x52A0;&#x4E00;&#x6761; iptables &#x89C4;&#x5219;&#xFF0C;&#x65B9;&#x5411; POD &#x8BBF;&#x95EE; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo iptables -I FORWARD 2 -j ACCEPT</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x4E34;&#x65F6; POD&#xFF0C;&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl run -it --rm --restart=Never busybox --image=busybox sh
+If you don<span class="hljs-string">&apos;t see a command prompt, try pressing enter.
+/ # wget -S -O - 10.107.168.72
+
+/ # wget -S -O - 192.168.0.20:9376</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_cluster_ip_service_2">Cluster IP &#x7C7B;&#x578B; Service &#x8BBF;&#x95EE;&#x8C03;&#x8BD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> echoserver.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/echoserver.yaml">echoserver.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B; SERVICE &#x53CA; POD IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc echoserver --no-headers
+echoserver   ClusterIP   10.106.23.233   &lt;none&gt;   8877/TCP   45s
+
+$ kubectl get pods -o wide --no-headers
+echoserver-6dbbc8d5<span class="hljs-built_in">fc</span><span class="hljs-_">-f</span>455t   1/1   Running   0     3m24s   192.168.0.33   node-1   &lt;none&gt;   &lt;none&gt;
+echoserver-6dbbc8d5<span class="hljs-built_in">fc</span>-n4smh   1/1   Running   0     3m24s   192.168.0.34   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. nat &#x8868;&#x4E2D; PREROUTING &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 338 packets, 15210 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+  521 24674 KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    2   128 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nat &#x8868;&#x4E2D; KUBE-SERVICES &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.106.23.233        /* default/echoserver cluster IP */ tcp dpt:8877
+    0     0 KUBE-SVC-HOYURHXRFA5BUYEO  tcp  --  *      *       0.0.0.0/0            10.106.23.233        /* default/echoserver cluster IP */ tcp dpt:8877
+  537 31690 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule <span class="hljs-keyword">in</span> this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.106.23.233
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.106.23.233        /* default/echoserver cluster IP */ tcp dpt:8877
+    0     0 KUBE-SVC-HOYURHXRFA5BUYEO  tcp  --  *      *       0.0.0.0/0            10.106.23.233        /* default/echoserver cluster IP */ tcp dpt:8877</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. nat &#x8868;&#x4E2D; KUBE-SVC- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SVC-HOYURHXRFA5BUYEO
+Chain KUBE-SVC-HOYURHXRFA5BUYEO (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-SEP-652URVIXIJWATNFG  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ statistic mode random probability 0.50000000000
+    0     0 KUBE-SEP-ASOAWBDFEODJJPJH  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. nat &#x8868;&#x4E2D; KUBE-SEP- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SEP-652URVIXIJWATNFG
+Chain KUBE-SEP-652URVIXIJWATNFG (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.33         0.0.0.0/0            /* default/echoserver */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ tcp to:192.168.0.33:8877
+
+$ sudo iptables -t nat -vnL KUBE-SEP-ASOAWBDFEODJJPJH
+Chain KUBE-SEP-ASOAWBDFEODJJPJH (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.34         0.0.0.0/0            /* default/echoserver */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ tcp to:192.168.0.34:8877</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x8C03;&#x6574; echoserver &#x4E3A; 3 replicas</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pod -o wide --no-headers
+echoserver-6dbbc8d5<span class="hljs-built_in">fc</span>-hqxdv   1/1   Running   0     13m   192.168.0.33   node-1   &lt;none&gt;   &lt;none&gt;
+echoserver-6dbbc8d5<span class="hljs-built_in">fc</span>-kj27r   1/1   Running   0     13m   192.168.0.34   node-1   &lt;none&gt;   &lt;none&gt;
+echoserver-6dbbc8d5<span class="hljs-built_in">fc</span>-tgj24   1/1   Running   0     6s    192.168.0.35   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. nat &#x8868;&#x4E2D; KUBE-SVC- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SVC-HOYURHXRFA5BUYEO
+Chain KUBE-SVC-HOYURHXRFA5BUYEO (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-SEP-652URVIXIJWATNFG  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ statistic mode random probability 0.33333333349
+    0     0 KUBE-SEP-ASOAWBDFEODJJPJH  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ statistic mode random probability 0.50000000000
+    0     0 KUBE-SEP-7ZRSXHFJXB4D6W3U  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. nat &#x8868;&#x4E2D; KUBE-SEP- &#x89C4;&#x5219;&#xFF08;&#x65B0;&#x589E;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SEP-7ZRSXHFJXB4D6W3U
+Chain KUBE-SEP-7ZRSXHFJXB4D6W3U (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.35         0.0.0.0/0            /* default/echoserver */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ tcp to:192.168.0.35:8877</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__clientip_service">&#x57FA;&#x4E8E; ClientIP &#x7C7B;&#x578B;&#x7684; Service</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> clientip.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/clientip.yaml">clientip.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B; Service &#x548C; POD IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-clientip --no-headers
+<span class="hljs-built_in">test</span>-clientip   ClusterIP   10.107.215.65   &lt;none&gt;   80/TCP   7h26m
+
+$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk   1/1   Running   0     7h27m   192.168.0.37   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-ktlxt   1/1   Running   0     7h27m   192.168.0.36   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5} ; <span class="hljs-keyword">do</span> curl 10.107.215.65 ; <span class="hljs-keyword">done</span>
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk
+<span class="hljs-built_in">test</span>-clientip-55c6c8ddcd-2ntlk</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nat &#x8868;&#x4E2D; PREROUTING &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 612 packets, 27540 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 3258  149K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    2   128 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. nat &#x8868;&#x4E2D; KUBE-SERVICES &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    8   480 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.107.215.65        /* default/<span class="hljs-built_in">test</span>-clientip cluster IP */ tcp dpt:80
+    8   480 KUBE-SVC-JASYFCTGROL6PGNE  tcp  --  *      *       0.0.0.0/0            10.107.215.65        /* default/<span class="hljs-built_in">test</span>-clientip cluster IP */ tcp dpt:80
+  814 48164 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule <span class="hljs-keyword">in</span> this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.107.215.65
+    8   480 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.107.215.65        /* default/<span class="hljs-built_in">test</span>-clientip cluster IP */ tcp dpt:80
+    8   480 KUBE-SVC-JASYFCTGROL6PGNE  tcp  --  *      *       0.0.0.0/0            10.107.215.65        /* default/<span class="hljs-built_in">test</span>-clientip cluster IP */ tcp dpt:80</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. nat &#x8868;&#x4E2D; KUBE-SVC- &#x89C4;&#x5219;&#xFF08;recent: CHECK seconds: 10800 reap name: KUBE-SEP-2WE6A5EBAO3UGN4N side: source mask: 255.255.255.255&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SVC-JASYFCTGROL6PGNE
+Chain KUBE-SVC-JASYFCTGROL6PGNE (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-SEP-2WE6A5EBAO3UGN4N  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */ recent: CHECK seconds: 10800 reap name: KUBE-SEP-2WE6A5EBAO3UGN4N side: <span class="hljs-built_in">source</span> mask: 255.255.255.255
+    7   420 KUBE-SEP-LXKS3SWKA3X476YD  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */ recent: CHECK seconds: 10800 reap name: KUBE-SEP-LXKS3SWKA3X476YD side: <span class="hljs-built_in">source</span> mask: 255.255.255.255
+    0     0 KUBE-SEP-2WE6A5EBAO3UGN4N  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */ statistic mode random probability 0.50000000000
+    1    60 KUBE-SEP-LXKS3SWKA3X476YD  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. nat &#x8868;&#x4E2D; KUBE-SEP- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SEP-2WE6A5EBAO3UGN4N
+Chain KUBE-SEP-2WE6A5EBAO3UGN4N (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.36         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */ recent: SET name: KUBE-SEP-2WE6A5EBAO3UGN4N side: <span class="hljs-built_in">source</span> mask: 255.255.255.255 tcp to:192.168.0.36:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-LXKS3SWKA3X476YD
+Chain KUBE-SEP-LXKS3SWKA3X476YD (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.37         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */
+    8   480 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-clientip */ recent: SET name: KUBE-SEP-LXKS3SWKA3X476YD side: <span class="hljs-built_in">source</span> mask: 255.255.255.255 tcp to:192.168.0.37:9376</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__cluster_ip_service">&#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x8868;&#x5411;&#x5916;&#x7F51;&#x53D1;&#x5E03; Cluster IP &#x7C7B;&#x578B; Service</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> service.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B; Node IP, Service IP&#xFF0C;Pod IP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get node -o wide --no-headers
+node-1   Ready   control-plane,master   15h   v1.20.5   10.1.10.9   &lt;none&gt;   Ubuntu 18.04 LTS   4.15.0-140-generic   docker://20.10.3
+
+$ kubectl get svc <span class="hljs-built_in">test</span>-service --no-headers
+<span class="hljs-built_in">test</span>-service   ClusterIP   10.106.235.190   &lt;none&gt;   80/TCP   112s
+
+$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-service-6f6f8db499-6j7nm   1/1   Running   0     2m24s   192.168.0.38   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-service-6f6f8db499-m8lsx   1/1   Running   0     2m24s   192.168.0.39   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B; Service &#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ps -ef | grep kubelet | grep service-cluster-ip-range
+root       2582   2554  4 08:26 ?        00:03:03 kube-apiserver --advertise-address=10.1.10.9 --allow-privileged=<span class="hljs-literal">true</span> --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=<span class="hljs-literal">true</span> --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key --etcd-servers=https://127.0.0.1:2379 --insecure-port=0 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x5728; 10.1.10.8 &#x4E0A;&#x914D;&#x7F6E;&#x8DEF;&#x7531;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ip r
+default via 10.1.10.2 dev ens33 proto static metric 100
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.8 metric 100
+
+# ip route add 10.96.0.0/12 via 10.1.10.9
+
+# ip r
+default via 10.1.10.2 dev ens33 proto static metric 100
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.8 metric 100
+10.96.0.0/12 via 10.1.10.9 dev ens33</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x5728; 10.1.10.8 &#x4E0A;&#x8BBF;&#x95EE; test-service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl 10.106.235.190</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__external_ip_cluster_ip_service">&#x901A;&#x8FC7; External IP &#x5411;&#x5916;&#x7F51;&#x53D1;&#x5E03; Cluster IP &#x7C7B;&#x578B; Service</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x4E00;&#x4E2A; External IP Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> externalip.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/externalip.yaml">externalip.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-externalip
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+<span class="hljs-built_in">test</span>-externalip   ClusterIP   10.97.132.81   10.1.10.9     80/TCP    101s</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x901A;&#x8FC7; EXTERNAL-IP &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5} ; <span class="hljs-keyword">do</span> curl 10.1.10.9 ; <span class="hljs-keyword">done</span>
+<span class="hljs-built_in">test</span>-externalip-8<span class="hljs-built_in">fc</span>497f8-jncpv
+<span class="hljs-built_in">test</span>-externalip-8<span class="hljs-built_in">fc</span>497f8-jncpv
+<span class="hljs-built_in">test</span>-externalip-8<span class="hljs-built_in">fc</span>497f8-phldw
+<span class="hljs-built_in">test</span>-externalip-8<span class="hljs-built_in">fc</span>497f8-phldw
+<span class="hljs-built_in">test</span>-externalip-8<span class="hljs-built_in">fc</span>497f8-phldw</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nat &#x8868;&#x4E2D; PREROUTING &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 1165 packets, 52425 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 8114  369K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    4   296 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. nat &#x8868;&#x4E2D; KUBE-SERVICES &#x89C4;&#x5219;&#xFF08;&#x65B0;&#x589E;&#x52A0;&#x4E86;&#x4E24;&#x6761;&#x89C4;&#x5219;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.132.81         /* default/<span class="hljs-built_in">test</span>-externalip cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.97.132.81         /* default/<span class="hljs-built_in">test</span>-externalip cluster IP */ tcp dpt:80
+   27  1700 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80
+   20  1280 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80 PHYSDEV match ! --physdev-is-in ADDRTYPE match src-type !LOCAL
+    7   420 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80 ADDRTYPE match dst-type LOCAL
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+ 1429 84328 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule <span class="hljs-keyword">in</span> this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.97.132.81
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.132.81         /* default/<span class="hljs-built_in">test</span>-externalip cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.97.132.81         /* default/<span class="hljs-built_in">test</span>-externalip cluster IP */ tcp dpt:80
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.1.10.9
+   27  1700 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80
+   20  1280 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80 PHYSDEV match ! --physdev-is-in ADDRTYPE match src-type !LOCAL
+    7   420 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/<span class="hljs-built_in">test</span>-externalip external IP */ tcp dpt:80 ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. nat &#x8868;&#x4E2D; KUBE-SVC- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SVC-CITWPFL6QQOR27AK
+Chain KUBE-SVC-CITWPFL6QQOR27AK (3 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+   14   884 KUBE-SEP-RRILQQHBGE5IMDI4  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */ statistic mode random probability 0.50000000000
+   13   816 KUBE-SEP-JRIE3IXDMRY6BNG5  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. nat &#x8868;&#x4E2D; KUBE-SEP- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SEP-RRILQQHBGE5IMDI4
+Chain KUBE-SEP-RRILQQHBGE5IMDI4 (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.40         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */
+   14   884 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */ tcp to:192.168.0.40:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-JRIE3IXDMRY6BNG5
+Chain KUBE-SEP-JRIE3IXDMRY6BNG5 (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.41         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */
+   13   816 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-externalip */ tcp to:192.168.0.41:9376</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodeport_service">NodePort &#x7C7B;&#x578B; Service</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; NodePort &#x7C7B;&#x578B; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> nodeport.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/nodeport.yaml">nodeport.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; Service &#x548C; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-nodeport --no-headers
+<span class="hljs-built_in">test</span>-nodeport   NodePort   10.97.231.111   &lt;none&gt;   80:32228/TCP   98s
+
+$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7-4kftd   1/1   Running   0     2m38s   192.168.0.42   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7<span class="hljs-_">-s</span>2jz5   1/1   Running   0     2m38s   192.168.0.43   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..5} ; <span class="hljs-keyword">do</span> curl 10.1.10.9:32228 ; <span class="hljs-keyword">done</span>
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7<span class="hljs-_">-s</span>2jz5
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7<span class="hljs-_">-s</span>2jz5
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7-4kftd
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7-4kftd
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7-4kftd</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nodeport_service_2">NodePort &#x7C7B;&#x578B; Service &#x8BBF;&#x95EE;&#x8C03;&#x8BD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; NodePort &#x7C7B;&#x578B; Service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> nodeport.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; Service &#x548C; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-nodeport --no-headers
+<span class="hljs-built_in">test</span>-nodeport   NodePort   10.97.231.111   &lt;none&gt;   80:32228/TCP   98s
+
+$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7-4kftd   1/1   Running   0     2m38s   192.168.0.42   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-nodeport-5d4bdfc7c7<span class="hljs-_">-s</span>2jz5   1/1   Running   0     2m38s   192.168.0.43   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..1000} ; <span class="hljs-keyword">do</span> curl 10.1.10.9:32228 ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nat &#x8868;&#x4E2D; PREROUTING &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 422 packets, 18990 bytes)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+15548  799K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    4   296 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. nat &#x8868;&#x4E2D; KUBE-SERVICES &#x89C4;&#x5219;&#xFF08;Cluster IP &#x89C4;&#x5219;&#x4F9D;&#x7136;&#x5B58;&#x5728;&#xFF0C;&#x65B0;&#x589E; KUBE-NODEPORTS &#x94FE;&#xFF09;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.231.111        /* default/<span class="hljs-built_in">test</span>-nodeport cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            10.97.231.111        /* default/<span class="hljs-built_in">test</span>-nodeport cluster IP */ tcp dpt:80
+ 5798  367K KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule <span class="hljs-keyword">in</span> this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.97.231.111
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.231.111        /* default/<span class="hljs-built_in">test</span>-nodeport cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            10.97.231.111        /* default/<span class="hljs-built_in">test</span>-nodeport cluster IP */ tcp dpt:80
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep KUBE-NODEPORTS
+ 6098  385K KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule <span class="hljs-keyword">in</span> this chain */ ADDRTYPE match dst-type LOCAL</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. nat &#x8868;&#x4E2D; KUBE-NODEPORTS &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-NODEPORTS
+Chain KUBE-NODEPORTS (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 5015  321K KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */ tcp dpt:32228
+ 5015  321K KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */ tcp dpt:32228</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. nat &#x8868;&#x4E2D; KUBE-SVC- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SVC-CIFSXFMKAAMIL4QG
+Chain KUBE-SVC-CIFSXFMKAAMIL4QG (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 2560  164K KUBE-SEP-EEAMLDZD2ZLPIVQ3  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */ statistic mode random probability 0.50000000000
+ 2455  157K KUBE-SEP-3C6WTWWWE5M27K7C  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. nat &#x8868;&#x4E2D; KUBE-SEP- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-SEP-EEAMLDZD2ZLPIVQ3
+Chain KUBE-SEP-EEAMLDZD2ZLPIVQ3 (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.42         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */
+ 2560  164K DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */ tcp to:192.168.0.42:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-3C6WTWWWE5M27K7C
+Chain KUBE-SEP-3C6WTWWWE5M27K7C (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.43         0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */
+ 2455  157K DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/<span class="hljs-built_in">test</span>-nodeport */ tcp to:192.168.0.43:9376</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>9. &#x8DE8; Work Node SNAT &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-MARK-MASQ
+Chain KUBE-MARK-MASQ (15 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 5015  321K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            MARK or 0x4000
+
+$ sudo iptables -t nat -vnL KUBE-POSTROUTING
+Chain KUBE-POSTROUTING (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+ 4258  228K RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            mark match ! 0x4000/0x4000
+ 5015  321K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            MARK xor 0x4000
+ 5015  321K MASQUERADE  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service traffic requiring SNAT */</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_k8s_dns">K8S DNS</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> dns.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="files/dns.yaml">dns.yaml</a></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x67E5;&#x770B;&#x521B;&#x5EFA;&#x7684; Service &#x548C; Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get svc <span class="hljs-built_in">test</span>-dns --no-headers
+<span class="hljs-built_in">test</span>-dns   ClusterIP   10.106.139.47   &lt;none&gt;   80/TCP   96s
+
+$ kubectl get pods -o wide --no-headers
+<span class="hljs-built_in">test</span>-dns-6bff6cbdc5-2n6jx   1/1   Running   0     2m17s   192.168.0.44   node-1   &lt;none&gt;   &lt;none&gt;
+<span class="hljs-built_in">test</span>-dns-6bff6cbdc5-hq4fx   1/1   Running   0     2m17s   192.168.0.45   node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x4E34;&#x65F6; POD&#xFF0C;DNS &#x67E5;&#x8BE2;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl run -it --rm --restart=Never busybox --image=busybox sh
+If you don<span class="hljs-string">&apos;t see a command prompt, try pressing enter.
+/ #</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nslookup Service &#x57DF;&#x540D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># nslookup test-dns</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	<span class="hljs-built_in">test</span>-dns.default.svc.cluster.local
+Address: 10.106.139.47
+
+/ <span class="hljs-comment"># nslookup test-dns.default.svc.cluster.local</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	<span class="hljs-built_in">test</span>-dns.default.svc.cluster.local
+Address: 10.106.139.47</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. nslookup PTR &#x8BB0;&#x5F55;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># nslookup 10.106.139.47</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+47.139.106.10.in-addr.arpa	name = <span class="hljs-built_in">test</span>-dns.default.svc.cluster.local
+
+
+/ <span class="hljs-comment"># nslookup 192.168.0.44</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+44.0.168.192.in-addr.arpa	name = 192-168-0-44.test-dns.default.svc.cluster.local
+
+
+/ <span class="hljs-comment"># nslookup 192.168.0.45</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+45.0.168.192.in-addr.arpa	name = 192-168-0-45.test-dns.default.svc.cluster.local</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. nslookup lookup Pod &#x57DF;&#x540D;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">/ <span class="hljs-comment"># nslookup 192-168-0-44.test-dns.default.svc.cluster.local</span>
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	192-168-0-44.test-dns.default.svc.cluster.local
+Address: 192.168.0.44</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_k8s_hostport">K8S HostPort</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; HostPort Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> hostPort.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/hostPort.yaml">hostPort.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 10.1.10.9:8081
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href=<span class="hljs-string">&quot;http://nginx.org/&quot;</span>&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href=<span class="hljs-string">&quot;http://nginx.com/&quot;</span>&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you <span class="hljs-keyword">for</span> using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. nat &#x8868;&#x4E2D; KUBE-HOSTPORTS &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-HOSTPORTS
+Chain KUBE-HOSTPORTS (2 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    1    60 KUBE-HP-KWJPLLZCGIIKHTTD  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* nginx_default hostport 8081 */ tcp dpt:8081</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. nat &#x8868;&#x4E2D; KUBE-HP- &#x89C4;&#x5219;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ sudo iptables -t nat -vnL KUBE-HP-KWJPLLZCGIIKHTTD
+Chain KUBE-HP-KWJPLLZCGIIKHTTD (1 references)
+ pkts bytes target     prot opt <span class="hljs-keyword">in</span>     out     <span class="hljs-built_in">source</span>               destination
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.47         0.0.0.0/0            /* nginx_default hostport 8081 */
+    1    60 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* nginx_default hostport 8081 */ tcp to:192.168.0.47:80</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_k8s_hostnetwork">K8S HostNetwork</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; HostNetwork Pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> hostNetwork.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/hostNetwork.yaml">hostNetwork.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x8BBF;&#x95EE;&#x670D;&#x52A1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 10.1.10.9
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;Welcome to nginx!&lt;/title&gt;
+&lt;style&gt;
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+&lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to nginx!&lt;/h1&gt;
+&lt;p&gt;If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.&lt;/p&gt;
+
+&lt;p&gt;For online documentation and support please refer to
+&lt;a href=<span class="hljs-string">&quot;http://nginx.org/&quot;</span>&gt;nginx.org&lt;/a&gt;.&lt;br/&gt;
+Commercial support is available at
+&lt;a href=<span class="hljs-string">&quot;http://nginx.com/&quot;</span>&gt;nginx.com&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Thank you <span class="hljs-keyword">for</span> using nginx.&lt;/em&gt;&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flannel">Flannel</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_flannel_2">Flannel &#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. kubeadm &#x521D;&#x59CB;&#x5316;&#x96C6;&#x7FA4;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo kubeadm init --pod-network-cidr=10.244.0.0/16</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5B89;&#x88C5;&#x7F51;&#x7EDC;&#x63D2;&#x4EF6;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> kube-flannel-host-gw.yml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><a href="files/kube-flannel-host-gw.yml">kube-flannel-host-gw.yml</a></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x52A0;&#x5165;&#x4E00;&#x4E2A; Work Node</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get nodes
+NAME     STATUS   ROLES                  AGE    VERSION
+node-1   Ready    control-plane,master   84m    v1.20.5
+node-2   Ready    &lt;none&gt;                 7m9s   v1.20.5</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x67E5;&#x770B;&#x5B89;&#x88C5;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                             READY   STATUS    RESTARTS   AGE     IP           NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-74ff55c5b-dxwb6          1/1     Running   1          84m     10.244.0.4   node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   coredns-74ff55c5b-vv8bx          1/1     Running   1          84m     10.244.0.5   node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   etcd-node-1                      1/1     Running   1          85m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-apiserver-node-1            1/1     Running   1          85m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-controller-manager-node-1   1/1     Running   1          85m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-flannel-ds-v8n7m            1/1     Running   0          7m39s   10.1.10.10   node-2   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-flannel-ds-wsxps            1/1     Running   1          81m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-proxy-24l9w                 1/1     Running   1          84m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-proxy-gsdwh                 1/1     Running   0          7m39s   10.1.10.10   node-2   &lt;none&gt;           &lt;none&gt;
+kube-system   kube-scheduler-node-1            1/1     Running   1          85m     10.1.10.9    node-1   &lt;none&gt;           &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x91CD;&#x65B0; Schedule coredns</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl scale -n kube-system deploy/coredns --replicas=0
+kubectl scale -n kube-system deploy/coredns --replicas=2</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x518D;&#x6B21;&#x67E5;&#x770B;&#x5B89;&#x88C5;&#x7ED3;&#x679C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get pods -n kube-system -o wide --no-headers | grep coredns
+coredns-74ff55c5b-5jdgq          1/1   Running   0     32s    10.244.1.12   node-2   &lt;none&gt;   &lt;none&gt;
+coredns-74ff55c5b<span class="hljs-_">-gt</span>5jh          1/1   Running   0     104s   10.244.0.6    node-1   &lt;none&gt;   &lt;none&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>7. &#x67E5;&#x770B; Master &#x4E3B;&#x673A;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether ee:54:ee:d0:94:7d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::ec54:eeff:fed0:947d/64 scope link
+       valid_lft forever preferred_lft forever
+7: veth38645991@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cni0 state UP group default
+    link/ether b6:ad:8e:5b:19:cf brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::b4ad:8eff:fe5b:19cf/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>8. &#x67E5;&#x770B; Worker &#x4E3B;&#x673A;&#x7F51;&#x7EDC;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ip a
+...
+4: cni0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether a2:b6:d4:1d:2f:38 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a0b6:d4ff:fe1d:2f38/64 scope link
+       valid_lft forever preferred_lft forever
+15: veth30eb6ff0@<span class="hljs-keyword">if</span>3: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue master cni0 state UP group default
+    link/ether e6:4e:2d:6c:7a:06 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::e44e:2dff:fe6c:7a06/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_td">TD</h3>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">**</div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="docker.html" class="navigation navigation-prev " aria-label="Previous page: DOCKER">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../nginx/" class="navigation navigation-next " aria-label="Next page: NGINX">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"K8S","level":"1.3.2","depth":2,"next":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"Use Case","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]}]},"previous":{"title":"DOCKER","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"alipay":"http://ksoong.org/docs/content/images/alipay.png","alipayText":"支付宝捐赠","button":"赞赏","title":"","wechat":"http://ksoong.org/docs/content/images/wechat.png","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/k8s.adoc","mtime":"2021-04-05T07:29:57.771Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-05T07:31:19.924Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-donate/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

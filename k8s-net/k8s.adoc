@@ -371,7 +371,703 @@ Chain KUBE-SEP-7ZRSXHFJXB4D6W3U (1 references)
     0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/echoserver */ tcp to:192.168.0.35:8877
 ----
 
-=== TODO
+=== 基于 ClientIP 类型的 Service
+
+[source, bash]
+.*1. 创建 Service*
+----
+kubectl apply -f clientip.yaml
+----
+
+* link:files/clientip.yaml[clientip.yaml]
+
+[source, bash]
+.*2. 查看 Service 和 POD IP*
+----
+$ kubectl get svc test-clientip --no-headers
+test-clientip   ClusterIP   10.107.215.65   <none>   80/TCP   7h26m
+
+$ kubectl get pods -o wide --no-headers
+test-clientip-55c6c8ddcd-2ntlk   1/1   Running   0     7h27m   192.168.0.37   node-1   <none>   <none>
+test-clientip-55c6c8ddcd-ktlxt   1/1   Running   0     7h27m   192.168.0.36   node-1   <none>   <none>
+----
+
+[source, bash]
+.*3. 访问服务*
+----
+$ for i in {1..5} ; do curl 10.107.215.65 ; done
+test-clientip-55c6c8ddcd-2ntlk
+test-clientip-55c6c8ddcd-2ntlk
+test-clientip-55c6c8ddcd-2ntlk
+test-clientip-55c6c8ddcd-2ntlk
+test-clientip-55c6c8ddcd-2ntlk
+----
+
+[source, bash]
+.*4. nat 表中 PREROUTING 规则*
+----
+$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 612 packets, 27540 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 3258  149K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    2   128 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+---- 
+
+[source, bash]
+.*5. nat 表中 KUBE-SERVICES 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    8   480 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.107.215.65        /* default/test-clientip cluster IP */ tcp dpt:80
+    8   480 KUBE-SVC-JASYFCTGROL6PGNE  tcp  --  *      *       0.0.0.0/0            10.107.215.65        /* default/test-clientip cluster IP */ tcp dpt:80
+  814 48164 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.107.215.65
+    8   480 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.107.215.65        /* default/test-clientip cluster IP */ tcp dpt:80
+    8   480 KUBE-SVC-JASYFCTGROL6PGNE  tcp  --  *      *       0.0.0.0/0            10.107.215.65        /* default/test-clientip cluster IP */ tcp dpt:80
+----
+
+[source, bash]
+.*6. nat 表中 KUBE-SVC- 规则（recent: CHECK seconds: 10800 reap name: KUBE-SEP-2WE6A5EBAO3UGN4N side: source mask: 255.255.255.255）*
+----
+$ sudo iptables -t nat -vnL KUBE-SVC-JASYFCTGROL6PGNE
+Chain KUBE-SVC-JASYFCTGROL6PGNE (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-SEP-2WE6A5EBAO3UGN4N  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */ recent: CHECK seconds: 10800 reap name: KUBE-SEP-2WE6A5EBAO3UGN4N side: source mask: 255.255.255.255
+    7   420 KUBE-SEP-LXKS3SWKA3X476YD  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */ recent: CHECK seconds: 10800 reap name: KUBE-SEP-LXKS3SWKA3X476YD side: source mask: 255.255.255.255
+    0     0 KUBE-SEP-2WE6A5EBAO3UGN4N  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */ statistic mode random probability 0.50000000000
+    1    60 KUBE-SEP-LXKS3SWKA3X476YD  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */
+----
+
+[source, bash]
+.*7. nat 表中 KUBE-SEP- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SEP-2WE6A5EBAO3UGN4N
+Chain KUBE-SEP-2WE6A5EBAO3UGN4N (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.36         0.0.0.0/0            /* default/test-clientip */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */ recent: SET name: KUBE-SEP-2WE6A5EBAO3UGN4N side: source mask: 255.255.255.255 tcp to:192.168.0.36:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-LXKS3SWKA3X476YD
+Chain KUBE-SEP-LXKS3SWKA3X476YD (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.37         0.0.0.0/0            /* default/test-clientip */
+    8   480 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-clientip */ recent: SET name: KUBE-SEP-LXKS3SWKA3X476YD side: source mask: 255.255.255.255 tcp to:192.168.0.37:9376
+----
+
+=== 通过路由表向外网发布 Cluster IP 类型 Service
+
+[source, bash]
+.*1. 创建 Service*
+----
+kubectl apply -f service.yaml
+----
+
+[source, bash]
+.*2. 查看 Node IP, Service IP，Pod IP*
+----
+$ kubectl get node -o wide --no-headers
+node-1   Ready   control-plane,master   15h   v1.20.5   10.1.10.9   <none>   Ubuntu 18.04 LTS   4.15.0-140-generic   docker://20.10.3
+
+$ kubectl get svc test-service --no-headers
+test-service   ClusterIP   10.106.235.190   <none>   80/TCP   112s
+
+$ kubectl get pods -o wide --no-headers
+test-service-6f6f8db499-6j7nm   1/1   Running   0     2m24s   192.168.0.38   node-1   <none>   <none>
+test-service-6f6f8db499-m8lsx   1/1   Running   0     2m24s   192.168.0.39   node-1   <none>   <none>
+----
+
+[source, bash]
+.*3. 查看 Service 网络*
+----
+$ ps -ef | grep kubelet | grep service-cluster-ip-range
+root       2582   2554  4 08:26 ?        00:03:03 kube-apiserver --advertise-address=10.1.10.9 --allow-privileged=true --authorization-mode=Node,RBAC --client-ca-file=/etc/kubernetes/pki/ca.crt --enable-admission-plugins=NodeRestriction --enable-bootstrap-token-auth=true --etcd-cafile=/etc/kubernetes/pki/etcd/ca.crt --etcd-certfile=/etc/kubernetes/pki/apiserver-etcd-client.crt --etcd-keyfile=/etc/kubernetes/pki/apiserver-etcd-client.key --etcd-servers=https://127.0.0.1:2379 --insecure-port=0 --kubelet-client-certificate=/etc/kubernetes/pki/apiserver-kubelet-client.crt --kubelet-client-key=/etc/kubernetes/pki/apiserver-kubelet-client.key --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname --proxy-client-cert-file=/etc/kubernetes/pki/front-proxy-client.crt --proxy-client-key-file=/etc/kubernetes/pki/front-proxy-client.key --requestheader-allowed-names=front-proxy-client --requestheader-client-ca-file=/etc/kubernetes/pki/front-proxy-ca.crt --requestheader-extra-headers-prefix=X-Remote-Extra- --requestheader-group-headers=X-Remote-Group --requestheader-username-headers=X-Remote-User --secure-port=6443 --service-account-issuer=https://kubernetes.default.svc.cluster.local --service-account-key-file=/etc/kubernetes/pki/sa.pub --service-account-signing-key-file=/etc/kubernetes/pki/sa.key --service-cluster-ip-range=10.96.0.0/12 --tls-cert-file=/etc/kubernetes/pki/apiserver.crt --tls-private-key-file=/etc/kubernetes/pki/apiserver.key
+----
+
+[source, text]
+.*4. 在 10.1.10.8 上配置路由*
+----
+# ip r
+default via 10.1.10.2 dev ens33 proto static metric 100 
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.8 metric 100 
+
+# ip route add 10.96.0.0/12 via 10.1.10.9
+
+# ip r
+default via 10.1.10.2 dev ens33 proto static metric 100 
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.8 metric 100 
+10.96.0.0/12 via 10.1.10.9 dev ens33 
+----
+
+[source, bash]
+.*5. 在 10.1.10.8 上访问 test-service*
+----
+curl 10.106.235.190
+----
+
+=== 通过 External IP 向外网发布 Cluster IP 类型 Service
+
+[source, bash]
+.*1. 创建一个 External IP Service*
+----
+kubectl apply -f externalip.yaml 
+----
+
+* link:files/externalip.yaml[externalip.yaml]
+
+[source, bash]
+.*2. 查看创建的 Service*
+----
+$ kubectl get svc test-externalip
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+test-externalip   ClusterIP   10.97.132.81   10.1.10.9     80/TCP    101s
+----
+
+[source, bash]
+.*3. 通过 EXTERNAL-IP 访问服务*
+----
+$ for i in {1..5} ; do curl 10.1.10.9 ; done
+test-externalip-8fc497f8-jncpv
+test-externalip-8fc497f8-jncpv
+test-externalip-8fc497f8-phldw
+test-externalip-8fc497f8-phldw
+test-externalip-8fc497f8-phldw
+----
+
+[source, bash]
+.*4. nat 表中 PREROUTING 规则*
+----
+$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 1165 packets, 52425 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+ 8114  369K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    4   296 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+----
+
+[source, bash]
+.*5. nat 表中 KUBE-SERVICES 规则（新增加了两条规则）*
+----
+$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.132.81         /* default/test-externalip cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.97.132.81         /* default/test-externalip cluster IP */ tcp dpt:80
+   27  1700 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80
+   20  1280 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80 PHYSDEV match ! --physdev-is-in ADDRTYPE match src-type !LOCAL
+    7   420 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80 ADDRTYPE match dst-type LOCAL
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+ 1429 84328 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.97.132.81
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.132.81         /* default/test-externalip cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.97.132.81         /* default/test-externalip cluster IP */ tcp dpt:80
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.1.10.9
+   27  1700 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80
+   20  1280 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80 PHYSDEV match ! --physdev-is-in ADDRTYPE match src-type !LOCAL
+    7   420 KUBE-SVC-CITWPFL6QQOR27AK  tcp  --  *      *       0.0.0.0/0            10.1.10.9            /* default/test-externalip external IP */ tcp dpt:80 ADDRTYPE match dst-type LOCAL
+----
+
+[source, bash]
+.*6. nat 表中 KUBE-SVC- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SVC-CITWPFL6QQOR27AK
+Chain KUBE-SVC-CITWPFL6QQOR27AK (3 references)
+ pkts bytes target     prot opt in     out     source               destination         
+   14   884 KUBE-SEP-RRILQQHBGE5IMDI4  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-externalip */ statistic mode random probability 0.50000000000
+   13   816 KUBE-SEP-JRIE3IXDMRY6BNG5  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-externalip */
+----
+
+[source, bash]
+.*7. nat 表中 KUBE-SEP- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SEP-RRILQQHBGE5IMDI4
+Chain KUBE-SEP-RRILQQHBGE5IMDI4 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.40         0.0.0.0/0            /* default/test-externalip */
+   14   884 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-externalip */ tcp to:192.168.0.40:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-JRIE3IXDMRY6BNG5
+Chain KUBE-SEP-JRIE3IXDMRY6BNG5 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.41         0.0.0.0/0            /* default/test-externalip */
+   13   816 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-externalip */ tcp to:192.168.0.41:9376
+----
+
+=== NodePort 类型 Service
+
+[source, bash]
+.*1. 创建 NodePort 类型 Service*
+----
+kubectl apply -f nodeport.yaml 
+----
+
+* link:files/nodeport.yaml[nodeport.yaml]
+
+[source, bash]
+.*2. 查看创建的 Service 和 Pod*
+----
+$ kubectl get svc test-nodeport --no-headers
+test-nodeport   NodePort   10.97.231.111   <none>   80:32228/TCP   98s
+
+$ kubectl get pods -o wide --no-headers
+test-nodeport-5d4bdfc7c7-4kftd   1/1   Running   0     2m38s   192.168.0.42   node-1   <none>   <none>
+test-nodeport-5d4bdfc7c7-s2jz5   1/1   Running   0     2m38s   192.168.0.43   node-1   <none>   <none>
+----
+
+[source, bash]
+.*3. 访问服务*
+----
+$ for i in {1..5} ; do curl 10.1.10.9:32228 ; done
+test-nodeport-5d4bdfc7c7-s2jz5
+test-nodeport-5d4bdfc7c7-s2jz5
+test-nodeport-5d4bdfc7c7-4kftd
+test-nodeport-5d4bdfc7c7-4kftd
+test-nodeport-5d4bdfc7c7-4kftd
+----
+
+=== NodePort 类型 Service 访问调试
+
+[source, bash]
+.*1. 创建 NodePort 类型 Service*
+----
+kubectl apply -f nodeport.yaml 
+----
+
+[source, bash]
+.*2. 查看创建的 Service 和 Pod*
+----
+$ kubectl get svc test-nodeport --no-headers
+test-nodeport   NodePort   10.97.231.111   <none>   80:32228/TCP   98s
+
+$ kubectl get pods -o wide --no-headers
+test-nodeport-5d4bdfc7c7-4kftd   1/1   Running   0     2m38s   192.168.0.42   node-1   <none>   <none>
+test-nodeport-5d4bdfc7c7-s2jz5   1/1   Running   0     2m38s   192.168.0.43   node-1   <none>   <none>
+----
+
+[source, bash]
+.*3. 访问服务*
+----
+$ for i in {1..1000} ; do curl 10.1.10.9:32228 ; done
+----
+
+[source, bash]
+.*4. nat 表中 PREROUTING 规则*
+----
+$ sudo iptables -t nat -vnL PREROUTING
+Chain PREROUTING (policy ACCEPT 422 packets, 18990 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+15548  799K KUBE-SERVICES  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service portals */
+    4   296 DOCKER     all  --  *      *       0.0.0.0/0            0.0.0.0/0            ADDRTYPE match dst-type LOCAL
+----
+
+[source, bash]
+.*5. nat 表中 KUBE-SERVICES 规则（Cluster IP 规则依然存在，新增 KUBE-NODEPORTS 链）*
+----
+$ sudo iptables -t nat -vnL KUBE-SERVICES
+Chain KUBE-SERVICES (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-SVC-JD5MR3NA4I4DYORP  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:metrics cluster IP */ tcp dpt:9153
+    0     0 KUBE-MARK-MASQ  udp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-SVC-TCOU7JCQXEZGVUNU  udp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns cluster IP */ udp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-SVC-ERIFXISQEP7F7OF4  tcp  --  *      *       0.0.0.0/0            10.96.0.10           /* kube-system/kube-dns:dns-tcp cluster IP */ tcp dpt:53
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-SVC-NPX46M4PTMTKRN6Y  tcp  --  *      *       0.0.0.0/0            10.96.0.1            /* default/kubernetes:https cluster IP */ tcp dpt:443
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.231.111        /* default/test-nodeport cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            10.97.231.111        /* default/test-nodeport cluster IP */ tcp dpt:80
+ 5798  367K KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep 10.97.231.111
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !192.168.0.0/16       10.97.231.111        /* default/test-nodeport cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            10.97.231.111        /* default/test-nodeport cluster IP */ tcp dpt:80
+
+$ sudo iptables -t nat -vnL KUBE-SERVICES | grep KUBE-NODEPORTS 
+ 6098  385K KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+----
+
+[source, bash]
+.*6. nat 表中 KUBE-NODEPORTS 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-NODEPORTS
+Chain KUBE-NODEPORTS (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 5015  321K KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */ tcp dpt:32228
+ 5015  321K KUBE-SVC-CIFSXFMKAAMIL4QG  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */ tcp dpt:32228
+----
+
+[source, bash]
+.*7. nat 表中 KUBE-SVC- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SVC-CIFSXFMKAAMIL4QG
+Chain KUBE-SVC-CIFSXFMKAAMIL4QG (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 2560  164K KUBE-SEP-EEAMLDZD2ZLPIVQ3  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */ statistic mode random probability 0.50000000000
+ 2455  157K KUBE-SEP-3C6WTWWWE5M27K7C  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */
+----
+
+[source, bash]
+.*8. nat 表中 KUBE-SEP- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-SEP-EEAMLDZD2ZLPIVQ3
+Chain KUBE-SEP-EEAMLDZD2ZLPIVQ3 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.42         0.0.0.0/0            /* default/test-nodeport */
+ 2560  164K DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */ tcp to:192.168.0.42:9376
+
+$ sudo iptables -t nat -vnL KUBE-SEP-3C6WTWWWE5M27K7C
+Chain KUBE-SEP-3C6WTWWWE5M27K7C (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.43         0.0.0.0/0            /* default/test-nodeport */
+ 2455  157K DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* default/test-nodeport */ tcp to:192.168.0.43:9376
+----
+
+[source, bash]
+.*9. 跨 Work Node SNAT 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-MARK-MASQ
+Chain KUBE-MARK-MASQ (15 references)
+ pkts bytes target     prot opt in     out     source               destination
+ 5015  321K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            MARK or 0x4000
+
+$ sudo iptables -t nat -vnL KUBE-POSTROUTING
+Chain KUBE-POSTROUTING (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+ 4258  228K RETURN     all  --  *      *       0.0.0.0/0            0.0.0.0/0            mark match ! 0x4000/0x4000
+ 5015  321K MARK       all  --  *      *       0.0.0.0/0            0.0.0.0/0            MARK xor 0x4000
+ 5015  321K MASQUERADE  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service traffic requiring SNAT */
+----
+
+=== K8S DNS
+
+[source, bash]
+.*1. 创建服务*
+----
+kubectl apply -f dns.yaml
+----
+
+link:files/dns.yaml[dns.yaml]
+
+[source, bash]
+.*2. 查看创建的 Service 和 Pod*
+----
+$ kubectl get svc test-dns --no-headers
+test-dns   ClusterIP   10.106.139.47   <none>   80/TCP   96s
+
+$ kubectl get pods -o wide --no-headers
+test-dns-6bff6cbdc5-2n6jx   1/1   Running   0     2m17s   192.168.0.44   node-1   <none>   <none>
+test-dns-6bff6cbdc5-hq4fx   1/1   Running   0     2m17s   192.168.0.45   node-1   <none>   <none>
+----
+
+[source, bash]
+.*3. 创建一个临时 POD，DNS 查询测试*
+----
+$ kubectl run -it --rm --restart=Never busybox --image=busybox sh
+If you don't see a command prompt, try pressing enter.
+/ # 
+----
+
+[source, bash]
+.*4. nslookup Service 域名*
+----
+/ # nslookup test-dns
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	test-dns.default.svc.cluster.local
+Address: 10.106.139.47
+
+/ # nslookup test-dns.default.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	test-dns.default.svc.cluster.local
+Address: 10.106.139.47
+----
+
+[source, bash]
+.*5. nslookup PTR 记录*
+----
+/ # nslookup 10.106.139.47
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+47.139.106.10.in-addr.arpa	name = test-dns.default.svc.cluster.local
+
+
+/ # nslookup 192.168.0.44 
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+44.0.168.192.in-addr.arpa	name = 192-168-0-44.test-dns.default.svc.cluster.local
+
+
+/ # nslookup 192.168.0.45
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+45.0.168.192.in-addr.arpa	name = 192-168-0-45.test-dns.default.svc.cluster.local
+----
+
+[source, bash]
+.*6. nslookup lookup Pod 域名*
+----
+/ # nslookup 192-168-0-44.test-dns.default.svc.cluster.local
+Server:		10.96.0.10
+Address:	10.96.0.10:53
+
+Name:	192-168-0-44.test-dns.default.svc.cluster.local
+Address: 192.168.0.44
+----
+
+=== K8S HostPort
+
+[source, bash]
+.*1. 创建 HostPort Pod*
+----
+kubectl apply -f hostPort.yaml 
+----
+
+* link:files/hostPort.yaml[hostPort.yaml]
+
+[source, bash]
+.*2. 访问服务*
+----
+$ curl 10.1.10.9:8081
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+----
+
+[source, bash]
+.*3. nat 表中 KUBE-HOSTPORTS 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-HOSTPORTS
+Chain KUBE-HOSTPORTS (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    1    60 KUBE-HP-KWJPLLZCGIIKHTTD  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* nginx_default hostport 8081 */ tcp dpt:8081
+----
+
+[source, bash]
+.*4. nat 表中 KUBE-HP- 规则*
+----
+$ sudo iptables -t nat -vnL KUBE-HP-KWJPLLZCGIIKHTTD
+Chain KUBE-HP-KWJPLLZCGIIKHTTD (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       192.168.0.47         0.0.0.0/0            /* nginx_default hostport 8081 */
+    1    60 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* nginx_default hostport 8081 */ tcp to:192.168.0.47:80
+----
+
+=== K8S HostNetwork
+
+[source, bash]
+.*1. 创建 HostNetwork Pod*
+----
+kubectl apply -f hostNetwork.yaml
+----
+
+* link:files/hostNetwork.yaml[hostNetwork.yaml]
+
+[source, bash]
+.*2. 访问服务*
+----
+$ curl 10.1.10.9
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+----
+
+== Flannel
+
+=== Flannel 配置
+
+[source, bash]
+.*1. kubeadm 初始化集群*
+----
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+----
+
+[source, bash]
+.*2. 安装网络插件*
+----
+kubectl apply -f kube-flannel-host-gw.yml 
+----
+
+link:files/kube-flannel-host-gw.yml[kube-flannel-host-gw.yml]
+
+[source, bash]
+.*3. 加入一个 Work Node*
+----
+$ kubectl get nodes
+NAME     STATUS   ROLES                  AGE    VERSION
+node-1   Ready    control-plane,master   84m    v1.20.5
+node-2   Ready    <none>                 7m9s   v1.20.5
+----
+
+[source, bash]
+.*4. 查看安装结果*
+----
+$ kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                             READY   STATUS    RESTARTS   AGE     IP           NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-74ff55c5b-dxwb6          1/1     Running   1          84m     10.244.0.4   node-1   <none>           <none>
+kube-system   coredns-74ff55c5b-vv8bx          1/1     Running   1          84m     10.244.0.5   node-1   <none>           <none>
+kube-system   etcd-node-1                      1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-apiserver-node-1            1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-controller-manager-node-1   1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-flannel-ds-v8n7m            1/1     Running   0          7m39s   10.1.10.10   node-2   <none>           <none>
+kube-system   kube-flannel-ds-wsxps            1/1     Running   1          81m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-proxy-24l9w                 1/1     Running   1          84m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-proxy-gsdwh                 1/1     Running   0          7m39s   10.1.10.10   node-2   <none>           <none>
+kube-system   kube-scheduler-node-1            1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+----
+
+[source, bash]
+.*5. 重新 Schedule coredns*
+----
+kubectl scale -n kube-system deploy/coredns --replicas=0
+kubectl scale -n kube-system deploy/coredns --replicas=2
+----
+
+[source, bash]
+.*6. 再次查看安装结果*
+----
+$ kubectl get pods -n kube-system -o wide --no-headers | grep coredns
+coredns-74ff55c5b-5jdgq          1/1   Running   0     32s    10.244.1.12   node-2   <none>   <none>
+coredns-74ff55c5b-gt5jh          1/1   Running   0     104s   10.244.0.6    node-1   <none>   <none>
+----
+
+[source, bash]
+.*7. 查看 Master 主机网络*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether ee:54:ee:d0:94:7d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::ec54:eeff:fed0:947d/64 scope link 
+       valid_lft forever preferred_lft forever
+7: veth38645991@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default 
+    link/ether b6:ad:8e:5b:19:cf brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::b4ad:8eff:fe5b:19cf/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*8. 查看 Worker 主机网络*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether a2:b6:d4:1d:2f:38 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a0b6:d4ff:fe1d:2f38/64 scope link 
+       valid_lft forever preferred_lft forever
+15: veth30eb6ff0@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default 
+    link/ether e6:4e:2d:6c:7a:06 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::e44e:2dff:fe6c:7a06/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+=== TD
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
 
 [source, bash]
 .**
