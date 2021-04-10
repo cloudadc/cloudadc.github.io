@@ -1382,11 +1382,682 @@ bridge fdb
 brctl show
 ----
 
+=== Reset Flannel VxLan
+
+[source, bash]
+.*1. kubeadm reset*
+----
+sudo kubeadm reset
+sudo rm $HOME/.kube/config
+----
+
+NOTE: `sudo kubeadm reset` 需要在 Node 节点上也执行。
+
+[source, bash]
+.*2. flush iptables*
+----
+sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+----
+
 == Calico
 
 === Calico 配置
 
 [source, bash]
+.*1. 初始化 K8S*
+----
+sudo kubeadm init --pod-network-cidr=10.100.0.0/16
+----
+
+[source, bash]
+.*2. 安装验证*
+----
+$ kubectl get nodes --no-headers
+node-1   Ready   control-plane,master   13m    v1.20.5
+node-2   Ready   <none>                 110s   v1.20.5
+
+$ kubectl get pods --all-namespaces --no-headers
+kube-system   coredns-74ff55c5b-4khp6          0/1   ContainerCreating   0     13m
+kube-system   coredns-74ff55c5b-vkb45          0/1   ContainerCreating   0     13m
+kube-system   etcd-node-1                      1/1   Running             0     14m
+kube-system   kube-apiserver-node-1            1/1   Running             0     14m
+kube-system   kube-controller-manager-node-1   1/1   Running             0     14m
+kube-system   kube-proxy-6mcfd                 1/1   Running             0     2m22s
+kube-system   kube-proxy-qfdjp                 1/1   Running             0     13m
+kube-system   kube-scheduler-node-1            1/1   Running             0     14m
+----
+
+[source, bash]
+.*3. 安装 Calico，设定 CALICO_IPV4POOL_CIDR 为 10.100.0.0/16，CALICO_IPV4POOL_IPIP 为 Never*
+----
+kubectl apply -f calico.yaml 
+----
+
+* link:files/calico.yaml[calico.yaml]
+
+[source, bash]
+.*4. 验证网路安装结果*
+----
+$ kubectl get pods --all-namespaces -o wide --no-headers
+kube-system   calico-kube-controllers-69496d8b75-phggg   1/1   Running   0     3m27s   10.100.247.0    node-2   <none>   <none>
+kube-system   calico-node-6prgd                          1/1   Running   0     3m27s   10.1.10.10      node-2   <none>   <none>
+kube-system   calico-node-lz8kx                          1/1   Running   0     3m27s   10.1.10.9       node-1   <none>   <none>
+kube-system   coredns-74ff55c5b-rq6l6                    1/1   Running   0     64s     10.100.247.1    node-2   <none>   <none>
+kube-system   coredns-74ff55c5b-wwmkq                    1/1   Running   0     4m15s   10.100.84.128   node-1   <none>   <none>
+kube-system   etcd-node-1                                1/1   Running   0     4m31s   10.1.10.9       node-1   <none>   <none>
+kube-system   kube-apiserver-node-1                      1/1   Running   0     4m31s   10.1.10.9       node-1   <none>   <none>
+kube-system   kube-controller-manager-node-1             1/1   Running   0     4m31s   10.1.10.9       node-1   <none>   <none>
+kube-system   kube-proxy-bhdwp                           1/1   Running   0     4m15s   10.1.10.9       node-1   <none>   <none>
+kube-system   kube-proxy-mfww5                           1/1   Running   0     4m7s    10.1.10.10      node-2   <none>   <none>
+kube-system   kube-scheduler-node-1                      1/1   Running   0     4m31s   10.1.10.9       node-1   <none>   <none>
+----
+
+[source, bash]
+.*5. calicoctl 安装*
+----
+curl -O -L  https://github.com/projectcalico/calicoctl/releases/download/v3.18.1/calicoctl
+chmod a+x calicoctl
+sudo cp calicoctl /usr/local/bin/
+----
+
+[source, bash]
+.*6. calicoctl 查看 Nodes*
+----
+$ calicoctl get nodes -o wide
+NAME     ASN       IPV4            IPV6   
+node-1   (64512)   10.1.10.9/24           
+node-2   (64512)   10.1.10.10/24   
+----
+
+[source, bash]
+.*7. calicoctl 查看 BGP full mesh*
+----
+$ sudo calicoctl node status
+Calico process is running.
+
+IPv4 BGP status
++--------------+-------------------+-------+----------+-------------+
+| PEER ADDRESS |     PEER TYPE     | STATE |  SINCE   |    INFO     |
++--------------+-------------------+-------+----------+-------------+
+| 10.1.10.10   | node-to-node mesh | up    | 03:18:42 | Established |
++--------------+-------------------+-------+----------+-------------+
+
+IPv6 BGP status
+No IPv6 peers found.
+----
+
+=== Pure BGP 默认网络查看
+
+[source, bash]
+.*1. 容器 IP*
+----
+$ kubectl get pods --all-namespaces -o wide | grep 10.100
+kube-system   calico-kube-controllers-69496d8b75-phggg   1/1     Running   0          26m   10.100.247.0    node-2   <none>           <none>
+kube-system   coredns-74ff55c5b-rq6l6                    1/1     Running   0          24m   10.100.247.1    node-2   <none>           <none>
+kube-system   coredns-74ff55c5b-wwmkq                    1/1     Running   0          27m   10.100.84.128   node-1   <none>           <none>
+----
+
+[source, bash]
+.*2. node-1 网卡*
+----
+$ ip a
+...
+6: califee22f61266@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*3. node-2 网卡* 
+----
+$ ip a
+...
+6: cali8de5ff87b7c@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+7: cali1e472607f9f@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*4. node-1 路由表*
+----
+$ ip r show
+10.100.84.128 dev califee22f61266 scope link 
+blackhole 10.100.84.128/26 proto bird 
+10.100.247.0/26 via 10.1.10.10 dev ens33 proto bird 
+----
+
+[source, bash]
+.*5. node-2 路由表*
+----
+$ ip r show
+10.100.84.128/26 via 10.1.10.9 dev ens33 proto bird 
+10.100.247.0 dev cali8de5ff87b7c scope link 
+blackhole 10.100.247.0/26 proto bird 
+10.100.247.1 dev cali1e472607f9f scope link 
+----
+
+=== Pure BGP 调试
+
+[source, bash]
+.*1. 创建 POD*
+----
+kubectl apply -f busybox.yaml 
+----
+
+[source, bash]
+.*2. 查看创建的 POD* 
+----
+$ kubectl get pods -o wide --no-headers
+test-7999578869-9nc25   1/1   Running   0     2m10s   10.100.84.130   node-1   <none>   <none>
+test-7999578869-9vbv6   1/1   Running   0     6m59s   10.100.247.3    node-2   <none>   <none>
+test-7999578869-b26kk   1/1   Running   0     6m59s   10.100.247.2    node-2   <none>   <none>
+----
+
+[source, bash]
+.*3. node-1 新增虚拟网卡*
+----
+$ ip a
+...
+8: calida8798d2ad7@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*4. node-2 新增虚拟网卡*
+----
+$ ip a
+...
+8: cali70df284fc76@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+9: cali79d4f06640e@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 3
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. node-1 上 POD IP 地址*
+----
+$ kubectl exec -it test-7999578869-9nc25 -- sh
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if8: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether 56:40:a9:1a:11:5c brd ff:ff:ff:ff:ff:ff
+    inet 10.100.84.130/32 brd 10.100.84.130 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*6. node-1 上 POD 默认路由* 
+----
+$ kubectl exec -it test-7999578869-9nc25 -- sh
+/ # ip r
+default via 169.254.1.1 dev eth0 
+169.254.1.1 dev eth0 scope link 
+----
+
+[source, bash]
+.*7. node-1 上 POD ping node-2 上 POD IP*
+----
+$ kubectl exec -it test-7999578869-9nc25 -- sh
+/ # ping 10.100.247.3 -c3
+PING 10.100.247.3 (10.100.247.3): 56 data bytes
+64 bytes from 10.100.247.3: seq=0 ttl=62 time=0.749 ms
+64 bytes from 10.100.247.3: seq=1 ttl=62 time=0.334 ms
+64 bytes from 10.100.247.3: seq=2 ttl=62 time=0.680 ms
+----
+
+[source, bash]
+.*8. node-1 上 POD 查看 ARP*
+----
+$ kubectl exec -it test-7999578869-9nc25 -- sh
+/ # arping 169.254.1.1
+ARPING 169.254.1.1 from 10.100.84.130 eth0
+Unicast reply from 169.254.1.1 [ee:ee:ee:ee:ee:ee] 0.017ms
+Unicast reply from 169.254.1.1 [ee:ee:ee:ee:ee:ee] 0.020ms
+Unicast reply from 169.254.1.1 [ee:ee:ee:ee:ee:ee] 0.029ms
+Unicast reply from 169.254.1.1 [ee:ee:ee:ee:ee:ee] 0.030ms
+----
+
+[source, bash]
+.*9. node-1 tcpdump 抓包* 
+----
+$ sudo tcpdump -nei calida8798d2ad7
+[sudo] password for kylin: 
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on calida8798d2ad7, link-type EN10MB (Ethernet), capture size 262144 bytes
+12:44:11.298318 56:40:a9:1a:11:5c > ee:ee:ee:ee:ee:ee, ethertype ARP (0x0806), length 42: Request who-has 169.254.1.1 (ee:ee:ee:ee:ee:ee) tell 10.100.84.130, length 28
+12:44:11.298334 ee:ee:ee:ee:ee:ee > 56:40:a9:1a:11:5c, ethertype ARP (0x0806), length 42: Reply 169.254.1.1 is-at ee:ee:ee:ee:ee:ee, length 28
+12:44:12.298813 56:40:a9:1a:11:5c > ee:ee:ee:ee:ee:ee, ethertype ARP (0x0806), length 42: Request who-has 169.254.1.1 (ee:ee:ee:ee:ee:ee) tell 10.100.84.130, length 28
+12:44:12.298827 ee:ee:ee:ee:ee:ee > 56:40:a9:1a:11:5c, ethertype ARP (0x0806), length 42: Reply 169.254.1.1 is-at ee:ee:ee:ee:ee:ee, length 28
+----
+
+==== 跨主机节点 POD 通信
+
+[source, bash]
+.*10. node-1 tcpdump 过滤 icmp 包*
+----
+$ sudo tcpdump -nei calida8798d2ad7 icmp
+$ sudo tcpdump -nei ens33 icmp
+----
+
+[source, bash]
+.*11. node-2 tcpdump 过滤 icmp 包*
+----
+$ sudo tcpdump -nei ens33 icmp
+$ sudo tcpdump -nei cali79d4f06640e icmp
+----
+
+[source, bash]
+.*13. node-1 上 POD ping node-2 上 POD IP*
+----
+$ kubectl exec -it test-7999578869-9nc25 -- sh
+/ # ping 10.100.247.3 -c3
+PING 10.100.247.3 (10.100.247.3): 56 data bytes
+64 bytes from 10.100.247.3: seq=0 ttl=62 time=0.749 ms
+64 bytes from 10.100.247.3: seq=1 ttl=62 time=0.334 ms
+64 bytes from 10.100.247.3: seq=2 ttl=62 time=0.680 ms
+----
+
+[source, bash]
+.*14. 查看第 10 步骤 node-1 上抓包的结果*
+----
+$ sudo tcpdump -nei calida8798d2ad7 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on calida8798d2ad7, link-type EN10MB (Ethernet), capture size 262144 bytes
+12:57:34.031776 56:40:a9:1a:11:5c > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 0, length 64
+12:57:34.032503 ee:ee:ee:ee:ee:ee > 56:40:a9:1a:11:5c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 0, length 64
+12:57:35.032249 56:40:a9:1a:11:5c > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 1, length 64
+12:57:35.033223 ee:ee:ee:ee:ee:ee > 56:40:a9:1a:11:5c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 1, length 64
+12:57:36.033044 56:40:a9:1a:11:5c > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 2, length 64
+12:57:36.033983 ee:ee:ee:ee:ee:ee > 56:40:a9:1a:11:5c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 2, length 64
+
+
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+12:57:34.031810 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 0, length 64
+12:57:34.032483 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 0, length 64
+12:57:35.032283 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 1, length 64
+12:57:35.033144 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 1, length 64
+12:57:36.033150 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 2, length 64
+12:57:36.033946 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 2, length 64
+----
+
+[source, bash]
+.*15. 查看第 11 步骤 node-2 上抓包的结果* 
+----
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+12:57:34.032749 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 0, length 64
+12:57:34.033057 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 0, length 64
+12:57:35.033352 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 1, length 64
+12:57:35.033699 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 1, length 64
+12:57:36.034305 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 2, length 64
+12:57:36.034532 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 2, length 64
+
+
+$ sudo tcpdump -nei cali79d4f06640e icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cali79d4f06640e, link-type EN10MB (Ethernet), capture size 262144 bytes
+12:57:34.032891 ee:ee:ee:ee:ee:ee > 06:88:3d:d0:fa:c7, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 0, length 64
+12:57:34.033043 06:88:3d:d0:fa:c7 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 0, length 64
+12:57:35.033451 ee:ee:ee:ee:ee:ee > 06:88:3d:d0:fa:c7, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 1, length 64
+12:57:35.033672 06:88:3d:d0:fa:c7 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 1, length 64
+12:57:36.034398 ee:ee:ee:ee:ee:ee > 06:88:3d:d0:fa:c7, ethertype IPv4 (0x0800), length 98: 10.100.84.130 > 10.100.247.3: ICMP echo request, id 8960, seq 2, length 64
+12:57:36.034521 06:88:3d:d0:fa:c7 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.84.130: ICMP echo reply, id 8960, seq 2, length 64
+----
+
+*16. 跨主机 POD 之间通信路径*
+
+`node-1/calida8798d2ad7` -> `node-1/ens33` -> `node-2/ens33` -> `node-2/cali79d4f06640e`.
+
+==== 同一个主机上 POD 之间的通信
+
+[source, bash]
+.*17. 进入 node-2 POD 并查看 IP*
+----
+$ kubectl exec -it test-7999578869-b26kk -- sh
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+3: eth0@if8: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1500 qdisc noqueue 
+    link/ether f6:f3:fd:41:df:e6 brd ff:ff:ff:ff:ff:ff
+    inet 10.100.247.2/32 brd 10.100.247.2 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*18. node-2 上 tcpmdump 过滤 icmp*
+----
+sudo tcpdump -nei ens33 icmp
+sudo tcpdump -nei cali70df284fc76 icmp
+sudo tcpdump -nei cali79d4f06640e icmp
+----
+
+[source, bash]
+.*19. 进入 node-2 POD ping 同节点 POD*
+----
+$ kubectl exec -it test-7999578869-b26kk -- sh
+/ # ping 10.100.247.3 -c2
+PING 10.100.247.3 (10.100.247.3): 56 data bytes
+64 bytes from 10.100.247.3: seq=0 ttl=63 time=0.533 ms
+64 bytes from 10.100.247.3: seq=1 ttl=63 time=0.375 ms
+----
+
+[source, bash]
+.*20. 查看 18 步抓包结果* 
+----
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+
+$ sudo tcpdump -nei cali70df284fc76 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cali70df284fc76, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:11:32.741409 f6:f3:fd:41:df:e6 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.2 > 10.100.247.3: ICMP echo request, id 5888, seq 0, length 64
+13:11:32.741485 ee:ee:ee:ee:ee:ee > f6:f3:fd:41:df:e6, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.247.2: ICMP echo reply, id 5888, seq 0, length 64
+13:11:33.742592 f6:f3:fd:41:df:e6 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.2 > 10.100.247.3: ICMP echo request, id 5888, seq 1, length 64
+13:11:33.742668 ee:ee:ee:ee:ee:ee > f6:f3:fd:41:df:e6, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.247.2: ICMP echo reply, id 5888, seq 1, length 64
+
+
+$ sudo tcpdump -nei cali79d4f06640e icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cali79d4f06640e, link-type EN10MB (Ethernet), capture size 262144 bytes
+13:11:32.741452 ee:ee:ee:ee:ee:ee > 06:88:3d:d0:fa:c7, ethertype IPv4 (0x0800), length 98: 10.100.247.2 > 10.100.247.3: ICMP echo request, id 5888, seq 0, length 64
+13:11:32.741476 06:88:3d:d0:fa:c7 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.247.2: ICMP echo reply, id 5888, seq 0, length 64
+13:11:33.742637 ee:ee:ee:ee:ee:ee > 06:88:3d:d0:fa:c7, ethertype IPv4 (0x0800), length 98: 10.100.247.2 > 10.100.247.3: ICMP echo request, id 5888, seq 1, length 64
+13:11:33.742658 06:88:3d:d0:fa:c7 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.3 > 10.100.247.2: ICMP echo reply, id 5888, seq 1, length 64
+----
+
+[source, bash]
+.*21. 删除 busybox 调试 POD*
+----
+kubectl delete -f busybox.yaml 
+----
+
+=== 切换到 IP in IP 模式
+
+[source, bash]
+.*1. 查看 IPIPMODE*
+----
+ calicoctl get ipPool -o wide
+NAME                  CIDR            NAT    IPIPMODE   VXLANMODE   DISABLED   SELECTOR   
+default-ipv4-ippool   10.100.0.0/16   true   Never      Never       false      all()     
+----
+
+[source, bash]
+.*2. 调整*
+----
+$ calicoctl get ipPool -o yaml > calico_ipPool.yaml
+$ vim calico_ipPool.yaml
+$ calicoctl apply -f calico_ipPool.yaml
+----
+
+[source, bash]
+.*3. 再次查看 IPIPMODE* 
+----
+$ calicoctl get ipPool -o wide
+NAME                  CIDR            NAT    IPIPMODE   VXLANMODE   DISABLED   SELECTOR   
+default-ipv4-ippool   10.100.0.0/16   true   Always     Never       false      all()  
+----
+
+[source, bash]
+.*4. node-1 查看新增虚拟网卡*
+----
+11: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+    inet 10.100.84.131/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. node-2 查看新增虚拟网卡*
+----
+30: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+    inet 10.100.247.22/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*6. node-1 查看隧道*
+----
+$ ip -d addr show dev tunl0 
+11: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0 promiscuity 0 
+    ipip any remote any local any ttl inherit nopmtudisc numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
+    inet 10.100.84.131/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*7. node-2 查看隧道* 
+----
+$ ip -d addr show dev tunl0 
+30: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0 promiscuity 0 
+    ipip any remote any local any ttl inherit nopmtudisc numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535 
+    inet 10.100.247.22/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+----
+
+=== IP in IP 调试
+
+[source, bash]
+.*1. 创建测试应用*
+----
+kubectl apply -f busybox.yaml 
+----
+
+[source, bash]
+.*2. 查看创建的 POD*
+----
+$ kubectl get pods -o wide --no-headers
+test-7999578869-jr2w9   1/1   Running   0     2m4s   10.100.247.24   node-2   <none>   <none>
+test-7999578869-kx4hp   1/1   Running   0     95s    10.100.84.132   node-1   <none>   <none>
+test-7999578869-xkhlz   1/1   Running   0     2m4s   10.100.247.23   node-2   <none>   <none>
+----
+
+[source, bash]
+.*3. node-1 设备网卡*
+----
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:10:a9:6c brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.9/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe10:a96c/64 scope link 
+       valid_lft forever preferred_lft forever
+11: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+    inet 10.100.84.131/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+12: cali14de3927136@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1480 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*4. node-2 设备网卡*
+----
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:2f:33:85 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.10/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe2f:3385/64 scope link 
+       valid_lft forever preferred_lft forever
+30: tunl0@NONE: <NOARP,UP,LOWER_UP> mtu 1480 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+    inet 10.100.247.22/32 scope global tunl0
+       valid_lft forever preferred_lft forever
+31: calieb588c579e3@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1480 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+32: cali813929a4a7b@if4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1480 qdisc noqueue state UP group default 
+    link/ether ee:ee:ee:ee:ee:ee brd ff:ff:ff:ff:ff:ff link-netnsid 3
+    inet6 fe80::ecee:eeff:feee:eeee/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+==== 跨主机节点 POD 通信
+
+[source, bash]
+.*5. node-1 POD IP*
+----
+$ kubectl exec -it test-7999578869-kx4hp -- sh
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+4: eth0@if12: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1480 qdisc noqueue 
+    link/ether 5e:56:ea:dc:5c:33 brd ff:ff:ff:ff:ff:ff
+    inet 10.100.84.132/32 brd 10.100.84.132 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*6. node-2 POD IP*
+----
+$ kubectl exec -it test-7999578869-jr2w9 -- sh
+/ # ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: tunl0@NONE: <NOARP> mtu 1480 qdisc noop qlen 1000
+    link/ipip 0.0.0.0 brd 0.0.0.0
+4: eth0@if32: <BROADCAST,MULTICAST,UP,LOWER_UP,M-DOWN> mtu 1480 qdisc noqueue 
+    link/ether 76:22:a9:e4:88:04 brd ff:ff:ff:ff:ff:ff
+    inet 10.100.247.24/32 brd 10.100.247.24 scope global eth0
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*7. node-1 上 tcpdump 过滤 icmp*
+----
+sudo tcpdump -nei ens33 ip proto 4
+sudo tcpdump -nei tunl0 icmp
+sudo tcpdump -nei cali14de3927136 icmp
+----
+
+[source, bash]
+.*8. node-2 上 tcpdump 过滤 icmp*
+----
+sudo tcpdump -nei ens33 ip proto 4
+sudo tcpdump -nei tunl0 icmp
+sudo tcpdump -nei cali813929a4a7b icmp
+----
+
+[source, bash]
+.*9. node-1 上 POD ping node-2 上 POD*
+----
+$ kubectl exec -it test-7999578869-kx4hp -- sh
+/ # ping 10.100.247.24 -c2
+PING 10.100.247.24 (10.100.247.24): 56 data bytes
+64 bytes from 10.100.247.24: seq=0 ttl=62 time=1.008 ms
+64 bytes from 10.100.247.24: seq=1 ttl=62 time=0.781 ms
+----
+
+[source, bash]
+.*10. 查看第 8 步骤抓包结果*
+----
+$ sudo tcpdump -nei cali14de3927136 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cali14de3927136, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:09:11.589241 5e:56:ea:dc:5c:33 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64
+14:09:11.589903 ee:ee:ee:ee:ee:ee > 5e:56:ea:dc:5c:33, ethertype IPv4 (0x0800), length 98: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64
+14:09:12.589717 5e:56:ea:dc:5c:33 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64
+14:09:12.590404 ee:ee:ee:ee:ee:ee > 5e:56:ea:dc:5c:33, ethertype IPv4 (0x0800), length 98: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64
+
+
+$ sudo tcpdump -nei tunl0 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on tunl0, link-type RAW (Raw IP), capture size 262144 bytes
+14:09:11.589275 ip: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64
+14:09:11.589887 ip: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64
+14:09:12.589763 ip: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64
+14:09:12.590394 ip: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64
+
+
+$ sudo tcpdump -nei ens33  ip proto 4
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:09:11.589287 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 118: 10.1.10.9 > 10.1.10.10: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64 (ipip-proto-4)
+14:09:11.589829 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 118: 10.1.10.10 > 10.1.10.9: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64 (ipip-proto-4)
+14:09:12.589779 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 118: 10.1.10.9 > 10.1.10.10: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64 (ipip-proto-4)
+14:09:12.590353 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 118: 10.1.10.10 > 10.1.10.9: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64 (ipip-proto-4)
+----
+
+[source, bash]
+.*11. 查看第 9 步骤抓包结果*
+----
+$ sudo tcpdump -nei ens33 ip proto 4
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:09:11.618270 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 118: 10.1.10.9 > 10.1.10.10: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64 (ipip-proto-4)
+14:09:11.618541 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 118: 10.1.10.10 > 10.1.10.9: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64 (ipip-proto-4)
+14:09:12.618795 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 118: 10.1.10.9 > 10.1.10.10: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64 (ipip-proto-4)
+14:09:12.618999 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 118: 10.1.10.10 > 10.1.10.9: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64 (ipip-proto-4)
+
+
+$ sudo tcpdump -nei tunl0 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on tunl0, link-type RAW (Raw IP), capture size 262144 bytes
+14:09:11.618327 ip: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64
+14:09:11.618528 ip: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64
+14:09:12.618870 ip: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64
+14:09:12.618985 ip: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64
+
+
+$ sudo tcpdump -nei cali813929a4a7b icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cali813929a4a7b, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:09:11.618375 ee:ee:ee:ee:ee:ee > 76:22:a9:e4:88:04, ethertype IPv4 (0x0800), length 98: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 0, length 64
+14:09:11.618513 76:22:a9:e4:88:04 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 0, length 64
+14:09:12.618891 ee:ee:ee:ee:ee:ee > 76:22:a9:e4:88:04, ethertype IPv4 (0x0800), length 98: 10.100.84.132 > 10.100.247.24: ICMP echo request, id 8704, seq 1, length 64
+14:09:12.618973 76:22:a9:e4:88:04 > ee:ee:ee:ee:ee:ee, ethertype IPv4 (0x0800), length 98: 10.100.247.24 > 10.100.84.132: ICMP echo reply, id 8704, seq 1, length 64
+----
+
+*12. 跨主机节点 POD 通信*
+
+`node-1/cali14de3927136` -> `node-1/tunl0` -> `node-1/ens33` -> `node-2/ems33` -> `node-2/tunl0` -> `node-2/cali813929a4a7b`.
+
+
+=== Network Policy
+
+TODO
+
+== NSX-T
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
 .**
 ----
 
@@ -1403,3 +2074,52 @@ brctl show
 ----
 
 ----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
