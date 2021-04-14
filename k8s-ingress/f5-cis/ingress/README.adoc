@@ -1,0 +1,62 @@
+= What's this
+
+F5 Container Ingress Service, which BIG-IP Controller plan as a kubernetes ingress controller, VS be created in F5 BIG-IP HW/VE.
+
+[source, bash]
+.*Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/f5-cis/ingress
+----
+
+[source, bash]
+.*Set up*
+----
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n kube-system
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f rbac.yaml
+kubectl create -f cis.yaml
+----
+
+== Demostrations
+
+[source, bash]
+.*1. Deploy*
+----
+kubectl create ns test001
+kubectl label ns test001 zone=zone_1
+kubectl create -f deploy01.yaml
+kubectl create -f in01.yaml 
+
+kubectl create ns test002
+kubectl label ns test002 zone=zone_1
+kubectl create -f deploy02.yaml
+kubectl create -f in02.yaml
+
+kubectl create ns test003
+kubectl label ns test003 zone=zone_1
+kubectl create -f deploy03.yaml
+kubectl create -f in03.yaml
+
+kubectl create ns test004
+kubectl label ns test004 zone=zone_1
+kubectl create -f deploy04.yaml
+kubectl create -f in04.yaml
+kubectl create -f in05.yaml
+----
+
+[source, bash]
+.*2. Test*
+----
+curl http://app1.apps.example.com
+curl http://app2.apps.example.com
+
+curl http://app.example.com/bar
+curl http://app.example.com/foo
+
+curl -k https://svc.example.com
+
+// broswer access, will rewrite web root from `/` to `bar`
+http://old.example.com/
+http://new.example.com/bar
+----

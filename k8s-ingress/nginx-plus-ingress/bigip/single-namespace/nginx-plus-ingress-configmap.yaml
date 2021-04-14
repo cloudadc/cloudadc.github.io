@@ -1,0 +1,134 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-ingress-f5
+  namespace: nginx-ingress
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "nginx-ingress-f5",
+        "label": "nginx-ingress-f5",
+        "remark": "Nginx Ingress",
+        "nginx-ingress": {
+          "class": "Tenant",
+          "nginx-ingress-test01-app": {
+            "class": "Application",
+            "template": "generic",
+            "nginx_ingress_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.41"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "nginx-ingress-test01-pool"
+            },
+            "nginx-ingress-test01-pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          },
+          "nginx-ingress-test01-dashboard-app": {
+            "class": "Application",
+            "template": "generic",
+            "nginx_ingress_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.41"
+              ],
+              "snat": "self",
+              "virtualPort": 8080,
+              "pool": "nginx-ingress-test01-dashboard-pool"
+            },
+            "nginx-ingress-test01-dashboard-pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": []
+              }
+              ]
+            }
+          },
+          "nginx-ingress-test02-app": {
+            "class": "Application",
+            "template": "generic",
+            "nginx_ingress_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.42"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "nginx-ingress-test02-pool"
+            },
+            "nginx-ingress-test02-pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          },
+          "nginx-ingress-test02-dashboard-app": {
+            "class": "Application",
+            "template": "generic",
+            "nginx_ingress_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.42"
+              ],
+              "snat": "self",
+              "virtualPort": 8080,
+              "pool": "nginx-ingress-test02-dashboard-pool"
+            },
+            "nginx-ingress-test02-dashboard-pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
+

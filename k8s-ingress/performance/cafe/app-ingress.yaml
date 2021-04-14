@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.60"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+  name: cafe-ingress
+  namespace: perf-test01
+spec:
+  rules:
+  - host: perftest01.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: coffee-svc
+          servicePort: 80

@@ -1,0 +1,75 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress01
+  namespace: cistest100
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.10"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+spec:
+  rules:
+  - host: app1.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress01
+  namespace: cistest101
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.10"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+spec:
+  rules:
+  - host: app2.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress01
+  namespace: cistest102
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.10"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+spec:
+  rules:
+  - host: app3.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress01
+  namespace: cistest103
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.10"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+spec:
+  rules:
+  - host: app4.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-svc
+          servicePort: 80

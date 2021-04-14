@@ -1,0 +1,91 @@
+= F5 CIS Installation
+:toc: manual
+
+== Installation
+
+=== Install on kube-system
+
+[source, bash]
+.*Install*
+----
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n kube-system
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f rbac.yaml
+kubectl create -f cis.yaml
+----
+
+* link:files/install-on-kube-system/cis.yaml[cis.yaml]
+* link:files/install-on-kube-system/rbac.yaml[rbac.yaml]
+
+[source, bash]
+.*Uninstall*
+----
+cd install-on-kube-system/
+kubectl delete -f cis.yaml
+kubectl delete -f rbac.yaml
+kubectl delete serviceaccount bigip-ctlr -n kube-system
+kubectl delete secret bigip-login -n kube-system
+----
+
+=== Install on bigip-ctlr
+
+[source, bash]
+.*Install*
+----
+kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl create -f rbac.yaml
+kubectl create -f cis.yaml
+----
+
+* link:files/install-on-bigip-ctlr/cis.yaml[cis.yaml]
+* link:files/install-on-bigip-ctlr/rbac.yaml[rbac.yaml]
+* link:files/install-on-bigip-ctlr/rbac-small.yaml[rbac-small.yaml]
+
+[source, bash]
+.*Uninstall*
+----
+cd install-on-bigip-ctlr/
+kubectl delete -f cis.yaml
+kubectl delete -f rbac.yaml
+kubectl delete serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl delete secret bigip-login -n bigip-ctlr
+kubectl delete ns bigip-ctlr
+----
+
+== livenessProbe & readinessProbe
+
+This page provide an example of CIS Pod with livenessProbe & readinessProbe.
+
+* Full Deployment YAML - link:files/cis-probe.yaml[cis-probe.yaml]
+
+[source, yaml]
+.*Key Config*
+----
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 15
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 15
+----
+
+== Integrate CIS with flannel （etcd mode, docker0 network）
+
+Refer to link:solutions/flannel-etcd-mode.adoc[flannel-etcd-mode] for detailed steps.
+

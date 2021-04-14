@@ -1,0 +1,240 @@
+= 二进制flannle部署，非cni网络模式下与k8s CIS结合方案
+:toc: manual
+
+== 环境描述
+- flannel以etcd为存储，直接使用二进制文件部署，不走cni模式的k8s集群
+- k8s 集群版本v1.18
+- CIS版本 v1.14 或 v2.1.1
+
+== 结合方案
+
+- 由于flannel直接以二进制安装，且以etcd为存储，因此flanneld不会给node patch 相关的flannel注解，而CIS需要读取这些annotations来了解节点的public ip， vtepmac信息来构建vxlan，因此需要手工为这些node节点增加annotations。
+- 另一方面，flanneld也需要了解BIGIP节点信息，因此需要在etcd中手工增加BIGIP的subnet信息
+
+因此需要进行以下额外工作：
+
+[source, bash]
+.*1. 在etcd中手工增加bigip伪节点的subnet key信息*
+----
+etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" set -ttl 0 /coreos.com/network/subnets/10.244.100.0-24 '{"PublicIP":"10.1.10.245","BackendType":"vxlan","BackendData":{"VtepMAC":"00:0c:29:2e:db:2e"}}'
+----
+
+> 注意： 设置ttl 为0，避免租期过期，因为bigip本身无法自动去续约。 设置bigip的subnet应该较大，避免flannel在集群里分配重复的网段.
+可通过设置config key来规定可分配的最大最小网段
+etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" set /coreos.com/network/config '{ "Network": "10.244.0.0/16", "SubnetMin": "10.244.10.0", "SubnetMax": "10.244.99.0", "SubnetLen": 24, "Backend": {"Type": "vxlan"}}'
+
+[source, yaml]
+.*2. 给各个node节点增加annotations (仿照cni安装模式自动产生的annotations)*
+----
+[root@master ~]# kubectl get node node01 -o yaml
+apiVersion: v1
+kind: Node
+metadata:
+    annotations:
+    flannel.alpha.coreos.com/backend-data: '{"VtepMAC":"86:a8:e1:95:5e:cf"}'
+    flannel.alpha.coreos.com/backend-type: vxlan
+    flannel.alpha.coreos.com/kube-subnet-manager: "true"
+    flannel.alpha.coreos.com/public-ip: 10.1.10.152
+----
+
+
+== flannel.1网卡MAC在重启后总是变化的问题解决
+
+node节点重启后，flannel.1的Mac总是会发生改变，导致每次重启需要重新修改node的annotation，因需要使用以下脚本每次在node重启后自动执行：
+
+[source, bash]
+----
+#!/usr/bin/bash
+## wait 10s to make sure the flanneld had updated etcd
+## in production, shoud make sure the script running after flanneld 
+##set the self node interface ip
+nodeip=10.1.10.152
+for node in `etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" ls /coreos.com/network/subnets/`
+ do 
+   publicip=`etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" get $node | jq .PublicIP | sed 's/\"//g'`
+   if [ $nodeip == $publicip ]; then
+     vtepmac=`etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" get $node | jq .BackendData.VtepMAC | sed 's/\"//g'`
+     kubectl patch node node01 -p '{"metadata": { "annotations": { "flannel.alpha.coreos.com/backend-data": "{\"VtepMAC\": \"'$vtepmac'\"}", "flannel.alpha.coreos.com/backend-type": "vxlan", "flannel.alpha.coreos.com/kube-subnet-manager": "true", "flannel.alpha.coreos.com/public-ip": "'$publicip'" }}}'
+     break
+   fi  
+ done
+----
+
+> 注意： 修改对应的nodeip值为脚本所在机器的IP（用于flannel public ip的那个网卡的IP），修改对应的etcd服务器。 机器上需要能够执行etcdctl，kubectl，以及安装了jq
+
+该脚本需要在node重启后，flannel.1网卡创建后且该k8s node节点状态变为ready之前执行，因为当node状态变为ready后再patch annotations时CIS并不能感应到变为，从而导致BIGIP已经存在的pod IP的arp条目无法更新为新的MAC。因此需要利用systemd将该脚本在合适的时间启动：
+
+[source, bash]
+----
+[root@node01 ~]# cat /usr/lib/systemd/system/k8s-patch.service
+[Unit]
+Description=k8s annotation patch script
+After=flanneld.service
+After=kubelet.service
+ 
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh /root/k8s-node-anno-patch.sh
+ 
+[Install]
+WantedBy=multi-user.target
+----
+
+[source, bash]
+----
+systemctl daemon-reload
+systemctl enable k8s-patch.service
+----
+
+== 附录：问题分析过程
+
+=== 在容器里ping 10.224.100.10
+
+=== 在容器里查看eth0
+
+[source, bash]
+----
+sh-4.4# ip -d link show
+30: eth0@if31: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP mode DEFAULT group default
+    link/ether 02:42:0a:f4:37:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0 promiscuity 0 minmtu 68 maxmtu 65535
+    veth addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535
+----
+
+可以看到eth0 连到 宿主机机的if31
+
+=== 在宿主机上查看
+
+[source, bash]
+----
+[root@node01 ns]# ip -d link show | grep "31: "
+31: veth8064e43@if30: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master docker0 state UP mode DEFAULT group default
+----
+
+可以看到if31 是一个 veth pair， 由于在此环境下，使用docker0网桥，查看网桥可以看到, veth8064e43是网桥上的一个接口
+
+[source, bash]
+----
+[root@node01 ns]# brctl show docker0
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.0242e2d30c43	no		veth2e13f30
+		            					veth5ba1fdd
+		            					veth8064e43
+		            					vethc509417
+----
+
+[source, bash]
+----
+[root@node01 ns]# ip route
+default via 10.1.10.2 dev ens33 proto static metric 100
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.152 metric 100
+10.244.34.0/24 via 10.244.34.0 dev flannel.1 onlink
+10.244.55.0/ip route24 dev docker0 proto kernel scope link src 10.244.55.1
+10.244.100.0/24 via 10.244.100.0 dev flannel.1 onlink
+192.168.122.0/24 dev virbr0 proto kernel scope link src 192.168.122.1 linkdown
+----
+10.244.100.0.0 条目是到达BIGIP tunnel网段的路由，通过10.244.100.0/32这个 onlink 网关
+
+[source, bash]
+----
+[root@node01 ns]# arp -an
+? (10.244.100.0) at 00:0c:29:2e:db:2e [ether] PERM on flannel.1
+保证到达10.244.100.0/32的arp条目，实际这个MAC已经是BIGIP的vtep MAC了，该条目可以让系统将该MAC用于vxlan的外部目的MAC字段
+
+[root@node01 ns]# bridge fdb show | grep  00:0c:29:2e:db:2e
+00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent
+----
+
+fdb让vxlan的外部目的IP变为vtep的IP
+
+上述route，fdb，arp是保证容器能够通过vxlan找到F5 tunnel self ip的关键。
+
+如果etcd里没有存储bigip 伪node的信息， 则不会产生：
+10.244.100.0/24 via 10.244.100.0 dev flannel.1 onlink
+以及不会产生fdb条目：
+00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent
+也不会产生arp条目：
+? (10.244.100.0) at 00:0c:29:2e:db:2e [ether] PERM on flannel.1
+这就会导致容器内的数据包到达docker0之后，无法知道应该从哪个接口发出. 
+
+手工修复：
+1. 增加fdb 条目 bridge fdb add 00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent
+2. 增加路由条目 ip route add 10.244.100.0/24 dev flannel.1 via 10.244.100.0 onlink
+3. 增加arp条目 arp -i flannel.1 -s 10.244.100.0  00:0c:29:2e:db:2e
+
+etcd flannel自动修复（建议方法，这样任意node都能自动产生相应的arp fdb route信息）：
+在etcd里增加bigip node的subnet key信息:
+
+[source, bash]
+----
+etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints="https://10.1.10.151:2379" set -ttl 0 /coreos.com/network/subnets/10.244.100.0-24 '{"PublicIP":"10.1.10.245","BackendType":"vxlan","BackendData":{"VtepMAC":"00:0c:29:2e:db:2e"}}'
+----
+
+
+
+[source, bash]
+.*执行完patch后，f5 CIS 可以自动更新bigip上的fdb条目，但是无法更新已存在的pod的旧arp条目*
+----
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)# show net fdb
+
+-----------------------------------------------------------------
+Net::FDB
+Tunnel         Mac Address        Member                  Dynamic
+-----------------------------------------------------------------
+flannel_vxlan  9a:99:ad:07:a3:c5  endpoint:10.1.10.151%0  no
+flannel_vxlan  92:05:59:f5:2f:5d  endpoint:10.1.10.152%0  no
+
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)# show net fdb
+
+-----------------------------------------------------------------
+Net::FDB
+Tunnel         Mac Address        Member                  Dynamic
+-----------------------------------------------------------------
+flannel_vxlan  9a:99:ad:07:a3:c5  endpoint:10.1.10.151%0  no
+flannel_vxlan  36:30:db:6b:2a:04  endpoint:10.1.10.152%0  no 《《《《《 fdb 已被更新
+----
+
+[source, bash]
+.*arp 条目却无法更新：*
+----
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)# show net arp
+
+--------------------------------------------------------------------------------------------------
+Net::Arp
+Name                     Address      HWaddress          Vlan              Expire-in-sec  Status
+--------------------------------------------------------------------------------------------------
+/Common/k8s-10.244.55.4  10.244.55.4  92:05:59:f5:2f:5d  -                 -              static
+10.1.10.2                10.1.10.2    00:50:56:e7:40:a0  /Common/vlan_cis  294            resolved
+10.1.10.152              10.1.10.152  00:0c:29:98:b6:5b  /Common/vlan_cis  233            resolved
+
+
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)# show net arp
+
+--------------------------------------------------------------------------------------------------
+Net::Arp
+Name                     Address      HWaddress          Vlan              Expire-in-sec  Status
+--------------------------------------------------------------------------------------------------
+/Common/k8s-10.244.55.4  10.244.55.4  16:79:46:7b:37:47  -                 -              static  《《 未更新
+10.1.10.2                10.1.10.2    00:50:56:e7:40:a0  /Common/vlan_cis  273            resolved
+----
+
+[source, bash]
+
+.*解决方法：由于CIS在node状态发生变化时候会做感应到，因此只需要在机器刚启动，flannel.1接口被创建后且node状态还未变为ready前执行脚本即可，因此使用systemd控制一个service来执行脚本：*
+
+----
+[root@node01 ~]# cat /usr/lib/systemd/system/k8s-patch.service
+[Unit]
+Description=k8s annotation patch script
+After=flanneld.service
+After=kubelet.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh /root/k8s-node-anno-patch.sh
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl daemon-reload
+systemctl enable k8s-patch.service
+----

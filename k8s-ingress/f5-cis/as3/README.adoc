@@ -1,0 +1,204 @@
+= What's this
+:toc: manual
+
+F5 Container Ingress Service with AS3 agent, which BIG-IP Controller deployed in kubernetes use AS3 agent communicated with F5 BIG-IP HW/VE.
+
+* *Advantage* - L4/l7 load balance, complete BIG-IP ADC capability
+* *Disadvantage* - AS3 based configmap
+
+== All in One Demostrations
+
+[source, bash]
+.*Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/f5-cis/as3/general
+----
+
+[source, bash]
+.*Set up*
+----
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n kube-system
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f rbac.yaml
+kubectl create -f cis.yaml
+----
+
+=== Demostrations
+
+[source, bash]
+.*Deploy*
+----
+kubectl create ns test001
+kubectl create -f cm.yaml
+----
+
+[source, bash]
+.*Test*
+----
+curl http://192.168.5.50/coffee
+curl http://10.1.10.72/
+curl -k https://10.1.10.73/
+----
+
+=== Deployment Templates
+
+[cols="2,5a"]
+|===
+|Name |Template
+
+|Standard VS + TCP profile
+|
+----
+            "app_svc_vs": {
+              "class": "Service_TCP",
+----
+
+|source-address persistence
+|
+----
+              "persistenceMethods": [ "source-address" ],
+----
+
+|cookie persistence
+|
+----
+              "persistenceMethods": [ "cookie" ],
+----
+
+|custom tcp profile
+|
+----
+            "app_svc_vs": {
+              ...
+              "profileTCP": {
+                "use": "customTCPProfile"
+              },
+              ...
+            },
+            "customTCPProfile": {
+              "class": "TCP_Profile",
+              "idleTimeout": 600
+            },
+----
+
+|custom http profile
+|
+----
+            "app_svc_vs": {
+              ...
+              "profileHTTP": {
+                "use": "customHTTPProfile"
+              },
+              ...
+            },
+            "customHTTPProfile": {
+              "class": "HTTP_Profile",
+              "xForwardedFor": true
+            },
+----
+
+|custom oneconnect prpfile
+|
+----
+            "app_svc_vs": {
+              ...
+              "profileMultiplex": {
+                "use": "custoOneConnectProfile"
+              },
+              ...
+            },
+            "custoOneConnectProfile": {
+              "class": "Multiplex_Profile",
+              "sourceMask": "255.255.255.255"
+            },
+----
+
+|snat
+|
+----
+              "snat": "self",
+----
+
+|Connection Mirroring
+|
+----
+              "mirroring": "L4",
+----
+
+|least-connections-member
+|
+----
+              "loadBalancingMode": "least-connections-member",
+----
+
+|multiple monitors
+|
+----
+              "monitors": [
+                "tcp",
+                "http"
+              ],
+----
+
+|TLS
+|
+----
+            "serviceMain": {
+              "class": "Service_HTTPS",
+              ...
+              "serverTLS": "webtls"
+            },
+            "webtls": {
+              "class": "TLS_Server",
+              "certificates": [
+              {
+                "certificate": "webcert"
+              }
+              ]
+            },
+            "webcert": {
+              "class": "Certificate",
+              "certificate": {"bigip": "/Common/default.crt"},
+              "privateKey": {"bigip": "/Common/default.key"}
+            }
+----
+
+|td
+|
+----
+td
+----
+
+|===
+
+
+== Multiports Service
+
+[source, bash]
+.*1. Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/f5-cis/as3/multiports
+----
+
+[source, bash]
+.*2. Deploy app*
+----
+kubectl apply -f backend.yaml
+----
+
+
+
+[source, bash]
+.*3. Deploy configmap*
+----
+kubectl apply -f cm.yaml
+----
+
+[source, bash]
+.*4. Test*
+----
+curl http://192.168.5.40
+curl http://192.168.5.40:8081
+----

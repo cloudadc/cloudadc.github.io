@@ -6,7 +6,7 @@
     "styles": {
         "website": "styles/website.css"
     },
-    "plugins": ["collapsible-menu","donate","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],
+    "plugins": ["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],
     "pluginsConfig": {
         "donate": {
           "wechat": "http://ksoong.org/docs/content/images/wechat.png",

@@ -1,0 +1,32 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mysql
+  namespace: db-mysql
+  labels:
+    f5type: virtual-server
+data:
+  schema: "f5schemadb://bigip-virtual-server_v0.1.7.json"
+  data: |-
+    {
+      "virtualServer": {
+        "frontend": {
+          "balance": "least-connections-member",
+          "mode": "tcp",
+          "partition": "k8s",
+          "virtualAddress": {
+            "bindAddr": "192.168.5.45",
+            "port": 3306
+          }
+        },
+        "backend": {
+          "serviceName": "mysql-svc",
+          "servicePort": 3306,
+          "healthMonitors": [{
+            "interval": 30,
+            "timeout": 91,
+            "protocol": "tcp"
+          }]
+        }
+      }
+    }

@@ -1,0 +1,252 @@
+= Canary Releasing
+:toc: manual
+
+== What's this?
+
+F5 CIS AS3 support Canary Releasing, no matter two services in sample namespaces of single K8S cluster, or two services in different namespaces of different K8S clusters.
+
+This page contains the demonstrations that 5 types of Canary Releasing F5 CIS AS3 supported.
+
+F5 CIS support Canary Releasing via iRules.
+
+== Five types of Canary Releasing
+
+[source, bash]
+.*Deploy Services*
+----
+kubectl apply -f backend-canary.yaml
+----
+
+* link:backend-canary.yaml[backend-canary.yaml]
+
+This will deploy 2 services, the `/version` will return app version, the 1st return `{"appVersion": "1.0"}`, the 2nd service return `{"appVersion": "1.1"}`.
+
+=== URL
+
+[source, bash]
+.*1. Key iRules*
+----
+when HTTP_REQUEST {
+   if { [HTTP::uri] starts_with "/foo" } {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+    } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+   }
+}  
+----
+
+[source, bash]
+.*2. Deploy to F5*
+----
+kubectl apply -f cm-canary-url.yaml
+----
+
+* link:cm-canary-url.yaml[cm-canary-url.yaml]
+
+[source, bash]
+.*3. Demonstrations*
+----
+$ curl http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.78
+    Server Port: 8080
+    Server Hostname: app-v1-ff65997d6-h28f4
+
+$ curl http://192.168.5.40/foo
+
+F5 Demo App
+
+    Request URI: /foo
+
+    Server IP: 10.244.2.77
+    Server Port: 8080
+    Server Hostname: app-v2-548875d666-tzc5c
+----
+
+=== Source Address
+
+[source, bash]
+.*1. Key iRules*
+----
+when CLIENT_ACCEPTED {
+  if {[IP::addr [IP::client_addr] equals 192.168.5.30] or [IP::addr [IP::client_addr] equals 192.168.5.0/24]} {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+  } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+  }
+}
+----
+
+[source, bash]
+.*2. Deploy to F5*
+----
+kubectl apply -f cm-canary-sourceaddr.yaml
+----
+
+* link:cm-canary-sourceaddr.yaml[cm-canary-sourceaddr.yaml]
+
+[source, bash]
+.*3. Demonstrations*
+----
+$ curl http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.77
+    Server Port: 8080
+    Server Hostname: app-v2-548875d666-tzc5c
+----
+
+=== Http Header
+
+[source, bash]
+.*1. Key iRules*
+----
+when HTTP_REQUEST {
+  if {[HTTP::header exists "Canary"] and [HTTP::header values "Canary"] equals "true"} {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+  } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+  }
+}
+----
+
+[source, bash]
+.*2. Deploy to F5*
+----
+kubectl apply -f cm-canary-headers.yaml
+----
+
+* link:cm-canary-headers.yaml[cm-canary-headers.yaml]
+
+[source, bash]
+.*3. Demonstrations*
+----
+$ curl http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.78
+    Server Port: 8080
+    Server Hostname: app-v1-ff65997d6-h28f4
+
+$ curl --header "Canary: true" http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.77
+    Server Port: 8080
+    Server Hostname: app-v2-548875d666-tzc5c
+----
+
+=== Cookie
+
+[source, bash]
+.*1. Key iRules*
+----
+when HTTP_REQUEST {
+  if {[HTTP::cookie exists "Canary"] and [HTTP::cookie value "Canary"] equals "true"} {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+  } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+  }
+}
+----
+
+[source, bash]
+.*2. Deploy to F5*
+----
+kubectl apply -f cm-canary-cookie.yaml
+----
+
+* link:cm-canary-cookie.yaml[cm-canary-cookie.yaml]
+
+[source, bash]
+.*3. Demonstrations*
+----
+$ curl  http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.78
+    Server Port: 8080
+    Server Hostname: app-v1-ff65997d6-h28f4
+
+$ curl --cookie "Canary=true" http://192.168.5.40/bar
+
+F5 Demo App
+
+    Request URI: /bar
+
+    Server IP: 10.244.2.77
+    Server Port: 8080
+    Server Hostname: app-v2-548875d666-tzc5c
+----
+
+=== Ratio
+
+[source, bash]
+.*1. Key iRules*
+----
+// option 1:
+when HTTP_REQUEST {
+  if {[format %0.2f [expr {rand()}]] < 0.25} {
+      pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+  } else {
+      pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+  }
+}
+
+// option 2:
+when CLIENT_ACCEPTED {
+  if {[expr {[expr {0xffffffff & [crc32 [IP::client_addr]]}] % 100}] < 25} {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+  } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+  }
+} 
+----
+
+[source, bash]
+.*2. Deploy to F5*
+----
+kubectl apply -f cm-canary-ratio.yaml
+----
+
+link:cm-canary-ratio.yaml[cm-canary-ratio.yaml]
+
+[source, bash]
+.*3. Demonstrations*
+----
+$ curl  http://192.168.5.40/
+
+F5 Demo App
+
+    Request URI: /
+
+    Server IP: 10.244.2.77
+    Server Port: 8080
+    Server Hostname: app-v2-548875d666-tzc5c
+
+$ curl  http://192.168.5.40/
+
+F5 Demo App
+
+    Request URI: /
+
+    Server IP: 10.244.2.78
+    Server Port: 8080
+    Server Hostname: app-v1-ff65997d6-h28f4
+----

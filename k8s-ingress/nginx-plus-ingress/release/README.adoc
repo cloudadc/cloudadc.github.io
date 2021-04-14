@@ -1,0 +1,10 @@
+= Zero-Downtime Releases
+:toc: manual
+
+== Blue-Green Deployments
+
+
+== Canary Releasing
+
+
+

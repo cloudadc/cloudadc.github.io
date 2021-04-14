@@ -1,0 +1,60 @@
+= Container Ingress & Container Route
+:toc: manual
+
+== Popularity of Ingress Controllers 
+
+The below Popularity of Ingress Controllers is from the downloads counts of DockerHub:
+
+image:etc/img/k8s-ingress-downloads-dockerhub.png[]
+
+== Exist Solutions Demonstation
+
+[cols="2,2,5a"]
+|===
+|Solution |Provider |Demonstations
+
+|link:f5-cis/cccl/README.adoc[F5 Container Ingress Service] 
+|F5 
+|
+* F5 CIS `cccl` agent
+* L4 load balancer
+* Various balance methods
+* TCP health monitor 
+
+|link:f5-cis/as3/README.adoc[F5 Container Ingress Service]
+|F5
+|
+* F5 CIS `as3` agent
+* L4 load balancer
+* L7 load balancer
+* `source-address` and `cookie` persistence
+* connection mirroring 
+* `least-connections-member` load balancer mode
+* SNAT
+* `tcp` anf `http` health check methods
+* customized tcp idel timeout
+* XFF
+* OneConnect Acceleration Profile
+* TLS
+
+|link:f5-cis/ingress/README.adoc[F5 Container Ingress Service]
+|F5
+|
+* Ingress Controller/Ingress
+* `least-connections-member` load balancing method
+* L7 load balancer
+* TLS
+* rewrite `app-root` and `target-url`
+
+|link:nginx-ingress/README.adoc[Nginx Ingress Controller]
+|Open Source
+|
+
+|link:nginx-plus-ingress/README.adoc[F5 Nginx Plus Ingress Controller]
+|F5
+|
+* Nginx plus docker image build
+* L7 load balancer
+* TLS
+
+|=== 

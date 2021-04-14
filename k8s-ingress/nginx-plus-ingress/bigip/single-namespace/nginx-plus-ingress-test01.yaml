@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ingress-test01
+  namespace: nginx-ingress
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx-ingress-test01
+  template:
+    metadata:
+      labels:
+        app: nginx-ingress-test01
+    spec:
+      serviceAccountName: nginx-ingress
+      containers:
+      - image: cloudadc/nginx-ingress:1.8.1.1
+        imagePullPolicy: IfNotPresent
+        name: nginx-plus-ingress
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        - name: readiness-port
+          containerPort: 8081
+        - name: monitor
+          containerPort: 8898
+        readinessProbe:
+          httpGet:
+            path: /nginx-ready
+            port: readiness-port
+          periodSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsUser: 101
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        args:
+          - -nginx-plus
+          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+          - -watch-namespace=test01
+          - -nginx-status=true
+          - -nginx-status-allow-cidrs=0.0.0.0/0
+          - -nginx-status-port=8898

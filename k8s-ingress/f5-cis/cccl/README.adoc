@@ -1,0 +1,52 @@
+= What's this
+
+F5 Container Ingress Service with CCCL agent, which BIG-IP Controller deployed in kubernetes use CCCL agent communicated with F5 BIG-IP HW/VE.
+
+* *Advantage* - L4 load balance, simple L7 load balance
+* *Disadvantage* - Lack of complex ADC capbilities
+
+[source, bash]
+.*Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/f5-cis/cccl
+----
+
+[source, bash]
+.*Set up*
+----
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n kube-system
+kubectl create serviceaccount bigip-ctlr -n kube-system
+kubectl create -f rbac.yaml
+kubectl create -f cis.yaml
+----
+
+== Demostrations
+
+[source, bash]
+.*1. Deploy*
+----
+kubectl create ns test001
+kubectl create -f mysql.yaml
+kubectl create -f cm.yaml
+----
+
+[source, bash]
+.*2. Test*
+----
+$ mysql -h10.1.10.60 -uroot -pf5demo666 -P3306
+
+MySQL [(none)]> show variables like 'read_only';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| read_only     | OFF   |
++---------------+-------+
+
+MySQL [(none)]> show status like 'Slave_running';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| Slave_running | OFF   |
++---------------+-------+
+----

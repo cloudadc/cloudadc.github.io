@@ -1,0 +1,165 @@
+= Nginx Ingress Controller
+:toc: manual
+
+== Installation
+
+[source, bash]
+.*Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/nginx-ingress/install/
+
+git clone https://github.com/nginxinc/kubernetes-ingress/
+cd kubernetes-ingress/deployments
+git checkout v1.7.2
+----
+
+[source, bash]
+.*Install*
+----
+// 1. configure rbac
+kubectl apply -f common/ns-and-sa.yaml
+kubectl apply -f rbac/rbac.yaml
+
+// 2. create common resource
+kubectl apply -f common/default-server-secret.yaml
+kubectl apply -f common/nginx-config.yaml
+kubectl apply -f common/vs-definition.yaml
+kubectl apply -f common/vsr-definition.yaml
+kubectl apply -f common/ts-definition.yaml
+
+// 3. deploy ingress controller
+kubectl apply -f deployment/nginx-ingress.yaml
+
+// 4. set up f5 cis
+kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl create -f rbac-global-nginx.yaml
+kubectl create -f cis-global-nginx.yaml
+
+// 5. create service and configmap
+kubectl create -f nginx-ingress-svc.yaml 
+kubectl apply -f nginx-ingress-f5-configmap.yaml 
+----
+
+== Coffee Tea Example
+
+[source, bash]
+.*0. Get Code*
+----
+git clone https://github.com/cloudadc/container-ingress.git
+cd container-ingress/nginx-ingress/coffee-tea/
+----
+
+[source, bash]
+.*1. Set up*
+----
+kubectl apply -f cafe.yaml
+kubectl create -f cafe-ingress.yaml 
+----
+
+[source, bash]
+.*2. Test*
+----
+$ curl http://cafe.example.com/coffee
+Server address: 10.244.2.221:8080
+Server name: coffee-67c6f7c5fd-thlc8
+Date: 11/Jul/2020:17:31:26 +0000
+URI: /coffee
+Request ID: 49b7f783e298387eaeed05f8e493b583
+
+$ curl http://cafe.example.com/tea
+Server address: 10.244.1.5:8080
+Server name: tea-7df475c6-nbdrs
+Date: 11/Jul/2020:17:31:33 +0000
+URI: /tea
+Request ID: d8344e70dfe8627d67a136c701851573
+----
+
+[source, bash]
+.*3. Check config change*
+----
+kubectl exec -it nginx-ingress-658848c866-vsbzh -n nginx-ingress -- bash
+$ cd /etc/nginx/conf.d/
+
+$ cat cafe-cafe-ingress.conf 
+
+upstream cafe-cafe-ingress-cafe.example.com-coffee-svc-80 {
+	zone cafe-cafe-ingress-cafe.example.com-coffee-svc-80 256k;
+	random two least_conn;
+	
+	server 10.244.1.6:8080 max_fails=1 fail_timeout=10s max_conns=0;
+	server 10.244.2.221:8080 max_fails=1 fail_timeout=10s max_conns=0;
+	
+}
+upstream cafe-cafe-ingress-cafe.example.com-tea-svc-80 {
+	zone cafe-cafe-ingress-cafe.example.com-tea-svc-80 256k;
+	random two least_conn;
+	
+	server 10.244.1.5:8080 max_fails=1 fail_timeout=10s max_conns=0;
+	server 10.244.2.219:8080 max_fails=1 fail_timeout=10s max_conns=0;
+	server 10.244.2.220:8080 max_fails=1 fail_timeout=10s max_conns=0;
+	
+}
+
+server {
+	listen 80;
+	server_tokens on;
+	server_name cafe.example.com;
+	
+	location /tea {
+		proxy_http_version 1.1;
+		proxy_connect_timeout 60s;
+		proxy_read_timeout 60s;
+		proxy_send_timeout 60s;
+		client_max_body_size 1m;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Port $server_port;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_buffering on;
+		proxy_pass http://cafe-cafe-ingress-cafe.example.com-tea-svc-80;
+	}
+
+	location /coffee {
+		proxy_http_version 1.1;
+		proxy_connect_timeout 60s;
+		proxy_read_timeout 60s;
+		proxy_send_timeout 60s;
+		client_max_body_size 1m;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Host $host;
+		proxy_set_header X-Forwarded-Port $server_port;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_buffering on;
+		proxy_pass http://cafe-cafe-ingress-cafe.example.com-coffee-svc-80;
+	}
+}
+----
+
+[source, bash]
+.*4. Check logs*
+----
+$ kubectl logs -f nginx-ingress-658848c866-vsbzh -n nginx-ingress
+2020/07/11 17:40:09 [notice] 10#10: signal 29 (SIGIO) received
+I0711 17:40:09.494809       1 event.go:278] Event(v1.ObjectReference{Kind:"Ingress", Namespace:"cafe", Name:"cafe-ingress", UID:"051be8fa-aa72-462c-8b5f-a477020eda94", APIVersion:"extensions/v1beta1", ResourceVersion:"3398169", FieldPath:""}): type: 'Normal' reason: 'AddedOrUpdated' Configuration for cafe/cafe-ingress was added or updated
+----
+
+== Controller Deployment Architectures
+
+The Deployment Architectures using both BIGIP and Nginx, there are 3 trypical deployment architectures:
+
+* BIG-IP with Cluster-wide Ingress Controller
+* BIG-IP with Single-namespace Ingress Controller
+* BIG-IP with Ingress Controller for Specific Ingress Class
+
+More details refer to link:bigip/README.adoc[bigip with nginx].
+
+== Zero-Downtime Releases
+
+More details about Blue-Green Deployments and Canary Releasing refer to link:release/README.adoc[link].

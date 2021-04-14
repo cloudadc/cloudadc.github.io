@@ -1,0 +1,89 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: perftest100
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: perftest100.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: perftest101
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: perftest101.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: perftest102
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: perftest102.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: perftest103
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: perftest103.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: perftest104
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: perftest104.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80
