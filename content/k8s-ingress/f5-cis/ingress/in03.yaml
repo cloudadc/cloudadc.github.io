@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-03
+  namespace: test003
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.62"
+    virtual-server.f5.com/partition: "k8s"
+    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/allow-http: "false"
+spec:
+  tls:
+  - secretName: /Common/clientssl
+  rules:
+  - host: svc.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-1-svc
+          servicePort: 80

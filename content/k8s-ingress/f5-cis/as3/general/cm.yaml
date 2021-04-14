@@ -1,0 +1,145 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: f5-bigip-confgimap
+  namespace: test001
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "f5-bigip-confgimap",
+        "label": "f5-bigip-confgimap",
+        "test001": {
+          "class": "Tenant",
+          "test001_1": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_TCP",
+              "persistenceMethods": [ "source-address" ],
+              "virtualAddresses": [
+                "192.168.5.50"
+              ],
+              "profileTCP": {
+                "use": "customTCPProfile"
+              },
+              "snat": "self",
+              "virtualPort": 80,
+              "mirroring": "L4",
+              "pool": "test001_app_1_svc_pool"
+            },
+            "customTCPProfile": {
+              "class": "TCP_Profile",
+              "idleTimeout": 600
+            },
+            "test001_app_1_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          },
+          "test001_2": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.51"
+              ],
+              "profileHTTP": {
+                "use": "customHTTPProfile"
+              },
+              "profileMultiplex": {
+                "use": "custoOneConnectProfile"
+              },
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "test001_app_2_svc_pool"
+            },
+            "customHTTPProfile": {
+              "class": "HTTP_Profile",
+              "xForwardedFor": true
+            },
+            "custoOneConnectProfile": {
+              "class": "Multiplex_Profile",
+              "sourceMask": "255.255.255.255",
+              "maxConnectionAge": 86400,
+              "maxConnections": 10000 ,
+              "maxConnectionReuse": 5
+            },
+            "test001_app_2_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp",
+                "http"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          },
+          "test001_3": {
+            "class": "Application",
+            "template": "https",
+            "serviceMain": {
+              "class": "Service_HTTPS",
+              "virtualAddresses": [
+                "192.168.5.52"
+              ],
+              "snat": "self",
+              "virtualPort": 443,
+              "pool": "test001_app_3_svc_pool",
+              "serverTLS": "webtls"
+            },
+            "test001_app_3_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            },
+            "webtls": {
+              "class": "TLS_Server",
+              "certificates": [
+              {
+                "certificate": "webcert"
+              }
+              ]
+            },
+            "webcert": {
+              "class": "Certificate",
+              "certificate": {"bigip": "/Common/default.crt"},
+              "privateKey": {"bigip": "/Common/default.key"}
+            }
+          }
+          
+        }
+      }
+    }

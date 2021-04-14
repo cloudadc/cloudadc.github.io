@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: app-1
+  name: app-1
+  namespace: test001
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-1
+    spec:
+      containers:
+      - image: kylinsoong/backend:0.0.4
+        name: backend
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: app-2
+  name: app-2
+  namespace: test001
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app-2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-2
+    spec:
+      containers:
+      - image: kylinsoong/backend:0.0.4
+        name: backend
+        ports:
+        - containerPort: 8080
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-1
+  name: app-1-svc
+  namespace: test001
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app-1
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-2
+  name: app-2-svc
+  namespace: test001
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app-2
+  sessionAffinity: None
+  type: ClusterIP

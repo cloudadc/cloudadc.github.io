@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: cafe
+  annotations:
+    virtual-server.f5.com/ip: "192.168.5.3"
+    virtual-server.f5.com/partition: "k8s"
+spec:
+  rules:
+  - host: cafe.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: coffee-svc
+          servicePort: 80

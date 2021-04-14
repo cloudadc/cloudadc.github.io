@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-01
+  namespace: test001
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.60"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/balance: "least-connections-member"
+    virtual-server.f5.com/health: |
+      [
+        {
+          "path":     "app1.apps.example.com",
+          "send":     "HTTP GET /version",
+          "interval": 5,
+          "timeout":  16
+        },
+        {
+          "path":     "app2.apps.example.com",
+          "send":     "HTTP GET /version",
+          "interval": 5,
+          "timeout":  16
+        }
+      ]
+spec:
+  rules:
+  - host: app1.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-1-svc
+          servicePort: 80
+  - host: app2.apps.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: app-2-svc
+          servicePort: 80

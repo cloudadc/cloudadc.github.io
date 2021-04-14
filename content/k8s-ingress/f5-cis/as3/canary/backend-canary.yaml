@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    cis_scanner_zone: zone_1
+  name: test001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-v1
+  name: app-v1
+  namespace: test001
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-v1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: app-v1
+    spec:
+      containers:
+      - image: cloudadc/backend:0.0.6
+        name: backend
+        ports:
+        - containerPort: 8080
+        env:
+        - name: APP_DATACENTER_NAME
+          value: "TEST"
+        - name: APP_VERSION_NUMBER
+          value: "1.0"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-v2
+  name: app-v2
+  namespace: test001
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-v2
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-v2
+    spec:
+      containers:
+      - image: cloudadc/backend:0.0.6
+        name: backend
+        ports:
+        - containerPort: 8080
+        env:
+        - name: APP_DATACENTER_NAME
+          value: "TEST"
+        - name: APP_VERSION_NUMBER
+          value: "1.1"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    cis.f5.com/as3-tenant: "test001"
+    cis.f5.com/as3-app: "test001_app-v1-svc_svc"
+    cis.f5.com/as3-pool: "test001_app-v1-svc_80_pool"
+  name: app-v1-svc
+  namespace: test001
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app-v1
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    cis.f5.com/as3-tenant: "test001"
+    cis.f5.com/as3-app: "test001_app-v2-svc_svc"
+    cis.f5.com/as3-pool: "test001_app-v2-svc_80_pool"
+  name: app-v2-svc
+  namespace: test001
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app-v2
+  type: ClusterIP
+

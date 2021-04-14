@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    cis.f5.com/as3-tenant: nginx-ingress
+    cis.f5.com/as3-app: nginx-ingress-test01-app
+    cis.f5.com/as3-pool: nginx-ingress-test01-pool
+  name: nginx-ingress-test01-svc
+  namespace: nginx-ingress
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: nginx-ingress-test01
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    cis.f5.com/as3-tenant: nginx-ingress
+    cis.f5.com/as3-app: nginx-ingress-test02-app
+    cis.f5.com/as3-pool: nginx-ingress-test02-pool
+  name: nginx-ingress-test02-svc
+  namespace: nginx-ingress
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  - name: https
+    port: 443
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: nginx-ingress-test02
+  sessionAffinity: None
+  type: ClusterIP

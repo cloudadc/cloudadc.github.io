@@ -1,0 +1,50 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: cistest
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "cm-cistest",
+        "cistest": {
+          "class": "Tenant",
+          "cistest": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs_http": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.5.40"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "cistest_app_svc_pool"
+            },
+            "cistest_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }

@@ -1,0 +1,67 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-test001
+  namespace: test001
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true, 
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "cm-test001",
+        "test001": {
+          "class": "Tenant",
+          "test001_app-v1-svc_svc": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+               "iRules": ["test001_app-v1-svc_irules"],
+              "virtualAddresses": [
+                "192.168.5.40"
+              ],
+              "virtualPort": 80
+            },
+            "test001_app-v1-svc_80_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            },
+            "test001_app-v1-svc_irules": {
+              "class": "iRule",
+              "iRule": "when HTTP_REQUEST {\n   if { [HTTP::uri] starts_with \"/foo\" } {\n    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool \n    } else {\n    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool \n   }\n}" 
+            }
+          },
+          "test001_app-v2-svc_svc": {
+            "class": "Application",
+            "template": "generic",
+            "test001_app-v2-svc_80_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }

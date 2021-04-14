@@ -1,0 +1,1615 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>PERFORMANCE · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../../k8s-net/" />
+    
+    
+    <link rel="prev" href="../nginx-plus-ingress/release/" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    CONTAINER INGRESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../f5-cis/">
+            
+                <a href="../f5-cis/">
+            
+                    
+                    F5 CIS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../f5-cis/install.html">
+            
+                <a href="../f5-cis/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1.1" data-path="../f5-cis/solutions/flannel-etcd-mode.html">
+            
+                <a href="../f5-cis/solutions/flannel-etcd-mode.html">
+            
+                    
+                    Flannel etcd mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../f5-cis/config.html">
+            
+                <a href="../f5-cis/config.html">
+            
+                    
+                    配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../f5-cis/as3/">
+            
+                <a href="../f5-cis/as3/">
+            
+                    
+                    AS3
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.3.1" data-path="../f5-cis/as3/canary/">
+            
+                <a href="../f5-cis/as3/canary/">
+            
+                    
+                    Canary Releasing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../f5-cis/ingress/">
+            
+                <a href="../f5-cis/ingress/">
+            
+                    
+                    Ingress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.5" data-path="../f5-cis/cccl/">
+            
+                <a href="../f5-cis/cccl/">
+            
+                    
+                    CCCL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../nginx-ingress/">
+            
+                <a href="../nginx-ingress/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../nginx-ingress/bigip/">
+            
+                <a href="../nginx-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../nginx-plus-ingress/">
+            
+                <a href="../nginx-plus-ingress/">
+            
+                    
+                    NGINX PLUS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../nginx-plus-ingress/monitor/dashboard.html">
+            
+                <a href="../nginx-plus-ingress/monitor/dashboard.html">
+            
+                    
+                    Monitor Dashboard
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../nginx-plus-ingress/bigip/">
+            
+                <a href="../nginx-plus-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../nginx-plus-ingress/l4-lb/">
+            
+                <a href="../nginx-plus-ingress/l4-lb/">
+            
+                    
+                    L4 Load Balancing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../nginx-plus-ingress/health-checks/">
+            
+                <a href="../nginx-plus-ingress/health-checks/">
+            
+                    
+                    Active Health Checks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../nginx-plus-ingress/release/">
+            
+                <a href="../nginx-plus-ingress/release/">
+            
+                    
+                    Zero-Downtime Releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    PERFORMANCE
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../k8s-net/">
+            
+                <a href="../../k8s-net/">
+            
+                    
+                    CONTAINER NETWORK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../k8s-net/docker.html">
+            
+                <a href="../../k8s-net/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../k8s-net/k8s.html">
+            
+                <a href="../../k8s-net/k8s.html">
+            
+                    
+                    K8S
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../nginx/">
+            
+                <a href="../../nginx/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../nginx/concepts.html">
+            
+                <a href="../../nginx/concepts.html">
+            
+                    
+                    入门到精通
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../nginx/install.html">
+            
+                <a href="../../nginx/install.html">
+            
+                    
+                    离线安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../nginx/controller.html">
+            
+                <a href="../../nginx/controller.html">
+            
+                    
+                    Nginx Controller
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="../../nginx/apidrive.html">
+            
+                <a href="../../nginx/apidrive.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../nginx/usecase.html">
+            
+                <a href="../../nginx/usecase.html">
+            
+                    
+                    Use Case
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.4.1" data-path="../../nginx/docker.html">
+            
+                <a href="../../nginx/docker.html">
+            
+                    
+                    Docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../nginx/app/">
+            
+                <a href="../../nginx/app/">
+            
+                    
+                    现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../dist.html">
+            
+                <a href="../../dist.html">
+            
+                    
+                    DISTRIBUTED
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../zk/">
+            
+                <a href="../../zk/">
+            
+                    
+                    ZooKeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/distribute-dev-framework/content/dubbo">
+            
+                    
+                    DUBBO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../../mongo/">
+            
+                <a href="../../mongo/">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../../mongo/viewpoint/presentation.html">
+            
+                <a href="../../mongo/viewpoint/presentation.html">
+            
+                    
+                    定位
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1.1" data-path="../../mongo/viewpoint/5thingsfornosql.html">
+            
+                <a href="../../mongo/viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.2" data-path="../../mongo/viewpoint/oversea.html">
+            
+                <a href="../../mongo/viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.3" data-path="../../mongo/viewpoint/td.html">
+            
+                <a href="../../mongo/viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.4" data-path="../../mongo/viewpoint/cards.html">
+            
+                <a href="../../mongo/viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../../mongo/dba/basic.html">
+            
+                <a href="../../mongo/dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3" data-path="../../mongo/dev/">
+            
+                <a href="../../mongo/dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.3.1" data-path="../../mongo/dev/aggregation.html">
+            
+                <a href="../../mongo/dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.2" data-path="../../mongo/dev/aggregation-sum.html">
+            
+                <a href="../../mongo/dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.3" data-path="../../mongo/dev/transactions.html">
+            
+                <a href="../../mongo/dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.4" data-path="../../mongo/dev/java.html">
+            
+                <a href="../../mongo/dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.5" data-path="../../mongo/dev/geo.html">
+            
+                <a href="../../mongo/dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4" data-path="../../mongo/dba/cluster-admin.html">
+            
+                <a href="../../mongo/dba/cluster-admin.html">
+            
+                    
+                    运维
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.4.1" data-path="../../mongo/dba/replication.html">
+            
+                <a href="../../mongo/dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.2" data-path="../../mongo/dba/rs-deployments.html">
+            
+                <a href="../../mongo/dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.3" data-path="../../mongo/dba/rs-maintenance.html">
+            
+                <a href="../../mongo/dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.4" data-path="../../mongo/dba/sharding.html">
+            
+                <a href="../../mongo/dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.5" data-path="../../mongo/dba/dba.html">
+            
+                <a href="../../mongo/dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.6" data-path="../../mongo/dba/sh-restore.html">
+            
+                <a href="../../mongo/dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.7" data-path="../../mongo/dba/opsmanager.html">
+            
+                <a href="../../mongo/dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.8" data-path="../../mongo/dba/perf.html">
+            
+                <a href="../../mongo/dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.9" data-path="../../mongo/dba/troubleshooting.html">
+            
+                <a href="../../mongo/dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.5" data-path="../../mongo/dba/security.html">
+            
+                <a href="../../mongo/dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../../kafka/">
+            
+                <a href="../../kafka/">
+            
+                    
+                    Kafka
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.4.1" data-path="../../kafka/installing/">
+            
+                <a href="../../kafka/installing/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../../elastic/">
+            
+                <a href="../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../../spark/">
+            
+                <a href="../../spark/">
+            
+                    
+                    Spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/nodejs-honeypot/">
+            
+                    
+                    NODE.JS HONEYPOT
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../.." >PERFORMANCE</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="container-ingress-performance">Container Ingress Performance</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_http_request_performance_comparision">HTTP Request Performance Comparision</a>
+<ul class="sectlevel2">
+<li><a href="#_software_used">Software Used</a></li>
+<li><a href="#_set_up">Set up</a></li>
+<li><a href="#_topology">Topology</a></li>
+<li><a href="#_metrics_collected">Metrics Collected</a></li>
+<li><a href="#_results">Results</a></li>
+</ul>
+</li>
+<li><a href="#_f5_cis_performance_metric">F5 CIS Performance Metric</a>
+<ul class="sectlevel2">
+<li><a href="#_preparing">Preparing</a></li>
+<li><a href="#_ingress_in_multiple_namespaces">Ingress in multiple namespaces</a></li>
+<li><a href="#_configmap_in_multiple_namespaces">Configmap in multiple namespaces</a></li>
+<li><a href="#_ingress_in_single_namespace">Ingress in single namespace</a></li>
+<li><a href="#_configmap_in_single_namespace">Configmap in single namespace</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="_http_request_performance_comparision">HTTP Request Performance Comparision</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section will compare the performance of different Ingress controller(F5, Nginx, HAProxy) to process simple http request.</p>
+</div>
+<div class="sect2">
+<h3 id="_software_used">Software Used</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>wrk</code> 4.1.0</p>
+</li>
+<li>
+<p><code>k8s</code> 1.15.12, one master two worker, 6 vCPU 12 GB(each node 2 vCPU 4 GB)</p>
+</li>
+<li>
+<p><code>CentOS Linux</code> 7.8.2003</p>
+</li>
+<li>
+<p><code>nginx/nginx-ingress:1.7.2</code></p>
+</li>
+<li>
+<p><code>f5networks/k8s-bigip-ctlr:2.0.0</code></p>
+</li>
+<li>
+<p><code>haproxytech/kubernetes-ingress:latest</code></p>
+</li>
+<li>
+<p><code>kylinsoong/cafe:1.0</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_set_up">Set up</h3>
+<div class="listingblock">
+<div class="title"><strong>1. Get Code</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">git <span class="hljs-built_in">clone</span> https://github.com/cloudadc/container-ingress.git
+<span class="hljs-built_in">cd</span> container-ingress/performance/install</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. Install nginx ingress controller</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> ns-and-sa.yaml
+kubectl apply <span class="hljs-_">-f</span> rbac.yaml
+kubectl apply <span class="hljs-_">-f</span> default-server-secret.yaml
+kubectl apply <span class="hljs-_">-f</span> nginx-config.yaml
+kubectl apply <span class="hljs-_">-f</span> vs-definition.yaml
+kubectl apply <span class="hljs-_">-f</span> vsr-definition.yaml
+kubectl apply <span class="hljs-_">-f</span> ts-definition.yaml
+kubectl apply <span class="hljs-_">-f</span> nginx-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> nginx-ingress-nodeport.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. Install F5 container ingress service</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl apply <span class="hljs-_">-f</span> rbac-cis.yaml
+kubectl apply <span class="hljs-_">-f</span> cis.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. Install HAProxy controller</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> haproxy-ingress.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. Verify the installation</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl get ns
+NAME                 STATUS   AGE
+bigip-ctlr           Active   5m
+haproxy-controller   Active   5m
+nginx-ingress        Active   5m</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_topology">Topology</h3>
+<div class="paragraph">
+<p>The topology looks like below diagram:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/performance-comparision.png" alt="performance comparision.png"></span></p>
+</div>
+<div class="paragraph">
+<p>The <code>cafe</code> application have 3 replicas are used as performance comparision application, the k8s ingress object are created, use the following command to deploy performance comparision application:</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Get Code</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">git <span class="hljs-built_in">clone</span> https://github.com/cloudadc/container-ingress.git
+<span class="hljs-built_in">cd</span> container-ingress/performance/cafe</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Deploy Cafe Application</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> app-deploy.yaml
+kubectl apply <span class="hljs-_">-f</span> app-ingress.yaml</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There are 3 ingress controller deployed, F5, Nginx and HAProxy, refer to above <strong>Set up</strong> section for details. The Ingress controller will take aware of the created k8s ingress object and make a amendment of controller controll panel settings to be ready for the incoming request:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>F5 will add a Policy rule to exist Virtual server and add a Pool with 3 pool members refer to the 3 POD of <code>cafe</code> service</p>
+</li>
+<li>
+<p>Nginx will add a config file under <code>/etc/nginx/conf.d/</code> which contains server and upstream settings, the upstream contains 3 servers refer to the 3 POD of <code>cafe</code> service</p>
+</li>
+<li>
+<p>HAProxy will update the configuration files that add a frontend and a backend, the backend contains 3 servers refer to the 3 POD of <code>cafe</code> service</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_metrics_collected">Metrics Collected</h3>
+<div class="paragraph">
+<p>There are 3 metrics are collected, RPS, TPS and Throughput,</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Requests per second (RPS) - The number of requests the IC can process per second, averaged over a fixed time period.</p>
+</li>
+<li>
+<p>Transactions per second (TPS) - The number of new HTTP connections the IC can establish and serve per second, averaged over a fixed time period.</p>
+</li>
+<li>
+<p>Throughput &#x2013; The data transmission rate that IC is able to sustain while processing HTTP requests for static content over a fixed time period.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are 3 groups of metrics are collected, each for a different IC, the below commands are are use to collect metrics:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">wrk -t 6 -c 100 <span class="hljs-_">-d</span> 180s http://perftest01.example.com/coffee
+wrk -t 6 -c 100 <span class="hljs-_">-d</span> 180s -H <span class="hljs-string">&apos;Connection: Close&apos;</span> http://perftest01.example.com/coffee</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_results">Results</h3>
+<div class="listingblock">
+<div class="title"><strong>Results</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-csv" data-lang="csv">Type,RPS,TPS,Throughput
+F5,14216,514,5.10
+Nginx,3815,278,1.36
+HAProxy,6569,274,2.20</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Requests per second (RPS)</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/rps.png" alt="rps.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>Transactions per second (TPS)</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/tps.png" alt="tps.png"></span></p>
+</div>
+<div class="paragraph">
+<p><strong>Throughput</strong></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/throughput.png" alt="throughput.png"></span></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Journals</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-csv" data-lang="csv">./wrk -t 6 -c 100 -d 180s http://perftest01.example.com/coffee
+Running 3m test @ http://perftest01.example.com/coffee
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     6.79ms    2.50ms  43.36ms   80.22%
+    Req/Sec     2.38k   196.42     2.95k    74.06%
+  2559718 requests in 3.00m, 0.90GB read
+Requests/sec:  14215.71
+Transfer/sec:      5.10MB
+
+./wrk -t 6 -c 100 -d 180s -H &apos;Connection: Close&apos; http://perftest01.example.com
+Running 3m test @ http://perftest01.example.com
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.73ms    4.73ms  79.80ms   79.79%
+    Req/Sec   762.15    244.45     1.01k    85.54%
+  92481 requests in 3.00m, 42.36MB read
+  Socket errors: connect 96, read 0, write 0, timeout 0
+Requests/sec:    513.57
+Transfer/sec:    240.91KB
+
+./wrk -t 6 -c 100 -d 180s http://perftest01.example.com/coffee
+Running 3m test @ http://perftest01.example.com/coffee
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    28.04ms   27.88ms   1.03s    96.63%
+    Req/Sec   639.07     90.63     1.15k    70.78%
+  687099 requests in 3.00m, 245.69MB read
+Requests/sec:   3815.10
+Transfer/sec:      1.36MB
+
+./wrk -t 6 -c 100 -d 180s -H &apos;Connection: Close&apos; http://perftest01.example.com
+Running 3m test @ http://perftest01.example.com
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    22.36ms   32.54ms   1.03s    99.57%
+    Req/Sec   554.09    162.35   767.00     88.63%
+  50056 requests in 3.00m, 14.46MB read
+  Socket errors: connect 96, read 0, write 0, timeout 0
+  Non-2xx or 3xx responses: 50056
+Requests/sec:    277.93
+Transfer/sec:     82.24KB
+
+./wrk -t 6 -c 100 -d 180s http://perftest01.example.com/coffee
+Running 3m test @ http://perftest01.example.com/coffee
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    14.97ms    7.95ms 251.38ms   79.14%
+    Req/Sec     1.10k   121.04     1.48k    68.66%
+  1182909 requests in 3.00m, 395.97MB read
+Requests/sec:   6568.77
+Transfer/sec:      2.20MB
+
+./wrk -t 6 -c 100 -d 180s -H &apos;Connection: Close&apos; http://perftest01.example.com
+Running 3m test @ http://perftest01.example.com
+  6 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    19.63ms   19.60ms   1.03s    99.79%
+    Req/Sec   593.08    198.71     0.85k    88.60%
+  49289 requests in 3.00m, 10.95MB read
+  Socket errors: connect 96, read 0, write 0, timeout 0
+  Non-2xx or 3xx responses: 49289
+Requests/sec:    273.69
+Transfer/sec:     62.27KB</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_f5_cis_performance_metric">F5 CIS Performance Metric</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_preparing">Preparing</h3>
+<div class="listingblock">
+<div class="title"><strong>Get Code</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">git <span class="hljs-built_in">clone</span> https://github.com/cloudadc/container-ingress.git
+<span class="hljs-built_in">cd</span> container-ingress/performance/discover</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Deploy 200 Application</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> 200-ns-deploy.yaml</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ingress_in_multiple_namespaces">Ingress in multiple namespaces</h3>
+<div class="listingblock">
+<div class="title"><strong>Tmsh command: count time</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">// count total pool
+STARTTIME=$(date +%s) ; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..100} ; <span class="hljs-keyword">do</span> tmsh list ltm pool /k8s/Shared/* | grep pool | wc <span class="hljs-_">-l</span> ; ENDTIME=$(date +%s); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;spend <span class="hljs-variable">$(($ENDTIME - $STARTTIME)</span>) seconds&quot;</span> ; sleep 3 ; <span class="hljs-keyword">done</span>
+// count specific pool<span class="hljs-string">&apos;s total pool member
+STARTTIME=$(date +%s) ; for i in {1..100} ; do tmsh list ltm pool /k8s/Shared/ingress_perftest299_app_svc | grep address | wc -l;  ENDTIME=$(date +%s); echo &quot;spend $(($ENDTIME - $STARTTIME)) seconds&quot; ; sleep 3 ;  done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Steps</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> 20-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 40-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 60-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 80-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 100-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 120-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 140-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 160-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 180-ns-ingress.yaml
+kubectl apply <span class="hljs-_">-f</span> 200-ns-ingress.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Results</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">total_namespaces,total_deploy_time,service_discover_time,total_deleletion_time,delete_one_ingress,create_one_ingress
+20,12,3,4,3,3
+40,18,5,5,4,5
+60,21,6,6,4,6
+80,25,9,7,7,7
+100,27,9,8,8,10
+120,31,10,8,8,13
+140,38,11,9,10,16
+160,42,11,9,14,18
+180,49,17,12,15,19
+200,54,18,14,17,21</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>total_namespaces - the total number of namespaces</p>
+</li>
+<li>
+<p>total_deploy_time - the total time of deploy all ingress</p>
+</li>
+<li>
+<p>service_discover_time - the time of pod change be update to ingress</p>
+</li>
+<li>
+<p>total_deleletion_time - the total time of delete all ingress</p>
+</li>
+<li>
+<p>delete_one_ingress - the time of delete one ingress</p>
+</li>
+<li>
+<p>create_one_ingress - the time of create one ingress in current namespace</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ingress-perf-multi-ns-v1.png" alt="ingress perf multi ns v1.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configmap_in_multiple_namespaces">Configmap in multiple namespaces</h3>
+<div class="listingblock">
+<div class="title"><strong>Tmsh command: count time</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">STARTTIME=$(date +%s) ; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..100} ; <span class="hljs-keyword">do</span> tmsh list ltm pool /perftest109/perftest109/* | grep pool | wc <span class="hljs-_">-l</span> ; ENDTIME=$(date +%s); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;spend <span class="hljs-variable">$(($ENDTIME - $STARTTIME)</span>) seconds&quot;</span> ; sleep 3 ; <span class="hljs-keyword">done</span>
+STARTTIME=$(date +%s) ; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..100} ; <span class="hljs-keyword">do</span> tmsh list ltm pool /perftest122/perftest122/* | grep address | wc <span class="hljs-_">-l</span> ; ENDTIME=$(date +%s); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;spend <span class="hljs-variable">$(($ENDTIME - $STARTTIME)</span>) seconds&quot;</span> ; sleep 3 ; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Steps</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> 10-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 20-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 30-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 40-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 500-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 60-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 70-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 80-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 90-ns-configmap.yaml
+kubectl apply <span class="hljs-_">-f</span> 100-ns-configmap.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Results</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">total_namespaces,total_deploy_time,service_discover_time,total_deleletion_time,delete_one_tenant,create_one_tenant
+5,15,7,16,6,4
+10,20,9,23,9,8
+20,37,13,40,12,12
+30,54,18,58,20,15
+40,72,24,81,30,28
+50,96,37,106,50,39
+60,110,51,119,61,58
+80,161,57,169,73,70
+100,205,59,207,97,92</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>total_namespaces - the total number of namespaces</p>
+</li>
+<li>
+<p>total_deploy_time - the total time of deploy all configmap</p>
+</li>
+<li>
+<p>service_discover_time - the time of pod change be update to configmap</p>
+</li>
+<li>
+<p>total_deleletion_time - the total time of delete all configmap</p>
+</li>
+<li>
+<p>delete_one_tenant - delete one configmap</p>
+</li>
+<li>
+<p>create_one_tenant - create one configmap</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/perf-multiplue-cm-in-multiple-ns.png" alt="perf multiplue cm in multiple ns.png"></span></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ingress_in_single_namespace">Ingress in single namespace</h3>
+<div class="listingblock">
+<div class="title"><strong>Tmsh command: count time</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Steps</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Results</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configmap_in_single_namespace">Configmap in single namespace</h3>
+<div class="listingblock">
+<div class="title"><strong>Tmsh command: count time</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">STARTTIME=$(date +%s) ; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..100} ; <span class="hljs-keyword">do</span> tmsh list ltm node /cistest/* | grep node | wc <span class="hljs-_">-l</span> ; ENDTIME=$(date +%s); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;spend <span class="hljs-variable">$(($ENDTIME - $STARTTIME)</span>) seconds&quot;</span> ; sleep 3 ; <span class="hljs-keyword">done</span>
+STARTTIME=$(date +%s) ; <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> {1..100} ; <span class="hljs-keyword">do</span> tmsh list ltm pool /cistest/cistest_app-svc-19/* | grep address | wc <span class="hljs-_">-l</span> ; ENDTIME=$(date +%s); <span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;spend <span class="hljs-variable">$(($ENDTIME - $STARTTIME)</span>) seconds&quot;</span> ; sleep 3 ; don</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Steps</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> X-svc-configmap.yaml</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Results</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">total_servicess,total_deploy_time,service_discover_time,total_deleletion_time,delete_one_service,create_one_service
+20,14,20,22,19,21
+40,36,43,54,39,45
+60,55,52,52,65,72
+70,63,75,96,65,75
+80,72,76,125,75,84
+100,89,92,151,91,94</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../nginx-plus-ingress/release/" class="navigation navigation-prev " aria-label="Previous page: Zero-Downtime Releases">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../../k8s-net/" class="navigation navigation-next " aria-label="Next page: CONTAINER NETWORK">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"PERFORMANCE","level":"1.2.4","depth":2,"next":{"title":"CONTAINER NETWORK","level":"1.3","depth":1,"path":"k8s-net/README.adoc","ref":"k8s-net/README.adoc","articles":[{"title":"DOCKER","level":"1.3.1","depth":2,"path":"k8s-net/docker.adoc","ref":"k8s-net/docker.adoc","articles":[]},{"title":"K8S","level":"1.3.2","depth":2,"path":"k8s-net/k8s.adoc","ref":"k8s-net/k8s.adoc","articles":[]}]},"previous":{"title":"Zero-Downtime Releases","level":"1.2.3.5","depth":3,"path":"k8s-ingress/nginx-plus-ingress/release/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/release/README.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/performance/README.adoc","mtime":"2021-04-14T17:07:50.382Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-14T17:10:32.230Z"},"basePath":"../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../gitbook/gitbook.js"></script>
+    <script src="../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

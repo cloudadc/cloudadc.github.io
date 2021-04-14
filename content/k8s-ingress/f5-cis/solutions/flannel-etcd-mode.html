@@ -1,0 +1,1437 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Flannel etcd mode · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../../../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../../../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../../../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../../../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="../config.html" />
+    
+    
+    <link rel="prev" href="../install.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../../../">
+            
+                <a href="../../../">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../../">
+            
+                <a href="../../">
+            
+                    
+                    CONTAINER INGRESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    F5 CIS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../install.html">
+            
+                <a href="../install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="1.2.1.1.1" data-path="flannel-etcd-mode.html">
+            
+                <a href="flannel-etcd-mode.html">
+            
+                    
+                    Flannel etcd mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../config.html">
+            
+                <a href="../config.html">
+            
+                    
+                    配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../as3/">
+            
+                <a href="../as3/">
+            
+                    
+                    AS3
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.3.1" data-path="../as3/canary/">
+            
+                <a href="../as3/canary/">
+            
+                    
+                    Canary Releasing
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../ingress/">
+            
+                <a href="../ingress/">
+            
+                    
+                    Ingress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.5" data-path="../cccl/">
+            
+                <a href="../cccl/">
+            
+                    
+                    CCCL
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../../nginx-ingress/">
+            
+                <a href="../../nginx-ingress/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../../nginx-ingress/bigip/">
+            
+                <a href="../../nginx-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../../nginx-plus-ingress/">
+            
+                <a href="../../nginx-plus-ingress/">
+            
+                    
+                    NGINX PLUS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../../nginx-plus-ingress/monitor/dashboard.html">
+            
+                <a href="../../nginx-plus-ingress/monitor/dashboard.html">
+            
+                    
+                    Monitor Dashboard
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../../nginx-plus-ingress/bigip/">
+            
+                <a href="../../nginx-plus-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../../nginx-plus-ingress/l4-lb/">
+            
+                <a href="../../nginx-plus-ingress/l4-lb/">
+            
+                    
+                    L4 Load Balancing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../../nginx-plus-ingress/health-checks/">
+            
+                <a href="../../nginx-plus-ingress/health-checks/">
+            
+                    
+                    Active Health Checks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../../nginx-plus-ingress/release/">
+            
+                <a href="../../nginx-plus-ingress/release/">
+            
+                    
+                    Zero-Downtime Releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../../performance/">
+            
+                <a href="../../performance/">
+            
+                    
+                    PERFORMANCE
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../../../k8s-net/">
+            
+                <a href="../../../k8s-net/">
+            
+                    
+                    CONTAINER NETWORK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../../../k8s-net/docker.html">
+            
+                <a href="../../../k8s-net/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../../../k8s-net/k8s.html">
+            
+                <a href="../../../k8s-net/k8s.html">
+            
+                    
+                    K8S
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="../../../nginx/">
+            
+                <a href="../../../nginx/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../../../nginx/concepts.html">
+            
+                <a href="../../../nginx/concepts.html">
+            
+                    
+                    入门到精通
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../../../nginx/install.html">
+            
+                <a href="../../../nginx/install.html">
+            
+                    
+                    离线安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../../../nginx/controller.html">
+            
+                <a href="../../../nginx/controller.html">
+            
+                    
+                    Nginx Controller
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.3.1" data-path="../../../nginx/apidrive.html">
+            
+                <a href="../../../nginx/apidrive.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../../../nginx/usecase.html">
+            
+                <a href="../../../nginx/usecase.html">
+            
+                    
+                    Use Case
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.4.1" data-path="../../../nginx/docker.html">
+            
+                <a href="../../../nginx/docker.html">
+            
+                    
+                    Docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../../../nginx/app/">
+            
+                <a href="../../../nginx/app/">
+            
+                    
+                    现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../../../dist.html">
+            
+                <a href="../../../dist.html">
+            
+                    
+                    DISTRIBUTED
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../../../zk/">
+            
+                <a href="../../../zk/">
+            
+                    
+                    ZooKeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/distribute-dev-framework/content/dubbo">
+            
+                    
+                    DUBBO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3" data-path="../../../mongo/">
+            
+                <a href="../../../mongo/">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1" data-path="../../../mongo/viewpoint/presentation.html">
+            
+                <a href="../../../mongo/viewpoint/presentation.html">
+            
+                    
+                    定位
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.1.1" data-path="../../../mongo/viewpoint/5thingsfornosql.html">
+            
+                <a href="../../../mongo/viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.2" data-path="../../../mongo/viewpoint/oversea.html">
+            
+                <a href="../../../mongo/viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.3" data-path="../../../mongo/viewpoint/td.html">
+            
+                <a href="../../../mongo/viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.1.4" data-path="../../../mongo/viewpoint/cards.html">
+            
+                <a href="../../../mongo/viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.2" data-path="../../../mongo/dba/basic.html">
+            
+                <a href="../../../mongo/dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3" data-path="../../../mongo/dev/">
+            
+                <a href="../../../mongo/dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.3.1" data-path="../../../mongo/dev/aggregation.html">
+            
+                <a href="../../../mongo/dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.2" data-path="../../../mongo/dev/aggregation-sum.html">
+            
+                <a href="../../../mongo/dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.3" data-path="../../../mongo/dev/transactions.html">
+            
+                <a href="../../../mongo/dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.4" data-path="../../../mongo/dev/java.html">
+            
+                <a href="../../../mongo/dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.3.5" data-path="../../../mongo/dev/geo.html">
+            
+                <a href="../../../mongo/dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4" data-path="../../../mongo/dba/cluster-admin.html">
+            
+                <a href="../../../mongo/dba/cluster-admin.html">
+            
+                    
+                    运维
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.3.4.1" data-path="../../../mongo/dba/replication.html">
+            
+                <a href="../../../mongo/dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.2" data-path="../../../mongo/dba/rs-deployments.html">
+            
+                <a href="../../../mongo/dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.3" data-path="../../../mongo/dba/rs-maintenance.html">
+            
+                <a href="../../../mongo/dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.4" data-path="../../../mongo/dba/sharding.html">
+            
+                <a href="../../../mongo/dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.5" data-path="../../../mongo/dba/dba.html">
+            
+                <a href="../../../mongo/dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.6" data-path="../../../mongo/dba/sh-restore.html">
+            
+                <a href="../../../mongo/dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.7" data-path="../../../mongo/dba/opsmanager.html">
+            
+                <a href="../../../mongo/dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.8" data-path="../../../mongo/dba/perf.html">
+            
+                <a href="../../../mongo/dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.4.9" data-path="../../../mongo/dba/troubleshooting.html">
+            
+                <a href="../../../mongo/dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.3.5" data-path="../../../mongo/dba/security.html">
+            
+                <a href="../../../mongo/dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.4" data-path="../../../kafka/">
+            
+                <a href="../../../kafka/">
+            
+                    
+                    Kafka
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.4.1" data-path="../../../kafka/installing/">
+            
+                <a href="../../../kafka/installing/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.5" data-path="../../../elastic/">
+            
+                <a href="../../../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.6" data-path="../../../spark/">
+            
+                <a href="../../../spark/">
+            
+                    
+                    Spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/nodejs-honeypot/">
+            
+                    
+                    NODE.JS HONEYPOT
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="../../.." >Flannel etcd mode</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="&#x4E8C;&#x8FDB;&#x5236;flannle&#x90E8;&#x7F72;&#xFF0C;&#x975E;cni&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;&#x4E0B;&#x4E0E;k8s-cis&#x7ED3;&#x5408;&#x65B9;&#x6848;">&#x4E8C;&#x8FDB;&#x5236;flannle&#x90E8;&#x7F72;&#xFF0C;&#x975E;cni&#x7F51;&#x7EDC;&#x6A21;&#x5F0F;&#x4E0B;&#x4E0E;k8s CIS&#x7ED3;&#x5408;&#x65B9;&#x6848;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x73AF;&#x5883;&#x63CF;&#x8FF0;</a></li>
+<li><a href="#___2">&#x7ED3;&#x5408;&#x65B9;&#x6848;</a></li>
+<li><a href="#_flannel_1_mac">flannel.1&#x7F51;&#x5361;MAC&#x5728;&#x91CD;&#x542F;&#x540E;&#x603B;&#x662F;&#x53D8;&#x5316;&#x7684;&#x95EE;&#x9898;&#x89E3;&#x51B3;</a></li>
+<li><a href="#___3">&#x9644;&#x5F55;&#xFF1A;&#x95EE;&#x9898;&#x5206;&#x6790;&#x8FC7;&#x7A0B;</a>
+<ul class="sectlevel2">
+<li><a href="#__ping_10_224_100_10">&#x5728;&#x5BB9;&#x5668;&#x91CC;ping 10.224.100.10</a></li>
+<li><a href="#__eth0">&#x5728;&#x5BB9;&#x5668;&#x91CC;&#x67E5;&#x770B;eth0</a></li>
+<li><a href="#___4">&#x5728;&#x5BBF;&#x4E3B;&#x673A;&#x4E0A;&#x67E5;&#x770B;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x73AF;&#x5883;&#x63CF;&#x8FF0;</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>flannel&#x4EE5;etcd&#x4E3A;&#x5B58;&#x50A8;&#xFF0C;&#x76F4;&#x63A5;&#x4F7F;&#x7528;&#x4E8C;&#x8FDB;&#x5236;&#x6587;&#x4EF6;&#x90E8;&#x7F72;&#xFF0C;&#x4E0D;&#x8D70;cni&#x6A21;&#x5F0F;&#x7684;k8s&#x96C6;&#x7FA4;</p>
+</li>
+<li>
+<p>k8s &#x96C6;&#x7FA4;&#x7248;&#x672C;v1.18</p>
+</li>
+<li>
+<p>CIS&#x7248;&#x672C; v1.14 &#x6216; v2.1.1</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___2">&#x7ED3;&#x5408;&#x65B9;&#x6848;</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>&#x7531;&#x4E8E;flannel&#x76F4;&#x63A5;&#x4EE5;&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;&#xFF0C;&#x4E14;&#x4EE5;etcd&#x4E3A;&#x5B58;&#x50A8;&#xFF0C;&#x56E0;&#x6B64;flanneld&#x4E0D;&#x4F1A;&#x7ED9;node patch &#x76F8;&#x5173;&#x7684;flannel&#x6CE8;&#x89E3;&#xFF0C;&#x800C;CIS&#x9700;&#x8981;&#x8BFB;&#x53D6;&#x8FD9;&#x4E9B;annotations&#x6765;&#x4E86;&#x89E3;&#x8282;&#x70B9;&#x7684;public ip&#xFF0C; vtepmac&#x4FE1;&#x606F;&#x6765;&#x6784;&#x5EFA;vxlan&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x624B;&#x5DE5;&#x4E3A;&#x8FD9;&#x4E9B;node&#x8282;&#x70B9;&#x589E;&#x52A0;annotations&#x3002;</p>
+</li>
+<li>
+<p>&#x53E6;&#x4E00;&#x65B9;&#x9762;&#xFF0C;flanneld&#x4E5F;&#x9700;&#x8981;&#x4E86;&#x89E3;BIGIP&#x8282;&#x70B9;&#x4FE1;&#x606F;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x5728;etcd&#x4E2D;&#x624B;&#x5DE5;&#x589E;&#x52A0;BIGIP&#x7684;subnet&#x4FE1;&#x606F;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>&#x56E0;&#x6B64;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x4EE5;&#x4E0B;&#x989D;&#x5916;&#x5DE5;&#x4F5C;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5728;etcd&#x4E2D;&#x624B;&#x5DE5;&#x589E;&#x52A0;bigip&#x4F2A;&#x8282;&#x70B9;&#x7684;subnet key&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://10.1.10.151:2379&quot;</span> <span class="hljs-built_in">set</span> -ttl 0 /coreos.com/network/subnets/10.244.100.0-24 <span class="hljs-string">&apos;{&quot;PublicIP&quot;:&quot;10.1.10.245&quot;,&quot;BackendType&quot;:&quot;vxlan&quot;,&quot;BackendData&quot;:{&quot;VtepMAC&quot;:&quot;00:0c:29:2e:db:2e&quot;}}&apos;</span></code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>&#x6CE8;&#x610F;&#xFF1A; &#x8BBE;&#x7F6E;ttl &#x4E3A;0&#xFF0C;&#x907F;&#x514D;&#x79DF;&#x671F;&#x8FC7;&#x671F;&#xFF0C;&#x56E0;&#x4E3A;bigip&#x672C;&#x8EAB;&#x65E0;&#x6CD5;&#x81EA;&#x52A8;&#x53BB;&#x7EED;&#x7EA6;&#x3002; &#x8BBE;&#x7F6E;bigip&#x7684;subnet&#x5E94;&#x8BE5;&#x8F83;&#x5927;&#xFF0C;&#x907F;&#x514D;flannel&#x5728;&#x96C6;&#x7FA4;&#x91CC;&#x5206;&#x914D;&#x91CD;&#x590D;&#x7684;&#x7F51;&#x6BB5;.
+&#x53EF;&#x901A;&#x8FC7;&#x8BBE;&#x7F6E;config key&#x6765;&#x89C4;&#x5B9A;&#x53EF;&#x5206;&#x914D;&#x7684;&#x6700;&#x5927;&#x6700;&#x5C0F;&#x7F51;&#x6BB5;
+etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=&quot;https://10.1.10.151:2379&quot; set /coreos.com/network/config &apos;{ &quot;Network&quot;: &quot;10.244.0.0/16&quot;, &quot;SubnetMin&quot;: &quot;10.244.10.0&quot;, &quot;SubnetMax&quot;: &quot;10.244.99.0&quot;, &quot;SubnetLen&quot;: 24, &quot;Backend&quot;: {&quot;Type&quot;: &quot;vxlan&quot;}}&apos;</p>
+</div>
+</blockquote>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x7ED9;&#x5404;&#x4E2A;node&#x8282;&#x70B9;&#x589E;&#x52A0;annotations (&#x4EFF;&#x7167;cni&#x5B89;&#x88C5;&#x6A21;&#x5F0F;&#x81EA;&#x52A8;&#x4EA7;&#x751F;&#x7684;annotations)</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml">[root@master ~]<span class="hljs-comment"># kubectl get node node01 -o yaml</span>
+<span class="hljs-attr">apiVersion:</span> v1
+<span class="hljs-attr">kind:</span> Node
+<span class="hljs-attr">metadata:</span>
+<span class="hljs-attr">    annotations:</span>
+    flannel.alpha.coreos.com/backend-data: <span class="hljs-string">&apos;{&quot;VtepMAC&quot;:&quot;86:a8:e1:95:5e:cf&quot;}&apos;</span>
+    flannel.alpha.coreos.com/backend-type: vxlan
+    flannel.alpha.coreos.com/kube-subnet-manager: <span class="hljs-string">&quot;true&quot;</span>
+    flannel.alpha.coreos.com/public-ip: <span class="hljs-number">10.1</span><span class="hljs-number">.10</span><span class="hljs-number">.152</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flannel_1_mac">flannel.1&#x7F51;&#x5361;MAC&#x5728;&#x91CD;&#x542F;&#x540E;&#x603B;&#x662F;&#x53D8;&#x5316;&#x7684;&#x95EE;&#x9898;&#x89E3;&#x51B3;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>node&#x8282;&#x70B9;&#x91CD;&#x542F;&#x540E;&#xFF0C;flannel.1&#x7684;Mac&#x603B;&#x662F;&#x4F1A;&#x53D1;&#x751F;&#x6539;&#x53D8;&#xFF0C;&#x5BFC;&#x81F4;&#x6BCF;&#x6B21;&#x91CD;&#x542F;&#x9700;&#x8981;&#x91CD;&#x65B0;&#x4FEE;&#x6539;node&#x7684;annotation&#xFF0C;&#x56E0;&#x9700;&#x8981;&#x4F7F;&#x7528;&#x4EE5;&#x4E0B;&#x811A;&#x672C;&#x6BCF;&#x6B21;&#x5728;node&#x91CD;&#x542F;&#x540E;&#x81EA;&#x52A8;&#x6267;&#x884C;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-meta">#!/usr/bin/bash</span>
+<span class="hljs-comment">## wait 10s to make sure the flanneld had updated etcd</span>
+<span class="hljs-comment">## in production, shoud make sure the script running after flanneld</span>
+<span class="hljs-comment">##set the self node interface ip</span>
+nodeip=10.1.10.152
+<span class="hljs-keyword">for</span> node <span class="hljs-keyword">in</span> `etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://10.1.10.151:2379&quot;</span> ls /coreos.com/network/subnets/`
+ <span class="hljs-keyword">do</span>
+   publicip=`etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://10.1.10.151:2379&quot;</span> get <span class="hljs-variable">$node</span> | jq .PublicIP | sed <span class="hljs-string">&apos;s/\&quot;//g&apos;</span>`
+   <span class="hljs-keyword">if</span> [ <span class="hljs-variable">$nodeip</span> == <span class="hljs-variable">$publicip</span> ]; <span class="hljs-keyword">then</span>
+     vtepmac=`etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://10.1.10.151:2379&quot;</span> get <span class="hljs-variable">$node</span> | jq .BackendData.VtepMAC | sed <span class="hljs-string">&apos;s/\&quot;//g&apos;</span>`
+     kubectl patch node node01 -p <span class="hljs-string">&apos;{&quot;metadata&quot;: { &quot;annotations&quot;: { &quot;flannel.alpha.coreos.com/backend-data&quot;: &quot;{\&quot;VtepMAC\&quot;: \&quot;&apos;</span><span class="hljs-variable">$vtepmac</span><span class="hljs-string">&apos;\&quot;}&quot;, &quot;flannel.alpha.coreos.com/backend-type&quot;: &quot;vxlan&quot;, &quot;flannel.alpha.coreos.com/kube-subnet-manager&quot;: &quot;true&quot;, &quot;flannel.alpha.coreos.com/public-ip&quot;: &quot;&apos;</span><span class="hljs-variable">$publicip</span><span class="hljs-string">&apos;&quot; }}}&apos;</span>
+     <span class="hljs-built_in">break</span>
+   <span class="hljs-keyword">fi</span>
+ <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>&#x6CE8;&#x610F;&#xFF1A; &#x4FEE;&#x6539;&#x5BF9;&#x5E94;&#x7684;nodeip&#x503C;&#x4E3A;&#x811A;&#x672C;&#x6240;&#x5728;&#x673A;&#x5668;&#x7684;IP&#xFF08;&#x7528;&#x4E8E;flannel public ip&#x7684;&#x90A3;&#x4E2A;&#x7F51;&#x5361;&#x7684;IP&#xFF09;&#xFF0C;&#x4FEE;&#x6539;&#x5BF9;&#x5E94;&#x7684;etcd&#x670D;&#x52A1;&#x5668;&#x3002; &#x673A;&#x5668;&#x4E0A;&#x9700;&#x8981;&#x80FD;&#x591F;&#x6267;&#x884C;etcdctl&#xFF0C;kubectl&#xFF0C;&#x4EE5;&#x53CA;&#x5B89;&#x88C5;&#x4E86;jq</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>&#x8BE5;&#x811A;&#x672C;&#x9700;&#x8981;&#x5728;node&#x91CD;&#x542F;&#x540E;&#xFF0C;flannel.1&#x7F51;&#x5361;&#x521B;&#x5EFA;&#x540E;&#x4E14;&#x8BE5;k8s node&#x8282;&#x70B9;&#x72B6;&#x6001;&#x53D8;&#x4E3A;ready&#x4E4B;&#x524D;&#x6267;&#x884C;&#xFF0C;&#x56E0;&#x4E3A;&#x5F53;node&#x72B6;&#x6001;&#x53D8;&#x4E3A;ready&#x540E;&#x518D;patch annotations&#x65F6;CIS&#x5E76;&#x4E0D;&#x80FD;&#x611F;&#x5E94;&#x5230;&#x53D8;&#x4E3A;&#xFF0C;&#x4ECE;&#x800C;&#x5BFC;&#x81F4;BIGIP&#x5DF2;&#x7ECF;&#x5B58;&#x5728;&#x7684;pod IP&#x7684;arp&#x6761;&#x76EE;&#x65E0;&#x6CD5;&#x66F4;&#x65B0;&#x4E3A;&#x65B0;&#x7684;MAC&#x3002;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x5229;&#x7528;systemd&#x5C06;&#x8BE5;&#x811A;&#x672C;&#x5728;&#x5408;&#x9002;&#x7684;&#x65F6;&#x95F4;&#x542F;&#x52A8;&#xFF1A;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ~]<span class="hljs-comment"># cat /usr/lib/systemd/system/k8s-patch.service</span>
+[Unit]
+Description=k8s annotation patch script
+After=flanneld.service
+After=kubelet.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh /root/k8s-node-anno-patch.sh
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">systemctl daemon-reload
+systemctl <span class="hljs-built_in">enable</span> k8s-patch.service</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="___3">&#x9644;&#x5F55;&#xFF1A;&#x95EE;&#x9898;&#x5206;&#x6790;&#x8FC7;&#x7A0B;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__ping_10_224_100_10">&#x5728;&#x5BB9;&#x5668;&#x91CC;ping 10.224.100.10</h3>
+
+</div>
+<div class="sect2">
+<h3 id="__eth0">&#x5728;&#x5BB9;&#x5668;&#x91CC;&#x67E5;&#x770B;eth0</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sh-4.4<span class="hljs-comment"># ip -d link show</span>
+30: eth0@<span class="hljs-keyword">if</span>31: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue state UP mode DEFAULT group default
+    link/ether 02:42:0a:f4:37:03 brd ff:ff:ff:ff:ff:ff link-netnsid 0 promiscuity 0 minmtu 68 maxmtu 65535
+    veth addrgenmode eui64 numtxqueues 1 numrxqueues 1 gso_max_size 65536 gso_max_segs 65535</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;eth0 &#x8FDE;&#x5230; &#x5BBF;&#x4E3B;&#x673A;&#x673A;&#x7684;if31</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x5728;&#x5BBF;&#x4E3B;&#x673A;&#x4E0A;&#x67E5;&#x770B;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ns]<span class="hljs-comment"># ip -d link show | grep &quot;31: &quot;</span>
+31: veth8064e43@<span class="hljs-keyword">if</span>30: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1450 qdisc noqueue master docker0 state UP mode DEFAULT group default</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230;if31 &#x662F;&#x4E00;&#x4E2A; veth pair&#xFF0C; &#x7531;&#x4E8E;&#x5728;&#x6B64;&#x73AF;&#x5883;&#x4E0B;&#xFF0C;&#x4F7F;&#x7528;docker0&#x7F51;&#x6865;&#xFF0C;&#x67E5;&#x770B;&#x7F51;&#x6865;&#x53EF;&#x4EE5;&#x770B;&#x5230;, veth8064e43&#x662F;&#x7F51;&#x6865;&#x4E0A;&#x7684;&#x4E00;&#x4E2A;&#x63A5;&#x53E3;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ns]<span class="hljs-comment"># brctl show docker0</span>
+bridge name	bridge id		STP enabled	interfaces
+docker0		8000.0242e2d30c43	no		veth2e13f30
+		            					veth5ba1fdd
+		            					veth8064e43
+		            					vethc509417</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ns]<span class="hljs-comment"># ip route</span>
+default via 10.1.10.2 dev ens33 proto static metric 100
+10.1.10.0/24 dev ens33 proto kernel scope link src 10.1.10.152 metric 100
+10.244.34.0/24 via 10.244.34.0 dev flannel.1 onlink
+10.244.55.0/ip route24 dev docker0 proto kernel scope link src 10.244.55.1
+10.244.100.0/24 via 10.244.100.0 dev flannel.1 onlink
+192.168.122.0/24 dev virbr0 proto kernel scope link src 192.168.122.1 linkdown</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>10.244.100.0.0 &#x6761;&#x76EE;&#x662F;&#x5230;&#x8FBE;BIGIP tunnel&#x7F51;&#x6BB5;&#x7684;&#x8DEF;&#x7531;&#xFF0C;&#x901A;&#x8FC7;10.244.100.0/32&#x8FD9;&#x4E2A; onlink &#x7F51;&#x5173;</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ns]<span class="hljs-comment"># arp -an</span>
+? (10.244.100.0) at 00:0c:29:2e:db:2e [ether] PERM on flannel.1
+&#x4FDD;&#x8BC1;&#x5230;&#x8FBE;10.244.100.0/32&#x7684;arp&#x6761;&#x76EE;&#xFF0C;&#x5B9E;&#x9645;&#x8FD9;&#x4E2A;MAC&#x5DF2;&#x7ECF;&#x662F;BIGIP&#x7684;vtep MAC&#x4E86;&#xFF0C;&#x8BE5;&#x6761;&#x76EE;&#x53EF;&#x4EE5;&#x8BA9;&#x7CFB;&#x7EDF;&#x5C06;&#x8BE5;MAC&#x7528;&#x4E8E;vxlan&#x7684;&#x5916;&#x90E8;&#x76EE;&#x7684;MAC&#x5B57;&#x6BB5;
+
+[root@node01 ns]<span class="hljs-comment"># bridge fdb show | grep  00:0c:29:2e:db:2e</span>
+00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>fdb&#x8BA9;vxlan&#x7684;&#x5916;&#x90E8;&#x76EE;&#x7684;IP&#x53D8;&#x4E3A;vtep&#x7684;IP</p>
+</div>
+<div class="paragraph">
+<p>&#x4E0A;&#x8FF0;route&#xFF0C;fdb&#xFF0C;arp&#x662F;&#x4FDD;&#x8BC1;&#x5BB9;&#x5668;&#x80FD;&#x591F;&#x901A;&#x8FC7;vxlan&#x627E;&#x5230;F5 tunnel self ip&#x7684;&#x5173;&#x952E;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x679C;etcd&#x91CC;&#x6CA1;&#x6709;&#x5B58;&#x50A8;bigip &#x4F2A;node&#x7684;&#x4FE1;&#x606F;&#xFF0C; &#x5219;&#x4E0D;&#x4F1A;&#x4EA7;&#x751F;&#xFF1A;
+10.244.100.0/24 via 10.244.100.0 dev flannel.1 onlink
+&#x4EE5;&#x53CA;&#x4E0D;&#x4F1A;&#x4EA7;&#x751F;fdb&#x6761;&#x76EE;&#xFF1A;
+00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent
+&#x4E5F;&#x4E0D;&#x4F1A;&#x4EA7;&#x751F;arp&#x6761;&#x76EE;&#xFF1A;
+? (10.244.100.0) at 00:0c:29:2e:db:2e [ether] PERM on flannel.1
+&#x8FD9;&#x5C31;&#x4F1A;&#x5BFC;&#x81F4;&#x5BB9;&#x5668;&#x5185;&#x7684;&#x6570;&#x636E;&#x5305;&#x5230;&#x8FBE;docker0&#x4E4B;&#x540E;&#xFF0C;&#x65E0;&#x6CD5;&#x77E5;&#x9053;&#x5E94;&#x8BE5;&#x4ECE;&#x54EA;&#x4E2A;&#x63A5;&#x53E3;&#x53D1;&#x51FA;.</p>
+</div>
+<div class="paragraph">
+<p>&#x624B;&#x5DE5;&#x4FEE;&#x590D;&#xFF1A;
+1. &#x589E;&#x52A0;fdb &#x6761;&#x76EE; bridge fdb add 00:0c:29:2e:db:2e dev flannel.1 dst 10.1.10.245 self permanent
+2. &#x589E;&#x52A0;&#x8DEF;&#x7531;&#x6761;&#x76EE; ip route add 10.244.100.0/24 dev flannel.1 via 10.244.100.0 onlink
+3. &#x589E;&#x52A0;arp&#x6761;&#x76EE; arp -i flannel.1 -s 10.244.100.0  00:0c:29:2e:db:2e</p>
+</div>
+<div class="paragraph">
+<p>etcd flannel&#x81EA;&#x52A8;&#x4FEE;&#x590D;&#xFF08;&#x5EFA;&#x8BAE;&#x65B9;&#x6CD5;&#xFF0C;&#x8FD9;&#x6837;&#x4EFB;&#x610F;node&#x90FD;&#x80FD;&#x81EA;&#x52A8;&#x4EA7;&#x751F;&#x76F8;&#x5E94;&#x7684;arp fdb route&#x4FE1;&#x606F;&#xFF09;&#xFF1A;
+&#x5728;etcd&#x91CC;&#x589E;&#x52A0;bigip node&#x7684;subnet key&#x4FE1;&#x606F;:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">etcdctl --ca-file=/etc/etcd/ssl/ca.pem --cert-file=/etc/etcd/ssl/server.pem --key-file=/etc/etcd/ssl/server-key.pem --endpoints=<span class="hljs-string">&quot;https://10.1.10.151:2379&quot;</span> <span class="hljs-built_in">set</span> -ttl 0 /coreos.com/network/subnets/10.244.100.0-24 <span class="hljs-string">&apos;{&quot;PublicIP&quot;:&quot;10.1.10.245&quot;,&quot;BackendType&quot;:&quot;vxlan&quot;,&quot;BackendData&quot;:{&quot;VtepMAC&quot;:&quot;00:0c:29:2e:db:2e&quot;}}&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x6267;&#x884C;&#x5B8C;patch&#x540E;&#xFF0C;f5 CIS &#x53EF;&#x4EE5;&#x81EA;&#x52A8;&#x66F4;&#x65B0;bigip&#x4E0A;&#x7684;fdb&#x6761;&#x76EE;&#xFF0C;&#x4F46;&#x662F;&#x65E0;&#x6CD5;&#x66F4;&#x65B0;&#x5DF2;&#x5B58;&#x5728;&#x7684;pod&#x7684;&#x65E7;arp&#x6761;&#x76EE;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)<span class="hljs-comment"># show net fdb</span>
+
+-----------------------------------------------------------------
+Net::FDB
+Tunnel         Mac Address        Member                  Dynamic
+-----------------------------------------------------------------
+flannel_vxlan  9a:99:ad:07:a3:c5  endpoint:10.1.10.151%0  no
+flannel_vxlan  92:05:59:f5:2f:5d  endpoint:10.1.10.152%0  no
+
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)<span class="hljs-comment"># show net fdb</span>
+
+-----------------------------------------------------------------
+Net::FDB
+Tunnel         Mac Address        Member                  Dynamic
+-----------------------------------------------------------------
+flannel_vxlan  9a:99:ad:07:a3:c5  endpoint:10.1.10.151%0  no
+flannel_vxlan  36:30:db:6b:2a:04  endpoint:10.1.10.152%0  no &#x300A;&#x300A;&#x300A;&#x300A;&#x300A; fdb &#x5DF2;&#x88AB;&#x66F4;&#x65B0;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>arp &#x6761;&#x76EE;&#x5374;&#x65E0;&#x6CD5;&#x66F4;&#x65B0;&#xFF1A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)<span class="hljs-comment"># show net arp</span>
+
+--------------------------------------------------------------------------------------------------
+Net::Arp
+Name                     Address      HWaddress          Vlan              Expire-in-sec  Status
+--------------------------------------------------------------------------------------------------
+/Common/k8s-10.244.55.4  10.244.55.4  92:05:59:f5:2f:5d  -                 -              static
+10.1.10.2                10.1.10.2    00:50:56:e7:40:a0  /Common/vlan_cis  294            resolved
+10.1.10.152              10.1.10.152  00:0c:29:98:b6:5b  /Common/vlan_cis  233            resolved
+
+
+root@(v15)(cfg-sync Standalone)(Active)(/Common)(tmos)<span class="hljs-comment"># show net arp</span>
+
+--------------------------------------------------------------------------------------------------
+Net::Arp
+Name                     Address      HWaddress          Vlan              Expire-in-sec  Status
+--------------------------------------------------------------------------------------------------
+/Common/k8s-10.244.55.4  10.244.55.4  16:79:46:7b:37:47  -                 -              static  &#x300A;&#x300A; &#x672A;&#x66F4;&#x65B0;
+10.1.10.2                10.1.10.2    00:50:56:e7:40:a0  /Common/vlan_cis  273            resolved</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>&#x89E3;&#x51B3;&#x65B9;&#x6CD5;&#xFF1A;&#x7531;&#x4E8E;CIS&#x5728;node&#x72B6;&#x6001;&#x53D1;&#x751F;&#x53D8;&#x5316;&#x65F6;&#x5019;&#x4F1A;&#x505A;&#x611F;&#x5E94;&#x5230;&#xFF0C;&#x56E0;&#x6B64;&#x53EA;&#x9700;&#x8981;&#x5728;&#x673A;&#x5668;&#x521A;&#x542F;&#x52A8;&#xFF0C;flannel.1&#x63A5;&#x53E3;&#x88AB;&#x521B;&#x5EFA;&#x540E;&#x4E14;node&#x72B6;&#x6001;&#x8FD8;&#x672A;&#x53D8;&#x4E3A;ready&#x524D;&#x6267;&#x884C;&#x811A;&#x672C;&#x5373;&#x53EF;&#xFF0C;&#x56E0;&#x6B64;&#x4F7F;&#x7528;systemd&#x63A7;&#x5236;&#x4E00;&#x4E2A;service&#x6765;&#x6267;&#x884C;&#x811A;&#x672C;&#xFF1A;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">[root@node01 ~]<span class="hljs-comment"># cat /usr/lib/systemd/system/k8s-patch.service</span>
+[Unit]
+Description=k8s annotation patch script
+After=flanneld.service
+After=kubelet.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sh /root/k8s-node-anno-patch.sh
+
+[Install]
+WantedBy=multi-user.target
+
+systemctl daemon-reload
+systemctl <span class="hljs-built_in">enable</span> k8s-patch.service</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="../install.html" class="navigation navigation-prev " aria-label="Previous page: 安装">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="../config.html" class="navigation navigation-next " aria-label="Next page: 配置">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"next":{"title":"配置","level":"1.2.1.2","depth":3,"path":"k8s-ingress/f5-cis/config.adoc","ref":"k8s-ingress/f5-cis/config.adoc","articles":[]},"previous":{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","mtime":"2021-04-14T17:07:50.274Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-14T17:10:32.230Z"},"basePath":"../../..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../../../gitbook/gitbook.js"></script>
+    <script src="../../../gitbook/theme.js"></script>
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

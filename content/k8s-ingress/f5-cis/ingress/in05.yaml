@@ -1,0 +1,17 @@
+kind: Ingress
+metadata:
+  name: ingress-05
+  namespace: test004
+  annotations:
+    virtual-server.f5.com/ip: "10.1.10.63"
+    virtual-server.f5.com/partition: "k8s"
+    virtual-server.f5.com/rewrite-target-url: "old.example.com/bar=new.example.com/foo"
+spec:
+  rules:
+  - host: old.example.com
+    http:
+      paths:
+      - path: /bar
+        backend:
+          serviceName: app-1-svc
+          servicePort: 80
