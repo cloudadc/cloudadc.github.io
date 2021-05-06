@@ -33,7 +33,7 @@ kubectl delete secret bigip-login -n kube-system
 .*Install*
 ----
 kubectl create ns bigip-ctlr
-kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n bigip-ctlr
 kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
 kubectl create -f rbac.yaml
 kubectl create -f cis.yaml

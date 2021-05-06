@@ -77,6 +77,8 @@ for i in {1..10} ; do curl http://localhost:8004 ; done
 
 == 负载均衡
 
+=== 启动步骤
+
 [source, bash]
 .*1. 启动微服务*
 ----
@@ -106,6 +108,35 @@ http://localhost:8005
 docker run --env-file ./env.list cloudadc/grpc-go-greeting:0.1 greeter_client
 ----
 
-== 结果截图
+=== 结果截图
 
 image:img/nginx-demo-results.png[]
+
+== API 网关
+
+[source, bash]
+.*1. 启动微服务*
+----
+docker run -it --rm --name springboot-1 -d cloudadc/backend:0.0.8
+docker run -it --rm --name springboot-2 -d cloudadc/backend:0.0.8
+----
+
+[source, bash]
+.*2. 启动 Nginx Plus*
+----
+docker run -it --rm --name nginx-plus --link springboot-1 --link springboot-2 -p 8001-8002:8001-8002 -v /Users/ksong/work/nginx/nginx-req-limit.conf:/etc/nginx/nginx.conf:ro nginxplus:23-r1
+----
+
+[source, bash]
+.*3. 测试*
+----
+$ for i in {1..5} ; do curl localhost:8002/api/fruits ; echo ; done
+[{"id":1,"name":"Cherry"},{"id":2,"name":"Apple"},{"id":3,"name":"Banana"}]
+<html>
+<head><title>503 Service Temporarily Unavailable</title></head>
+<body>
+<center><h1>503 Service Temporarily Unavailable</h1></center>
+<hr><center>nginx/1.19.5</center>
+</body>
+</html>
+----
