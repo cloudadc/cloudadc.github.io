@@ -114,6 +114,8 @@ image:img/nginx-demo-results.png[]
 
 == API 网关
 
+=== Limit Reqs
+
 [source, bash]
 .*1. 启动微服务*
 ----
@@ -139,4 +141,35 @@ $ for i in {1..5} ; do curl localhost:8002/api/fruits ; echo ; done
 <hr><center>nginx/1.19.5</center>
 </body>
 </html>
+----
+
+=== Keyvals
+
+[source, bash]
+.*1. 启动微服务*
+----
+docker run -it --rm --name springboot-1 -d cloudadc/backend:0.0.8
+docker run -it --rm --name springboot-2 -d cloudadc/backend:0.0.9
+----
+
+[source, bash]
+.*2. 启动 Nginx Plus*
+----
+docker run -it --rm --name nginx-plus --link springboot-1 --link springboot-2 -p 8001-8002:8001-8002 -v /Users/ksong/work/nginx/nginx-kayval.conf:/etc/nginx/nginx.conf:ro nginxplus:23-r1
+----
+
+* link:conf/nginx-kayval.conf[nginx-kayval.conf]
+
+[source, bash]
+.*3. 测试*
+----
+$ curl -X POST "http://localhost:8001/api/6/http/keyvals/canary" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"abswitch\": \"0\"}"
+
+$ curl localhost:8002/info
+{group=io.cloudadc, app=backend, version=0.0.8}
+
+$ curl -X POST "http://localhost:8001/api/6/http/keyvals/canary" -H "accept: application/json" -H "Content-Type: application/json" -d "{ \"abswitch\": \"1\"}"
+
+$ curl localhost:8002/info
+{group=io.cloudadc, app=backend, version=0.0.9}
 ----
