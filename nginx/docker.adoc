@@ -173,3 +173,65 @@ $ curl -X POST "http://localhost:8001/api/6/http/keyvals/canary" -H "accept: app
 $ curl localhost:8002/info
 {group=io.cloudadc, app=backend, version=0.0.9}
 ----
+
+=== JWT
+
+[source, bash]
+.*1. 启动微服务*
+----
+docker run -it --rm --name springboot-1 -d cloudadc/backend:0.0.8
+docker run -it --rm --name springboot-2 -d cloudadc/backend:0.0.9
+----
+
+[source, bash]
+.*2. 生成 api_secret.jwk*
+----
+$ echo -n cloudadcjwt | base64 | tr '+/' '-_' | tr -d '='
+Y2xvdWRhZGNqd3Q
+----
+
+[source, bash]
+.*3. 创建 api_secret.jwk 文件，添加如下内容*
+----
+{"keys":
+    [{
+        "k":"Y2xvdWRhZGNqd3Q",
+        "kty":"oct",
+        "kid":"0001"
+    }]
+}
+----
+
+[source, bash]
+.*4. 生成客户端 API Key*
+----
+$ echo -n '{"typ":"JWT","alg":"HS256","kid":"0001"}' | base64 | tr '+/' '-_' | tr -d '='
+eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjAwMDEifQ
+
+$ echo -n '{"name":"Cloudadc System","sub":"cloudadc","iss":"My API Gateway"}' | base64 | tr '+/' '-_' | tr -d '='
+eyJuYW1lIjoiQ2xvdWRhZGMgU3lzdGVtIiwic3ViIjoiY2xvdWRhZGMiLCJpc3MiOiJNeSBBUEkgR2F0ZXdheSJ9
+
+$ echo -n $HEADER_PAYLOAD | openssl dgst -binary -sha256 -hmac cloudadcjwt | base64 | tr '+/' '-_' | tr -d '='
+mrxpQNel2N5apjLjjkwHVh7fsnnGYBThGhgRr61o_wE
+
+$ echo $HEADER_PAYLOAD.mrxpQNel2N5apjLjjkwHVh7fsnnGYBThGhgRr61o_wE > quotes.jwt
+----
+
+[source, bash]
+.*5. 启动 Nginx Plus*
+----
+docker run -it --rm --name nginx-plus --link springboot-1 --link springboot-2 -p 8001-8002:8001-8002 -v /Users/ksong/work/nginx/nginx-jwt.conf:/etc/nginx/nginx.conf:ro -v /Users/ksong/work/nginx/api_secret.jwk:/etc/nginx/conf/api_secret.jwk:ro nginxplus:23-r1
+----
+
+[source, bash]
+.*6. 测试*
+----
+$ curl -H "Authorization: Bearer `cat quotes.jwt`" http://localhost:8002/info
+{group=io.cloudadc, app=backend, version=0.0.9}
+----
+
+[source, bash]
+.**
+----
+
+----
