@@ -105,22 +105,22 @@ Control Hub Mode is mainly for Ops Convenient, which use a Control Hub(one or mu
 create auth partition kubernetes
 ----
 
+* *kubernetes* - Partition 的名称需要与 CIS Deployment 中`--bigip-partition`参数指定的partition一致。
+
 [source, bash]
 .*2. 创建 VxLan 隧道*
 ----
-create net tunnels vxlan fl-vxlan port 8472 flooding-type none description none defaults-from vxlan app-service none
-create net tunnels tunnel flannel_vxlan { app-service none key 1 local-address 192.168.6.120 profile fl-vxlan remote-address any secondary-address any }
-create net self self_flannel_vxlan { address 10.244.20.100/16 vlan flannel_vxlan allow-service all traffic-group traffic-group-local-only }
-create net self floating_flannel_vxlan { address 10.244.20.10/16 allow-service all vlan flannel_vxlan traffic-group traffic-group-local-only }
-save sys config
-show net tunnels tunnel flannel_vxlan all-properties
-
 create net tunnels vxlan fl-vxlan port 8472 flooding-type none
 create net tunnels tunnel flannel_vxlan key 1 profile fl-vxlan local-address 192.168.200.208
 create net self 10.244.20.100 address 10.244.20.100/16 allow-service none vlan flannel_vxlan 
 save sys config
 show net tunnels tunnel flannel_vxlan all-properties
 ----
+
+* `192.168.200.208` – F5 VE 上VS业务VLAN的 Self IP或管理IP，K8S上创建 BIG-IP Node 时会使用到改地址，对应 flannel `flannel.alpha.coreos.com/backend-data`标注。
+* `10.244.20.100/16` – K8S Flannel vxlan self IP, 必需是 16 位，这样才可以确保所有目的网络都走vtep
+* `show net tunnels tunnel flannel_vxlan all-properties` 会输出 tunnel vxlan interface MAC 地址，该地址会在K8S上创建 BIG-IP Node 时使用，对应 flannel `flannel.alpha.coreos.com/public-ip` 标注。
+
 
 === Setup on K8s
 

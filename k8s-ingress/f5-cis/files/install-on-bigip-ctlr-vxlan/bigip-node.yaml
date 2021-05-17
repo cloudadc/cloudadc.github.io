@@ -14,3 +14,6 @@ spec:
   # Define the flannel subnet you want to assign to the BIG-IP device.
   # Be sure this subnet does not collide with any other Nodes' subnets.
   podCIDR: 10.244.20.0/24
+  taints:
+  - effect: NoExecute
+    key: node.kubernetes.io/unschedulable
