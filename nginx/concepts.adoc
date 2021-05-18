@@ -43,7 +43,9 @@ https://www.nginx.com/products/nginx/
 
 == 安装
 
-=== Installing NGINX on CentOS 7
+=== 二进制安装
+
+本部分在 CentOS 7 上二进制安装。
 
 [source, bash]
 .*1. 创建 `/etc/yum.repos.d/nginx.repo` 内容如下*
@@ -74,30 +76,68 @@ systemctl start nginx && systemctl enable nginx && systemctl status nginx
 
 image:img/nginx-welcom.png[]
 
-=== Installing NGINX on Ubuntu 16.04
-
 === 编译安装
 
 [source, bash]
+.*1. 下载源代码*
 ----
-// download
-wget http://nginx.org/download/nginx-1.17.10.tar.gz
+wget https://nginx.org/download/nginx-1.20.0.tar.gz
+tar -xvf nginx-1.20.0.tar.gz && cd nginx-1.20.0
+----
 
-// navigate to folder
-tar -xzvf nginx-1.17.10.tar.gz
-cd nginx-1.17.10/
-
-// install dev tools
+[source, bash]
+.*2. 安装编译所需依赖包*
+----
 yum groupinstall 'Development Tools'
 yum install zlib-devel -y
 yum install pcre-devel -y
+----
 
-// compile to install
-./configure --help
-./configure --prefix=/opt/nginx
-cat objs/ngx_modules.c
-make
-make install
+[source, text]
+.*3. 编译*
+----
+# ./configure --help
+
+# ./configure --prefix=/root/nginx
+...
+  nginx path prefix: "/root/nginx"
+  nginx binary file: "/root/nginx/sbin/nginx"
+  nginx modules path: "/root/nginx/modules"
+  nginx configuration prefix: "/root/nginx/conf"
+  nginx configuration file: "/root/nginx/conf/nginx.conf"
+  nginx pid file: "/root/nginx/logs/nginx.pid"
+  nginx error log file: "/root/nginx/logs/error.log"
+  nginx http access log file: "/root/nginx/logs/access.log"
+  nginx http client request body temporary files: "client_body_temp"
+  nginx http proxy temporary files: "proxy_temp"
+  nginx http fastcgi temporary files: "fastcgi_temp"
+  nginx http uwsgi temporary files: "uwsgi_temp"
+  nginx http scgi temporary files: "scgi_temp"
+
+# make
+
+# make install
+----
+
+[source, bash]
+.*4. 编辑 ~/nginx/conf/nginx.conf, 修改监听端口为 8001*
+----
+    server {
+        listen       8001;
+        server_name  localhost;
+----
+
+[source, bash]
+.*5. 启动*
+----
+cd ~/nginx
+./sbin/nginx 
+----
+
+[source, bash]
+.*6. 访问测试*
+----
+curl localhost:8001
 ----
 
 == 基本使用场景
@@ -256,43 +296,130 @@ $ curl -u "admin:admin" http://192.168.100.11/test
 YES
 ----
 
-=== TD 
+== Webdocket 代理
+
+本部分内参参照 https://www.nginx.com/blog/websocket-nginx/ 和 https://www.nginx.com/blog/nginx-websockets-performance/ 中内容。
+
+本部分部署拓扑示意如下：
+
+|===
+|Server |IP |功能
+|server1
+|10.1.10.9
+|Websocket Client
+
+|server2
+|10.1.10.159
+|Nginx Webdocket 代理
+
+|server3
+|10.1.10.10
+|Websocket Server
+|===
+
+=== Websocket Server
 
 [source, bash]
-.**
+.*1. 安装 node 及 ws 环境*
 ----
+sudo apt-get install nodejs npm
+mkdir server && cd server
+npm install ws
+----
+
+[source, bash]
+.*2. 创建 server.js，内容如下*
+----
+console.log("Server started");
+var Msg = '';
+var WebSocketServer = require('ws').Server
+    , wss = new WebSocketServer({port: 8010});
+    wss.on('connection', function(ws) {
+        ws.on('message', function(message) {
+        console.log('Received from client: %s', message);
+        ws.send('Server received from client: ' + message);
+    });
+ });
+----
+
+[source, bash]
+.*3. 启动*
+----
+node server.js 
+----
+
+=== Nginx Webdocket 代理配置
+
+[source, bash]
+----
+http {
+
+    ...
+
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    upstream websocket {
+        server 10.1.10.10:8010;
+    }
+
+    server {
+        listen 8020;
+        location / {
+            proxy_pass http://websocket;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_set_header Host $host;
+        }
+    }
+
+}
+----
+
+=== Websocket Client
+
+[source, bash]
+.*1. 安装 node 及 ws 环境*
+----
+sudo apt-get install nodejs npm
+mkdir client && cd client
+npm install ws
+----
+
+[source, bash]
+.*2. 创建 client.js，内容如下*
+----
+const WebSocket = require('ws')
+const url = 'ws://10.1.10.159:8020/rlzy/ws'
+const connection = new WebSocket(url)
+
+connection.onopen = () => {
+  connection.send('Message From Client')
+}
+
+connection.onerror = (error) => {
+  console.log(`WebSocket error: ${error}`)
+}
+
+connection.onmessage = (e) => {
+  console.log(e.data)
+}
 
 ----
 
 [source, bash]
-.**
+.*3. 启动 Client 通过代理和Server端通信*
+----
+node client.js 
 ----
 
-----
+=== Websocket Server 端抓包查看底层通信
 
-[source, bash]
-.**
-----
+image:img/websocket-communicate.png[]
 
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
 == Web Server
 
 
