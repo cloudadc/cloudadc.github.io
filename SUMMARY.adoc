@@ -30,6 +30,7 @@
 .. link:nginx/usecase.adoc[Use Case]
 ... link:nginx/docker.adoc[Docker]
 .. link:nginx/app/README.adoc[现代应用]
+.. link:nginx/programming.adoc[可编程]
 . link:dist.adoc[DISTRIBUTED]
 .. link:zk/README.adoc[ZooKeeper]
 .. link:https://cloudadc.github.io/distribute-dev-framework/content/dubbo[DUBBO]

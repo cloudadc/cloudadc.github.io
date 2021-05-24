@@ -1,0 +1,313 @@
+= 可编程
+:toc: manual
+
+== NJS
+
+* Source Code - https://github.com/nginx-architects/njs-examples
+* Documentation - http://nginx.org/en/docs/njs/
+* Step By Step Lab - https://clouddocs.f5.com/training/community/nginx/html/class3/class3.html
+
+=== Run NJS From CLI
+
+[source, bash]
+.*nginx njs*
+----
+$ docker run -it --rm --name nginx nginx njs
+interactive njs 0.5.3
+
+v.<Tab> -> the properties and prototype methods of v.
+
+>> function hi(msg) {console.log(msg)}
+undefined
+>> hi("Test From Kylin")
+Test From Kylin
+undefined
+----
+
+=== Hello World 
+
+[source, bash]
+.*1. 运行*
+----
+docker run -it --rm --name nginx-njs -v $(pwd)/conf/http/hello.conf:/etc/nginx/nginx.conf:ro -v $(pwd)/njs/:/etc/nginx/njs/:ro -p 80:80 -d nginx 
+----
+
+[source, bash]
+.*2. 测试*
+----
+$ curl localhost
+Hello world!
+
+$ curl localhost/version
+0.5.3
+----
+
+*3. Configuration & Code*
+
+[source, bash]
+.*nginx.conf*
+----
+load_module modules/ngx_http_js_module.so;
+  
+events { }
+
+http {
+      js_path "/etc/nginx/njs/";
+
+      js_import utils.js;
+      js_import main from http/hello.js;
+
+      server {
+            listen 80;
+
+            location = /version {
+                js_content utils.version;
+            }
+
+            location / {
+                js_content main.hello;
+            }
+      }
+}
+----
+
+[source, bash]
+.*utils.js*
+----
+function version(r) {
+    r.return(200, njs.version);
+}
+
+export default {version}
+----
+
+[source, bash]
+.*hello.js*
+----
+function hello(r) {
+    r.return(200, "Hello world!\n");
+}
+
+export default {hello}
+----
+
+=== Decode URI
+
+[source, bash]
+.*1. 运行*
+----
+docker run -it --rm --name nginx-njs -v $(pwd)/conf/http/decode_uri.conf:/etc/nginx/nginx.conf:ro -v $(pwd)/njs/:/etc/nginx/njs/:ro -p 80:80 -d nginx
+----
+
+[source, bash]
+.*2. 测试*
+----
+$ curl -G http://localhost/foo --data-urlencode "foo=你好"
+%E4%BD%A0%E5%A5%BD
+
+$ curl -G http://localhost/dec_foo -d "foo=%E4%BD%A0%E5%A5%BD"
+你好
+----
+
+*3. Configuration & Code*
+
+[source, bash]
+.*nginx.conf*
+----
+load_module modules/ngx_http_js_module.so;
+  
+events { }
+
+http {
+      js_path "/etc/nginx/njs/";
+
+      js_import utils.js;
+      js_import main from http/decode_uri.js;
+
+      js_set $dec_foo main.dec_foo;
+
+      server {
+            listen 80;
+
+            location /version {
+                js_content utils.version;
+            }
+
+            location /foo {
+                return 200 $arg_foo;
+            }
+
+            location /dec_foo {
+                return 200 $dec_foo;
+            }
+      }
+}
+----
+
+[source, bash]
+.*decode_uri.js*
+----
+function dec_foo(r) {
+    return decodeURIComponent(r.args.foo);
+}
+
+export default {dec_foo};
+----
+
+=== JWT
+
+[source, bash]
+.*1. 运行*
+----
+docker run -it --rm --name nginx-njs -v $(pwd)/conf/http/authorization/jwt.conf:/etc/nginx/nginx.conf:ro -v $(pwd)/njs/:/etc/nginx/njs/:ro -p 80:80 -d nginx
+----
+
+[source, bash]
+.*2. 测试*
+----
+$ curl 'http://localhost/jwt' -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImV4cCI6MTU4NDcyMzA4NX0.eyJpc3MiOiJuZ2lueCIsInN1YiI6ImFsaWNlIiwiZm9vIjoxMjMsImJhciI6InFxIiwienl4IjpmYWxzZX023Rvv9dIso1RuZ8uHaJ83BkKmMtTwch09rJtwgk"
+alice
+----
+
+=== Subrequests join
+
+[source, bash]
+.*1. 运行*
+----
+docker run -it --rm --name nginx-njs -v $(pwd)/conf/http/join_subrequests.conf:/etc/nginx/nginx.conf:ro -v $(pwd)/njs/:/etc/nginx/njs/:ro -p 80:80 -d nginx
+----
+
+[source, bash]
+.*2. 测试*
+----
+$ curl http://localhost/foo
+FOO
+
+$ curl http://localhost/bar
+BAR
+
+$ curl http://localhost/join
+[{"uri":"/foo","code":200,"body":"FOO"},{"uri":"/bar","code":200,"body":"BAR"}]
+----
+
+=== TD
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
