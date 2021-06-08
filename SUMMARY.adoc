@@ -8,6 +8,7 @@
 ... link:k8s-ingress/f5-cis/config.adoc[配置]
 ... link:k8s-ingress/f5-cis/as3/README.adoc[AS3]
 .... link:k8s-ingress/f5-cis/as3/canary/README.adoc[Canary Releasing]
+.... link:k8s-ingress/f5-cis/as3/hubmode/README.adoc[HubMode]
 ... link:k8s-ingress/f5-cis/ingress/README.adoc[Ingress]
 ... link:k8s-ingress/f5-cis/cccl/README.adoc[CCCL]
 .. link:k8s-ingress/nginx-ingress/README.adoc[NGINX]
