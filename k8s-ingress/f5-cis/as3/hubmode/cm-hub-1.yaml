@@ -1,0 +1,81 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-hub-1
+  namespace: control-hub-1 
+  labels:
+    f5type: virtual-server
+    as3: "true"
+    hubMode: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.25.0",
+        "id": "hubtest00",
+        "hubtest01": {
+          "class": "Tenant",
+          "hubtest01": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.200.41"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "hubtest01_app_svc_pool"
+            },
+            "hubtest01_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": [ ]
+              }
+              ]
+            }
+          }
+        },
+        "hubtest02": {
+          "class": "Tenant",
+          "hubtest02": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.200.42"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "hubtest02_app_svc_pool"
+            },
+            "hubtest02_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": [ ]
+              }
+              ]
+            }
+          }
+        }
+      }
+    }

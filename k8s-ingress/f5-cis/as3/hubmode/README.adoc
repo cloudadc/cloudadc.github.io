@@ -1,3 +1,220 @@
 = HubMode
 :toc: manual
 
+== Basic Functions
+
+[source, yaml]
+.*1. CIS Deployment Configuration*
+----
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-bigip-ctlr
+  namespace: bigip-ctlr
+  labels:
+    app: k8s-bigip-ctlr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-bigip-ctlr
+  template:
+    metadata:
+      name: k8s-bigip-ctlr
+      labels:
+        app: k8s-bigip-ctlr
+    spec:
+      serviceAccountName: bigip-ctlr
+      containers:
+        - name: k8s-bigip-ctlr
+          image: "cloudadc/k8s-bigip-ctlr:2.5.0-WIP"
+          env:
+            - name: BIGIP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bigip-login
+                  key: username
+            - name: BIGIP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bigip-login
+                  key: password
+          command: ["/app/bin/k8s-bigip-ctlr"]
+          args: [
+            "--bigip-username=$(BIGIP_USERNAME)",
+            "--bigip-password=$(BIGIP_PASSWORD)",
+            "--bigip-url=192.168.200.208",
+            "--insecure=true",
+            "--bigip-partition=k8s",
+            "--log-as3-response=true",
+            "--manage-configmaps=true",
+            "--manage-ingress=false",
+            "--log-level=INFO",
+            "--pool-member-type=cluster",
+            "--namespace=control-hub-1",
+            "--namespace=control-hub-2"
+            ]
+----
+
+[source, bash]
+.*2. Deploy applications*
+----
+kubectl apply -f deploy.yaml
+----
+
+* link:deploy.yaml[deploy.yaml]
+
+[source, bash]
+.*3. Deploy cm-hub-1.yaml*
+----
+kubectl apply -f cm-hub-1.yaml 
+----
+
+* link:cm-hub-1.yaml[cm-hub-1.yaml]
+
+Test the deployed Service:
+
+[source, bash]
+----
+$ curl http://192.168.200.41/cafe
+Server address: 10.244.1.82:8080
+Server name: app-7d84cd8575-hkw6q
+Date: 09/Jun/2021:15:38:26 +0000
+URI: /cafe
+Request ID: 8687dec584795413122cb9a9ff0f39d6
+
+$ curl http://192.168.200.42/cafe
+Server address: 10.244.2.101:8080
+Server name: app-7d84cd8575-5j7mb
+Date: 09/Jun/2021:15:38:31 +0000
+URI: /cafe
+Request ID: c2310711d82a7d3589b773042134c9c4
+----
+
+[source, bash]
+.*4. Deploy cm-hub-2.yaml*
+----
+kubectl apply -f cm-hub-2.yaml 
+----
+
+* link:cm-hub-2.yaml[cm-hub-2.yaml]
+
+Test the deployed Service:
+
+[source, bash]
+----
+$ curl http://192.168.200.43/cafe
+Server address: 10.244.1.83:8080
+Server name: app1-66b6ffd764-g2c7z
+Date: 09/Jun/2021:16:00:47 +0000
+URI: /cafe
+Request ID: df789b7a2ba7a26fa8b92ac04d65438a
+
+$ curl http://192.168.200.44/cafe
+Server address: 10.244.2.102:8080
+Server name: app2-85d97bcf99-vm9px
+Date: 09/Jun/2021:16:01:06 +0000
+URI: /cafe
+Request ID: 636f80015136199619e7ca71ce9affa7
+----
+
+[source, bash]
+.*5. Expend hubtest01 from 1 pod to 3 pods*
+----
+$ kubectl get pods -n hubtest01 -o wide --no-headers
+app-7d84cd8575-49drf   1/1   Running   0     59s   10.244.1.84    node1   <none>   <none>
+app-7d84cd8575-cb2z9   1/1   Running   0     59s   10.244.2.103   node2   <none>   <none>
+app-7d84cd8575-lq4p4   1/1   Running   0     17m   10.244.1.82    node1   <none>   <none>
+
+
+----
+
+NOTE: Expect results is two new added pods should be add to F5, but the results is no as expected.
+
+[source, bash]
+.*6. Delete all pods from hubtest03*
+----
+$ for i in $(kubectl get pods -n hubtest03 --no-headers | awk '{print $1}') ; do kubectl delete pod $i -n hubtest03 ; done
+
+
+----
+
+NOTE: Expected results is the updated pod ip should be syn to F5, but the results is not as expected.
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
