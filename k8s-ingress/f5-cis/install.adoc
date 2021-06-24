@@ -85,7 +85,9 @@ This page provide an example of CIS Pod with livenessProbe & readinessProbe.
             timeoutSeconds: 15
 ----
 
-=== VE 健壮性检测
+=== VE 健壮性检测(curl)
+
+* Full Deployment YAML - link:files/cis-rhel.yaml[cis-rhel.yaml]
 
 [source, yaml]
 ----
@@ -99,6 +101,26 @@ This page provide an example of CIS Pod with livenessProbe & readinessProbe.
               - -o
               - /dev/null
               - https://192.168.200.208
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            successThreshold: 1
+----
+
+NOTE: `curl` 命令只存在于 Red Hat Linux Base 镜像中。
+
+=== VE 健壮性检测(sh + python)
+
+* Full Deployment YAML - link:files/cis-debian.yaml[cis-debian.yaml]
+
+[source, yaml]
+----
+          livenessProbe:
+            failureThreshold: 3
+            exec:
+              command:
+              - sh
+              - -c
+              - echo 'import requests' > /tmp/live.py ; echo 'response = requests.get("https://192.168.200.208", verify=False)'  >> /tmp/live.py ; python -W ignore /tmp/live.py
             initialDelaySeconds: 15
             periodSeconds: 15
             successThreshold: 1
