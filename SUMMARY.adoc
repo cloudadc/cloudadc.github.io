@@ -11,6 +11,7 @@
 .... link:k8s-ingress/f5-cis/as3/hubmode/README.adoc[HubMode]
 ... link:k8s-ingress/f5-cis/ingress/README.adoc[Ingress]
 ... link:k8s-ingress/f5-cis/cccl/README.adoc[CCCL]
+... link:k8s-ingress/f5-cis/mgmt-isolation/README.adoc[管理隔离]
 .. link:k8s-ingress/nginx-ingress/README.adoc[NGINX]
 ... link:k8s-ingress/nginx-ingress/bigip/README.adoc[Deployment Architectures]
 .. link:k8s-ingress/nginx-plus-ingress/README.adoc[NGINX PLUS]

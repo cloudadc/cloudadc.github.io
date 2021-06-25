@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-bigip-ctlr
+  namespace: bigip-ctlr
+  labels:
+    app: k8s-bigip-ctlr
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-bigip-ctlr
+  template:
+    metadata:
+      name: k8s-bigip-ctlr
+      labels:
+        app: k8s-bigip-ctlr
+    spec:
+      serviceAccountName: bigip-ctlr
+      containers:
+        - name: k8s-bigip-ctlr
+          #image: "f5networks/k8s-bigip-ctlr:2.4.1"
+          #image: "f5networks/k8s-bigip-ctlr:2.0.0"
+          image: "cloudadc/k8s-bigip-ctlr:2.5.0-WIP"
+          #image: "vli39/k8s-bigip-ctlr:C3456795"
+          livenessProbe:
+            failureThreshold: 3
+            exec:
+              command:
+              - sh
+              - -c
+              - echo 'import requests' > /tmp/live.py ; echo 'response = requests.get("https://192.168.200.208", verify=False)'  >> /tmp/live.py ; python -W ignore /tmp/live.py
+            initialDelaySeconds: 15
+            periodSeconds: 15
+            successThreshold: 1
+          env:
+            - name: BIGIP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: bigip-login
+                  key: username
+            - name: BIGIP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bigip-login
+                  key: password
+          command: ["/app/bin/k8s-bigip-ctlr"]
+          args: [
+            "--bigip-username=$(BIGIP_USERNAME)",
+            "--bigip-password=$(BIGIP_PASSWORD)",
+            "--bigip-url=192.168.200.208",
+            "--insecure=true",
+            "--bigip-partition=k8s",
+            "--log-as3-response=true",
+            "--manage-configmaps=true",
+            "--manage-ingress=true",
+            "--namespace-label=cis_scanner=mgmt-isolation",
+            "--log-level=INFO",
+            "--pool-member-type=cluster"
+            ]

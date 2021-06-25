@@ -1,0 +1,131 @@
+= Mamagement Isolation
+:toc: manual
+
+== Preparation
+
+[source, bash]
+.*1. Deploy CIS*
+----
+kubectl apply -f cis.yaml
+----
+
+* link:cis.yaml[cis.yaml]
+
+[source, bash]
+.*2. Deploy Service*
+----
+kubectl apply -f deploy-svc-in-different-ns.yaml
+----
+
+* link:deploy-svc-in-different-ns.yaml[deploy-svc-in-different-ns.yaml]
+
+== Ingress Mamagement Isolation
+
+[source, bash]
+.*1. Deploy Ingress in mgmt-isolation100*
+----
+kubectl apply -f ingress-in-different-ns-1.yaml
+----
+
+* link:ingress-in-different-ns-1.yaml[ingress-in-different-ns-1.yaml]
+
+[source, bash]
+.*2. Deploy Ingress in mgmt-isolation101*
+----
+kubectl apply -f ingress-in-different-ns-2.yaml
+----
+
+* link:ingress-in-different-ns-2.yaml[ingress-in-different-ns-2.yaml]
+
+This steps should failed with the following error:
+
+----
+2021/06/25 10:02:02 [ERROR] Ingress IP Address is not provided. Unable to process ingress resources. Either configure controller with 'default-ingress-ip' or Ingress with annotation 'virtual-server.f5.com/ip'.
+2021/06/25 10:02:02 [ERROR] [AS3] Invalid Virtual Server Destination IP address/Port.
+2021/06/25 10:02:02 [ERROR] Invalid Virtual Server Destination IP address/Port.
+2021/06/25 10:02:04 [ERROR] [AS3] Big-IP Responded with code: 422
+2021/06/25 10:02:04 [ERROR] [AS3] Raw response from Big-IP: map[code:422 declarationFullId: errors:[/k8s/Shared/ingress__80: should have required property 'virtualAddresses'] message:declaration is invalid] 
+----
+
+This error through out periodicity.
+
+[source, bash]
+.*3. Deploy Ingress in mgmt-isolation102*
+----
+kubectl apply -f ingress-in-different-ns-3.yaml 
+----
+
+link:ingress-in-different-ns-3.yaml[ingress-in-different-ns-3.yaml]
+
+=== Expectation & Results
+
+Step 3 should deploy success, the fact is it doesn't.
+
+=== Workaround
+
+Add default-ingress-ip in CIS Deployment:
+
+----
+          args: [
+            ...
+            "--default-ingress-ip=192.168.200.11",
+            ...
+            ]
+----
+
+=== Clean up
+
+[source, bash]
+----
+kubectl delete -f ingress-in-different-ns-1.yaml 
+kubectl delete -f ingress-in-different-ns-2.yaml 
+kubectl delete -f ingress-in-different-ns-3.yaml 
+----
+
+== Configmap Mamagement Isolation
+
+[source, bash]
+.*1. Deploy configmap 1*
+----
+kubectl apply -f configmap-ns-1.yaml
+----
+
+* link:configmap-ns-1.yaml[configmap-ns-1.yaml]
+
+This step will deploy success.
+
+[source, bash]
+.*2. Deploy configmap 2*
+----
+kubectl apply -f configmap-ns-2.yaml
+----
+
+* link:configmap-ns-2.yaml[configmap-ns-2.yaml]
+
+This step should deploy failed, due to format of ip.
+
+[source, bash]
+----
+2021/06/25 10:46:16 [ERROR] [AS3] Big-IP Responded with code: 422
+2021/06/25 10:46:16 [ERROR] [AS3] Raw response from Big-IP: map[code:422 declarationFullId: errors:[/mgmt-isolation101/mgmt-isolation101/app_svc_vs/virtualAddresses/0: should match format "f5ip"] message:declaration is invalid] 
+----
+
+[source, bash]
+.*3. Deploy configmap 3*
+----
+kubectl apply -f configmap-ns-3.yaml
+----
+
+* link:configmap-ns-3.yaml[configmap-ns-3.yaml]
+
+Expectation of this steps is that the service should deploy success, the fact doesn't.
+
+[source, bash]
+.*4. Clean up*
+----
+kubectl delete -f configmap-ns-1.yaml 
+kubectl delete -f configmap-ns-2.yaml 
+kubectl delete -f configmap-ns-3.yaml 
+----
+
+

@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cafe-ingress
+  namespace: mgmt-isolation102
+  annotations:
+    virtual-server.f5.com/ip: "192.168.200.3"
+spec:
+  rules:
+  - host: mgmt-isolation102.example.com
+    http:
+      paths:
+      - path: /coffee
+        backend:
+          serviceName: app-svc
+          servicePort: 80

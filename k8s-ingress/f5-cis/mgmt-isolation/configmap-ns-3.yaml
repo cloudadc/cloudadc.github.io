@@ -1,0 +1,50 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: mgmt-isolation102
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "mgmt-isolation102",
+        "mgmt-isolation102": {
+          "class": "Tenant",
+          "mgmt-isolation102": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "10.1.10.5"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "mgmt-isolation102_app_svc_pool"
+            },
+            "mgmt-isolation102_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": [ ]
+              }
+              ]
+            }
+          }
+        }
+      }
+    }

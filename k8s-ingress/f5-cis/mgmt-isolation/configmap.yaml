@@ -1,0 +1,203 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: mgmt-isolation100
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "mgmt-isolation100",
+        "mgmt-isolation100": {
+          "class": "Tenant",
+          "mgmt-isolation100": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "10.1.10.3"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "mgmt-isolation100_app_svc_pool"
+            },
+            "mgmt-isolation100_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: mgmt-isolation101
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "mgmt-isolation101",
+        "mgmt-isolation101": {
+          "class": "Tenant",
+          "mgmt-isolation101": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "10.1.10.4"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "mgmt-isolation101_app_svc_pool"
+            },
+            "mgmt-isolation101_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: mgmt-isolation102
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "mgmt-isolation102",
+        "mgmt-isolation102": {
+          "class": "Tenant",
+          "mgmt-isolation102": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "10.1.10.5"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "mgmt-isolation102_app_svc_pool"
+            },
+            "mgmt-isolation102_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-cistest
+  namespace: mgmt-isolation103
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.19.0",
+        "id": "mgmt-isolation103",
+        "mgmt-isolation103": {
+          "class": "Tenant",
+          "mgmt-isolation103": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "10.1.10.6"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "mgmt-isolation103_app_svc_pool"
+            },
+            "mgmt-isolation103_app_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 80,
+                "serverAddresses": []
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
