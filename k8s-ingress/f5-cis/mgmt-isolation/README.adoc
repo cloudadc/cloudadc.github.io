@@ -61,7 +61,7 @@ link:ingress-in-different-ns-3.yaml[ingress-in-different-ns-3.yaml]
 
 Step 3 should deploy success, the fact is it doesn't.
 
-=== Workaround
+=== Workaround I
 
 Add default-ingress-ip in CIS Deployment:
 
@@ -71,6 +71,26 @@ Add default-ingress-ip in CIS Deployment:
             "--default-ingress-ip=192.168.200.11",
             ...
             ]
+----
+
+=== Workaround II
+
+Add manage-ingress-class-only in CIS Deployment:
+
+----
+          args: [
+            ...
+             "--manage-ingress-class-only=true",
+            ...
+            ]
+----
+
+and CIS only monitor ingress that has class annotation
+
+----
+  annotations:
+    virtual-server.f5.com/ip: "192.168.200.3"
+    kubernetes.io/ingress.class: "f5"
 ----
 
 === Clean up
