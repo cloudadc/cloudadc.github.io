@@ -115,16 +115,38 @@ NOTE: `curl` 命令只存在于 Red Hat Linux Base 镜像中。
 [source, yaml]
 ----
           livenessProbe:
-            failureThreshold: 3
             exec:
               command:
               - sh
               - -c
-              - echo 'import requests' > /tmp/live.py ; echo 'response = requests.get("https://192.168.200.208", verify=False)'  >> /tmp/live.py ; python -W ignore /tmp/live.py
+              - echo 'import requests' > /tmp/live.py ; echo 'response = requests.get("https://192.168.200.208", verify=False, timeout=3)'  >> /tmp/live.py ; python -W ignore /tmp/live.py
             initialDelaySeconds: 15
             periodSeconds: 15
             successThreshold: 1
+            failureThreshold: 3
+            timeoutSeconds: 5
 ----
+
+|===
+|timeoutSeconds |timeout |VE 重启过程 CIS Restart 次数
+
+|1
+|1
+|7
+
+|3
+|2
+|6
+
+|5
+|3
+|6
+
+|15
+|15
+|5
+
+|===
 
 == Integrate CIS with flannel （etcd mode, docker0 network）
 
