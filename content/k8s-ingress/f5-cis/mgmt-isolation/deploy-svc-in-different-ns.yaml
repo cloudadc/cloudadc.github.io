@@ -1,0 +1,199 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mgmt-isolation100
+  labels:
+    cis_scanner: mgmt-isolation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+  namespace: mgmt-isolation100
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - image: cloudadc/cafe:1.0
+        name: backend
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app
+    cis.f5.com/as3-tenant: mgmt-isolation100
+    cis.f5.com/as3-app: mgmt-isolation100
+    cis.f5.com/as3-pool: mgmt-isolation100_app_svc_pool
+  name: app-svc
+  namespace: mgmt-isolation100
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mgmt-isolation101
+  labels:
+    cis_scanner: mgmt-isolation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+  namespace: mgmt-isolation101
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - image: cloudadc/cafe:1.0
+        name: backend
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app
+    cis.f5.com/as3-tenant: mgmt-isolation101
+    cis.f5.com/as3-app: mgmt-isolation101
+    cis.f5.com/as3-pool: mgmt-isolation101_app_svc_pool
+  name: app-svc
+  namespace: mgmt-isolation101
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mgmt-isolation102
+  labels:
+    cis_scanner: mgmt-isolation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+  namespace: mgmt-isolation102
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - image: cloudadc/cafe:1.0
+        name: backend
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app
+    cis.f5.com/as3-tenant: mgmt-isolation102
+    cis.f5.com/as3-app: mgmt-isolation102
+    cis.f5.com/as3-pool: mgmt-isolation102_app_svc_pool
+  name: app-svc
+  namespace: mgmt-isolation102
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mgmt-isolation103
+  labels:
+    cis_scanner: mgmt-isolation
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app
+  name: app
+  namespace: mgmt-isolation103
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+      - image: cloudadc/cafe:1.0
+        name: backend
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app
+    cis.f5.com/as3-tenant: mgmt-isolation103
+    cis.f5.com/as3-app: mgmt-isolation103
+    cis.f5.com/as3-pool: mgmt-isolation103_app_svc_pool
+  name: app-svc
+  namespace: mgmt-isolation103
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: app
+  sessionAffinity: None
+  type: ClusterIP

@@ -202,6 +202,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.1.3.2" data-path="../k8s-ingress/f5-cis/as3/hubmode/">
+            
+                <a href="../k8s-ingress/f5-cis/as3/hubmode/">
+            
+                    
+                    HubMode
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -226,6 +239,19 @@
             
                     
                     CCCL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.6" data-path="../k8s-ingress/f5-cis/mgmt-isolation/">
+            
+                <a href="../k8s-ingress/f5-cis/mgmt-isolation/">
+            
+                    
+                    管理隔离
             
                 </a>
             
@@ -527,6 +553,19 @@
             
                     
                     现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="programming.html">
+            
+                <a href="programming.html">
+            
+                    
+                    可编程
             
                 </a>
             
@@ -1049,28 +1088,34 @@
 </li>
 <li><a href="#___2">&#x5B89;&#x88C5;</a>
 <ul class="sectlevel2">
-<li><a href="#_installing_nginx_on_centos_7">Installing NGINX on CentOS 7</a></li>
-<li><a href="#_installing_nginx_on_ubuntu_16_04">Installing NGINX on Ubuntu 16.04</a></li>
-<li><a href="#___3">&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</a></li>
+<li><a href="#___3">&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;</a></li>
+<li><a href="#___4">&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</a></li>
 </ul>
 </li>
-<li><a href="#___4">&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x573A;&#x666F;</a>
+<li><a href="#___5">&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x573A;&#x666F;</a>
 <ul class="sectlevel2">
 <li><a href="#__web">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x9759;&#x6001;&#x8D44;&#x6E90; Web &#x670D;&#x52A1;&#x5668;</a></li>
-<li><a href="#___5">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x5177;&#x6709;&#x7F13;&#x5B58;&#x529F;&#x80FD;&#x7684;&#x53CD;&#x5411;&#x4EE3;&#x7406;</a></li>
+<li><a href="#___6">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x5177;&#x6709;&#x7F13;&#x5B58;&#x529F;&#x80FD;&#x7684;&#x53CD;&#x5411;&#x4EE3;&#x7406;</a></li>
 <li><a href="#__realip">&#x914D;&#x7F6E; realip &#x6A21;&#x5757;</a></li>
 <li><a href="#__http_basic_authentication_web">&#x914D;&#x7F6E;&#x4E00;&#x4E2A; HTTP Basic Authentication &#x7684; Web &#x670D;&#x52A1;&#x5668;</a></li>
-<li><a href="#_td">TD</a></li>
+</ul>
+</li>
+<li><a href="#_webdocket">Webdocket &#x4EE3;&#x7406;</a>
+<ul class="sectlevel2">
+<li><a href="#_websocket_server">Websocket Server</a></li>
+<li><a href="#_nginx_webdocket">Nginx Webdocket &#x4EE3;&#x7406;&#x914D;&#x7F6E;</a></li>
+<li><a href="#_websocket_client">Websocket Client</a></li>
+<li><a href="#_websocket_server_2">Websocket Server &#x7AEF;&#x6293;&#x5305;&#x67E5;&#x770B;&#x5E95;&#x5C42;&#x901A;&#x4FE1;</a></li>
 </ul>
 </li>
 <li><a href="#_web_server">Web Server</a></li>
 <li><a href="#_reverse_proxy">Reverse Proxy</a></li>
 <li><a href="#_load_balancer">Load Balancer</a></li>
-<li><a href="#___6">&#x5B89;&#x5168;</a></li>
-<li><a href="#___7">&#x8FD0;&#x7EF4;</a>
+<li><a href="#___7">&#x5B89;&#x5168;</a></li>
+<li><a href="#___8">&#x8FD0;&#x7EF4;</a>
 <ul class="sectlevel2">
 <li><a href="#_logging">Logging</a></li>
-<li><a href="#___8">&#x6027;&#x80FD;&#x8C03;&#x4F18;</a></li>
+<li><a href="#___9">&#x6027;&#x80FD;&#x8C03;&#x4F18;</a></li>
 </ul>
 </li>
 </ul>
@@ -1151,7 +1196,10 @@
 <h2 id="___2">&#x5B89;&#x88C5;</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_installing_nginx_on_centos_7">Installing NGINX on CentOS 7</h3>
+<h3 id="___3">&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;</h3>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728; CentOS 7 &#x4E0A;&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;&#x3002;</p>
+</div>
 <div class="listingblock">
 <div class="title"><strong>1. &#x521B;&#x5EFA; <code>/etc/yum.repos.d/nginx.repo</code> &#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
 <div class="content">
@@ -1195,38 +1243,74 @@ yum install -y nginx</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_installing_nginx_on_ubuntu_16_04">Installing NGINX on Ubuntu 16.04</h3>
-
-</div>
-<div class="sect2">
-<h3 id="___3">&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</h3>
+<h3 id="___4">&#x7F16;&#x8BD1;&#x5B89;&#x88C5;</h3>
 <div class="listingblock">
+<div class="title"><strong>1. &#x4E0B;&#x8F7D;&#x6E90;&#x4EE3;&#x7801;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash">// download
-wget http://nginx.org/download/nginx-1.17.10.tar.gz
-
-// navigate to folder
-tar -xzvf nginx-1.17.10.tar.gz
-<span class="hljs-built_in">cd</span> nginx-1.17.10/
-
-// install dev tools
-yum groupinstall <span class="hljs-string">&apos;Development Tools&apos;</span>
+<pre class="highlight"><code class="language-bash" data-lang="bash">wget https://nginx.org/download/nginx-1.20.0.tar.gz
+tar -xvf nginx-1.20.0.tar.gz &amp;&amp; <span class="hljs-built_in">cd</span> nginx-1.20.0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5B89;&#x88C5;&#x7F16;&#x8BD1;&#x6240;&#x9700;&#x4F9D;&#x8D56;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">yum groupinstall <span class="hljs-string">&apos;Development Tools&apos;</span>
 yum install zlib-devel -y
-yum install pcre-devel -y
+yum install pcre-devel -y</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x7F16;&#x8BD1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text"># ./configure --help
 
-// compile to install
-./configure --help
-./configure --prefix=/opt/nginx
-cat objs/ngx_modules.c
-make
-make install</code></pre>
+# ./configure --prefix=/root/nginx
+...
+  nginx path prefix: &quot;/root/nginx&quot;
+  nginx binary file: &quot;/root/nginx/sbin/nginx&quot;
+  nginx modules path: &quot;/root/nginx/modules&quot;
+  nginx configuration prefix: &quot;/root/nginx/conf&quot;
+  nginx configuration file: &quot;/root/nginx/conf/nginx.conf&quot;
+  nginx pid file: &quot;/root/nginx/logs/nginx.pid&quot;
+  nginx error log file: &quot;/root/nginx/logs/error.log&quot;
+  nginx http access log file: &quot;/root/nginx/logs/access.log&quot;
+  nginx http client request body temporary files: &quot;client_body_temp&quot;
+  nginx http proxy temporary files: &quot;proxy_temp&quot;
+  nginx http fastcgi temporary files: &quot;fastcgi_temp&quot;
+  nginx http uwsgi temporary files: &quot;uwsgi_temp&quot;
+  nginx http scgi temporary files: &quot;scgi_temp&quot;
+
+# make
+
+# make install</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x7F16;&#x8F91; ~/nginx/conf/nginx.conf, &#x4FEE;&#x6539;&#x76D1;&#x542C;&#x7AEF;&#x53E3;&#x4E3A; 8001</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">    server {
+        listen       8001;
+        server_name  localhost;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x542F;&#x52A8;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-built_in">cd</span> ~/nginx
+./sbin/nginx</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. &#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">curl localhost:8001</code></pre>
 </div>
 </div>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___4">&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x573A;&#x666F;</h2>
+<h2 id="___5">&#x57FA;&#x672C;&#x4F7F;&#x7528;&#x573A;&#x666F;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="__web">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x9759;&#x6001;&#x8D44;&#x6E90; Web &#x670D;&#x52A1;&#x5668;</h3>
@@ -1261,7 +1345,7 @@ make install</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="___5">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x5177;&#x6709;&#x7F13;&#x5B58;&#x529F;&#x80FD;&#x7684;&#x53CD;&#x5411;&#x4EE3;&#x7406;</h3>
+<h3 id="___6">&#x914D;&#x7F6E;&#x4E00;&#x4E2A;&#x5177;&#x6709;&#x7F13;&#x5B58;&#x529F;&#x80FD;&#x7684;&#x53CD;&#x5411;&#x4EE3;&#x7406;</h3>
 <div class="listingblock">
 <div class="title"><strong>1. &#x67E5;&#x770B;&#x4E0A;&#x6E38;&#x670D;&#x52A1;</strong></div>
 <div class="content">
@@ -1386,43 +1470,151 @@ YES</code></pre>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_webdocket">Webdocket &#x4EE3;&#x7406;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5185;&#x53C2;&#x53C2;&#x7167; <a href="https://www.nginx.com/blog/websocket-nginx/" class="bare" target="_blank">https://www.nginx.com/blog/websocket-nginx/</a> &#x548C; <a href="https://www.nginx.com/blog/nginx-websockets-performance/" class="bare" target="_blank">https://www.nginx.com/blog/nginx-websockets-performance/</a> &#x4E2D;&#x5185;&#x5BB9;&#x3002;</p>
+</div>
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x90E8;&#x7F72;&#x62D3;&#x6251;&#x793A;&#x610F;&#x5982;&#x4E0B;&#xFF1A;</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Server</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">IP</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#x529F;&#x80FD;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">server1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.9</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Websocket Client</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">server2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.159</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Nginx Webdocket &#x4EE3;&#x7406;</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">server3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">10.1.10.10</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Websocket Server</p></td>
+</tr>
+</tbody>
+</table>
 <div class="sect2">
-<h3 id="_td">TD</h3>
+<h3 id="_websocket_server">Websocket Server</h3>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>1. &#x5B89;&#x88C5; node &#x53CA; ws &#x73AF;&#x5883;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">**</div>
-<div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo apt-get install nodejs npm
+mkdir server &amp;&amp; <span class="hljs-built_in">cd</span> server
+npm install ws</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x521B;&#x5EFA; server.js&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">console.log(<span class="hljs-string">&quot;Server started&quot;</span>);
+var Msg = <span class="hljs-string">&apos;&apos;</span>;
+var WebSocketServer = require(<span class="hljs-string">&apos;ws&apos;</span>).Server
+    , wss = new WebSocketServer({port: 8010});
+    wss.on(<span class="hljs-string">&apos;connection&apos;</span>, <span class="hljs-keyword">function</span>(ws) {
+        ws.on(<span class="hljs-string">&apos;message&apos;</span>, <span class="hljs-keyword">function</span>(message) {
+        console.log(<span class="hljs-string">&apos;Received from client: %s&apos;</span>, message);
+        ws.send(<span class="hljs-string">&apos;Server received from client: &apos;</span> + message);
+    });
+ });</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>3. &#x542F;&#x52A8;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">node server.js</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_nginx_webdocket">Nginx Webdocket &#x4EE3;&#x7406;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">http {
+
+    ...
+
+    map <span class="hljs-variable">$http_upgrade</span> <span class="hljs-variable">$connection_upgrade</span> {
+        default upgrade;
+        <span class="hljs-string">&apos;&apos;</span> close;
+    }
+
+    upstream websocket {
+        server 10.1.10.10:8010;
+    }
+
+    server {
+        listen 8020;
+        location / {
+            proxy_pass http://websocket;
+            proxy_http_version 1.1;
+            proxy_<span class="hljs-built_in">set</span>_header Upgrade <span class="hljs-variable">$http_upgrade</span>;
+            proxy_<span class="hljs-built_in">set</span>_header Connection <span class="hljs-variable">$connection_upgrade</span>;
+            proxy_<span class="hljs-built_in">set</span>_header Host <span class="hljs-variable">$host</span>;
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_websocket_client">Websocket Client</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5B89;&#x88C5; node &#x53CA; ws &#x73AF;&#x5883;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo apt-get install nodejs npm
+mkdir client &amp;&amp; <span class="hljs-built_in">cd</span> client
+npm install ws</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>2. &#x521B;&#x5EFA; client.js&#xFF0C;&#x5185;&#x5BB9;&#x5982;&#x4E0B;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">const WebSocket = require(<span class="hljs-string">&apos;ws&apos;</span>)
+const url = <span class="hljs-string">&apos;ws://10.1.10.159:8020/rlzy/ws&apos;</span>
+const connection = new WebSocket(url)
+
+connection.onopen = () =&gt; {
+  connection.send(<span class="hljs-string">&apos;Message From Client&apos;</span>)
+}
+
+connection.onerror = (error) =&gt; {
+  console.log(`WebSocket error: <span class="hljs-variable">${error}</span>`)
+}
+
+connection.onmessage = (e) =&gt; {
+  console.log(e.data)
+}</code></pre>
 </div>
 </div>
 <div class="listingblock">
-<div class="title">**</div>
+<div class="title"><strong>3. &#x542F;&#x52A8; Client &#x901A;&#x8FC7;&#x4EE3;&#x7406;&#x548C;Server&#x7AEF;&#x901A;&#x4FE1;</strong></div>
 <div class="content">
-<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+<pre class="highlight"><code class="language-bash" data-lang="bash">node client.js</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_websocket_server_2">Websocket Server &#x7AEF;&#x6293;&#x5305;&#x67E5;&#x770B;&#x5E95;&#x5C42;&#x901A;&#x4FE1;</h3>
+<div class="paragraph">
+<p><span class="image"><img src="img/websocket-communicate.png" alt="websocket communicate.png"></span></p>
 </div>
 </div>
 </div>
@@ -1446,20 +1638,20 @@ YES</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="___6">&#x5B89;&#x5168;</h2>
+<h2 id="___7">&#x5B89;&#x5168;</h2>
 <div class="sectionbody">
 
 </div>
 </div>
 <div class="sect1">
-<h2 id="___7">&#x8FD0;&#x7EF4;</h2>
+<h2 id="___8">&#x8FD0;&#x7EF4;</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_logging">Logging</h3>
 
 </div>
 <div class="sect2">
-<h3 id="___8">&#x6027;&#x80FD;&#x8C03;&#x4F18;</h3>
+<h3 id="___9">&#x6027;&#x80FD;&#x8C03;&#x4F18;</h3>
 <div class="listingblock">
 <div class="title">**</div>
 <div class="content">
@@ -1511,7 +1703,7 @@ YES</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"入门到精通","level":"1.4.1","depth":2,"next":{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},"previous":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"Use Case","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"nginx/concepts.adoc","mtime":"2021-04-14T17:03:53.715Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-14T17:10:32.230Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"入门到精通","level":"1.4.1","depth":2,"next":{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},"previous":{"title":"NGINX","level":"1.4","depth":1,"path":"nginx/README.adoc","ref":"nginx/README.adoc","articles":[{"title":"入门到精通","level":"1.4.1","depth":2,"path":"nginx/concepts.adoc","ref":"nginx/concepts.adoc","articles":[]},{"title":"离线安装","level":"1.4.2","depth":2,"path":"nginx/install.adoc","ref":"nginx/install.adoc","articles":[]},{"title":"Nginx Controller","level":"1.4.3","depth":2,"path":"nginx/controller.adoc","ref":"nginx/controller.adoc","articles":[{"title":"API","level":"1.4.3.1","depth":3,"path":"nginx/apidrive.adoc","ref":"nginx/apidrive.adoc","articles":[]}]},{"title":"Use Case","level":"1.4.4","depth":2,"path":"nginx/usecase.adoc","ref":"nginx/usecase.adoc","articles":[{"title":"Docker","level":"1.4.4.1","depth":3,"path":"nginx/docker.adoc","ref":"nginx/docker.adoc","articles":[]}]},{"title":"现代应用","level":"1.4.5","depth":2,"path":"nginx/app/README.adoc","ref":"nginx/app/README.adoc","articles":[]},{"title":"可编程","level":"1.4.6","depth":2,"path":"nginx/programming.adoc","ref":"nginx/programming.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"nginx/concepts.adoc","mtime":"2021-05-18T08:32:06.711Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-07-12T10:54:10.811Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

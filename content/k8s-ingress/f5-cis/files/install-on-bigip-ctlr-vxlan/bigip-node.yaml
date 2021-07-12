@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Node
+metadata:
+  name: bigip101
+  annotations:
+    # Provide the MAC address of the BIG-IP VXLAN tunnel
+    flannel.alpha.coreos.com/backend-data: '{"VNI":1,"VtepMAC" : "00:0c:29:65:83:8f"}'
+    #flannel.alpha.coreos.com/backend-data: '{"VtepMAC":"00:0c:29:65:83:8f"}'
+    flannel.alpha.coreos.com/backend-type: "vxlan"
+    flannel.alpha.coreos.com/kube-subnet-manager: "true"
+    # Provide the IP address you assigned as the BIG-IP VTEP
+    flannel.alpha.coreos.com/public-ip: 192.168.200.208
+spec:
+  # Define the flannel subnet you want to assign to the BIG-IP device.
+  # Be sure this subnet does not collide with any other Nodes' subnets.
+  podCIDR: 10.244.20.0/24
+  taints:
+  - effect: NoExecute
+    key: node.kubernetes.io/unschedulable

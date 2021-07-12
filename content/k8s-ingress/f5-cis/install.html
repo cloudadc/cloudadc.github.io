@@ -202,6 +202,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.2.1.3.2" data-path="as3/hubmode/">
+            
+                <a href="as3/hubmode/">
+            
+                    
+                    HubMode
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -226,6 +239,19 @@
             
                     
                     CCCL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.6" data-path="mgmt-isolation/">
+            
+                <a href="mgmt-isolation/">
+            
+                    
+                    管理隔离
             
                 </a>
             
@@ -527,6 +553,19 @@
             
                     
                     现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../../nginx/programming.html">
+            
+                <a href="../../nginx/programming.html">
+            
+                    
+                    可编程
             
                 </a>
             
@@ -1046,8 +1085,23 @@
 <li><a href="#_install_on_bigip_ctlr">Install on bigip-ctlr</a></li>
 </ul>
 </li>
-<li><a href="#_livenessprobe_readinessprobe">livenessProbe &amp; readinessProbe</a></li>
+<li><a href="#_livenessprobe_readinessprobe">livenessProbe &amp; readinessProbe</a>
+<ul class="sectlevel2">
+<li><a href="#_ve_curl">VE &#x5065;&#x58EE;&#x6027;&#x68C0;&#x6D4B;(curl)</a></li>
+<li><a href="#_ve_sh_python">VE &#x5065;&#x58EE;&#x6027;&#x68C0;&#x6D4B;(sh + python)</a></li>
+</ul>
+</li>
 <li><a href="#_integrate_cis_with_flannel_etcd_mode_docker0_network">Integrate CIS with flannel &#xFF08;etcd mode, docker0 network&#xFF09;</a></li>
+<li><a href="#_install_on_bigip_ctlr_flannel_vxlan_control_hub_mode">Install on bigip-ctlr flannel vxlan Control Hub Mode</a>
+<ul class="sectlevel2">
+<li><a href="#_what_s_control_hub_mode">What&#x2019;s Control Hub Mode</a></li>
+<li><a href="#_setup_on_f5_ve">Setup on F5 VE</a></li>
+<li><a href="#_setup_on_k8s">Setup on K8s</a></li>
+<li><a href="#__">&#x90E8;&#x7F72;&#x6D4B;&#x8BD5;&#x5E94;&#x7528;</a></li>
+<li><a href="#_troubleshoting">TroubleShoting</a></li>
+<li><a href="#___2">&#x8BBF;&#x95EE;&#x670D;&#x52A1;</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="sect1">
@@ -1091,7 +1145,7 @@ kubectl delete secret bigip-login -n kube-system</code></pre>
 <div class="title"><strong>Install</strong></div>
 <div class="content">
 <pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create ns bigip-ctlr
-kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin.F5demo.com -n bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n bigip-ctlr
 kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
 kubectl create <span class="hljs-_">-f</span> rbac.yaml
 kubectl create <span class="hljs-_">-f</span> cis.yaml</code></pre>
@@ -1162,6 +1216,106 @@ kubectl delete ns bigip-ctlr</code></pre>
 <span class="hljs-attr">            timeoutSeconds:</span> <span class="hljs-number">15</span></code></pre>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_ve_curl">VE &#x5065;&#x58EE;&#x6027;&#x68C0;&#x6D4B;(curl)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Full Deployment YAML - <a href="files/cis-rhel.yaml">cis-rhel.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">          livenessProbe:</span>
+<span class="hljs-attr">            failureThreshold:</span> <span class="hljs-number">3</span>
+<span class="hljs-attr">            exec:</span>
+<span class="hljs-attr">              command:</span>
+<span class="hljs-bullet">              -</span> curl
+<span class="hljs-bullet">              -</span> -k
+<span class="hljs-bullet">              -</span> -s
+<span class="hljs-bullet">              -</span> -o
+<span class="hljs-bullet">              -</span> /dev/<span class="hljs-literal">null</span>
+<span class="hljs-attr">              - https:</span>//<span class="hljs-number">192.168</span><span class="hljs-number">.200</span><span class="hljs-number">.208</span>
+<span class="hljs-attr">            initialDelaySeconds:</span> <span class="hljs-number">15</span>
+<span class="hljs-attr">            periodSeconds:</span> <span class="hljs-number">15</span>
+<span class="hljs-attr">            successThreshold:</span> <span class="hljs-number">1</span></code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<code>curl</code> &#x547D;&#x4EE4;&#x53EA;&#x5B58;&#x5728;&#x4E8E; Red Hat Linux Base &#x955C;&#x50CF;&#x4E2D;&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ve_sh_python">VE &#x5065;&#x58EE;&#x6027;&#x68C0;&#x6D4B;(sh + python)</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Full Deployment YAML - <a href="files/cis-debian.yaml">cis-debian.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-yaml" data-lang="yaml"><span class="hljs-attr">          livenessProbe:</span>
+<span class="hljs-attr">            exec:</span>
+<span class="hljs-attr">              command:</span>
+<span class="hljs-bullet">              -</span> sh
+<span class="hljs-bullet">              -</span> -c
+<span class="hljs-bullet">              -</span> echo <span class="hljs-string">&apos;import requests&apos;</span> &gt; /tmp/live.py ; echo <span class="hljs-string">&apos;response = requests.get(&quot;https://192.168.200.208&quot;, verify=False, timeout=3)&apos;</span>  &gt;&gt; /tmp/live.py ; python -W ignore /tmp/live.py
+<span class="hljs-attr">            initialDelaySeconds:</span> <span class="hljs-number">15</span>
+<span class="hljs-attr">            periodSeconds:</span> <span class="hljs-number">15</span>
+<span class="hljs-attr">            successThreshold:</span> <span class="hljs-number">1</span>
+<span class="hljs-attr">            failureThreshold:</span> <span class="hljs-number">3</span>
+<span class="hljs-attr">            timeoutSeconds:</span> <span class="hljs-number">5</span></code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">timeoutSeconds</th>
+<th class="tableblock halign-left valign-top">timeout</th>
+<th class="tableblock halign-left valign-top">VE &#x91CD;&#x542F;&#x8FC7;&#x7A0B; CIS Restart &#x6B21;&#x6570;</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">1</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">7</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">3</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">6</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">15</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">5</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1169,6 +1323,194 @@ kubectl delete ns bigip-ctlr</code></pre>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Refer to <a href="solutions/flannel-etcd-mode.html">flannel-etcd-mode</a> for detailed steps.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install_on_bigip_ctlr_flannel_vxlan_control_hub_mode">Install on bigip-ctlr flannel vxlan Control Hub Mode</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_what_s_control_hub_mode">What&#x2019;s Control Hub Mode</h3>
+<div class="paragraph">
+<p><span class="image"><img src="files/cis-vxlan.png" alt="cis vxlan.png"></span></p>
+</div>
+<div class="paragraph">
+<p>Control Hub Mode is mainly for Ops Convenient, which use a Control Hub(one or multiple namespaces) to hold CIS configmap only.</p>
+</div>
+<div class="paragraph">
+<p>HubMode expands on current ConfigMap implementation in CIS using the AS3 API. One of key strength of CIS is it can help multiple team collaborate better together. With microservices architecture we are seeing organizations create dedicate team that combine network and system personas. This allegement request that network engineers (NetOps) be added to these teams. F5 CIS ConfigMap is a perfect fit as it can accelerates the developer experience and workflow tooling.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setup_on_f5_ve">Setup on F5 VE</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x521B;&#x5EFA; partition</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">create auth partition kubernetes</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>kubernetes</strong> - Partition &#x7684;&#x540D;&#x79F0;&#x9700;&#x8981;&#x4E0E; CIS Deployment &#x4E2D;<code>--bigip-partition</code>&#x53C2;&#x6570;&#x6307;&#x5B9A;&#x7684;partition&#x4E00;&#x81F4;&#x3002;</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; VxLan &#x96A7;&#x9053;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">create net tunnels vxlan fl-vxlan port 8472 flooding-type none
+create net tunnels tunnel flannel_vxlan key 1 profile fl-vxlan <span class="hljs-built_in">local</span>-address 192.168.200.208
+create net self 10.244.20.100 address 10.244.20.100/16 allow-service none vlan flannel_vxlan
+save sys config
+show net tunnels tunnel flannel_vxlan all-properties</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>192.168.200.208</code> &#x2013; F5 VE &#x4E0A;VS&#x4E1A;&#x52A1;VLAN&#x7684; Self IP&#x6216;&#x7BA1;&#x7406;IP&#xFF0C;K8S&#x4E0A;&#x521B;&#x5EFA; BIG-IP Node &#x65F6;&#x4F1A;&#x4F7F;&#x7528;&#x5230;&#x6539;&#x5730;&#x5740;&#xFF0C;&#x5BF9;&#x5E94; flannel <code>flannel.alpha.coreos.com/backend-data</code>&#x6807;&#x6CE8;&#x3002;</p>
+</li>
+<li>
+<p><code>10.244.20.100/16</code> &#x2013; K8S Flannel vxlan self IP, &#x5FC5;&#x9700;&#x662F; 16 &#x4F4D;&#xFF0C;&#x8FD9;&#x6837;&#x624D;&#x53EF;&#x4EE5;&#x786E;&#x4FDD;&#x6240;&#x6709;&#x76EE;&#x7684;&#x7F51;&#x7EDC;&#x90FD;&#x8D70;vtep</p>
+</li>
+<li>
+<p><code>show net tunnels tunnel flannel_vxlan all-properties</code> &#x4F1A;&#x8F93;&#x51FA; tunnel vxlan interface MAC &#x5730;&#x5740;&#xFF0C;&#x8BE5;&#x5730;&#x5740;&#x4F1A;&#x5728;K8S&#x4E0A;&#x521B;&#x5EFA; BIG-IP Node &#x65F6;&#x4F7F;&#x7528;&#xFF0C;&#x5BF9;&#x5E94; flannel <code>flannel.alpha.coreos.com/public-ip</code> &#x6807;&#x6CE8;&#x3002;</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setup_on_k8s">Setup on K8s</h3>
+<div class="listingblock">
+<div class="title"><strong>1. Install</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl create <span class="hljs-_">-f</span> rbac.yaml
+kubectl create <span class="hljs-_">-f</span> cis.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/install-on-bigip-ctlr-vxlan/rbac.yaml">rbac.yaml</a></p>
+</li>
+<li>
+<p><a href="files/install-on-bigip-ctlr-vxlan/cis.yaml">cis.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; Big-IP Node</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> bigip-node.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="link:files/install-on-bigip-ctlr-vxlan/bigip-node.yaml" target="_blank">bigip-node.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x65E5;&#x5FD7;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl logs <span class="hljs-_">-f</span> $(kubectl get pods -n bigip-ctlr --no-headers | awk <span class="hljs-string">&apos;{print $1}&apos;</span>) -n bigip-ctlr</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="__">&#x90E8;&#x7F72;&#x6D4B;&#x8BD5;&#x5E94;&#x7528;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x90E8;&#x7F72;&#x6D4B;&#x8BD5;&#x5E94;&#x7528;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> deploy.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/install-on-bigip-ctlr-vxlan/deploy.yaml">deploy.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x521B;&#x5EFA; CIS Configmap</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> cm.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="files/install-on-bigip-ctlr-vxlan/cm.yaml">cm.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B;&#x65E5;&#x5FD7;&#x8F93;&#x51FA;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ kubectl logs <span class="hljs-_">-f</span> $(kubectl get pods -n bigip-ctlr --no-headers | awk <span class="hljs-string">&apos;{print $1}&apos;</span>) -n bigip-ctlr
+...
+2021/05/12 11:27:27 [INFO] [CCCL] Successfully Sent the FDB Records
+2021/05/12 11:27:29 [INFO] [2021-05-12 11:27:29,320 f5_cccl.resource.resource INFO] Updating ApiFDBTunnel: /Common/flannel_vxlan
+2021/05/12 11:27:45 [INFO] [2021-05-12 11:27:45,726 f5_cccl.resource.resource INFO] Creating ApiArp: /Common/k8s-10.244.1.47
+2021/05/12 11:31:06 [INFO] [CCCL] Successfully Sent the FDB Records
+2021/05/12 11:31:24 [INFO] [2021-05-12 11:31:24,519 f5_cccl.resource.resource INFO] Creating ApiArp: /Common/k8s-10.244.1.49</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_troubleshoting">TroubleShoting</h3>
+<div class="listingblock">
+<div class="title"><strong>1. FDB</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># show net fdb</span>
+
+---------------------------------------------------------------------
+Net::FDB
+Tunnel         Mac Address        Member                      Dynamic
+---------------------------------------------------------------------
+flannel_vxlan  16:73:97:7f:83:28  endpoint:192.168.200.210%0  no
+flannel_vxlan  e2:85:68:42:be:b7  endpoint:192.168.200.211%0  no</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. ARP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-comment"># show net arp</span>
+
+-------------------------------------------------------------------------------------------------------
+Net::Arp
+Name                     Address          HWaddress          Vlan               Expire-in-sec  Status
+-------------------------------------------------------------------------------------------------------
+/Common/k8s-10.244.1.47  10.244.1.47      e2:85:68:42:be:b7  -                  -              static
+/Common/k8s-10.244.1.49  10.244.1.49      e2:85:68:42:be:b7  -                  -              static</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x6293;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tcpdump -nni flannel_vxlan icmp
+tcpdump -nni  0.0:nnnp <span class="hljs-_">-s</span>0 host ip and port  -w  /var/tmp/zhuabao.pcap  &#x2013;vvv</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x8BBF;&#x95EE;&#x670D;&#x52A1;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ curl 192.168.200.34/coffee
+Server address: 10.244.1.47:8080
+Server name: app-1-7f4585dc79<span class="hljs-_">-l</span>6sx4
+Date: 12/May/2021:11:35:07 +0000
+URI: /coffee
+Request ID: 03f319a0fde3233c478e16e34115386e</code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1214,7 +1556,7 @@ kubectl delete ns bigip-ctlr</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.2.1.1","depth":3,"next":{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]},"previous":{"title":"F5 CIS","level":"1.2.1","depth":2,"path":"k8s-ingress/f5-cis/README.adoc","ref":"k8s-ingress/f5-cis/README.adoc","articles":[{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},{"title":"配置","level":"1.2.1.2","depth":3,"path":"k8s-ingress/f5-cis/config.adoc","ref":"k8s-ingress/f5-cis/config.adoc","articles":[]},{"title":"AS3","level":"1.2.1.3","depth":3,"path":"k8s-ingress/f5-cis/as3/README.adoc","ref":"k8s-ingress/f5-cis/as3/README.adoc","articles":[{"title":"Canary Releasing","level":"1.2.1.3.1","depth":4,"path":"k8s-ingress/f5-cis/as3/canary/README.adoc","ref":"k8s-ingress/f5-cis/as3/canary/README.adoc","articles":[]}]},{"title":"Ingress","level":"1.2.1.4","depth":3,"path":"k8s-ingress/f5-cis/ingress/README.adoc","ref":"k8s-ingress/f5-cis/ingress/README.adoc","articles":[]},{"title":"CCCL","level":"1.2.1.5","depth":3,"path":"k8s-ingress/f5-cis/cccl/README.adoc","ref":"k8s-ingress/f5-cis/cccl/README.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/f5-cis/install.adoc","mtime":"2021-04-14T17:07:50.288Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-04-14T17:10:32.230Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"安装","level":"1.2.1.1","depth":3,"next":{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]},"previous":{"title":"F5 CIS","level":"1.2.1","depth":2,"path":"k8s-ingress/f5-cis/README.adoc","ref":"k8s-ingress/f5-cis/README.adoc","articles":[{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},{"title":"配置","level":"1.2.1.2","depth":3,"path":"k8s-ingress/f5-cis/config.adoc","ref":"k8s-ingress/f5-cis/config.adoc","articles":[]},{"title":"AS3","level":"1.2.1.3","depth":3,"path":"k8s-ingress/f5-cis/as3/README.adoc","ref":"k8s-ingress/f5-cis/as3/README.adoc","articles":[{"title":"Canary Releasing","level":"1.2.1.3.1","depth":4,"path":"k8s-ingress/f5-cis/as3/canary/README.adoc","ref":"k8s-ingress/f5-cis/as3/canary/README.adoc","articles":[]},{"title":"HubMode","level":"1.2.1.3.2","depth":4,"path":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","ref":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","articles":[]}]},{"title":"Ingress","level":"1.2.1.4","depth":3,"path":"k8s-ingress/f5-cis/ingress/README.adoc","ref":"k8s-ingress/f5-cis/ingress/README.adoc","articles":[]},{"title":"CCCL","level":"1.2.1.5","depth":3,"path":"k8s-ingress/f5-cis/cccl/README.adoc","ref":"k8s-ingress/f5-cis/cccl/README.adoc","articles":[]},{"title":"管理隔离","level":"1.2.1.6","depth":3,"path":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","ref":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/f5-cis/install.adoc","mtime":"2021-06-28T07:14:16.217Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-07-12T10:54:10.811Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
