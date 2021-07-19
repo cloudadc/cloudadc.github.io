@@ -1,4 +1,99 @@
-= Why F5 Container Ingress Service
+= F5 CIS 功能
+:toc: manual
+
+== Install CIS
+
+=== Flannel Host-gw 下安装
+
+[source, bash]
+.*Create Partition*
+----
+tmsh create auth partition kubernetes
+----
+
+[source, bash]
+.*Install on bigip-ctlr*
+----
+kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl create -f rbac-2.5.yaml
+kubectl create -f cis-2.5-flannel-host-gw.yaml
+----
+
+* link:all/install/rbac-2.5.yaml[rbac-2.5.yaml]
+* link:all/install/cis-2.5-flannel-host-gw.yaml[cis-2.5-flannel-host-gw.yaml]
+
+Refer to link:install.adoc[详细安装步骤] for detailed instllation steps.
 
 
-== Exist Problems
+== Install Test App
+
+[source, bash]
+.*L7 APP*
+----
+kubectl apply -f app-l7.yaml
+----
+
+* link:all/app/app-l7.yaml[app-l7.yaml]
+
+
+== Configmap 下发七层应用
+
+=== 目的
+
+验证高级负载均衡功能支持：
+
+* HTTP健康检查，根据请求路径及返回值预期结果的判断容器服务是否健康 
+* Cookie会话保持，并且Cookie需要启用加密
+* Pool 所有Member健康检查失败后，对VS地址Telnet和ICMP请求都不通
+* 关联iRule，插入XFF属性
+* 最小连接数的负载均衡算法
+* 启用 SANT
+
+=== 步骤
+
+== Hubmode
+
+=== 目的
+
+* Verify CIS Hubmode feature.
+
+=== 步骤
+
+[source, bash]
+.*1. Add the following parameters in CIS Deployment*
+----
+            "--hubmode=true",
+            "--namespace=control-hub-1",
+            "--namespace=control-hub-2"
+----
+
+[source, bash]
+.*2. Deploy*
+----
+kubectl apply -f cm-hub-1.yaml
+kubectl apply -f cm-hub-2.yaml
+----
+
+* link:all/hubmode/cm-hub-1.yaml[cm-hub-1.yaml]
+* link:all/hubmode/cm-hub-2.yaml[cm-hub-2.yaml]
+
+*3. Wait some time and check from F5*
+
+[source, bash]
+.*4. Delete all pod*
+----
+for i in cistest01 cistest02 cistest03 ; do for j in $(kubectl get pods -n $i --no-headers | awk '{print $1}') ; do kubectl delete pod $j -n $i ; done; done
+----
+
+*5. Wait some time and check from F5*
+
+[source, bash]
+.*6. Clean Up*
+----
+kubectl delete -f cm-hub-1.yaml
+kubectl delete -f cm-hub-2.yaml
+----
+
+
