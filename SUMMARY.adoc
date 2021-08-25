@@ -24,6 +24,7 @@
 . link:k8s-net/README.adoc[CONTAINER NETWORK]
 .. link:k8s-net/docker.adoc[DOCKER]
 .. link:k8s-net/k8s.adoc[K8S]
+... link:k8s-net/Calico.adoc[Calico]
 . link:nginx/README.adoc[NGINX]
 .. link:nginx/concepts.adoc[入门到精通]
 .. link:nginx/install.adoc[离线安装]

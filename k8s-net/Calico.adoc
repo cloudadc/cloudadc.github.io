@@ -1,0 +1,81 @@
+= Calico 
+:toc: manual
+
+== Install via operator
+
+[source, bash]
+.*1. install the operator*
+----
+kubectl create -f https://docs.projectcalico.org/archive/v3.16/manifests/tigera-operator.yaml
+----
+
+[source, bash]
+.*2. Install Calico*
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: operator.tigera.io/v1
+kind: Installation
+metadata:
+  name: default
+spec:
+  calicoNetwork:
+    containerIPForwarding: Enabled
+    ipPools:
+    - cidr: 198.19.16.0/21
+      natOutgoing: Enabled
+      encapsulation: None
+EOF
+----
+
+[source, bash]
+.*3. Calico pods*
+----
+$ kubectl get pods -n calico-system 
+NAME                                       READY   STATUS    RESTARTS   AGE
+calico-typha-7fb7f4bd66-fvt89              1/1     Running   2          28m
+calico-typha-7fb7f4bd66-gltp8              1/1     Running   2          28m
+calico-node-42d6k                          1/1     Running   1          28m
+calico-typha-7fb7f4bd66-lq6b5              1/1     Running   2          28m
+calico-node-tlvbb                          1/1     Running   2          28m
+calico-kube-controllers-57f767d97b-nxrnx   1/1     Running   3          28m
+calico-node-l5n4s                          1/1     Running   0          28m
+----
+
+* *calico-node*: Calico-node runs on every Kubernetes cluster node as a DaemonSet. It is responsible for enforcing network policy, setting up routes on the nodes, plus managing any virtual interfaces for IPIP, VXLAN, or WireGuard.
+* *calico-typha*: Typha is as a stateful proxy for the Kubernetes API server. It's used by every calico-node pod to query and watch Kubernetes resources without putting excessive load on the Kubernetes API server.  The Tigera Operator automatically scales the number of Typha instances as the cluster size grows.
+* *calico-kube-controllers*: Runs a variety of Calico specific controllers that automate synchronization of resources. For example, when a Kubernetes node is deleted, it tidies up any IP addresses or other Calico resources associated with the node.
+
+NOTE: The Kubernetes network model does specify that pods can communicate with each other directly without NAT. But a pod communicating with another pod via a service is not direct communication, and normally will use NAT to change the connection destination from the service to the backing pod as part of load balancing.
+
+[source, bash]
+.*4. Install Test APP*
+----
+$ kubectl apply -f https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.yaml
+----
+
+== Network Policy
+
+* K8S 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商。
+* 为什么Network Policy？1. 攻击者花样更加聪明，攻击量更多。2. 东西向安全. 3. 可以让非网络专家配置防火墙。
+* Calico Enterprise integrates with Fortinet firewalls, and make Fortinet understands ingress node or pod ip address.
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+
+

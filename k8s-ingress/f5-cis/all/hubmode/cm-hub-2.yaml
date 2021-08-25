@@ -1,0 +1,77 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: cm-hub-2
+  namespace: control-hub-2 
+  labels:
+    f5type: virtual-server
+    as3: "true"
+data:
+  template: |
+    {
+      "class": "AS3",
+      "action": "deploy",
+      "persist": true,
+      "declaration": {
+        "class": "ADC",
+        "schemaVersion": "3.25.0",
+        "id": "cm-hub-2",
+        "cistest03": {
+          "class": "Tenant",
+          "cistest03_app1": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.200.43"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "cistest03_app1_svc_pool"
+            },
+            "cistest03_app1_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": [ ]
+              }
+              ]
+            }
+          },
+          "cistest03_app2": {
+            "class": "Application",
+            "template": "generic",
+            "app_svc_vs": {
+              "class": "Service_HTTP",
+              "persistenceMethods": [ "cookie" ],
+              "virtualAddresses": [
+                "192.168.200.44"
+              ],
+              "snat": "self",
+              "virtualPort": 80,
+              "pool": "cistest03_app2_svc_pool"
+            },
+            "cistest03_app2_svc_pool": {
+              "class": "Pool",
+              "monitors": [
+                "tcp"
+              ],
+              "loadBalancingMode": "least-connections-member",
+              "members": [
+              {
+                "servicePort": 8080,
+                "serverAddresses": [ ]
+              }
+              ]
+            }
+          }
+        }
+      }
+    }
