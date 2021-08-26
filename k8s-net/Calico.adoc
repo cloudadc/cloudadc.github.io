@@ -51,6 +51,13 @@ NOTE: The Kubernetes network model does specify that pods can communicate with e
 .*4. Install Test APP*
 ----
 $ kubectl apply -f https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.yaml
+
+$ kubectl get pods -n yaobank --show-labels
+NAME                        READY   STATUS    RESTARTS   AGE   LABELS
+database-6c5db58d95-nnwsp   1/1     Running   1          15h   app=database,pod-template-hash=6c5db58d95,version=v1
+customer-574bd6cc75-9wx6m   1/1     Running   1          15h   app=customer,pod-template-hash=574bd6cc75,version=v1
+summary-85c56b76d7-v8vs6    1/1     Running   1          15h   app=summary,pod-template-hash=85c56b76d7,version=v1
+summary-85c56b76d7-nn9fv    1/1     Running   1          15h   app=summary,pod-template-hash=85c56b76d7,version=v1
 ----
 
 == Network Policy
@@ -58,6 +65,351 @@ $ kubectl apply -f https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.y
 * K8S 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商。
 * 为什么Network Policy？1. 攻击者花样更加聪明，攻击量更多。2. 东西向安全. 3. 可以让非网络专家配置防火墙。
 * Calico Enterprise integrates with Fortinet firewalls, and make Fortinet understands ingress node or pod ip address.
+* Kubernetes network security is defined using network policies, enforced by network plugins, decoupled fromm the underlying network capabilities.
+
+[cols="5a,5a]
+|===
+|Kubernetes Network Policy |Calico Network Policy
+
+|
+* Ingress & egress rules
+* Pod selectors
+* Namespce selectors
+* Port lists
+* Named Ports
+* IP blocks & excepts
+* TCP, UDP, or SCTP
+|
+* Namespaced & global scopes
+* Deny and log actions
+* Policy ordering
+* Richer matches, like ServiceAccounts, ICMP
+* Istio integration, like Cryptpgraphic identity matching, Layer 5-7 match criteria
+
+|===
+
+=== 基本的策略设计
+
+[source, bash]
+.*1. Add Network Policy to database*
+----
+cat <<EOF | kubectl apply -f -
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: database-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: summary
+    ports:
+      - protocol: TCP
+        port: 2379
+  egress:
+    - to: []
+EOF
+----
+
+[source, bash]
+.*2. Default Deny*
+----
+cat <<EOF | calicoctl apply -f -
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-app-policy
+spec:
+  namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system"}
+  types:
+  - Ingress
+  - Egress
+EOF
+----
+
+[source, bash]
+.*3. Allow DNS*
+----
+cat <<EOF | calicoctl apply -f -
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-app-policy
+spec:
+  namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system"}
+  types:
+  - Ingress
+  - Egress
+  egress:
+    - action: Allow
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        ports:
+          - 53
+EOF
+----
+
+[source, bash]
+.*4. Add Remaining Network Policies*
+----
+cat <<EOF | kubectl apply -f - 
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: customer-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: customer
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: summary-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: summary
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: customer
+      ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: database
+      ports:
+      - protocol: TCP
+        port: 2379
+EOF
+----
+
+[source, bash]
+.*5. Clean Up*
+----
+kubectl delete NetworkPolicy summary-policy -n yaobank
+kubectl delete NetworkPolicy customer-policy -n yaobank
+kubectl delete NetworkPolicy database-policy -n yaobank
+
+calicoctl delete GlobalNetworkPolicy default-app-policy
+----
+
+=== Managing Trust Across Teams 
+
+[source, bash]
+.*1. Lockdown Cluster Egress*
+----
+cat <<EOF | calicoctl apply -f -
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: egress-lockdown
+spec:
+  order: 600
+  namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system"}
+  serviceAccountSelector: internet-egress not in {"allowed"}
+  types:
+  - Egress
+  egress:
+    - action: Deny
+      destination:
+        notNets:
+          - 10.0.0.0/8
+          - 172.16.0.0/12
+          - 192.168.0.0/16
+          - 198.18.0.0/15
+EOF
+----
+
+[source, bash]
+.*2. Grant Selective Cluster Egress*
+----
+kubectl label serviceaccount -n yaobank customer internet-egress=allowed
+----
+
+[source, bash]
+.*3. Clean Up*
+----
+calicoctl delete GlobalNetworkPolicy egress-lockdown
+----
+
+=== Network Policy for Hosts and NodePorts 
+
+[source, bash]
+.*1. Network Policy for Nodes*
+----
+cat <<EOF| calicoctl apply -f -
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-node-policy
+spec:
+  selector: has(kubernetes.io/hostname)
+  ingress:
+  - action: Allow
+    protocol: TCP
+    source:
+      nets:
+      - 127.0.0.1/32
+  - action: Allow
+    protocol: UDP
+    source:
+      nets:
+      - 127.0.0.1/32
+EOF
+----
+
+[source, bash]
+.*2. Create Host Endpoints*
+----
+calicoctl patch kubecontrollersconfiguration default --patch='{"spec": {"controllers": {"node": {"hostEndpoint": {"autoCreate": "Enabled"}}}}}'
+----
+
+[source, bash]
+.*3. Restrict Access to Kubernetes NodePorts*
+----
+cat <<EOF | calicoctl apply -f -
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: nodeport-policy
+spec:
+  order: 100
+  selector: has(kubernetes.io/hostname)
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  - action: Deny
+    protocol: TCP
+    destination:
+      ports: ["30000:32767"]
+  - action: Deny
+    protocol: UDP
+    destination:
+      ports: ["30000:32767"]
+EOF
+----
+
+[source, bash]
+.*4. Selectively allow access to customer front end*
+----
+cat <<EOF | calicoctl apply -f -
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: nodeport-policy
+spec:
+  order: 100
+  selector: has(kubernetes.io/hostname)
+  applyOnForward: true
+  preDNAT: true
+  ingress:
+  - action: Allow
+    protocol: TCP
+    destination:
+      ports: [30180]
+    source:
+      nets:
+      - 198.19.15.254/32
+  - action: Deny
+    protocol: TCP
+    destination:
+      ports: ["30000:32767"]
+  - action: Deny
+    protocol: UDP
+    destination:
+      ports: ["30000:32767"]
+EOF
+----
+
+[source, bash]
+.*5. Clean Up*
+----
+calicoctl delete GlobalNetworkPolicy default-node-policy
+calicoctl delete GlobalNetworkPolicy nodeport-policy
+----
+
+== POD Connectivity
+
+=== Pods Network
+
+[source, bash]
+.*1. Exec into the pod*
+----
+CUSTOMER_POD=$(kubectl get pods -n yaobank -l app=customer -o name)
+kubectl exec -ti -n yaobank $CUSTOMER_POD -- /bin/bash
+----
+
+[source, bash]
+.*2. list interfaces*
+----
+root@customer-574bd6cc75-9wx6m:/app# ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+3: eth0@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1410 qdisc noqueue state UP group default 
+    link/ether 86:2d:a8:72:34:7d brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 198.19.22.147/32 brd 198.19.22.147 scope global eth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::842d:a8ff:fe72:347d/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+* There is a lo loopback interface with an IP address of 127.0.0.1. This is the standard loopback interface that every network namespace has by default. You can think of it as localhost for the pod itself.
+* There is an eth0 interface which has the pods actual IP address, 198.19.22.147. Notice this matches the IP address that kubectl get pods returned earlier.
+
+[source, bash]
+.*3. ip link*
+----
+root@customer-574bd6cc75-9wx6m:/app# ip -c link show up
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+3: eth0@if5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1410 qdisc noqueue state UP mode DEFAULT group default 
+    link/ether 86:2d:a8:72:34:7d brd ff:ff:ff:ff:ff:ff link-netnsid 0
+----
+
+[source, bash]
+.*4. Routing Table*
+----
+root@customer-574bd6cc75-9wx6m:/app# ip route
+default via 169.254.1.1 dev eth0 
+169.254.1.1 dev eth0  scope link 
+----
+
+NOTE: This shows that the pod's default route is out over the eth0 interface. i.e. Anytime it wants to send traffic to anywhere other than itself, it will send the traffic over eth0. (Note that the next hop address of 169.254.1.1 is a dummy address used by Calico. Every Calico networked pod sees this as its next hop.)
+
+[source, bash]
+.*5. Exit from the customer pod*
+----
+exit
+----
 
 [source, bash]
 .**
@@ -77,5 +429,56 @@ $ kubectl apply -f https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.y
 
 ----
 
+[source, bash]
+.**
+----
 
+----
 
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
