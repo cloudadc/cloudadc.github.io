@@ -411,74 +411,492 @@ NOTE: This shows that the pod's default route is out over the eth0 interface. i.
 exit
 ----
 
-[source, bash]
-.**
-----
-
-----
+=== WireGuard Encryption
 
 [source, bash]
-.**
+.*1. enabling encryption*
 ----
-
+calicoctl patch felixconfiguration default --type='merge' -p '{"spec":{"wireguardEnabled":true}}'
 ----
 
 [source, bash]
-.**
+.*2. wireguardPublicKey*
+----
+$ calicoctl get node node1 -o yaml
+apiVersion: projectcalico.org/v3
+kind: Node
+metadata:
+  annotations:
+    projectcalico.org/kube-labels: '{"beta.kubernetes.io/arch":"amd64","beta.kubernetes.io/instance-type":"k3s","beta.kubernetes.io/os":"linux","k3s.io/hostname":"node1","k3s.io/internal-ip":"198.19.0.2","kubernetes.io/arch":"amd64","kubernetes.io/hostname":"node1","kubernetes.io/os":"linux","node.kubernetes.io/instance-type":"k3s"}'
+  creationTimestamp: "2021-08-25T14:20:09Z"
+  labels:
+    beta.kubernetes.io/arch: amd64
+    beta.kubernetes.io/instance-type: k3s
+    beta.kubernetes.io/os: linux
+    k3s.io/hostname: node1
+    k3s.io/internal-ip: 198.19.0.2
+    kubernetes.io/arch: amd64
+    kubernetes.io/hostname: node1
+    kubernetes.io/os: linux
+    node.kubernetes.io/instance-type: k3s
+  name: node1
+  resourceVersion: "22959"
+  uid: 15122ad5-dfd7-4dfe-9c26-7a637a7088be
+spec:
+  bgp:
+    ipv4Address: 198.19.0.2/20
+  orchRefs:
+  - nodeName: node1
+    orchestrator: k8s
+  wireguard:
+    interfaceIPv4Address: 198.19.22.157
+status:
+  podCIDRs:
+  - 198.19.17.0/24
+  wireguardPublicKey: bIuu8myw2pIonLtCqtTf2bmzg4Syswp8m7wKh8C6mT4=
+----
+
+[source, bash]
+.*3. inspect wireguard from the interfaces*
+----
+$ ssh node1
+$ ip addr | grep wireguard
+13: wireguard.cali: <POINTOPOINT,NOARP,UP,LOWER_UP> mtu 1400 qdisc noqueue state UNKNOWN group default qlen 1000
+    inet 198.19.22.157/32 brd 198.19.22.157 scope global wireguard.cali
+----
+
+[source, bash]
+.*4. Disabling Encryption*
+----
+calicoctl patch felixconfiguration default --type='merge' -p '{"spec":{"wireguardEnabled":false}}'
+----
+
+=== IP Pools
+
+* IP Pools are calico resource which define ranges of addresses that the calico IP address management and IPAM CNI plugin can use. 
+
+[source, bash]
+----
+$ calicoctl get IPPool default-ipv4-ippool -o yaml
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  creationTimestamp: "2021-08-25T14:43:21Z"
+  name: default-ipv4-ippool
+  resourceVersion: "1371"
+  uid: 218a5773-6fff-48fd-a175-486b9ad66faa
+spec:
+  blockSize: 26
+  cidr: 198.19.16.0/21
+  ipipMode: Never
+  natOutgoing: true
+  nodeSelector: all()
+  vxlanMode: Never
+----
+
+* The IP Pool can be per Node, pernamespace
+* To improve performance and scalibility, Calico IPAM to allocates IPs to nodes in blocks.IP 分配是动态的，当一个NODE用完了 64 个地址后，Calico IPAM 会在分配一个新 Block，如果 Block 被分配完了，则会到相邻的 NODE的Block借一个IP。
+
+=== BGP Peering
+
+* *什么是 BGP*
+
+BGP 是一个标准的网络协议，大多数网络路由器都支持 BGP 协议，BGP 协议用来在路由器之间共享和同步路由信息。
+
+=== Cluster IP Address Ranges
+
+There are two address ranges that Kubernetes is normally configured with that are worth understanding:
+
+* The cluster pod CIDR is the range of IP addresses Kubernetes is expecting to be assigned to pods in the cluster.
+* The services CIDR is the range of IP addresses that are used for the Cluster IPs of Kubernetes Sevices (the virtual IP that corresponds to each Kubernetes Service).
+
+[source, bash]
+----
+$ kubectl cluster-info dump | grep -m 2 -E "service-cidr|cluster-cidr"
+                    "k3s.io/node-args": "[\"server\",\"--flannel-backend\",\"none\",\"--cluster-cidr\",\"198.19.16.0/20\",\"--service-cidr\",\"198.19.32.0/20\",\"--write-kubeconfig-mode\",\"664\",\"--disable-network-policy\"]",
+----
+
+=== Create IP Pools 
+
+[source, bash]
+.*1. Create externally routable IP Pool*
+----
+cat <<EOF | calicoctl apply -f - 
+---
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: external-pool
+spec:
+  cidr: 198.19.24.0/21
+  blockSize: 29
+  ipipMode: Never
+  natOutgoing: true
+  nodeSelector: "!all()"
+EOF
+----
+
+[source, bash]
+.*2. Examine BGP peering status*
+----
+$ ssh node1
+$ sudo calicoctl node status
+Calico process is running.
+
+IPv4 BGP status
++--------------+-------------------+-------+----------+-------------+
+| PEER ADDRESS |     PEER TYPE     | STATE |  SINCE   |    INFO     |
++--------------+-------------------+-------+----------+-------------+
+| 198.19.0.1   | node-to-node mesh | up    | 07:25:58 | Established |
+| 198.19.0.3   | node-to-node mesh | up    | 07:25:56 | Established |
++--------------+-------------------+-------+----------+-------------+
+
+IPv6 BGP status
+No IPv6 peers found.
+----
+
+[source, bash]
+.*3. Add a BGP Peer*
+----
+cat <<EOF | calicoctl apply -f -
+---
+apiVersion: projectcalico.org/v3
+kind: BGPPeer
+metadata:
+  name: bgppeer-global-host1
+spec:
+  peerIP: 198.19.15.254
+  asNumber: 64512
+EOF
+----
+
+[source, bash]
+.*4. Examine BGP peering status*
+----
+$ ssh node1
+$ sudo calicoctl node status
+Calico process is running.
+
+IPv4 BGP status
++---------------+-------------------+-------+----------+-------------+
+| PEER ADDRESS  |     PEER TYPE     | STATE |  SINCE   |    INFO     |
++---------------+-------------------+-------+----------+-------------+
+| 198.19.0.1    | node-to-node mesh | up    | 07:25:58 | Established |
+| 198.19.0.3    | node-to-node mesh | up    | 07:25:56 | Established |
+| 198.19.15.254 | global            | up    | 08:39:33 | Established |
++---------------+-------------------+-------+----------+-------------+
+
+IPv6 BGP status
+No IPv6 peers found.
+----
+
+[source, bash]
+.*5. Configure a Namespace to use External Routable IP Addresses*
+----
+cat <<EOF| kubectl apply -f - 
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    cni.projectcalico.org/ipv4pools: '["external-pool"]'
+  name: external-ns
+EOF
+----
+
+[source, bash]
+.*6. Deploy Nginx*
+----
+cat <<EOF| kubectl apply -f -
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: external-ns
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+        version: v1
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        imagePullPolicy: IfNotPresent
+      nodeSelector:
+        kubernetes.io/hostname: node1
+
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: nginx
+  namespace: external-ns
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - ports:
+    - protocol: TCP
+      port: 80
+EOF
+----
+
+[source, bash]
+.*7. Access the NGINX pod from outside the cluster*
+----
+$ kubectl get pods -n external-ns -o wide --no-headers
+nginx-8c44c96c6-xtw74   1/1   Running   0     70s   198.19.28.208   node1   <none>   <none>
+
+$ curl 198.19.28.208 -I
+HTTP/1.1 200 OK
+Server: nginx/1.21.1
+Date: Sat, 28 Aug 2021 08:48:10 GMT
+Content-Type: text/html
+Content-Length: 612
+Last-Modified: Tue, 06 Jul 2021 14:59:17 GMT
+Connection: keep-alive
+ETag: "60e46fc5-264"
+Accept-Ranges: bytes
+----
+
+[source, bash]
+.*8. Check Calico IPAM allocations statistics*
+----
+$ calicoctl ipam show
++----------+----------------+-----------+------------+-------------+
+| GROUPING |      CIDR      | IPS TOTAL | IPS IN USE |  IPS FREE   |
++----------+----------------+-----------+------------+-------------+
+| IP Pool  | 198.19.16.0/21 |      2048 | 12 (1%)    | 2036 (99%)  |
+| IP Pool  | 198.19.24.0/21 |      2048 | 1 (0%)     | 2047 (100%) |
++----------+----------------+-----------+------------+-------------+
+----
+
+== Kubernetes Services Networking
+
+=== kube-proxy service debug
+
+[source, bash]
+.*1. List the services*
+----
+$ kubectl get svc -n yaobank
+NAME       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+database   ClusterIP   198.19.33.67    <none>        2379/TCP       2d23h
+summary    ClusterIP   198.19.46.158   <none>        80/TCP         2d23h
+customer   NodePort    198.19.32.122   <none>        80:30180/TCP   2d23h
+----
+
+[source, bash]
+.*2. List the endpoints for each of the services*
+----
+$ kubectl get endpoints -n yaobank
+NAME       ENDPOINTS                       AGE
+customer   198.19.22.156:80                2d23h
+database   198.19.21.74:2379               2d23h
+summary    198.19.21.7:80,198.19.21.8:80   2d23h
+----
+
+[source, bash]
+.*3. List the pods*
+----
+$ kubectl get pods -n yaobank -o wide --no-headers
+database-6c5db58d95-nnwsp   1/1   Running   2     2d23h   198.19.21.74    node2     <none>   <none>
+summary-85c56b76d7-v8vs6    1/1   Running   2     2d23h   198.19.21.7     control   <none>   <none>
+summary-85c56b76d7-nn9fv    1/1   Running   2     2d23h   198.19.21.8     control   <none>   <none>
+customer-574bd6cc75-9wx6m   1/1   Running   2     2d23h   198.19.22.156   node1     <none>   <none>
+----
+
+==== ClusterIP
+
+image:files/Cluster_IP_Diagram.png[]
+
+[source, bash]
+.*1. KUBE-SERVICES -> KUBE-SVC-XXXXXXXXXXXXXXXX*
+----
+$ ssh control
+$ sudo iptables -v --numeric --table nat --list KUBE-SERVICES | grep  summary
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *      !198.19.16.0/20       198.19.46.158        /* yaobank/summary:http cluster IP */ tcp dpt:80
+    0     0 KUBE-SVC-OIQIZJVJK6E34BR4  tcp  --  *      *       0.0.0.0/0            198.19.46.158        /* yaobank/summary:http cluster IP */ tcp dpt:80
+----
+
+[source, bash]
+.*2. KUBE-SVC-OIQIZJVJK6E34BR4 -> KUBE-SEP-XXXXXXXXXXXXXXXX*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-SVC-OIQIZJVJK6E34BR4 
+Chain KUBE-SVC-OIQIZJVJK6E34BR4 (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-SEP-GRMQA4KZODSYCGHU  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/summary:http */ statistic mode random probability 0.50000000000
+    0     0 KUBE-SEP-HE4BCN24RMUDWA6V  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/summary:http */
+----
+
+[source, bash]
+.*3. KUBE-SEP-XXXXXXXXXXXXXXXX -> summary endpoint*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-SEP-GRMQA4KZODSYCGHU
+Chain KUBE-SEP-GRMQA4KZODSYCGHU (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       198.19.21.7          0.0.0.0/0            /* yaobank/summary:http */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/summary:http */ tcp to:198.19.21.7:80
+----
+
+==== NodePort
+
+image:files/NodePorrt_Diagram.png []
+
+[source, bash]
+.*1. KUBE-SERVICES -> KUBE-NODEPORTS*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-SERVICES | grep KUBE-NODEPORTS
+  619 37158 KUBE-NODEPORTS  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service nodeports; NOTE: this must be the last rule in this chain */ ADDRTYPE match dst-type LOCAL
+----
+
+[source, bash]
+.*2. KUBE-NODEPORTS -> KUBE-SVC-XXXXXXXXXXXXXXXX*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-NODEPORTS | grep customer
+    0     0 KUBE-MARK-MASQ  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/customer:http */ tcp dpt:30180
+    0     0 KUBE-SVC-PX5FENG4GZJTCELT  tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/customer:http */ tcp dpt:30180
+----
+
+[source, bash]
+.*3. KUBE-SVC-XXXXXXXXXXXXXXXX -> KUBE-SEP-XXXXXXXXXXXXXXXX*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-SVC-PX5FENG4GZJTCELT
+Chain KUBE-SVC-PX5FENG4GZJTCELT (2 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-SEP-5S2QR7W7CXIFMZTT  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/customer:http */
+----
+
+[source, bash]
+.*4. KUBE-SEP-XXXXXXXXXXXXXXXX -> customer endpoint*
+----
+$ sudo iptables -v --numeric --table nat --list KUBE-SEP-5S2QR7W7CXIFMZTT
+Chain KUBE-SEP-5S2QR7W7CXIFMZTT (1 references)
+ pkts bytes target     prot opt in     out     source               destination         
+    0     0 KUBE-MARK-MASQ  all  --  *      *       198.19.22.156        0.0.0.0/0            /* yaobank/customer:http */
+    0     0 DNAT       tcp  --  *      *       0.0.0.0/0            0.0.0.0/0            /* yaobank/customer:http */ tcp to:198.19.22.156:80
+----
+
+==== NodePort SNAT
+
+[source, bash]
+.*1, Access the customer service via nodeport*
+----
+$ curl 198.19.0.1:30180
+$ curl 198.19.0.2:30180
+$ curl 198.19.0.3:30180
+----
+
+[source, bash]
+.*2. View the customer pod logs*
+----
+$ kubectl logs  customer-574bd6cc75-9wx6m -n yaobank
+198.19.0.1 - - [28/Aug/2021 15:14:21] "GET / HTTP/1.1" 200 -
+198.19.0.2 - - [28/Aug/2021 15:16:54] "GET / HTTP/1.1" 200 -
+198.19.0.3 - - [28/Aug/2021 15:17:03] "GET / HTTP/1.1" 200 -
+----
+
+=== Calico Native Service Handling
+
+* Calico eBPF data plane supports native service handling.
+* Calico's eBPF dataplane is an alternative to the default standard Linux dataplane (which is iptables based). The eBPF dataplane has a number of advantages:
+** It scales to higher throughput.
+** It uses less CPU per GBit.
+** It has native support for Kubernetes services (without needing kube-proxy) that:
+*** Reduces first packet latency for packets to services.
+*** Preserves external client source IP addresses all the way to the pod.
+*** Supports DSR (Direct Server Return) for more efficient service routing.
+*** Uses less CPU than kube-proxy to keep the dataplane in sync.
+
+[source, bash]
+.*1. Configure Calico to connect directly to the API server*
+----
+cat <<EOF | kubectl apply -f -
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kubernetes-services-endpoint
+  namespace: tigera-operator
+data:
+  KUBERNETES_SERVICE_HOST: "198.19.0.1"
+  KUBERNETES_SERVICE_PORT: "6443"
+EOF
+----
+
+[source, bash]
+.*2.  recreated with the new configuration*
+----
+kubectl delete pod -n tigera-operator -l k8s-app=tigera-operator
+----
+
+[source, bash]
+.*3. Disable kube-proxy*
+----
+calicoctl patch felixconfiguration default --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": false}}'
+----
+
+[source, bash]
+.*4. Switch on eBPF mode*
+----
+calicoctl patch felixconfiguration default --patch='{"spec": {"bpfEnabled": true}}'
+----
+
+[source, bash]
+.*5. restart YAO Bank's customer and summary pods*
+----
+kubectl delete pod -n yaobank -l app=customer
+kubectl delete pod -n yaobank -l app=summary
+----
+
+==== Source IP preservation
+
+image:files/eBPF_Source_IP_Diagram.png[]
+
+[source, bash]
+.*1, Access the customer service via nodeport*
+----
+$ curl 198.19.0.1:30180
+$ curl 198.19.0.2:30180
+$ curl 198.19.0.3:30180
+----
+
+=== Advertising Services
+
+[source, bash]
+.*1. Update Calico BGP configuration*
+----
+cat <<EOF | calicoctl apply -f -
+---
+apiVersion: projectcalico.org/v3
+kind: BGPConfiguration
+metadata:
+  name: default
+spec:
+  serviceClusterIPs:
+  - cidr: "198.19.32.0/20"
+EOF
+----
+
+[source, bash]
+.*TD*
 ----
 
 ----
 
 [source, bash]
-.**
+.*TD*
 ----
 
 ----
 
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
