@@ -888,14 +888,112 @@ spec:
 EOF
 ----
 
+== Kubernetes Networking with AWS
+
+=== AWS Networking
+
+image:files/aws-global-cloud.png[]
+
+* *AWS Global Cloud* - Devices and Services in many regions. 
+* *AWS Region* - A physical location around the world where Amazon have equipment in data centers .
+* *Virtual Private Cloud(VPC)* - A logically isolated virtual private network that exists within AWS cloud. VPC can span AZ in a region.
+* *Availability Zone(AZ)* - A group of data centers in a region, each AZ has independent power, cooling, and physical security and is connected via multiple physical networks. 
+* *Subnet* - A subnet is a section of VPC's IP range, a subnet must be reside within a single AZ,
+* *Elastic Network Interfaces(ENI)* - A logical networking component in a VPC that represents a virtual network card.
+
+
 [source, bash]
-.*TD*
+.**
 ----
 
 ----
 
 [source, bash]
-.*TD*
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
 ----
 
 ----
