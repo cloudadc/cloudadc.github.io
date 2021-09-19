@@ -901,6 +901,21 @@ image:files/aws-global-cloud.png[]
 * *Subnet* - A subnet is a section of VPC's IP range, a subnet must be reside within a single AZ,
 * *Elastic Network Interfaces(ENI)* - A logical networking component in a VPC that represents a virtual network card.
 
+=== AWS-CNI 优缺点
+
+[cols="5a,5a"]
+|===
+|优点 |缺点
+
+|
+* Pods get native IPs
+* Routing from outside or control nodes "just works"
+* Using multiple ENIS gives access to more bandwidth
+* IAM integration is improved
+|
+* Number of pods per node is limited by number of ENIs and Node type
+|===
+
 
 [source, bash]
 .**
