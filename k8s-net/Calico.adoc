@@ -916,18 +916,31 @@ image:files/aws-global-cloud.png[]
 * Number of pods per node is limited by number of ENIs and Node type
 |===
 
+=== KOps
+
+* Like kubectl for clusters
+* Strengths
+** Builds production-grade clusters
+** Builds highly available cluster
+** Also provisions the necessary cloud infrastructure
+** Access to all of the Calico's feature
+** AWS is offically support
+** idempotent
 
 [source, bash]
-.**
+.*1. KOps Create Cluster*
 ----
-
+kops create cluster --zones ap-northeast-1a,ap-northeast-1c --networking calico --name ${CLUSTER_NAME}
+kops update cluster --name ${CLUSTER_NAME} --yes --admin
 ----
 
 [source, bash]
-.**
+.*2. KOps Get Cluster*
+----
+kops get cluster
 ----
 
-----
+=== TODO
 
 [source, bash]
 .**
