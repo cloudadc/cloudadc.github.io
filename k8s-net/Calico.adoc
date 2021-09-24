@@ -1,7 +1,9 @@
 = Calico 
 :toc: manual
 
-== Install via operator
+== 安装
+
+=== Install via operator
 
 [source, bash]
 .*1. install the operator*
@@ -47,17 +49,100 @@ calico-node-l5n4s                          1/1     Running   0          28m
 
 NOTE: The Kubernetes network model does specify that pods can communicate with each other directly without NAT. But a pod communicating with another pod via a service is not direct communication, and normally will use NAT to change the connection destination from the service to the backing pod as part of load balancing.
 
-[source, bash]
-.*4. Install Test APP*
-----
-$ kubectl apply -f https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.yaml
+=== Install via Manifest
 
-$ kubectl get pods -n yaobank --show-labels
-NAME                        READY   STATUS    RESTARTS   AGE   LABELS
-database-6c5db58d95-nnwsp   1/1     Running   1          15h   app=database,pod-template-hash=6c5db58d95,version=v1
-customer-574bd6cc75-9wx6m   1/1     Running   1          15h   app=customer,pod-template-hash=574bd6cc75,version=v1
-summary-85c56b76d7-v8vs6    1/1     Running   1          15h   app=summary,pod-template-hash=85c56b76d7,version=v1
-summary-85c56b76d7-nn9fv    1/1     Running   1          15h   app=summary,pod-template-hash=85c56b76d7,version=v1
+[source, bash]
+.*1. Download Manifest*
+----
+curl https://docs.projectcalico.org/manifests/calico.yaml -O
+----
+
+NOTE: Uncomment the `CALICO_IPV4POOL_CIDR`, and make sure the CIDR value equals the value of `--pod-network-cidr`.
+
+[source, bash]
+.*2. Install Calico*
+----
+kubectl apply -f calico.yaml
+---- 
+
+NOTE: Refer to https://docs.projectcalico.org/getting-started/kubernetes/self-managed-onprem/onpremises[LINK] for more details.
+
+[source, bash]
+.*3. Calico pods*
+----
+$ kubectl get pods -A | grep calico
+kube-system   calico-kube-controllers-855445d444-8rx26   1/1     Running   2          38h
+kube-system   calico-node-56d8l                          1/1     Running   2          38h
+kube-system   calico-node-r7ltw                          1/1     Running   2          38h
+----
+
+NOTE: Install via Manifest doesn't contains the *calico-typha*, which has less performance comapre with Install via operator.
+
+=== Install calicoctl
+
+[source, bash]
+.*1. Download*
+----
+curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/download/v3.20.1/calicoctl" 
+----
+
+[source, bash]
+.*2. Copy to /usr/local/bin*
+----
+chmod +x calicoctl 
+sudo cp calicoctl /usr/local/bin/
+----
+
+[source, bash]
+.*3. Verify*
+----
+$ calicoctl get nodes -o wide
+NAME            ASN       IPV4             IPV6   
+control-plane   (64512)   172.16.25.3/24          
+worker01        (64512)   172.16.25.4/24     
+----
+
+NOTE: Refer to https://docs.projectcalico.org/reference/calicoctl/ for calicoctl reference.
+
+=== Deploy YaoBank App
+
+The YaoBank Demo App contains 3 Microservice:
+
+image:files/microservice-on-k8s.png[]
+
+* Customer (which provides a simple web GUI)
+* Summary (some middleware business logic)
+* Database (the persistent datastore for the bank) 
+
+Originally from https://raw.githubusercontent.com/tigera/ccol1/main/yaobank.yaml, the nodeSelector are adjuested, and the docker image are retagged.
+
+* link:files/yaobank.yaml[yaobank.yaml]
+
+[source, bash]
+.*1. Deploy YaoBank App*
+----
+kubectl apply -f yaobank.yaml 
+----
+
+[source, bash]
+.*2. Show YaoBank App*
+----
+$ kubectl get pods -n yaobank --show-labels --no-headers
+customer-cfc847564-dk56j    1/1   Running   0     82s   app=customer,pod-template-hash=cfc847564,version=v1
+database-644f4569dd-mnncp   1/1   Running   0     83s   app=database,pod-template-hash=644f4569dd,version=v1
+summary-5877cf8b57-9sc44    1/1   Running   0     82s   app=summary,pod-template-hash=5877cf8b57,version=v1
+summary-5877cf8b57-kjb7b    1/1   Running   0     82s   app=summary,pod-template-hash=5877cf8b57,version=v1
+----
+
+[source, bash]
+.*3. Verify App*
+----
+$ curl http://control-plane:30180/ -I
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 593
+Server: Werkzeug/0.12.2 Python/2.7.12
+Date: Fri, 24 Sep 2021 16:59:18 GMT
 ----
 
 == Network Policy
