@@ -145,14 +145,25 @@ Server: Werkzeug/0.12.2 Python/2.7.12
 Date: Fri, 24 Sep 2021 16:59:18 GMT
 ----
 
-== Network Policy
+== 安全
 
-* K8S 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商。
-* 为什么Network Policy？1. 攻击者花样更加聪明，攻击量更多。2. 东西向安全. 3. 可以让非网络专家配置防火墙。
-* Calico Enterprise integrates with Fortinet firewalls, and make Fortinet understands ingress node or pod ip address.
-* Kubernetes network security is defined using network policies, enforced by network plugins, decoupled fromm the underlying network capabilities.
+=== 为什么需要 Network Policy？
 
-[cols="5a,5a]
+image:files/networkpolicy.png[]
+
+* 在容器平台需要基于IP地址或者应用端口进行流量控制（OSI L3、L4）
+* 以应用为中心的设计，通过标签匹配的方式控制着应用POD如何被访问
+* K8S 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商，实现与底层网络能力的解耦
+* Network Policy价值
+** 攻击者花样更加聪明
+** 攻击量更多
+** 东西向安全
+** 可以让非网络专家配置防火墙。
+* 南北向安全：Calico Enterprise integrates with Fortinet firewalls, and make Fortinet understands ingress node or pod ip address.
+
+=== Kubernetes Network Policy 与 Calico 额外增加的 Network Policy
+
+[cols="5a,5a"]
 |===
 |Kubernetes Network Policy |Calico Network Policy
 
@@ -172,6 +183,198 @@ Date: Fri, 24 Sep 2021 16:59:18 GMT
 * Istio integration, like Cryptpgraphic identity matching, Layer 5-7 match criteria
 
 |===
+
+=== 允许来自特定POD的入向访问
+
+如下图所示为允许来自特定POD的入向访问，名称为database的POD只允许来自summary POD的入向访问
+
+image:files/allow-traffic-from-specific-pod.png[]
+
+[source, bash]
+.*1. 查看 database POD 标签*
+----
+$ kubectl get pods -n yaobank --show-labels | grep database
+database-644f4569dd-mnncp   1/1     Running   0          22h   app=database,pod-template-hash=644f4569dd,version=v1
+----
+
+[source, bash]
+.*2. 查看 summary POD 标签*
+----
+$ kubectl get pods -n yaobank --show-labels | grep summary
+summary-5877cf8b57-9sc44    1/1     Running   0          22h   app=summary,pod-template-hash=5877cf8b57,version=v1
+summary-5877cf8b57-kjb7b    1/1     Running   0          22h   app=summary,pod-template-hash=5877cf8b57,version=v1
+----
+
+[source, bash]
+.*3. 分别在 customer POD 和summary POD 内访问database*
+----
+CUSTOMER_POD=$(kubectl get pods -n yaobank -l app=customer -o name)
+SUMMARY_POD=$(kubectl get pods -n yaobank -l app=summary -o name | head -n 1)
+
+$ kubectl exec -it $CUSTOMER_POD -n yaobank -- bash 
+root@customer-cfc847564-dk56j:/app# curl http://database:2379/v2/keys?recursive=true -I -s | head -n 1
+HTTP/1.1 200 OK
+
+$ kubectl exec -it $SUMMARY_POD -n yaobank -- bash 
+root@summary-5877cf8b57-9sc44:/app# curl http://database:2379/v2/keys?recursive=true -I -s | head -n 1
+HTTP/1.1 200 OK
+----
+
+[source, bash]
+.*4. 添加 database-policy*
+----
+cat <<EOF | kubectl apply -f -
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: database-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: summary
+    ports:
+      - protocol: TCP
+        port: 2379
+  egress:
+    - to: []
+EOF
+----
+
+* `spec.podSelector.matchLabels` - 指定要保护的目标 POD 为 database，具有 `app=database` 的标签。
+* `spec.ingress.from.podSelector.matchLabels` - 指定允许访问的 POD 需具有 `app=summary` 标签
+
+[source, bash]
+.*5. 重复执行第3步，分别在 customer POD 和summary POD 内访问database**
+----
+root@customer-cfc847564-dk56j:/app# curl http://database:2379/v2/keys?recursive=true -I -m 3
+curl: (28) Connection timed out after 3001 milliseconds
+
+$ kubectl exec -it $SUMMARY_POD -n yaobank -- bash 
+root@summary-5877cf8b57-9sc44:/app# curl http://database:2379/v2/keys?recursive=true -I -s | head -n 1
+HTTP/1.1 200 OK
+----
+
+NOTE: 对比第三步执行的结果，拒绝来自 customer POD 的请求，而允许来自 summary POD 的请求。
+
+[source, bash]
+.*6. Clean Up*
+----
+kubectl delete networkpolicy database-policy -n yaobank
+----
+
+=== 设置 Default Deny 策略
+
+[source, bash]
+.*1. 访问服务*
+----
+$ curl http://control-plane:30180 -m 3
+  <body>
+  	<h1>Welcome to YAO Bank</h1>
+  	<h2>Name: Spike Curtis</h2>
+  	<h2>Balance: 2389.45</h2>
+  	<p><a href="/logout">Log Out >></a></p>
+  </body>
+----
+
+[source, bash]
+.*2. 设置 Default Deny 策略*
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: yaobank
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+----
+
+[source, bash]
+.*3. 重复步骤 1，访问服务*
+----
+$ curl http://control-plane:30180 -m 3
+curl: (28) Operation timed out after 3001 milliseconds with 0 bytes received
+----
+
+[source, bash]
+.*4. 分别在 customer POD 和 summary POD 中访问其他 POD*
+----
+$ kubectl exec -it $CUSTOMER_POD -n yaobank -- bash 
+root@customer-cfc847564-dk56j:/app# curl http://summary -m 3
+curl: (28) Resolving timed out after 3513 milliseconds
+root@customer-cfc847564-dk56j:/app# curl http://database:2379/v2/keys?recursive=true -m 3
+curl: (28) Resolving timed out after 3512 milliseconds
+
+$ kubectl exec -it $SUMMARY_POD -n yaobank -- bash 
+root@summary-5877cf8b57-9sc44:/app# curl http://database:2379/v2/keys?recursive=true -m 3
+curl: (28) Resolving timed out after 3515 milliseconds
+----
+
+[source, bash]
+.*5. Clean UP*
+----
+kubectl delete networkpolicy default-deny -n yaobank
+----
+
+=== TDDO
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
 
 === 基本的策略设计
 
