@@ -326,62 +326,74 @@ curl: (28) Resolving timed out after 3515 milliseconds
 kubectl delete networkpolicy default-deny -n yaobank
 ----
 
-=== TDDO
+=== yaobank 策略控制最佳实践
 
 [source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-=== 基本的策略设计
-
-[source, bash]
-.*1. Add Network Policy to database*
+.*1. 设置 Default Deny 策略*
 ----
 cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: yaobank
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+----
+
+基于 namespace 设置 Default Deny 策略，namespace 内所有 POD 出向和入向都被禁止：
+
+image:files/np-default-deny.png[]
+
+[source, bash]
+.*2. 基于所有 POD 设定入向和出向策略*
+----
+cat <<EOF | kubectl apply -f -
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: customer-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: customer
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: summary-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: summary
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: customer
+      ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: database
+      ports:
+      - protocol: TCP
+        port: 2379
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -405,8 +417,12 @@ spec:
 EOF
 ----
 
+=== Calico 策略设定 yaobank 策略控制最佳实践
+
+Kubernetes 定义的 Default Deny 只能基于单个 namespace 设定Default Deny，而 Calico 策略设定 Default Deny 是基于 Kubernetes 全局设定。
+
 [source, bash]
-.*2. Default Deny*
+.*1. Default Deny*
 ----
 cat <<EOF | calicoctl apply -f -
 apiVersion: projectcalico.org/v3
@@ -422,7 +438,7 @@ EOF
 ----
 
 [source, bash]
-.*3. Allow DNS*
+.*2. 更新全局策略，允许 DNS*
 ----
 cat <<EOF | calicoctl apply -f -
 apiVersion: projectcalico.org/v3
@@ -445,9 +461,28 @@ EOF
 ----
 
 [source, bash]
-.*4. Add Remaining Network Policies*
+.*3. 基于每个 POD 设定出入向策略*
 ----
 cat <<EOF | kubectl apply -f - 
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: database-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: summary
+    ports:
+      - protocol: TCP
+        port: 2379
+  egress:
+    - to: []
 ---
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
@@ -494,7 +529,28 @@ EOF
 ----
 
 [source, bash]
-.*5. Clean Up*
+.*4. 查看策略*
+----
+$ calicoctl get GlobalNetworkPolicy
+NAME                 
+default-app-policy   
+
+$ kubectl get NetworkPolicy -n yaobank
+NAME              POD-SELECTOR   AGE
+customer-policy   app=customer   4m16s
+database-policy   app=database   4m15s
+summary-policy    app=summary    4m15s
+----
+
+[source, bash]
+.*5. 访问服务*
+----
+$ curl http://control-plane:30180 -I -s | head -n 1
+HTTP/1.0 200 OK
+----
+
+[source, bash]
+.*6. Clean Up*
 ----
 kubectl delete NetworkPolicy summary-policy -n yaobank
 kubectl delete NetworkPolicy customer-policy -n yaobank
