@@ -436,6 +436,25 @@
             
 
             
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../../k8s-net/Calico.html">
+            
+                <a href="../../k8s-net/Calico.html">
+            
+                    
+                    Calico
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
         </li>
     
 
@@ -1075,11 +1094,182 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="why-f5-container-ingress-service">Why F5 Container Ingress Service</h1>
+                                <h1 id="f5-cis-&#x529F;&#x80FD;">F5 CIS &#x529F;&#x80FD;</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#_install_cis">Install CIS</a>
+<ul class="sectlevel2">
+<li><a href="#_flannel_host_gw">Flannel Host-gw &#x4E0B;&#x5B89;&#x88C5;</a></li>
+</ul>
+</li>
+<li><a href="#_install_test_app">Install Test App</a></li>
+<li><a href="#_configmap">Configmap &#x4E0B;&#x53D1;&#x4E03;&#x5C42;&#x5E94;&#x7528;</a>
+<ul class="sectlevel2">
+<li><a href="#__">&#x76EE;&#x7684;</a></li>
+<li><a href="#___2">&#x6B65;&#x9AA4;</a></li>
+</ul>
+</li>
+<li><a href="#_hubmode">Hubmode</a>
+<ul class="sectlevel2">
+<li><a href="#___3">&#x76EE;&#x7684;</a></li>
+<li><a href="#___4">&#x6B65;&#x9AA4;</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="sect1">
-<h2 id="_exist_problems">Exist Problems</h2>
+<h2 id="_install_cis">Install CIS</h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="_flannel_host_gw">Flannel Host-gw &#x4E0B;&#x5B89;&#x88C5;</h3>
+<div class="listingblock">
+<div class="title"><strong>Create Partition</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">tmsh create auth partition kubernetes</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>Install on bigip-ctlr</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl create ns bigip-ctlr
+kubectl create secret generic bigip-login --from-literal=username=admin --from-literal=password=admin -n bigip-ctlr
+kubectl create serviceaccount bigip-ctlr -n bigip-ctlr
+kubectl create <span class="hljs-_">-f</span> rbac-2.5.yaml
+kubectl create <span class="hljs-_">-f</span> cis-2.5-flannel-host-gw.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="all/install/rbac-2.5.yaml">rbac-2.5.yaml</a></p>
+</li>
+<li>
+<p><a href="all/install/cis-2.5-flannel-host-gw.yaml">cis-2.5-flannel-host-gw.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Refer to <a href="install.html">&#x8BE6;&#x7EC6;&#x5B89;&#x88C5;&#x6B65;&#x9AA4;</a> for detailed instllation steps.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_install_test_app">Install Test App</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title"><strong>L7 APP</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> app<span class="hljs-_">-l</span>7.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="all/app/app-l7.yaml">app-l7.yaml</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_configmap">Configmap &#x4E0B;&#x53D1;&#x4E03;&#x5C42;&#x5E94;&#x7528;</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="__">&#x76EE;&#x7684;</h3>
+<div class="paragraph">
+<p>&#x9A8C;&#x8BC1;&#x9AD8;&#x7EA7;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x529F;&#x80FD;&#x652F;&#x6301;&#xFF1A;</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>HTTP&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#xFF0C;&#x6839;&#x636E;&#x8BF7;&#x6C42;&#x8DEF;&#x5F84;&#x53CA;&#x8FD4;&#x56DE;&#x503C;&#x9884;&#x671F;&#x7ED3;&#x679C;&#x7684;&#x5224;&#x65AD;&#x5BB9;&#x5668;&#x670D;&#x52A1;&#x662F;&#x5426;&#x5065;&#x5EB7;</p>
+</li>
+<li>
+<p>Cookie&#x4F1A;&#x8BDD;&#x4FDD;&#x6301;&#xFF0C;&#x5E76;&#x4E14;Cookie&#x9700;&#x8981;&#x542F;&#x7528;&#x52A0;&#x5BC6;</p>
+</li>
+<li>
+<p>Pool &#x6240;&#x6709;Member&#x5065;&#x5EB7;&#x68C0;&#x67E5;&#x5931;&#x8D25;&#x540E;&#xFF0C;&#x5BF9;VS&#x5730;&#x5740;Telnet&#x548C;ICMP&#x8BF7;&#x6C42;&#x90FD;&#x4E0D;&#x901A;</p>
+</li>
+<li>
+<p>&#x5173;&#x8054;iRule&#xFF0C;&#x63D2;&#x5165;XFF&#x5C5E;&#x6027;</p>
+</li>
+<li>
+<p>&#x6700;&#x5C0F;&#x8FDE;&#x63A5;&#x6570;&#x7684;&#x8D1F;&#x8F7D;&#x5747;&#x8861;&#x7B97;&#x6CD5;</p>
+</li>
+<li>
+<p>&#x542F;&#x7528; SANT</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x6B65;&#x9AA4;</h3>
 
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hubmode">Hubmode</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="___3">&#x76EE;&#x7684;</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Verify CIS Hubmode feature.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x6B65;&#x9AA4;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. Add the following parameters in CIS Deployment</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">            <span class="hljs-string">&quot;--hubmode=true&quot;</span>,
+            <span class="hljs-string">&quot;--namespace=control-hub-1&quot;</span>,
+            <span class="hljs-string">&quot;--namespace=control-hub-2&quot;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. Deploy</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl apply <span class="hljs-_">-f</span> cm-hub-1.yaml
+kubectl apply <span class="hljs-_">-f</span> cm-hub-2.yaml</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="all/hubmode/cm-hub-1.yaml">cm-hub-1.yaml</a></p>
+</li>
+<li>
+<p><a href="all/hubmode/cm-hub-2.yaml">cm-hub-2.yaml</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>3. Wait some time and check from F5</strong></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. Delete all pod</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> cistest01 cistest02 cistest03 ; <span class="hljs-keyword">do</span> <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> $(kubectl get pods -n <span class="hljs-variable">$i</span> --no-headers | awk <span class="hljs-string">&apos;{print $1}&apos;</span>) ; <span class="hljs-keyword">do</span> kubectl delete pod <span class="hljs-variable">$j</span> -n <span class="hljs-variable">$i</span> ; <span class="hljs-keyword">done</span>; <span class="hljs-keyword">done</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>5. Wait some time and check from F5</strong></p>
+</div>
+<div class="listingblock">
+<div class="title"><strong>6. Clean Up</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">kubectl delete <span class="hljs-_">-f</span> cm-hub-1.yaml
+kubectl delete <span class="hljs-_">-f</span> cm-hub-2.yaml</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
                                 
@@ -1124,7 +1314,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"F5 CIS","level":"1.2.1","depth":2,"next":{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},"previous":{"title":"CONTAINER INGRESS","level":"1.2","depth":1,"path":"k8s-ingress/README.adoc","ref":"k8s-ingress/README.adoc","articles":[{"title":"F5 CIS","level":"1.2.1","depth":2,"path":"k8s-ingress/f5-cis/README.adoc","ref":"k8s-ingress/f5-cis/README.adoc","articles":[{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},{"title":"配置","level":"1.2.1.2","depth":3,"path":"k8s-ingress/f5-cis/config.adoc","ref":"k8s-ingress/f5-cis/config.adoc","articles":[]},{"title":"AS3","level":"1.2.1.3","depth":3,"path":"k8s-ingress/f5-cis/as3/README.adoc","ref":"k8s-ingress/f5-cis/as3/README.adoc","articles":[{"title":"Canary Releasing","level":"1.2.1.3.1","depth":4,"path":"k8s-ingress/f5-cis/as3/canary/README.adoc","ref":"k8s-ingress/f5-cis/as3/canary/README.adoc","articles":[]},{"title":"HubMode","level":"1.2.1.3.2","depth":4,"path":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","ref":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","articles":[]}]},{"title":"Ingress","level":"1.2.1.4","depth":3,"path":"k8s-ingress/f5-cis/ingress/README.adoc","ref":"k8s-ingress/f5-cis/ingress/README.adoc","articles":[]},{"title":"CCCL","level":"1.2.1.5","depth":3,"path":"k8s-ingress/f5-cis/cccl/README.adoc","ref":"k8s-ingress/f5-cis/cccl/README.adoc","articles":[]},{"title":"管理隔离","level":"1.2.1.6","depth":3,"path":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","ref":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","articles":[]}]},{"title":"NGINX","level":"1.2.2","depth":2,"path":"k8s-ingress/nginx-ingress/README.adoc","ref":"k8s-ingress/nginx-ingress/README.adoc","articles":[{"title":"Deployment Architectures","level":"1.2.2.1","depth":3,"path":"k8s-ingress/nginx-ingress/bigip/README.adoc","ref":"k8s-ingress/nginx-ingress/bigip/README.adoc","articles":[]}]},{"title":"NGINX PLUS","level":"1.2.3","depth":2,"path":"k8s-ingress/nginx-plus-ingress/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/README.adoc","articles":[{"title":"Monitor Dashboard","level":"1.2.3.1","depth":3,"path":"k8s-ingress/nginx-plus-ingress/monitor/dashboard.adoc","ref":"k8s-ingress/nginx-plus-ingress/monitor/dashboard.adoc","articles":[]},{"title":"Deployment Architectures","level":"1.2.3.2","depth":3,"path":"k8s-ingress/nginx-plus-ingress/bigip/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/bigip/README.adoc","articles":[]},{"title":"L4 Load Balancing","level":"1.2.3.3","depth":3,"path":"k8s-ingress/nginx-plus-ingress/l4-lb/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/l4-lb/README.adoc","articles":[]},{"title":"Active Health Checks","level":"1.2.3.4","depth":3,"path":"k8s-ingress/nginx-plus-ingress/health-checks/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/health-checks/README.adoc","articles":[]},{"title":"Zero-Downtime Releases","level":"1.2.3.5","depth":3,"path":"k8s-ingress/nginx-plus-ingress/release/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/release/README.adoc","articles":[]}]},{"title":"PERFORMANCE","level":"1.2.4","depth":2,"path":"k8s-ingress/performance/README.adoc","ref":"k8s-ingress/performance/README.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/f5-cis/README.adoc","mtime":"2021-04-14T17:07:50.275Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-07-12T10:54:10.811Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"F5 CIS","level":"1.2.1","depth":2,"next":{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},"previous":{"title":"CONTAINER INGRESS","level":"1.2","depth":1,"path":"k8s-ingress/README.adoc","ref":"k8s-ingress/README.adoc","articles":[{"title":"F5 CIS","level":"1.2.1","depth":2,"path":"k8s-ingress/f5-cis/README.adoc","ref":"k8s-ingress/f5-cis/README.adoc","articles":[{"title":"安装","level":"1.2.1.1","depth":3,"path":"k8s-ingress/f5-cis/install.adoc","ref":"k8s-ingress/f5-cis/install.adoc","articles":[{"title":"Flannel etcd mode","level":"1.2.1.1.1","depth":4,"path":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","ref":"k8s-ingress/f5-cis/solutions/flannel-etcd-mode.adoc","articles":[]}]},{"title":"配置","level":"1.2.1.2","depth":3,"path":"k8s-ingress/f5-cis/config.adoc","ref":"k8s-ingress/f5-cis/config.adoc","articles":[]},{"title":"AS3","level":"1.2.1.3","depth":3,"path":"k8s-ingress/f5-cis/as3/README.adoc","ref":"k8s-ingress/f5-cis/as3/README.adoc","articles":[{"title":"Canary Releasing","level":"1.2.1.3.1","depth":4,"path":"k8s-ingress/f5-cis/as3/canary/README.adoc","ref":"k8s-ingress/f5-cis/as3/canary/README.adoc","articles":[]},{"title":"HubMode","level":"1.2.1.3.2","depth":4,"path":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","ref":"k8s-ingress/f5-cis/as3/hubmode/README.adoc","articles":[]}]},{"title":"Ingress","level":"1.2.1.4","depth":3,"path":"k8s-ingress/f5-cis/ingress/README.adoc","ref":"k8s-ingress/f5-cis/ingress/README.adoc","articles":[]},{"title":"CCCL","level":"1.2.1.5","depth":3,"path":"k8s-ingress/f5-cis/cccl/README.adoc","ref":"k8s-ingress/f5-cis/cccl/README.adoc","articles":[]},{"title":"管理隔离","level":"1.2.1.6","depth":3,"path":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","ref":"k8s-ingress/f5-cis/mgmt-isolation/README.adoc","articles":[]}]},{"title":"NGINX","level":"1.2.2","depth":2,"path":"k8s-ingress/nginx-ingress/README.adoc","ref":"k8s-ingress/nginx-ingress/README.adoc","articles":[{"title":"Deployment Architectures","level":"1.2.2.1","depth":3,"path":"k8s-ingress/nginx-ingress/bigip/README.adoc","ref":"k8s-ingress/nginx-ingress/bigip/README.adoc","articles":[]}]},{"title":"NGINX PLUS","level":"1.2.3","depth":2,"path":"k8s-ingress/nginx-plus-ingress/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/README.adoc","articles":[{"title":"Monitor Dashboard","level":"1.2.3.1","depth":3,"path":"k8s-ingress/nginx-plus-ingress/monitor/dashboard.adoc","ref":"k8s-ingress/nginx-plus-ingress/monitor/dashboard.adoc","articles":[]},{"title":"Deployment Architectures","level":"1.2.3.2","depth":3,"path":"k8s-ingress/nginx-plus-ingress/bigip/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/bigip/README.adoc","articles":[]},{"title":"L4 Load Balancing","level":"1.2.3.3","depth":3,"path":"k8s-ingress/nginx-plus-ingress/l4-lb/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/l4-lb/README.adoc","articles":[]},{"title":"Active Health Checks","level":"1.2.3.4","depth":3,"path":"k8s-ingress/nginx-plus-ingress/health-checks/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/health-checks/README.adoc","articles":[]},{"title":"Zero-Downtime Releases","level":"1.2.3.5","depth":3,"path":"k8s-ingress/nginx-plus-ingress/release/README.adoc","ref":"k8s-ingress/nginx-plus-ingress/release/README.adoc","articles":[]}]},{"title":"PERFORMANCE","level":"1.2.4","depth":2,"path":"k8s-ingress/performance/README.adoc","ref":"k8s-ingress/performance/README.adoc","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-ingress/f5-cis/README.adoc","mtime":"2021-07-19T16:14:12.721Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2021-09-27T08:45:00.456Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>

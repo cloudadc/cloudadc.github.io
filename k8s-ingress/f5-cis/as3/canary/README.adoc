@@ -9,7 +9,7 @@ This page contains the demonstrations that 5 types of Canary Releasing F5 CIS AS
 
 F5 CIS support Canary Releasing via iRules.
 
-== Five types of Canary Releasing
+== Six types of Canary Releasing
 
 [source, bash]
 .*Deploy Services*
@@ -65,6 +65,26 @@ F5 Demo App
     Server IP: 10.244.2.77
     Server Port: 8080
     Server Hostname: app-v2-548875d666-tzc5c
+----
+
+=== URL Parameter
+
+[source, bash]
+.*1. Key iRules*
+----
+when HTTP_REQUEST {
+   if  {([URI::query ?[URI::query [HTTP::uri]] name]) equals "1010"} {
+    pool /test001/test001_app-v2-svc_svc/test001_app-v2-svc_80_pool
+    } else {
+    pool /test001/test001_app-v1-svc_svc/test001_app-v1-svc_80_pool
+   }
+}  
+----
+
+[source, bash]
+.*2. Demonstrations*
+----
+curl http://10.1.10.20/test?name=1010
 ----
 
 === Source Address
