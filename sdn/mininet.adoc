@@ -1,0 +1,164 @@
+= Mininet
+:toc: manual
+
+== Mininet 介绍
+
+* Mininet 是由斯坦福大学基于 Linux Container 架构开发的一个进程虚拟化网络仿真工具，可以创建一个含有主机、交换机、控制器的链路的虚拟网络，其交换机支持OpenFlow，具有高度灵活的自定义软件定义网络。
+* http://mininet.org/
+* 为OpenFlow应用程序提供一个简单、便宜的网络测试平台
+* 启用复杂的拓扑测试，无需连接物理网络
+* 具有拓扑感知和OpenFlow感知的CLI，用于调试或运行网络范围的测试
+* 支持任意自定义拓扑，主机数可达4096，并包括一组基本的参数化拓扑
+* 提供用于网络创建和实验的可扩展Python API
+
+== Mininet 安装
+
+https://github.com/mininet/mininet/releases/
+
+[source, bash]
+.*安装完成验证*
+----
+sudo mn --test pingall
+----
+
+== Mininet 命令
+
+=== --topo
+
+[source, bash]
+.*单一(single)拓扑：整个网络拓扑中交换机有且只有一个，其下可挂一个或多个主机*
+----
+sudo mn --topo=single,3
+----
+
+[source, bash]
+.*线性(linear)拓扑：交换机连接呈线性排列，且每个交换机所连接的主机数目只有一个*
+----
+sudo mn --topo=linear,3
+----
+
+[source, bash]
+.*树形(tree)拓扑：交互机连接呈树形排列，且交换机所连接的主机一般都多个*
+----
+sudo mn --topo=tree,depth=2,fanout=2
+----
+
+* depth - 交换机的深度
+* fanout - 每个交换机下挂的子交换机或主机数
+
+[source, bash]
+.*自定义(custom)拓扑：Python编写脚本文件，执行此脚本即可创建自定义拓扑*
+----
+sudo mn --custom file.py --topo mytopo
+----
+
+=== --switch
+
+定义mininet要使用的交换机，默认使用ovsk，既OpenVSwitch交换机，常见参数，lxbr指内核态，user指用户态。
+
+=== --controller
+
+定义要使用的控制器，如果没有指定则使用mininet中默认的控制器。
+
+[source, bash]
+.*连接远程控制器示例*
+----
+sudo mn --controller=remote,--ip=<IP>,--port=<PORT>
+----
+
+=== --mac
+
+自定设置设备的MAC地址。
+
+该参数目的是让 MAC 地址易读，既设置交换机的MAC，主机MAC及IP地址从小到大排序，且设置简单唯一，不仅让机器容易获取，也容易让肉眼很容易识别其ID。
+
+[source, bash]
+.*使用示例*
+----
+sudo mn --topo=tree,depth=2,fanout=2,--mac
+----
+
+=== 内部交互命令
+
+[source, bash]
+.*help - 显示帮助信息*
+----
+mininet> help
+----
+
+[source, bash]
+.*net - 查看网络拓扑*
+----
+mininet> net
+h1 h1-eth0:s1-eth1
+h2 h2-eth0:s1-eth2
+s1 lo:  s1-eth1:h1-eth0 s1-eth2:h2-eth0
+c0
+----
+
+[source, bash]
+.*links - 查看链路健壮性*
+----
+mininet> links
+h1-eth0<->s1-eth1 (OK OK) 
+h2-eth0<->s1-eth2 (OK OK) 
+----
+
+[source, bash]
+.*nodes - 查看可用节点*
+----
+mininet> nodes
+available nodes are: 
+c0 h1 h2 s1
+----
+
+[source, bash]
+.*pingpair - 只验证前两个主机的连通性*
+----
+mininet> pingpair
+h1 -> h2 
+h2 -> h1 
+*** Results: 0% dropped (2/2 received)
+----
+
+[source, bash]
+.*pingall - 验证所有主机间的通信*
+----
+mininet> pingall
+*** Ping: testing ping reachability
+h1 -> h2 
+h2 -> h1 
+*** Results: 0% dropped (2/2 received)
+----
+
+[source, bash]
+.*intfs - 查看网络接口信息*
+----
+mininet> intfs
+h1: h1-eth0
+h2: h2-eth0
+s1: lo,s1-eth1,s1-eth2
+c0: 
+----
+
+[source, bash]
+.*dump - 查看节点信息*
+----
+mininet> dump
+<Host h1: h1-eth0:10.0.0.1 pid=1551> 
+<Host h2: h2-eth0:10.0.0.2 pid=1553> 
+<OVSSwitch s1: lo:127.0.0.1,s1-eth1:None,s1-eth2:None pid=1558> 
+<Controller c0: 127.0.0.1:6653 pid=1544> 
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
