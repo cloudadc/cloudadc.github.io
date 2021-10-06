@@ -152,6 +152,115 @@ mininet> dump
 ----
 
 [source, bash]
+.*link - 禁用或开启节点间链路*
+----
+link s1 s2 up
+link s1 s2 down
+----
+
+[source, bash]
+.*iperfudp - 两个节点间 UDP 带宽测试*
+----
+mininet> iperfudp bw h1 h2
+*** Iperf: testing UDP bandwidth between h1 and h2 
+*** Results: ['bw', '11.8 Kbits/sec', '11.8 Kbits/sec']
+----
+
+[source, bash]
+.*iperf - 两个节点间 TCP 带宽测试*
+----
+mininet> iperf h1 h2
+*** Iperf: testing TCP bandwidth between h1 and h2 
+.*** Results: ['2.45 Gbits/sec', '2.44 Gbits/sec']
+----
+
+[source, bash]
+.*dpctl - 所有交换机上流表的增、删、改、查*
+----
+dpctl dump-flows
+----
+
+[source, bash]
+.*xterm - 节点开启xterm 进入可视化操作界面*
+----
+xterm h1
+----
+
+[source, bash]
+.*py - 执行 Python 表达式*
+----
+py net.addSwitch("s3")
+----
+
+[source, bash]
+.*sh - 执行 BASH 表达式*
+----
+mininet> sh hostname
+mininet-vm
+----
+
+== Mininet 可视化 - MiniEdit
+
+* Mininet 可视化指直接在界面上编辑任意拓扑，生成Python自定义拓扑脚本，简单方便。
+* Mininet 2.2.0+ 内置MiniEdit，
+
+== 玩转流表
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
 .**
 ----
 

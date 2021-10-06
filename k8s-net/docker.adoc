@@ -1,7 +1,7 @@
 = Docker 网络 
 :toc: manual
 
-== 常用命令
+== 本部分常用命令
 
 [source, bash]
 .*docker network*
@@ -33,7 +33,20 @@ docker attach
 docker exec -it
 ----
 
-== CNM 模型
+== Container Network Model(CNM)
+
+=== libnetwork
+
+Docker 的网络模块通过插件的形式为Docker提供网络功能，创建容器和网络过程是解耦的，这样可以保证 Docker 可以支持多种类型的网络。Docker 提出容器网络标准，libnetwork 只是其中的一个实现。
+
+https://github.com/moby/libnetwork
+
+Docker 提出容器网络标准是*Container Network Model(CNM)*, CNM 中包括三种组件：Endpoint、Network、Sandbox。
+
+
+* Endpoint
+* Network
+* Sandbox
 
 [source, bash]
 .*1. 查看网络接口*
