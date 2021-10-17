@@ -135,6 +135,8 @@ $ kubectl exec -it test -c container-2 -- sh
 kubectl delete -f pod.yaml 
 ----
 
+=== 跨 NODE POD 通信
+
 [source, bash]
 .*6. 创建两个 POD*
 ----

@@ -10,8 +10,8 @@ spec:
     - echo Hello Kubernetes! && sleep 3600
     image: busybox
     name: busybox
-  nodeSelector:
-    kubernetes.io/hostname: node-1
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
 ---
 apiVersion: v1
 kind: Pod
@@ -25,5 +25,5 @@ spec:
     - echo Hello Kubernetes! && sleep 3600
     image: busybox
     name: busybox
-  nodeSelector:
-    kubernetes.io/hostname: node-2
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
