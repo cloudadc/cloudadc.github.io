@@ -25,6 +25,7 @@
 .. link:k8s-net/docker.adoc[DOCKER]
 .. link:k8s-net/k8s.adoc[K8S]
 ... link:k8s-net/kubenet.adoc[kubenet]
+... link:k8s-net/flannel.adoc[Flannel]
 ... link:k8s-net/Calico.adoc[Calico]
 . link:sdn/README.adoc[SDN]
 .. link:sdn/mininet.adoc[Mininet]

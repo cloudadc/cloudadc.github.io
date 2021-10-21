@@ -842,7 +842,7 @@ Chain KUBE-POSTROUTING (1 references)
  5015  321K MASQUERADE  all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* kubernetes service traffic requiring SNAT */
 ----
 
-=== K8S DNS
+== K8S DNS
 
 [source, bash]
 .*1. 创建服务*

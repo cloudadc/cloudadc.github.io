@@ -1,0 +1,464 @@
+= Flannel 
+:toc: manual
+
+== Flannel
+
+=== Flannel 配置
+
+[source, bash]
+.*1. kubeadm 初始化集群*
+----
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+----
+
+[source, bash]
+.*2. 安装网络插件*
+----
+kubectl apply -f kube-flannel-host-gw.yml 
+----
+
+link:files/kube-flannel-host-gw.yml[kube-flannel-host-gw.yml]
+
+[source, bash]
+.*3. 加入一个 Work Node*
+----
+$ kubectl get nodes
+NAME     STATUS   ROLES                  AGE    VERSION
+node-1   Ready    control-plane,master   84m    v1.20.5
+node-2   Ready    <none>                 7m9s   v1.20.5
+----
+
+[source, bash]
+.*4. 查看安装结果*
+----
+$ kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                             READY   STATUS    RESTARTS   AGE     IP           NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-74ff55c5b-dxwb6          1/1     Running   1          84m     10.244.0.4   node-1   <none>           <none>
+kube-system   coredns-74ff55c5b-vv8bx          1/1     Running   1          84m     10.244.0.5   node-1   <none>           <none>
+kube-system   etcd-node-1                      1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-apiserver-node-1            1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-controller-manager-node-1   1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-flannel-ds-v8n7m            1/1     Running   0          7m39s   10.1.10.10   node-2   <none>           <none>
+kube-system   kube-flannel-ds-wsxps            1/1     Running   1          81m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-proxy-24l9w                 1/1     Running   1          84m     10.1.10.9    node-1   <none>           <none>
+kube-system   kube-proxy-gsdwh                 1/1     Running   0          7m39s   10.1.10.10   node-2   <none>           <none>
+kube-system   kube-scheduler-node-1            1/1     Running   1          85m     10.1.10.9    node-1   <none>           <none>
+----
+
+[source, bash]
+.*5. 重新 Schedule coredns*
+----
+kubectl scale -n kube-system deploy/coredns --replicas=0
+kubectl scale -n kube-system deploy/coredns --replicas=2
+----
+
+[source, bash]
+.*6. 再次查看安装结果*
+----
+$ kubectl get pods -n kube-system -o wide --no-headers | grep coredns
+coredns-74ff55c5b-5jdgq          1/1   Running   0     32s    10.244.1.12   node-2   <none>   <none>
+coredns-74ff55c5b-gt5jh          1/1   Running   0     104s   10.244.0.6    node-1   <none>   <none>
+----
+
+[source, bash]
+.*7. 查看 Master 主机网络*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether ee:54:ee:d0:94:7d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::ec54:eeff:fed0:947d/64 scope link 
+       valid_lft forever preferred_lft forever
+7: veth38645991@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default 
+    link/ether b6:ad:8e:5b:19:cf brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::b4ad:8eff:fe5b:19cf/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*8. 查看 Worker 主机网络*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether a2:b6:d4:1d:2f:38 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a0b6:d4ff:fe1d:2f38/64 scope link 
+       valid_lft forever preferred_lft forever
+15: veth30eb6ff0@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default 
+    link/ether e6:4e:2d:6c:7a:06 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::e44e:2dff:fe6c:7a06/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+=== host-gw
+
+[source, bash]
+.*1. 查看主机 1 路由表*
+----
+$ ip route | grep 10.244
+10.244.0.0/24 dev cni0 proto kernel scope link src 10.244.0.1 
+10.244.1.0/24 via 10.1.10.10 dev ens33 
+----
+
+[source, bash]
+.*2. 查看主机 2 路由表*
+----
+$ ip route | grep 10.244
+10.244.0.0/24 via 10.1.10.9 dev ens33 
+10.244.1.0/24 dev cni0 proto kernel scope link src 10.244.1.1 
+----
+
+[source, bash]
+.*3. 创建测试应用*
+----
+kubectl apply -f busybox.yaml
+----
+
+* link:files/busybox.yaml[busybox.yaml]
+
+[source, bash]
+.*4. 查看创建的 POD*
+----
+$ kubectl get pods -o wide --no-headers
+test-7999578869-p5kbp   1/1   Running   0     6m47s   10.244.1.14   node-2   <none>   <none>
+test-7999578869-pkgtp   1/1   Running   0     4m31s   10.244.0.9    node-1   <none>   <none>
+----
+
+[source, bash]
+.*5. 在主机 2 上查看网络空间*
+----
+$ ip a
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:2f:33:85 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.10/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe2f:3385/64 scope link 
+       valid_lft forever preferred_lft forever
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether c6:06:e2:8f:2e:25 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c406:e2ff:fe8f:2e25/64 scope link 
+       valid_lft forever preferred_lft forever
+6: veth1695e55f@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue master cni0 state UP group default 
+    link/ether c6:a8:ac:da:08:e7 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::c4a8:acff:feda:8e7/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*6. 开启三个终端，连接主机 2，tcpdump 过滤 icmp 数据包*
+----
+sudo tcpdump -nei ens33 icmp
+sudo tcpdump -nei cni0 icmp
+sudo tcpdump -nei veth1695e55f icmp
+----
+
+[source, bash]
+.*7. 主机 1 上进入 busybox 容器 ping 主机 2 上 POD IP*
+----
+$ kubectl exec -it test-7999578869-pkgtp -- sh 
+/ # ping 10.244.1.14 -c2
+PING 10.244.1.14 (10.244.1.14): 56 data bytes
+64 bytes from 10.244.1.14: seq=0 ttl=62 time=0.739 ms
+64 bytes from 10.244.1.14: seq=1 ttl=62 time=1.106 ms
+
+--- 10.244.1.14 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.739/0.922/1.106 ms
+----
+
+[source, bash]
+.*8. 分析步骤 6 三个终端上数据包信息*
+----
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185063 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 0, length 64
+18:23:22.185355 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 0, length 64
+18:23:23.185863 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 1, length 64
+18:23:23.186051 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 1, length 64
+
+$ sudo tcpdump -nei cni0 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cni0, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185150 c6:06:e2:8f:2e:25 > 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 0, length 64
+18:23:22.185344 36:3e:45:9e:50:a9 > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 0, length 64
+18:23:23.185957 c6:06:e2:8f:2e:25 > 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 1, length 64
+18:23:23.186042 36:3e:45:9e:50:a9 > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 1, length 64
+
+$ sudo tcpdump -nei veth1695e55f icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on veth1695e55f, link-type EN10MB (Ethernet), capture size 262144 bytes
+18:23:22.185162 c6:06:e2:8f:2e:25 > 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 0, length 64
+18:23:22.185331 36:3e:45:9e:50:a9 > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 0, length 64
+18:23:23.185969 c6:06:e2:8f:2e:25 > 36:3e:45:9e:50:a9, ethertype IPv4 (0x0800), length 98: 10.244.0.9 > 10.244.1.14: ICMP echo request, id 11008, seq 1, length 64
+18:23:23.186032 36:3e:45:9e:50:a9 > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.14 > 10.244.0.9: ICMP echo reply, id 11008, seq 1, length 64
+----
+
+* 三个接口都可以抓取到数据包
+* `36:3e:45:9e:50:a9` 为主机 2 上 POD MAC 地址
+* `c6:06:e2:8f:2e:25` 为主机 2 上 linux bridge cni0 MAC 地址
+
+NOTE: iptables 默认的规则会基于全局的考虑，上面抓包 `cni0` -> `veth1695e55f` 这个之间的转发是由于 iptables SNAT 规则导致的。
+
+[source, bash]
+.*9. 在主机 2 路由表上删除一条路由记录*
+----
+sudo ip r del 10.244.0.0/24 via 10.1.10.9
+----
+
+[source, bash]
+.*10. 等待几秒钟后在主机 2 上查看路由表*
+----
+$ ip r | grep 10.244
+10.244.0.0/24 via 10.1.10.9 dev ens33 
+10.244.1.0/24 dev cni0 proto kernel scope link src 10.244.1.1 
+----
+
+NOTE: flannel host-gw 模式下，flannel 负责维护主机路由表。
+
+=== 切换 host-gw 到 vxlan
+
+[source, bash]
+.*1. CoreDNS POD scale 到 0*
+----
+kubectl scale -n kube-system deploy/coredns --replicas=0
+----
+
+[source, bash]
+.*2. 删除 host-gw*
+----
+kubectl delete -f kube-flannel-host-gw.yml 
+----
+
+[source, bash]
+.*3. 创建 vxlan*
+----
+kubectl apply -f kube-flannel.yml 
+----
+
+* link:files/kube-flannel.yml[kube-flannel.yml]
+
+[source, bash]
+.*4. CoreDNS POD scale 到 2*
+----
+kubectl scale -n kube-system deploy/coredns --replicas=2
+----
+
+[source, bash]
+.*5. 查看所有容器*
+----
+$ kubectl get pods --all-namespaces -o wide
+NAMESPACE     NAME                             READY   STATUS    RESTARTS   AGE     IP            NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-74ff55c5b-chf5p          1/1     Running   0          2m9s    10.244.0.11   node-1   <none>           <none>
+kube-system   coredns-74ff55c5b-rc24f          1/1     Running   0          93s     10.244.1.33   node-2   <none>           <none>
+kube-system   etcd-node-1                      1/1     Running   2          5h48m   10.1.10.9     node-1   <none>           <none>
+kube-system   kube-apiserver-node-1            1/1     Running   2          5h48m   10.1.10.9     node-1   <none>           <none>
+kube-system   kube-controller-manager-node-1   1/1     Running   2          5h48m   10.1.10.9     node-1   <none>           <none>
+kube-system   kube-flannel-ds-tbnf5            1/1     Running   0          5m52s   10.1.10.9     node-1   <none>           <none>
+kube-system   kube-flannel-ds-zm9d7            1/1     Running   0          5m52s   10.1.10.10    node-2   <none>           <none>
+kube-system   kube-proxy-24l9w                 1/1     Running   2          5h48m   10.1.10.9     node-1   <none>           <none>
+kube-system   kube-proxy-gsdwh                 1/1     Running   1          4h30m   10.1.10.10    node-2   <none>           <none>
+kube-system   kube-scheduler-node-1            1/1     Running   2          5h48m   10.1.10.9     node-1   <none>           <none>
+----
+
+[source, bash]
+.*6. 查看主机 1 网络空间*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether 86:37:cf:70:96:3d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8437:cfff:fe70:963d/64 scope link 
+       valid_lft forever preferred_lft forever
+7: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default 
+    link/ether 16:e0:b5:75:8c:4b brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.0/32 brd 10.244.0.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::14e0:b5ff:fe75:8c4b/64 scope link 
+       valid_lft forever preferred_lft forever
+9: veth2053e67d@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 
+    link/ether 86:92:b2:8b:1f:2f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8492:b2ff:fe8b:1f2f/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*7. 查看主机 2 网络空间*
+----
+$ ip a
+...
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether 86:37:cf:70:96:3d brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.1/24 brd 10.244.0.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8437:cfff:fe70:963d/64 scope link 
+       valid_lft forever preferred_lft forever
+7: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default 
+    link/ether 16:e0:b5:75:8c:4b brd ff:ff:ff:ff:ff:ff
+    inet 10.244.0.0/32 brd 10.244.0.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::14e0:b5ff:fe75:8c4b/64 scope link 
+       valid_lft forever preferred_lft forever
+9: veth2053e67d@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 
+    link/ether 86:92:b2:8b:1f:2f brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::8492:b2ff:fe8b:1f2f/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+=== VxLAN 调试
+
+[source, bash]
+.*1. 创建测试应用*
+----
+kubectl apply -f busybox.yaml
+----
+
+[source, bash]
+.*2. 查看创建的 POD*
+----
+$ kubectl get pods -o wide --no-headers
+test-7999578869-k4bn8   1/1   Running   0     63s     10.244.0.12   node-1   <none>   <none>
+test-7999578869-mlk49   1/1   Running   0     4m14s   10.244.1.34   node-2   <none>   <none>
+----
+
+[source, bash]
+.*3. 查看主机 2 上的 VxLAN UDP 端口*
+----
+$ sudo netstat -antulop | grep 8472
+udp        0      0 0.0.0.0:8472            0.0.0.0:*                           -                    off (0.00/0/0)
+----
+
+[source, bash]
+.*4. 查看主机 2 上的网络接口*
+----
+$ ip a
+2: ens33: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 00:0c:29:2f:33:85 brd ff:ff:ff:ff:ff:ff
+    inet 10.1.10.10/24 brd 10.1.10.255 scope global noprefixroute ens33
+       valid_lft forever preferred_lft forever
+    inet6 fe80::20c:29ff:fe2f:3385/64 scope link 
+       valid_lft forever preferred_lft forever
+4: cni0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default qlen 1000
+    link/ether c6:06:e2:8f:2e:25 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.1/24 brd 10.244.1.255 scope global cni0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c406:e2ff:fe8f:2e25/64 scope link 
+       valid_lft forever preferred_lft forever
+17: flannel.1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN group default 
+    link/ether 0e:46:36:ac:f6:d6 brd ff:ff:ff:ff:ff:ff
+    inet 10.244.1.0/32 brd 10.244.1.0 scope global flannel.1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c46:36ff:feac:f6d6/64 scope link 
+       valid_lft forever preferred_lft forever
+27: veth470beb22@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue master cni0 state UP group default 
+    link/ether 52:b3:aa:80:1e:c4 brd ff:ff:ff:ff:ff:ff link-netnsid 1
+    inet6 fe80::50b3:aaff:fe80:1ec4/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. 主机 2 上打开 5 个中断，依次执行如下抓包命令*
+----
+sudo tcpdump -nei ens33 port 8472
+sudo tcpdump -nei ens33 icmp
+sudo tcpdump -nei cni0 icmp
+sudo tcpdump -nei flannel.1 icmp
+sudo tcpdump -nei veth470beb22 icmp
+----
+
+[source, bash]
+.*6. 在主机 1 上的 POD 中 ping 主机 2 POD 的 IP*
+----
+$ kubectl exec -it test-7999578869-k4bn8 -- sh
+/ # ping 10.244.1.34 -c2
+PING 10.244.1.34 (10.244.1.34): 56 data bytes
+64 bytes from 10.244.1.34: seq=0 ttl=62 time=0.657 ms
+64 bytes from 10.244.1.34: seq=1 ttl=62 time=0.859 ms
+
+--- 10.244.1.34 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.657/0.758/0.859 ms
+----
+
+[source, bash]
+.*7. 查看第 5 步骤的输出*
+----
+$ sudo tcpdump -nei ens33 port 8472
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867705 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 148: 10.1.10.9.36389 > 10.1.10.10.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+16:e0:b5:75:8c:4b > 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 0, length 64
+19:59:38.867967 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 148: 10.1.10.10.58430 > 10.1.10.9.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+0e:46:36:ac:f6:d6 > 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 0, length 64
+19:59:39.868638 00:0c:29:10:a9:6c > 00:0c:29:2f:33:85, ethertype IPv4 (0x0800), length 148: 10.1.10.9.36389 > 10.1.10.10.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+16:e0:b5:75:8c:4b > 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 1, length 64
+19:59:39.868907 00:0c:29:2f:33:85 > 00:0c:29:10:a9:6c, ethertype IPv4 (0x0800), length 148: 10.1.10.10.58430 > 10.1.10.9.8472: OTV, flags [I] (0x08), overlay 0, instance 1
+0e:46:36:ac:f6:d6 > 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei ens33 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on ens33, link-type EN10MB (Ethernet), capture size 262144 bytes
+
+
+$ sudo tcpdump -nei cni0 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on cni0, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867909 c6:06:e2:8f:2e:25 > ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 0, length 64
+19:59:38.867941 ee:8d:f9:4a:25:7d > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 0, length 64
+19:59:39.868857 c6:06:e2:8f:2e:25 > ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 1, length 64
+19:59:39.868890 ee:8d:f9:4a:25:7d > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei flannel.1 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on flannel.1, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867886 16:e0:b5:75:8c:4b > 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 0, length 64
+19:59:38.867955 0e:46:36:ac:f6:d6 > 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 0, length 64
+19:59:39.868837 16:e0:b5:75:8c:4b > 0e:46:36:ac:f6:d6, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 1, length 64
+19:59:39.868896 0e:46:36:ac:f6:d6 > 16:e0:b5:75:8c:4b, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 1, length 64
+
+
+$ sudo tcpdump -nei veth470beb22 icmp
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on veth470beb22, link-type EN10MB (Ethernet), capture size 262144 bytes
+19:59:38.867916 c6:06:e2:8f:2e:25 > ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 0, length 64
+19:59:38.867936 ee:8d:f9:4a:25:7d > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 0, length 64
+19:59:39.868866 c6:06:e2:8f:2e:25 > ee:8d:f9:4a:25:7d, ethertype IPv4 (0x0800), length 98: 10.244.0.12 > 10.244.1.34: ICMP echo request, id 8448, seq 1, length 64
+19:59:39.868885 ee:8d:f9:4a:25:7d > c6:06:e2:8f:2e:25, ethertype IPv4 (0x0800), length 98: 10.244.1.34 > 10.244.0.12: ICMP echo reply, id 8448, seq 1, length 64
+----
+
+[source, bash]
+.*8. 相关调试命令*
+----
+ip r
+ip n
+bridge fdb
+brctl show
+----
+
+=== Reset Flannel VxLan
+
+[source, bash]
+.*1. kubeadm reset*
+----
+sudo kubeadm reset
+sudo rm $HOME/.kube/config
+----
+
+NOTE: `sudo kubeadm reset` 需要在 Node 节点上也执行。
+
+[source, bash]
+.*2. flush iptables*
+----
+sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+----
+
