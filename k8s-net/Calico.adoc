@@ -1260,6 +1260,542 @@ image:files/aws-global-cloud.png[]
 * Number of pods per node is limited by number of ENIs and Node type
 |===
 
+=== EKS with Calico Polify
+
+==== 集群创建
+
+[source, bash]
+.*1. eksctl 创建集群*
+----
+eksctl create cluster --name calicopolicy --version 1.18 --ssh-access --node-type t3.medium
+----
+
+* 详细关于eksctl: https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html
+
+[source, bash]
+.*2. 验证集群创建成功*
+----
+$ kubectl get nodes -A -o wide
+NAME                                               STATUS   ROLES    AGE   VERSION               INTERNAL-IP     EXTERNAL-IP     OS-IMAGE         KERNEL-VERSION                  CONTAINER-RUNTIME
+ip-192-168-46-0.ap-northeast-1.compute.internal    Ready    <none>   10m   v1.18.20-eks-c9f1ce   192.168.46.0    3.113.245.244   Amazon Linux 2   4.14.248-189.473.amzn2.x86_64   docker://20.10.7
+ip-192-168-76-87.ap-northeast-1.compute.internal   Ready    <none>   10m   v1.18.20-eks-c9f1ce   192.168.76.87   3.112.56.246    Amazon Linux 2   4.14.248-189.473.amzn2.x86_64   docker://20.10.7
+
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE   IP               NODE                                               NOMINATED NODE   READINESS GATES
+kube-system   aws-node-2gggk             1/1     Running   0          11m   192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   aws-node-q9kcb             1/1     Running   0          11m   192.168.76.87    ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-gdm9f   1/1     Running   0          19m   192.168.75.233   ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-wlqgf   1/1     Running   0          19m   192.168.49.127   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   kube-proxy-5bxqv           1/1     Running   0          11m   192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   kube-proxy-cldfs           1/1     Running   0          11m   192.168.76.87    ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+==== 测试应用部署
+
+[source, bash]
+.*1. Deploy Demo App*
+----
+kubectl apply -f https://raw.githubusercontent.com/tigera/ccol2aws/main/yaobank.yaml
+----
+
+[source, bash]
+.*2. 验证APP创建成功*
+----
+$ kubectl get pods -n yaobank -o wide
+NAME                        READY   STATUS    RESTARTS   AGE   IP               NODE                                               NOMINATED NODE   READINESS GATES
+customer-bf4c98479-2np9p    1/1     Running   0          42s   192.168.57.109   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+database-5b96655b86-88hwq   1/1     Running   0          42s   192.168.92.187   ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+summary-85c56b76d7-c28j6    1/1     Running   0          41s   192.168.54.112   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+summary-85c56b76d7-td5rq    1/1     Running   0          41s   192.168.85.137   ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+==== AWS-CNI IPAM
+
+[source, bash]
+.*1. 不同型号 EC2 节点支持的 IP 数量*
+----
+$ aws ec2 describe-instance-types --filters Name=instance-type,Values=t3.* --query "InstanceTypes[].{Type: InstanceType, MaxENI: NetworkInfo.MaximumNetworkInterfaces, IPv4addr: NetworkInfo.Ipv4AddressesPerInterface}" --output table
+--------------------------------------
+|        DescribeInstanceTypes       |
++----------+----------+--------------+
+| IPv4addr | MaxENI   |    Type      |
++----------+----------+--------------+
+|  15      |  4       |  t3.2xlarge  |
+|  15      |  4       |  t3.xlarge   |
+|  6       |  3       |  t3.medium   |
+|  12      |  3       |  t3.large    |
+|  2       |  2       |  t3.micro    |
+|  2       |  2       |  t3.nano     |
+|  4       |  3       |  t3.small    |
++----------+----------+--------------+
+----
+
+* *POD 可用的最大 IP地址* - ((MaxENI * (IPv4addr-1)) + 2)
+* t3.medium 最大 POD 可用地址为 17
+* t3.large 最大 POD 可用地址为 35
+
+[source, bash]
+.*2. 查看当前已使用的 IP*
+----
+$ kubectl get pods -A -o wide --no-headers | awk '{print $2, $7}'
+aws-node-2gggk 192.168.46.0
+aws-node-q9kcb 192.168.76.87
+coredns-86f7d88d77-gdm9f 192.168.75.233
+coredns-86f7d88d77-wlqgf 192.168.49.127
+kube-proxy-5bxqv 192.168.46.0
+kube-proxy-cldfs 192.168.76.87
+customer-bf4c98479-2np9p 192.168.57.109
+database-5b96655b86-88hwq 192.168.92.187
+summary-85c56b76d7-c28j6 192.168.54.112
+summary-85c56b76d7-td5rq 192.168.85.137
+----
+
+NOTE: t3.medium 最大 POD 可用地址为 17，两个 t3.medium 最大 POD 可用地址为34，当前集群剩余可分配 POD IP 为24（34-10）。
+
+[source, bash]
+.*3. 扩展 customer POD 到 30 个副本（部分会由于分不到 IP 地址而失败，新增 29 个 POD，可分配的 IP 为24个，有5个 POD不会启动成功）*
+----
+$ kubectl scale -n yaobank --replicas 30 deployments/customer
+
+// 已使用了 34 POD 地址
+$ kubectl get pods -A | grep Running | wc -l
+34
+
+kubectl get pods -n  yaobank | grep Pending | wc -l
+5
+----
+
+[source, bash]
+.*4. POD 上报错日志*
+----
+$ kubectl describe pod -n yaobank customer-bf4c98479-x9pkf
+Name:           customer-bf4c98479-x9pkf
+Namespace:      yaobank
+Priority:       0
+Node:           <none>
+Labels:         app=customer
+                pod-template-hash=bf4c98479
+                version=v1
+Annotations:    kubernetes.io/psp: eks.privileged
+Status:         Pending
+IP:             
+IPs:            <none>
+Controlled By:  ReplicaSet/customer-bf4c98479
+Containers:
+  customer:
+    Image:        calico/yaobank-customer:certification
+    Port:         80/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from customer-token-gxgsc (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  customer-token-gxgsc:
+    Type:        Secret (a volume populated by a Secret)
+    SecretName:  customer-token-gxgsc
+    Optional:    false
+QoS Class:       BestEffort
+Node-Selectors:  <none>
+Tolerations:     node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                 node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age                From               Message
+  ----     ------            ----               ----               -------
+  Warning  FailedScheduling  90s (x9 over 11m)  default-scheduler  0/2 nodes are available: 2 Too many pods.
+----
+
+[source, bash]
+.*5. Scale Down the APP*
+----
+kubectl scale -n yaobank --replicas 1 deployments/customer
+----
+
+==== AWS ENI DEBUG
+
+[source, bash]
+.*1. 查看计算节点 1 上的 POD*
+----
+$ kubectl get pods -A -o wide | grep ip-192-168-46-0.ap-northeast-1.compute.internal 
+kube-system   aws-node-2gggk              1/1     Running   0          56m   192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   coredns-86f7d88d77-wlqgf    1/1     Running   0          65m   192.168.49.127   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   kube-proxy-5bxqv            1/1     Running   0          56m   192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+yaobank       summary-85c56b76d7-c28j6    1/1     Running   0          44m   192.168.54.112   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+----
+
+[source, bash]
+.*2. 登录到计算节点*
+----
+$ kubectl get nodes -o wide | grep ip-192-168-46-0.ap-northeast-1.compute.internal | awk '{print $1, $7}'
+ip-192-168-46-0.ap-northeast-1.compute.internal 3.113.245.244
+
+$ ssh ec2-user@3.113.245.244
+----
+
+[source, bash]
+.*3. 查看 3 个 ENI *
+----
+$ ip addr
+...
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 0e:5e:cc:73:90:c9 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.46.0/19 brd 192.168.63.255 scope global dynamic eth0
+       valid_lft 2698sec preferred_lft 2698sec
+    inet6 fe80::c5e:ccff:fe73:90c9/64 scope link 
+       valid_lft forever preferred_lft forever
+...
+28: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 0e:e7:e0:d9:b5:0d brd ff:ff:ff:ff:ff:ff
+    inet 192.168.47.196/19 brd 192.168.63.255 scope global eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::ce7:e0ff:fed9:b50d/64 scope link 
+       valid_lft forever preferred_lft forever
+...
+14: eth2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 0e:90:9b:08:ca:19 brd ff:ff:ff:ff:ff:ff
+    inet 192.168.46.116/19 brd 192.168.63.255 scope global eth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::c90:9bff:fe08:ca19/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*4. 查看 POD L2 Port*
+----
+$ ip a
+...
+3: eni55c81bde47f: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc noqueue state UP group default 
+    link/ether e2:bd:60:03:d6:95 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet6 fe80::e0bd:60ff:fe03:d695/64 scope link 
+       valid_lft forever preferred_lft forever
+6: eni14acb186de7@if3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc noqueue state UP group default 
+    link/ether 92:79:17:b2:0b:6a brd ff:ff:ff:ff:ff:ff link-netnsid 2
+    inet6 fe80::9079:17ff:feb2:b6a/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+[source, bash]
+.*5. ip rule*
+----
+$ ip rule
+0:      from all lookup local 
+512:    from all to 192.168.49.127 lookup main 
+512:    from all to 192.168.54.112 lookup main 
+512:    from all to 192.168.62.196 lookup main 
+512:    from all to 192.168.62.66 lookup main 
+512:    from all to 192.168.57.109 lookup main 
+512:    from all to 192.168.52.72 lookup main 
+512:    from all to 192.168.43.112 lookup main 
+512:    from all to 192.168.58.45 lookup main 
+512:    from all to 192.168.54.134 lookup main 
+512:    from all to 192.168.43.102 lookup main 
+512:    from all to 192.168.60.236 lookup main 
+512:    from all to 192.168.42.143 lookup main 
+512:    from all to 192.168.53.163 lookup main 
+512:    from all to 192.168.34.227 lookup main 
+1024:   from all fwmark 0x80/0x80 lookup main 
+1536:   from 192.168.52.72 to 192.168.0.0/16 lookup 3 
+1536:   from 192.168.43.112 to 192.168.0.0/16 lookup 3 
+1536:   from 192.168.58.45 to 192.168.0.0/16 lookup 3 
+1536:   from 192.168.54.134 to 192.168.0.0/16 lookup 3 
+1536:   from 192.168.43.102 to 192.168.0.0/16 lookup 3 
+1536:   from 192.168.60.236 to 192.168.0.0/16 lookup 2 
+1536:   from 192.168.42.143 to 192.168.0.0/16 lookup 2 
+1536:   from 192.168.53.163 to 192.168.0.0/16 lookup 2 
+1536:   from 192.168.34.227 to 192.168.0.0/16 lookup 2 
+32766:  from all lookup main 
+32767:  from all lookup default 
+----
+
+[source, bash]
+.*6. 查看路由表*
+----
+$ ip route show table main
+default via 192.168.32.1 dev eth0 
+169.254.169.254 dev eth0 
+192.168.32.0/19 dev eth0 proto kernel scope link src 192.168.46.0 
+192.168.34.227 dev enid9db68cfa09 scope link 
+192.168.42.143 dev eni7bb60820661 scope link 
+192.168.43.102 dev enif625a3b6ece scope link 
+192.168.43.112 dev eni84d1fe33efe scope link 
+192.168.49.127 dev eni55c81bde47f scope link 
+192.168.52.72 dev eni1cc215ba5a7 scope link 
+192.168.53.163 dev eni8229e014bcc scope link 
+192.168.54.112 dev eni14acb186de7 scope link 
+192.168.54.134 dev eni7ef47dfe8b7 scope link 
+192.168.57.109 dev enib7e715ac094 scope link 
+192.168.58.45 dev eni9628b5d8d6d scope link 
+192.168.60.236 dev enifedb39161ec scope link 
+192.168.62.66 dev eni028bc2a8670 scope link 
+192.168.62.196 dev eni29dcee60bb0 scope link 
+
+$ ip route show table 2
+default via 192.168.32.1 dev eth1 
+192.168.32.1 dev eth1 scope link 
+
+$ ip route show table 3
+default via 192.168.32.1 dev eth2 
+192.168.32.1 dev eth2 scope link 
+----
+
+==== Calico Policy with AWS-CNI（不提供 IPAM，只做 L3/L4 安全管控）
+
+[source, bash]
+.*1. 安装*
+----
+kubectl apply -f https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v1.7.8/config/v1.7/calico.yaml
+----
+
+[source, bash]
+.*2. 验证安装成功*
+----
+$ kubectl get pods -n kube-system -o wide
+NAME                                                  READY   STATUS    RESTARTS   AGE     IP               NODE                                               NOMINATED NODE   READINESS GATES
+aws-node-2gggk                                        1/1     Running   0          86m     192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+aws-node-q9kcb                                        1/1     Running   0          86m     192.168.76.87    ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+calico-node-fbc9m                                     1/1     Running   0          2m9s    192.168.76.87    ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+calico-node-wtzvm                                     1/1     Running   0          2m9s    192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+calico-typha-5ff6788794-x95cv                         1/1     Running   0          2m10s   192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+calico-typha-horizontal-autoscaler-7d57c996b4-c6hqx   1/1     Running   0          2m10s   192.168.62.66    ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+coredns-86f7d88d77-gdm9f                              1/1     Running   0          94m     192.168.75.233   ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+coredns-86f7d88d77-wlqgf                              1/1     Running   0          94m     192.168.49.127   ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-proxy-5bxqv                                      1/1     Running   0          86m     192.168.46.0     ip-192-168-46-0.ap-northeast-1.compute.internal    <none>           <none>
+kube-proxy-cldfs                                      1/1     Running   0          86m     192.168.76.87    ip-192-168-76-87.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+NOTE: 4 个calico DeamonSet POD 创建，使用 Node 节点。 
+
+[source, bash]
+.*3. 记录 POD 名称到脚本中*
+----
+export CUSTOMER_POD=$(kubectl get pods -n yaobank -l app=customer -o name)
+export SUMMARY_POD=$(kubectl get pods -n yaobank -l app=summary -o name | head -n 1)
+echo "export CUSTOMER_POD=${CUSTOMER_POD}" >> ccol2awsexports.sh
+echo "export SUMMARY_POD=${SUMMARY_POD}" >> ccol2awsexports.sh
+chmod 700 ccol2awsexports.sh
+. ccol2awsexports.sh
+----
+
+[source, bash]
+.*4. 从 cusomer POD 访问 database POD（访问成功）*
+----
+$ kubectl exec -it $CUSTOMER_POD -n yaobank -c customer -- /bin/bash
+
+root@customer-bf4c98479-b4t8z:/app# curl http://database:2379/v2/keys?recursive=true  -I
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Etcd-Cluster-Id: 7e27652122e8b2ae
+X-Etcd-Index: 18
+X-Raft-Index: 9861
+X-Raft-Term: 5
+Date: Tue, 02 Nov 2021 02:40:10 GMT
+Content-Length: 1715
+----
+
+[source, bash]
+.*5. 添加全局 Default Deny*
+----
+cat <<EOF | calicoctl apply -f -
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: default-app-policy
+spec:
+  namespaceSelector: has(projectcalico.org/name) && projectcalico.org/name not in {"kube-system", "calico-system"}
+  types:
+  - Ingress
+  - Egress
+  egress:
+    - action: Allow
+      protocol: UDP
+      destination:
+        selector: k8s-app == "kube-dns"
+        ports:
+          - 53
+EOF
+----
+
+[source, bash]
+.*6. 从 cusomer POD 访问 database POD（访问失败）*
+----
+$ kubectl exec -it $CUSTOMER_POD -n yaobank -c customer -- /bin/bash
+
+root@customer-bf4c98479-b4t8z:/app# curl http://database:2379/v2/keys?recursive=true  -I --connect-timeout 3
+curl: (28) Connection timed out after 3000 milliseconds
+
+root@customer-bf4c98479-b4t8z:/app# exit
+----
+
+[source, bash]
+.*7. 添加 Policy*
+----
+cat <<EOF | kubectl apply -f - 
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: database-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: database
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: summary
+    ports:
+      - protocol: TCP
+        port: 2379
+  egress:
+    - to: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: customer-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: customer
+  ingress:
+    - ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: summary-policy
+  namespace: yaobank
+spec:
+  podSelector:
+    matchLabels:
+      app: summary
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: customer
+      ports:
+      - protocol: TCP
+        port: 80
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: database
+      ports:
+      - protocol: TCP
+        port: 2379
+EOF
+----
+
+[source, bash]
+.*8. 从 cusomer POD 访问 database POD（访问失败，Policy 允许 customer 访问 summary，但不允许 customer 访问 database）*
+----
+$ kubectl exec -it $CUSTOMER_POD -n yaobank -c customer -- /bin/bash
+
+root@customer-bf4c98479-b4t8z:/app# curl http://database:2379/v2/keys?recursive=true  -I --connect-timeout 3
+curl: (28) Connection timed out after 3000 milliseconds
+
+root@customer-bf4c98479-b4t8z:/app# exit
+----
+
+[source, bash]
+.*9. 从 summary 访问 database，访问成功*
+----
+$ kubectl exec -it $SUMMARY_POD -n yaobank -c summary -- /bin/bash
+
+root@summary-85c56b76d7-c28j6:/app# http://database:2379/v2/keys?recursive=true -I
+bash: http://database:2379/v2/keys?recursive=true: No such file or directory
+root@summary-85c56b76d7-c28j6:/app# curl http://database:2379/v2/keys?recursive=true -I
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Etcd-Cluster-Id: 7e27652122e8b2ae
+X-Etcd-Index: 18
+X-Raft-Index: 11118
+X-Raft-Term: 5
+Date: Tue, 02 Nov 2021 02:50:39 GMT
+Content-Length: 1715
+----
+
+==== ELB 发布服务
+
+[source, bash]
+.*1. 创建 LoadBalancer 类型的 Service 将会关联*
+----
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: yaobank-customer
+  namespace: yaobank
+spec:
+  selector:
+    app: customer
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
+EOF
+----
+
+* 更多关于 ELB：https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html
+
+[source, bash]
+.*2. 查看服务*
+----
+$ kubectl get svc -n yaobank
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP                                                                    PORT(S)        AGE
+customer           NodePort       10.100.175.236   <none>                                                                         80:30180/TCP   93m
+database           ClusterIP      10.100.193.59    <none>                                                                         2379/TCP       93m
+summary            ClusterIP      10.100.89.160    <none>                                                                         80/TCP         93m
+yaobank-customer   LoadBalancer   10.100.220.202   a9988b2b7630d491ead01ef28d21f90a-1857127968.ap-northeast-1.elb.amazonaws.com   80:31159/TCP   2m5s
+----
+
+[source, bash]
+.*3. 通过域名访问*
+----
+$ curl a9988b2b7630d491ead01ef28d21f90a-1857127968.ap-northeast-1.elb.amazonaws.com -I
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 593
+Server: Werkzeug/0.12.2 Python/2.7.12
+Date: Tue, 02 Nov 2021 02:57:57 GMT
+----
+
+[source, bash]
+.*4. 查看 customer POD Access 日志*
+----
+$ kubectl logs -n yaobank $CUSTOMER_POD
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+192.168.46.0 - - [02/Nov/2021 02:54:05] "GET / HTTP/1.0" 200 -
+192.168.46.0 - - [02/Nov/2021 02:57:42] "GET / HTTP/1.1" 200 -
+192.168.76.87 - - [02/Nov/2021 02:57:42] "GET / HTTP/1.1" 200 -
+192.168.76.87 - - [02/Nov/2021 02:57:44] "GET /favicon.ico HTTP/1.1" 404 -
+192.168.46.0 - - [02/Nov/2021 02:57:57] "HEAD / HTTP/1.1" 200 -
+----
+
+[source, bash]
+.*5. 删除 LoadBalancer 类型的 Service*
+----
+kubectl delete service yaobank-customer -n=yaobank
+----
+
+==== 删除集群
+
+[source, bash]
+----
+eksctl delete cluster --name calicopolicy
+----
+
 === KOps
 
 * Like kubectl for clusters
