@@ -1232,7 +1232,7 @@ spec:
 EOF
 ----
 
-== Kubernetes Networking with AWS
+== Calico with AWS
 
 === AWS Networking
 
@@ -1245,7 +1245,7 @@ image:files/aws-global-cloud.png[]
 * *Subnet* - A subnet is a section of VPC's IP range, a subnet must be reside within a single AZ,
 * *Elastic Network Interfaces(ENI)* - A logical networking component in a VPC that represents a virtual network card.
 
-=== AWS-CNI 优缺点
+=== AWS CNI 优缺点
 
 [cols="5a,5a"]
 |===
@@ -1260,7 +1260,34 @@ image:files/aws-global-cloud.png[]
 * Number of pods per node is limited by number of ENIs and Node type
 |===
 
-=== EKS with Calico Polify
+=== AWS 上使用 Calico 的 5 种组合方式
+
+|===
+|CNI |NetworkPolicy |Dataplane
+
+|AWS-CNI
+|
+|iptables
+
+|AWS-CNI
+|Calico Policy
+|iptables
+
+|AWS-CNI
+|Calico Policy
+|Calico eBPF
+
+|Calico CNI
+|Calico Policy
+|iptables
+
+|Calico CNI
+|Calico Policy
+|Calico eBPF
+|===
+
+
+=== AWS CNI + Calico Policy + iptables Dataplane
 
 ==== 集群创建
 
@@ -1794,6 +1821,562 @@ kubectl delete service yaobank-customer -n=yaobank
 [source, bash]
 ----
 eksctl delete cluster --name calicopolicy
+----
+
+=== AWS CNI + Calico Policy + Calico eBPF 
+
+==== 安装部署
+
+[source, bash]
+.*1. 基于支持 eBPF 的节点初始化 EKS（Linux Kernel 5.4 以上，本部的使用Bottlerocket）*
+----
+eksctl create cluster --name calicoebpf --version 1.18 --ssh-access --node-type t3.medium --node-ami-family Bottlerocket
+----
+
+[source, bash]
+.*2. 验证 EKS 部署（两个节点的 EKS 部署安装，KERNEL 版本是 5.4.141，OS 镜像是 Bottlerocket；6 个 POD 启动，2 个 coredns，2 个 kube-proxy，2 个 aws-node 提供 AWS-CNI）*
+----
+$ kubectl get nodes -o wide
+NAME                                                STATUS   ROLES    AGE     VERSION    INTERNAL-IP      EXTERNAL-IP     OS-IMAGE                               KERNEL-VERSION   CONTAINER-RUNTIME
+ip-192-168-30-253.ap-northeast-1.compute.internal   Ready    <none>   5m50s   v1.18.20   192.168.30.253   35.76.115.233   Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141          containerd://1.5.5+bottlerocket
+ip-192-168-47-152.ap-northeast-1.compute.internal   Ready    <none>   5m48s   v1.18.20   192.168.47.152   3.112.41.202    Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141          containerd://1.5.5+bottlerocket
+
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE   IP               NODE                                                NOMINATED NODE   READINESS GATES
+kube-system   aws-node-blqp4             1/1     Running   0          14m   192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   aws-node-rg969             1/1     Running   0          14m   192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-mmlbg   1/1     Running   0          21m   192.168.14.186   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-v776s   1/1     Running   0          21m   192.168.2.187    ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-lst24           1/1     Running   0          14m   192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-ssmqd           1/1     Running   0          14m   192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+[source, bash]
+.*3. 安装 Calico*
+----
+kubectl apply -f https://raw.githubusercontent.com/tigera/ccol2aws/main/calico-eks.yaml
+----
+
+[source, bash]
+.*4. 验证 Calico 部署*
+----
+$ kubectl get pods -A -o wide | grep calico
+kube-system   calico-node-dcsnv                                    1/1     Running   0          104s   192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-gtwv8                                    1/1     Running   0          104s   192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-typha-6dbb575c97-xhtg8                        1/1     Running   0          104s   192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-typha-horizontal-autoscaler-9f999cfc5-bxctw   1/1     Running   0          103s   192.168.23.14    ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+==== 开启 eBPF Dataplane
+
+默认，K8S 中 Calico 和 api-server 通信是通过 kube-proxy 来进行的，开启 eBPF Dataplane 需要删除 kube-proxy，删除 kube-proxy 之前需要 Calico 直接和 api-server 通信。
+
+image:img/calico-ebpf-enable.png[]
+
+[source, bash]
+.*1. 获取 API Server 的地址*
+----
+$ kubectl get configmap -n kube-system kube-proxy -o jsonpath='{.data.kubeconfig}' | grep server
+    server: https://5e8ff3570dd657770971f662fc84a38a.yl4.ap-northeast-1.eks.amazonaws.com
+----
+
+NOTE: EKS 集群中管理节点是集中部署的，对用户者来说，管理节点不可见，用户所获得到的 EKS 只有计算节点。
+
+[source, bash]
+.*2. 创建一个 configmap 保存 API Server 的地址和端口*
+----
+cat <<EOF | kubectl apply -f -
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: kubernetes-services-endpoint
+  namespace: kube-system
+data:
+  KUBERNETES_SERVICE_HOST: "5e8ff3570dd657770971f662fc84a38a.yl4.ap-northeast-1.eks.amazonaws.com"
+  KUBERNETES_SERVICE_PORT: "443"
+EOF
+----
+
+NOTE: calico-node 会从该配置文件中读取 api-server 的地址和端口，从而直接和 api-server 通信。
+
+[source, bash]
+.*3. 创建 Calico IPPool*
+----
+calicoctl apply -f - <<EOF 
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: vpc-subnet
+spec:
+  cidr: 192.168.0.0/16
+  natOutgoing: true
+  nodeSelector: !all()
+EOF
+----
+
+NOTE: EKS 默认 POD CIRD 是 `192.168.0.0/16`。
+
+[source, bash]
+.*4. Restart calico-node, calico-typha, and calico-kube-controllers *
+----
+kubectl delete pod -n kube-system -l k8s-app=calico-node
+kubectl delete pod -n kube-system -l k8s-app=calico-kube-controllers
+kubectl delete pod -n kube-system -l k8s-app=calico-typha
+----
+
+[source, bash]
+.*5. Disable kube-proxy*
+----
+kubectl patch ds -n kube-system kube-proxy -p '{"spec":{"template":{"spec":{"nodeSelector":{"non-calico": "true"}}}}}'
+----
+
+[source, bash]
+.*6. 修改 Calico felixconfiguration 配置，开启 eBPF Dataplane*
+----
+calicoctl patch felixconfiguration default --patch='{"spec": {"bpfEnabled": true}}'
+----
+
+[source, bash]
+.*7. coredns 更新*
+----
+kubectl delete pod -n kube-system -l k8s-app=kube-dns
+----
+
+[source, bash]
+.*8. 验证 K8S 当前状态*
+----
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                                                 READY   STATUS    RESTARTS   AGE     IP               NODE                                                NOMINATED NODE   READINESS GATES
+kube-system   aws-node-blqp4                                       1/1     Running   0          50m     192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   aws-node-rg969                                       1/1     Running   0          50m     192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-28k24                                    1/1     Running   0          5m54s   192.168.47.152   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-q69k8                                    1/1     Running   0          5m53s   192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-typha-6dbb575c97-x6zjk                        1/1     Running   0          5m50s   192.168.30.253   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-typha-horizontal-autoscaler-9f999cfc5-plwm9   1/1     Running   0          5m11s   192.168.50.191   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-cwccw                             1/1     Running   0          44s     192.168.23.14    ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-hwjnw                             1/1     Running   0          44s     192.168.32.76    ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+NOTE: kube-proxy 被删除，当前 EKS kube-system 下运行着 3 类 POD：aws-node for AWS-CNI，calico for Policy and sBPF，coredns for internal DNS。
+
+==== 部署测试 APP
+
+[source, bash]
+.*1. 部署*
+----
+kubectl apply -f https://raw.githubusercontent.com/tigera/ccol2aws/main/yaobank.yaml
+----
+
+image:files/microservice-on-k8s.png[]
+
+[source, bash]
+.*2. 验证*
+----
+$ kubectl get pods -o wide -n yaobank
+NAME                        READY   STATUS    RESTARTS   AGE    IP               NODE                                                NOMINATED NODE   READINESS GATES
+customer-bf4c98479-ww2b5    1/1     Running   0          103s   192.168.34.103   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+database-5b96655b86-cc9gb   1/1     Running   0          103s   192.168.14.186   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+summary-85c56b76d7-8xhvr    1/1     Running   0          103s   192.168.59.216   ip-192-168-47-152.ap-northeast-1.compute.internal   <none>           <none>
+summary-85c56b76d7-ww8n6    1/1     Running   0          103s   192.168.26.219   ip-192-168-30-253.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+[source, bash]
+.*3. 为方便后续测试，将 CUSTOMER POD 和SUMMARY POD 名称保存到脚本*
+----
+export CUSTOMER_POD=$(kubectl get pods -n yaobank -l app=customer -o name)
+export SUMMARY_POD=$(kubectl get pods -n yaobank -l app=summary -o name | head -n 1)
+echo "export CUSTOMER_POD=${CUSTOMER_POD}" >> ccol2awsexports.sh
+echo "export SUMMARY_POD=${SUMMARY_POD}" >> ccol2awsexports.sh
+----
+
+==== 访问服务
+
+[source, bash]
+.*1. 创建 Loadbalancer 类型的Service*
+----
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: yaobank-customer
+  namespace: yaobank
+spec:
+  selector:
+    app: customer
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
+EOF
+----
+
+[source, bash]
+.*2. 查看 Service*
+----
+$ kubectl get svc -n yaobank
+NAME               TYPE           CLUSTER-IP       EXTERNAL-IP                                                                   PORT(S)        AGE
+customer           NodePort       10.100.145.100   <none>                                                                        80:30180/TCP   26m
+database           ClusterIP      10.100.206.163   <none>                                                                        2379/TCP       26m
+summary            ClusterIP      10.100.216.117   <none>                                                                        80/TCP         26m
+yaobank-customer   LoadBalancer   10.100.176.85    aa2a64471ffee4d6f9618b063c881734-617348242.ap-northeast-1.elb.amazonaws.com   80:30716/TCP   17m
+----
+
+[source, bash]
+.*3. 服务访问*
+----
+$ curl aa2a64471ffee4d6f9618b063c881734-617348242.ap-northeast-1.elb.amazonaws.com -I
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 593
+Server: Werkzeug/0.12.2 Python/2.7.12
+Date: Wed, 03 Nov 2021 06:25:48 GMT
+----
+
+[source, bash]
+.*4. 查看 Customer POD Access 日志*
+----
+$ kubectl logs -n yaobank $CUSTOMER_POD
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+192.168.35.47 - - [03/Nov/2021 06:16:52] "GET / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:25:45] "GET / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:25:48] "HEAD / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:27:03] "GET / HTTP/1.1" 200 -
+----
+
+[source, bash]
+.*5. Delete ELB*
+----
+kubectl delete service yaobank-customer -n=yaobank
+----
+
+==== 开启源地址透传（Source IP Preservation）
+
+[source, bash]
+.*1. 在创建 Service 是通过设定 service.beta.kubernetes.io/aws-load-balancer-type 为 nlb 开启源地址透传*
+----
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: Service
+metadata:
+  name: yaobank-customer
+  namespace: yaobank
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  selector:
+    app: customer
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer
+EOF
+----
+
+[source, bash]
+.*2. 查看服务*
+----
+$ kubectl get svc -n yaobank yaobank-customer
+NAME               TYPE           CLUSTER-IP      EXTERNAL-IP                                                                          PORT(S)        AGE
+yaobank-customer   LoadBalancer   10.100.167.26   ae9ef3a157df94411a7c5b5b2b038a8b-09836b10c4bd6927.elb.ap-northeast-1.amazonaws.com   80:30330/TCP   115s
+----
+
+[source, bash]
+.*4. 访问服务*
+----
+$ curl ae9ef3a157df94411a7c5b5b2b038a8b-09836b10c4bd6927.elb.ap-northeast-1.amazonaws.com -I
+HTTP/1.0 200 OK
+Content-Type: text/html; charset=utf-8
+Content-Length: 593
+Server: Werkzeug/0.12.2 Python/2.7.12
+Date: Wed, 03 Nov 2021 06:39:59 GMT
+----
+
+[source, bash]
+.*5. 从 Customer 日志中查看源地址*
+----
+$ kubectl logs -n yaobank $CUSTOMER_POD
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+192.168.35.47 - - [03/Nov/2021 06:16:52] "GET / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:25:45] "GET / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:25:48] "HEAD / HTTP/1.1" 200 -
+192.168.35.47 - - [03/Nov/2021 06:27:03] "GET / HTTP/1.1" 200 -
+106.38.20.203 - - [03/Nov/2021 06:38:58] "GET / HTTP/1.1" 200 -
+106.38.20.203 - - [03/Nov/2021 06:39:59] "HEAD / HTTP/1.1" 200 -
+----
+
+NOTE: `106.38.20.203` 地址为`中国 北京 电信`地址，Customer POD 客户端地址为源客户端地址。
+
+==== Clean Up
+
+[source, bash]
+----
+eksctl delete cluster --name calicoebpf
+----
+
+=== Calico CNI + Calico Policy + iptables Dataplane
+
+==== EKS 部署
+
+[source, bash]
+.*1. 创建一个 EKS 集群*
+----
+eksctl create cluster --name calicocni --without-nodegroup
+----
+
+NOTE: `--without-nodegroup` 初始化一个集群但不部署计算节点。
+
+[source, bash]
+.*2. 查看计算节点*
+----
+$ kubectl get nodes
+No resources found
+----
+
+NOTE: 上面步骤 1 执行没有创建计算节点，而在 EKS 下，用户看不到管理节点信息，所以上面 `kubectl get nodes` 的结果为空。
+
+[source, bash]
+.*3. 查看 POD*
+----
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                       READY   STATUS    RESTARTS   AGE   IP       NODE     NOMINATED NODE   READINESS GATES
+kube-system   coredns-86f7d88d77-7fbzl   0/1     Pending   0          18m   <none>   <none>   <none>           <none>
+kube-system   coredns-86f7d88d77-wjqsg   0/1     Pending   0          18m   <none>   <none>   <none>           <none>
+----
+
+NOTE: coredns POD 状态为 Pending，在计算节点和 CNI 网络初始化完成后会进入运行状态。
+
+[source, bash]
+.*4. 删除 aws cni 相关的 daemonset*
+----
+kubectl delete daemonset -n kube-system aws-node
+----
+
+NOTE: 本部分使用 Calico CNI，所以删除 aws-node daemonset。
+
+==== 部署 Calico CNI
+
+[source, bash]
+.*1. 部署*
+----
+kubectl apply -f https://raw.githubusercontent.com/tigera/ccol2aws/main/calico-vxlan.yaml
+----
+
+[source, bash]
+.*2. 部署验证*
+----
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE     IP       NODE     NOMINATED NODE   READINESS GATES
+kube-system   calico-kube-controllers-54658cf6f7-j2xdj   0/1     Pending   0          2m18s   <none>   <none>   <none>           <none>
+kube-system   coredns-86f7d88d77-7fbzl                   0/1     Pending   0          25m     <none>   <none>   <none>           <none>
+kube-system   coredns-86f7d88d77-wjqsg                   0/1     Pending   0          25m     <none>   <none>   <none>           <none>
+----
+
+NOTE: calico-kube-controllers POD 处于 Pending 状态，计算节点初始化后完成部署，并会启动 calico-node 及 calico-typha POD。
+
+==== 创建一组 EKS 计算节点
+
+[source, bash]
+.*1. 创建计算节点*
+----
+eksctl create nodegroup --cluster calicocni --node-type t3.medium --node-ami-family Bottlerocket --max-pods-per-node 100 --ssh-access
+----
+
+[source, bash]
+.*2. 查看创建的计算节点*
+----
+$ kubectl get nodes -o wide
+NAME                                                STATUS   ROLES    AGE   VERSION    INTERNAL-IP      EXTERNAL-IP    OS-IMAGE                               KERNEL-VERSION   CONTAINER-RUNTIME
+ip-192-168-11-183.ap-northeast-1.compute.internal   Ready    <none>   72s   v1.18.20   192.168.11.183   3.115.11.42    Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141          containerd://1.5.5+bottlerocket
+ip-192-168-71-154.ap-northeast-1.compute.internal   Ready    <none>   71s   v1.18.20   192.168.71.154   35.72.30.131   Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141          containerd://1.5.5+bottlerocket
+----
+
+[source, bash]
+.*3. 查看运行的 POD*
+----
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE    IP               NODE                                                NOMINATED NODE   READINESS GATES
+kube-system   calico-kube-controllers-54658cf6f7-j2xdj   1/1     Running   0          11m    172.16.144.194   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-cfj68                          1/1     Running   0          105s   192.168.71.154   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-tp4rc                          1/1     Running   0          106s   192.168.11.183   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-7fbzl                   1/1     Running   0          35m    172.16.144.195   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-wjqsg                   1/1     Running   0          35m    172.16.144.193   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-n8bbt                           1/1     Running   0          105s   192.168.71.154   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-xmgk8                           1/1     Running   0          106s   192.168.11.183   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+==== 部署测试 APP
+
+image:files/microservice-on-k8s.png[]
+
+[source, bash]
+.*1. 部署测试 APP*
+----
+kubectl apply -f https://raw.githubusercontent.com/tigera/ccol2aws/main/yaobank.yaml
+----
+
+[source, bash]
+.*2. 查看 POD IP*
+----
+$ kubectl get pods -n yaobank -o wide
+NAME                        READY   STATUS    RESTARTS   AGE   IP               NODE                                                NOMINATED NODE   READINESS GATES
+customer-bf4c98479-r98pd    1/1     Running   0          29s   172.16.136.131   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+database-5b96655b86-8jf9h   1/1     Running   0          29s   172.16.136.129   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+summary-85c56b76d7-skhls    1/1     Running   0          29s   172.16.136.130   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+summary-85c56b76d7-sl6d9    1/1     Running   0          29s   172.16.144.196   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+NOTE: `172.16.0.0/16` 为 Calico CNI IPAM 分配的地址，和 Node 节点不在同一个网络。
+
+==== Calico CNI IPAM（没有 AWS CNI 最大可用地址限制）
+
+[source, bash]
+.*1. 扩展 customer POD 服务到 30 个副本*
+----
+kubectl scale -n yaobank --replicas 30 deployments/customer
+----
+
+[source, bash]
+.*2. 验证 POD 都启动*
+----
+$ kubectl get pods -A | grep Running | wc -l
+40
+----
+
+NOTE: 处于 Running 状态的 customer POD 状态为 30，没有 AWS CNI 下 t3.medium 节点 34 个最大可用 POD 的限制。 
+
+[source, bash]
+.*3. 查看 Calico CNI IPAM 信息*
+----
+$ calicoctl ipam show
++----------+---------------+-----------+------------+--------------+
+| GROUPING |     CIDR      | IPS TOTAL | IPS IN USE |   IPS FREE   |
++----------+---------------+-----------+------------+--------------+
+| IP Pool  | 172.16.0.0/16 |     65536 | 38 (0%)    | 65498 (100%) |
++----------+---------------+-----------+------------+--------------+
+----
+
+[source, bash]
+.*4. 调整 customer POD 服务到 30 个副本*
+----
+kubectl scale -n yaobank --replicas 1 deployments/customer
+----
+
+==== WireGuard 加密
+
+[source, bash]
+.*1. 开启 WireGuard 加密*
+----
+calicoctl patch felixconfiguration default --type='merge' -p '{"spec":{"wireguardEnabled":true}}'
+----
+
+[source, bash]
+.*2. 创建一个新的计算节点组*
+----
+eksctl create nodegroup --name calicoubuntu-ng --cluster calicocni --node-type t3.medium --node-ami-family Ubuntu2004 --max-pods-per-node 100 --ssh-access
+----
+
+NOTE: EKS 支持创建多个计算节点组。
+
+[source, bash]
+.*3. 查看计算节点*
+----
+$ kubectl get nodes -o wide
+NAME                                                STATUS   ROLES    AGE     VERSION    INTERNAL-IP      EXTERNAL-IP      OS-IMAGE                               KERNEL-VERSION    CONTAINER-RUNTIME
+ip-192-168-11-183.ap-northeast-1.compute.internal   Ready    <none>   53m     v1.18.20   192.168.11.183   3.115.11.42      Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141           containerd://1.5.5+bottlerocket
+ip-192-168-50-53.ap-northeast-1.compute.internal    Ready    <none>   5m15s   v1.18.16   192.168.50.53    13.231.161.250   Ubuntu 20.04.3 LTS                     5.11.0-1020-aws   docker://20.10.7
+ip-192-168-71-154.ap-northeast-1.compute.internal   Ready    <none>   53m     v1.18.20   192.168.71.154   35.72.30.131     Bottlerocket OS 1.3.0 (aws-k8s-1.18)   5.4.141           containerd://1.5.5+bottlerocket
+ip-192-168-83-149.ap-northeast-1.compute.internal   Ready    <none>   5m15s   v1.18.16   192.168.83.149   18.183.59.23     Ubuntu 20.04.3 LTS                     5.11.0-1020-aws   docker://20.10.7
+----
+
+[source, bash]
+.*4. 查看计算节点组*
+----
+$ eksctl get nodegroup --cluster calicocni
+[ℹ]  eksctl version 0.37.0
+[ℹ]  using region ap-northeast-1
+CLUSTER         NODEGROUP       STATUS          CREATED                 MIN SIZE                                                                                                                                               MAX SIZE DESIRED CAPACITY        INSTANCE TYPE   IMAGE ID                ASG NAME
+calicocni       calicoubuntu-ng CREATE_COMPLETE 2021-11-03T08:24:04Z    2                                                                                                                                                      t3.medium        ami-0e06ef5bd62a4e456   eksctl-calicocni-nodegroup-calicoubuntu-ng-NodeGroup-TEL4A38S0MRC
+calicocni       ng-7b6c0a05     CREATE_COMPLETE 2021-11-03T07:35:33Z    2                                                                                                                                                      t3.medium        ami-095ad745205a24ba6   eksctl-calicocni-nodegroup-ng-7b6c0a05-NodeGroup-VV084NCEIKHL
+----
+
+[source, bash]
+.*5. 查看 POD*
+----
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE     IP               NODE                                                NOMINATED NODE   READINESS GATES
+kube-system   calico-kube-controllers-54658cf6f7-j2xdj   1/1     Running   0          64m     172.16.144.194   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-cfj68                          1/1     Running   0          54m     192.168.71.154   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-h5rp6                          1/1     Running   0          5m59s   192.168.50.53    ip-192-168-50-53.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   calico-node-tmnvt                          1/1     Running   0          5m59s   192.168.83.149   ip-192-168-83-149.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-tp4rc                          1/1     Running   0          54m     192.168.11.183   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-7fbzl                   1/1     Running   0          88m     172.16.144.195   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   coredns-86f7d88d77-wjqsg                   1/1     Running   0          88m     172.16.144.193   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-n8bbt                           1/1     Running   0          54m     192.168.71.154   ip-192-168-71-154.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-wnjg5                           1/1     Running   0          5m59s   192.168.83.149   ip-192-168-83-149.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-wxst2                           1/1     Running   0          5m59s   192.168.50.53    ip-192-168-50-53.ap-northeast-1.compute.internal    <none>           <none>
+kube-system   kube-proxy-xmgk8                           1/1     Running   0          54m     192.168.11.183   ip-192-168-11-183.ap-northeast-1.compute.internal   <none>           <none>
+----
+
+[source, bash]
+.*6. 查看 Ubuntu 节点网卡信息*
+----
+$ ssh ubuntu@13.231.161.250 ip addr
+bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9001 qdisc mq state UP group default qlen 1000
+    link/ether 06:41:75:56:5f:b1 brd ff:ff:ff:ff:ff:ff
+    altname enp0s5
+    inet 192.168.50.53/19 brd 192.168.63.255 scope global dynamic ens5
+       valid_lft 2738sec preferred_lft 2738sec
+    inet6 fe80::441:75ff:fe56:5fb1/64 scope link 
+       valid_lft forever preferred_lft forever
+5: wireguard.cali: <POINTOPOINT,NOARP,UP,LOWER_UP> mtu 8941 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/none 
+    inet 172.16.141.193/32 scope global wireguard.cali
+       valid_lft forever preferred_lft forever
+6: vxlan.calico: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 8951 qdisc noqueue state UNKNOWN group default 
+    link/ether 66:74:c3:0a:39:53 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.141.192/32 scope global vxlan.calico
+       valid_lft forever preferred_lft forever
+    inet6 fe80::6474:c3ff:fe0a:3953/64 scope link 
+       valid_lft forever preferred_lft forever
+----
+
+NOTE: `wireguard.cali` is wireguard cali interface.
+
+[source, bash]
+.*7. 查看 wireguard 内核模块*
+----
+$ ssh ubuntu@13.231.161.250 lsmod | grep wireguard
+bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+wireguard              81920  0
+curve25519_x86_64      49152  1 wireguard
+libchacha20poly1305    16384  1 wireguard
+libblake2s             16384  1 wireguard
+ip6_udp_tunnel         16384  2 wireguard,vxlan
+udp_tunnel             20480  2 wireguard,vxlan
+libcurve25519_generic    49152  2 curve25519_x86_64,wireguard
+----
+
+[source, bash]
+.*8. 查看 wireguard 内核模块加载的时间*
+----
+$ ssh ubuntu@13.231.161.250 sudo dmesg | grep wireguard
+bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
+[  128.336924] wireguard: WireGuard 1.0.0 loaded. See www.wireguard.com for information.
+[  128.336927] wireguard: Copyright (C) 2015-2019 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
+----
+
+==== Clean up
+
+[source, bash]
+----
+eksctl delete cluster --name calicocni
 ----
 
 === KOps
