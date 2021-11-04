@@ -2379,7 +2379,9 @@ bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 eksctl delete cluster --name calicocni
 ----
 
-=== KOps
+=== Tools for build Self Defined K8S on AWS
+
+==== KOps
 
 * Like kubectl for clusters
 * Strengths
@@ -2390,102 +2392,580 @@ eksctl delete cluster --name calicocni
 ** AWS is offically support
 ** idempotent
 
+==== kubeadm
+
+* Creates a minimum viable K8S cluster that conforms to best practices
+* Strengths
+** As a build block in other ecosystems/installer tools
+** Very flexible across many environments
+* Shortcomings
+** more complex to use than KOps
+
+==== kubespray
+
+* Install K8S using ansible
+* Strengths
+** Builds highly available clusters
+** Fully customisable
+** Easier than kubeadm and more flexible than KOps
+** One Ansible playbook can build a cluster
+** Great if you already use Absible
+* Shortcomings
+** more complex to use than KOps
+
+=== 基于 AWS Service 及 Calico 构建 Production Enabled K8S 环境
+
+==== 创建 S3 存储
+
 [source, bash]
-.*1. KOps Create Cluster*
+.*1. 定义 S3 名称*
 ----
-kops create cluster --zones ap-northeast-1a,ap-northeast-1c --networking calico --name ${CLUSTER_NAME}
+export KOPS_STATE_STORE=s3://kops.calico.kylin
+echo "export KOPS_STATE_STORE=${KOPS_STATE_STORE}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*2. 创建*
+----
+aws s3 mb ${KOPS_STATE_STORE}
+----
+
+[source, bash]
+.*3. 查看 S3 文件*
+----
+$ aws s3 ls kops.calico.kylin
+----
+
+NOTE: 上述命令输出为空，是由于当前没有任何部署操作。
+
+==== 创建 K8S 集群
+
+[source, bash]
+.*1. 定义集群名称*
+----
+export CLUSTER_NAME=kopscalico.k8s.local
+echo "export CLUSTER_NAME=${CLUSTER_NAME}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*2. 查看当前可用 Region*
+----
+$ aws ec2 describe-availability-zones | grep RegionName | head -n 1
+            "RegionName": "ap-northeast-1",
+
+$ export REGION=ap-northeast-1
+$ echo "export REGION=${REGION}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*3. 查看可用 Zone*
+----
+$ aws ec2 describe-availability-zones | grep ZoneName
+            "ZoneName": "ap-northeast-1a",
+            "ZoneName": "ap-northeast-1c",
+            "ZoneName": "ap-northeast-1d",
+
+$ export ZONES=ap-northeast-1c,ap-northeast-1d
+$ echo "export ZONES=${ZONES}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*4. 创建 K8S 集群*
+----
+kops create cluster --zones ${ZONES} --networking calico --name ${CLUSTER_NAME}
 kops update cluster --name ${CLUSTER_NAME} --yes --admin
 ----
 
 [source, bash]
-.*2. KOps Get Cluster*
+.*5. 管理节点可运行业务 POD*
 ----
-kops get cluster
-----
-
-=== TODO
-
-[source, bash]
-.**
-----
-
+$ kubectl taint nodes --all node-role.kubernetes.io/master-
+node/ip-172-20-40-151.ap-northeast-1.compute.internal untainted
+taint "node-role.kubernetes.io/master" not found
+taint "node-role.kubernetes.io/master" not found
 ----
 
 [source, bash]
-.**
+.*6. 安装验证*
 ----
+$ kubectl get nodes -A -o wide
+NAME                                               STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP      OS-IMAGE             KERNEL-VERSION    CONTAINER-RUNTIME
+ip-172-20-40-151.ap-northeast-1.compute.internal   Ready    master   51m   v1.19.15   172.20.40.151   13.231.253.234   Ubuntu 20.04.3 LTS   5.11.0-1019-aws   docker://19.3.14
+ip-172-20-53-174.ap-northeast-1.compute.internal   Ready    node     50m   v1.19.15   172.20.53.174   13.114.199.57    Ubuntu 20.04.3 LTS   5.11.0-1019-aws   docker://19.3.14
+ip-172-20-91-147.ap-northeast-1.compute.internal   Ready    node     49m   v1.19.15   172.20.91.147   35.77.14.22      Ubuntu 20.04.3 LTS   5.11.0-1019-aws   docker://19.3.14
 
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
+$ kubectl get pods -A -o wide
+NAMESPACE     NAME                                                                       READY   STATUS    RESTARTS   AGE   IP                NODE                                               NOMINATED NODE   READINESS GATES
+kube-system   calico-kube-controllers-7d8f747cf4-kntrt                                   1/1     Running   0          51m   100.102.98.65     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-4jmct                                                          1/1     Running   0          50m   172.20.53.174     ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-l5hm5                                                          1/1     Running   0          51m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   calico-node-v4sp6                                                          1/1     Running   0          50m   172.20.91.147     ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   dns-controller-8d8889c4b-xlbmt                                             1/1     Running   0          51m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   etcd-manager-events-ip-172-20-40-151.ap-northeast-1.compute.internal       1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   etcd-manager-main-ip-172-20-40-151.ap-northeast-1.compute.internal         1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kops-controller-84k4v                                                      1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-apiserver-ip-172-20-40-151.ap-northeast-1.compute.internal            2/2     Running   1          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-controller-manager-ip-172-20-40-151.ap-northeast-1.compute.internal   1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-dns-696cb84c7-bfjpd                                                   3/3     Running   0          49m   100.103.113.129   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-dns-696cb84c7-rbdvj                                                   3/3     Running   0          51m   100.127.225.130   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-dns-autoscaler-55f8f75459-rhqjb                                       1/1     Running   0          51m   100.127.225.129   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-ip-172-20-40-151.ap-northeast-1.compute.internal                1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-ip-172-20-53-174.ap-northeast-1.compute.internal                1/1     Running   0          50m   172.20.53.174     ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-proxy-ip-172-20-91-147.ap-northeast-1.compute.internal                1/1     Running   0          48m   172.20.91.147     ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+kube-system   kube-scheduler-ip-172-20-40-151.ap-northeast-1.compute.internal            1/1     Running   0          50m   172.20.40.151     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
 ----
 
 [source, bash]
-.**
+.*7. 查看 S3 存储文件*
 ----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
-----
-
-[source, bash]
-.**
-----
-
+$ aws s3 ls ${KOPS_STATE_STORE}/${CLUSTER_NAME}/
+                           PRE addons/
+                           PRE backups/
+                           PRE clusteraddons/
+                           PRE instancegroup/
+                           PRE manifests/
+                           PRE pki/
+                           PRE secrets/
+2021-11-04 03:23:35       5355 cluster.spec
+2021-11-04 03:21:33       1267 config
+2021-11-04 03:23:35          6 kops-version.txt
 ----
 
 [source, bash]
-.**
+.*8. 查看 EC2 实例*
+----
+$ aws ec2 describe-instances --query "Reservations[*].Instances[*].{PublicIPAdd:PublicIpAddress,InstanceName:Tags[?Key=='Name']|[0].Value,Status:State.Name}" --filters Name=instance-state-name,Values=running
+[
+    [
+        {
+            "PublicIPAdd": "13.231.253.234",
+            "InstanceName": "master-ap-northeast-1c.masters.kopscalico.k8s.local",
+            "Status": "running"
+        }
+    ],
+    [
+        {
+            "PublicIPAdd": "13.114.199.57",
+            "InstanceName": "nodes-ap-northeast-1c.kopscalico.k8s.local",
+            "Status": "running"
+        }
+    ],
+    [
+        {
+            "PublicIPAdd": "35.77.14.22",
+            "InstanceName": "nodes-ap-northeast-1d.kopscalico.k8s.local",
+            "Status": "running"
+        }
+    ]
+]
 ----
 
+==== 部署 Boutique 应用
+
+[source, bash]
+.*1. 部署 APP*
+----
+kubectl apply -f https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/release/v0.2.2/release/kubernetes-manifests.yaml
 ----
 
 [source, bash]
-.**
+.*2. 查看 APP*
+----
+$ kubectl get pods -o wide
+NAME                                     READY   STATUS    RESTARTS   AGE     IP                NODE                                               NOMINATED NODE   READINESS GATES
+adservice-f787c8dcd-959pp                1/1     Running   0          3m16s   100.127.225.135   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+cartservice-67b89ffc69-jg9qr             1/1     Running   0          3m17s   100.103.113.135   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+checkoutservice-75db8bf6f6-fgr9j         1/1     Running   0          3m17s   100.127.225.131   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+currencyservice-68887d98fd-26tsq         1/1     Running   0          3m16s   100.103.113.130   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+emailservice-5f8fc7dbb4-8jtj6            1/1     Running   0          3m17s   100.103.113.131   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+frontend-5c4745dfdb-rjr7m                1/1     Running   0          3m17s   100.127.225.132   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+loadgenerator-86f46dcb88-pwh62           1/1     Running   4          3m17s   100.127.225.134   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+paymentservice-6658569876-rd27v          1/1     Running   0          3m17s   100.103.113.133   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+productcatalogservice-587f8bc64-dl79d    1/1     Running   0          3m17s   100.127.225.133   ip-172-20-53-174.ap-northeast-1.compute.internal   <none>           <none>
+recommendationservice-78965f984b-hrfgl   1/1     Running   0          3m17s   100.103.113.134   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+redis-cart-74594bd569-69vfn              1/1     Running   0          3m16s   100.103.113.132   ip-172-20-91-147.ap-northeast-1.compute.internal   <none>           <none>
+shippingservice-6998959488-kt99d         1/1     Running   0          3m16s   100.102.98.66     ip-172-20-40-151.ap-northeast-1.compute.internal   <none>           <none>
 ----
 
+==== 使用 ALB(Application Load Balancer )
+
+[source, bash]
+.*1. 获取 VPC ID*
+----
+export VPC_ID=`aws ec2 describe-vpcs --filters "Name=tag:Name,Values=$CLUSTER_NAME" --query Vpcs[].VpcId --output text`
+echo "export VPC_ID=${VPC_ID}" >> ccol2awsexports.sh
+echo $VPC_ID
 ----
 
 [source, bash]
-.**
+.*2. 创建 ALB 所需 RBAC*
+----
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.4/docs/examples/rbac-role.yaml
 ----
 
+[source, bash]
+.*3. 获取 ALB IAM Policy*
+----
+$ wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.4/docs/examples/iam-policy.json
+$ aws iam create-policy --policy-name ALBIngressControllerIAMPolicy --policy-document file://iam-policy.json
+{
+    "Policy": {
+        "PolicyName": "ALBIngressControllerIAMPolicy",
+        "PolicyId": "ANPAX3FESL57C4KMOVMS3",
+        "Arn": "arn:aws:iam::539363532670:policy/ALBIngressControllerIAMPolicy",
+        "Path": "/",
+        "DefaultVersionId": "v1",
+        "AttachmentCount": 0,
+        "PermissionsBoundaryUsageCount": 0,
+        "IsAttachable": true,
+        "CreateDate": "2021-11-04T04:33:59+00:00",
+        "UpdateDate": "2021-11-04T04:33:59+00:00"
+    }
+}
+----
+
+[source, bash]
+.*4. 设定 policy ARN 变量*
+----
+$ export POLICY_ARN=arn:aws:iam::539363532670:policy/ALBIngressControllerIAMPolicy
+$ echo "export POLICY_ARN=${POLICY_ARN}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*5. 设定 Node Role 变量*
+----
+export NODE_ROLE=nodes.$CLUSTER_NAME
+echo "export NODE_ROLE=${NODE_ROLE}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*6. Attach the node role to the policy created using the ARN*
+----
+aws iam attach-role-policy --region=$REGION --role-name=$NODE_ROLE --policy-arn=$POLICY_ARN
+----
+
+[source, bash]
+.*7. 下载 ALB Ingress Controller Deployment YAML*
+----
+wget https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.4/docs/examples/alb-ingress-controller.yaml
+----
+
+[source, bash]
+.*8. 编辑 alb-ingress-controller.yaml，修改--cluster-name，--aws-vpc-id，--aws-region*
+----
+# Application Load Balancer (ALB) Ingress Controller Deployment Manifest.
+# This manifest details sensible defaults for deploying an ALB Ingress Controller.
+# GitHub: https://github.com/kubernetes-sigs/aws-alb-ingress-controller
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: alb-ingress-controller
+  name: alb-ingress-controller
+  # Namespace the ALB Ingress Controller should run in. Does not impact which
+  # namespaces it's able to resolve ingress resource for. For limiting ingress
+  # namespace scope, see --watch-namespace.
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alb-ingress-controller
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: alb-ingress-controller
+    spec:
+      containers:
+        - name: alb-ingress-controller
+          args:
+            # Limit the namespace where this ALB Ingress Controller deployment will
+            # resolve ingress resources. If left commented, all namespaces are used.
+            # - --watch-namespace=your-k8s-namespace
+
+            # Setting the ingress-class flag below ensures that only ingress resources with the
+            # annotation kubernetes.io/ingress.class: "alb" are respected by the controller. You may
+            # choose any class you'd like for this controller to respect.
+            - --ingress-class=alb
+
+            # REQUIRED
+            # Name of your cluster. Used when naming resources created
+            # by the ALB Ingress Controller, providing distinction between
+            # clusters.
+            - --cluster-name=kopscalico.k8s.local
+
+            # AWS VPC ID this ingress controller will use to create AWS resources.
+            # If unspecified, it will be discovered from ec2metadata.
+            - --aws-vpc-id=vpc-04748aa440577e1ce
+
+            # AWS region this ingress controller will operate in.
+            # If unspecified, it will be discovered from ec2metadata.
+            # List of regions: http://docs.aws.amazon.com/general/latest/gr/rande.html#vpc_region
+            - --aws-region=ap-northeast-1
+
+            # Enables logging on all outbound requests sent to the AWS API.
+            # If logging is desired, set to true.
+            # - --aws-api-debug
+            # Maximum number of times to retry the aws calls.
+            # defaults to 10.
+            # - --aws-max-retries=10
+          # env:
+            # AWS key id for authenticating with the AWS API.
+            # This is only here for examples. It's recommended you instead use
+            # a project like kube2iam for granting access.
+            #- name: AWS_ACCESS_KEY_ID
+            #  value: KEYVALUE
+
+            # AWS key secret for authenticating with the AWS API.
+            # This is only here for examples. It's recommended you instead use
+            # a project like kube2iam for granting access.
+            #- name: AWS_SECRET_ACCESS_KEY
+            #  value: SECRETVALUE
+          # Repository location of the ALB Ingress Controller.
+          image: docker.io/amazon/aws-alb-ingress-controller:v1.1.4
+      serviceAccountName: alb-ingress-controller
+----
+
+[source, bash]
+.*9. 创建 ALB*
+----
+kubectl apply -f  alb-ingress-controller.yaml
+----
+
+[source, bash]
+.*10. 验证创建*
+----
+$ kubectl get all -n kube-system -l app.kubernetes.io/name=alb-ingress-controller
+NAME                                          READY   STATUS    RESTARTS   AGE
+pod/alb-ingress-controller-7cf5bdc85b-nq867   1/1     Running   0          119s
+
+NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/alb-ingress-controller   1/1     1            1           119s
+
+NAME                                                DESIRED   CURRENT   READY   AGE
+replicaset.apps/alb-ingress-controller-7cf5bdc85b   1         1         1       119s
+----
+
+[source, bash]
+.*11. 插曲 subnets*
+----
+$ aws ec2 describe-subnets --filters "Name=vpc-id,Values=${VPC_ID}" --query Subnets[].SubnetId --output table
+------------------------------
+|       DescribeSubnets      |
++----------------------------+
+|  subnet-0a6dee79bf442694a  |
+|  subnet-0892010209c3b11d6  |
++----------------------------+
+----
+
+[source, bash]
+.*12. 设定 subnet ID 变量*
+----
+export SUBNET_ID1=subnet-0a6dee79bf442694a
+export SUBNET_ID2=subnet-0892010209c3b11d6
+echo "export SUBNET_ID1=${SUBNET_ID1}" >> ccol2awsexports.sh
+echo "export SUBNET_ID2=${SUBNET_ID2}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*13. Tag the subnet resources*
+----
+aws ec2 create-tags --resources $SUBNET_ID1 --tags Key=kubernetes.io/cluster/$CLUSTER_NAME,Value=shared
+aws ec2 create-tags --resources $SUBNET_ID2 --tags Key=kubernetes.io/cluster/$CLUSTER_NAME,Value=shared
+aws ec2 create-tags --resources $SUBNET_ID1 --tags Key=kubernetes.io/role/elb,Value=
+aws ec2 create-tags --resources $SUBNET_ID2 --tags Key=kubernetes.io/role/elb,Value=
+----
+
+[source, bash]
+.*14. 发布服务*
+----
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: frontend-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+  labels:
+    app: frontend
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: Exact
+            backend:
+              service:
+                name: "frontend-external"
+                port:
+                  number: 80
+EOF
+----
+
+[source, bash]
+.*15. 查看 Ingress*
+----
+$ kubectl get ingress
+Warning: extensions/v1beta1 Ingress is deprecated in v1.14+, unavailable in v1.22+; use networking.k8s.io/v1 Ingress
+NAME               CLASS    HOSTS   ADDRESS                                                                      PORTS   AGE
+frontend-ingress   <none>   *       e84cfdb8-default-frontendi-3e1f-839848441.ap-northeast-1.elb.amazonaws.com   80      9s
+----
+
+[source, bash]
+.*16. 访问服务*
+----
+$ curl http://e84cfdb8-default-frontendi-3e1f-839848441.ap-northeast-1.elb.amazonaws.com -I
+HTTP/1.1 200 OK
+Date: Thu, 04 Nov 2021 04:55:24 GMT
+Content-Type: text/html; charset=utf-8
+Connection: keep-alive
+Set-Cookie: shop_session-id=345be51c-a75d-4615-ba6f-f74c7d54d9ad; Max-Age=172800
+----
+
+==== 删除 ALB
+
+[source, bash]
+.*1. 删除 RBAC*
+----
+kubectl delete -f https://raw.githubusercontent.com/kubernetes-sigs/aws-alb-ingress-controller/v1.1.4/docs/examples/rbac-role.yaml
+----
+
+[source, bash]
+.*2. 删除 IAM Policy*
+----
+aws iam detach-role-policy --role-name=$NODE_ROLE --policy-arn=$POLICY_ARN
+aws iam delete-policy --policy-arn=$POLICY_ARN
+----
+
+[source, bash]
+.*3. 删除 Ingress*
+----
+kubectl delete ingress frontend-ingress
+----
+
+[source, bash]
+.*4. Remove the subnet tags*
+----
+aws ec2 delete-tags --resources $SUBNET_ID1 --tags Key=kubernetes.io/cluster/$CLUSTER_NAME,Value=shared
+aws ec2 delete-tags --resources $SUBNET_ID2 --tags Key=kubernetes.io/cluster/$CLUSTER_NAME,Value=shared
+aws ec2 delete-tags --resources $SUBNET_ID1 --tags Key=kubernetes.io/role/elb,Value=
+aws ec2 delete-tags --resources $SUBNET_ID2 --tags Key=kubernetes.io/role/elb,Value=
+----
+
+[source, bash]
+.*5. 查看 ALB*
+----
+$ aws elbv2 describe-load-balancers
+{
+    "LoadBalancers": [
+        {
+            "LoadBalancerArn": "arn:aws:elasticloadbalancing:ap-northeast-1:539363532670:loadbalancer/app/e84cfdb8-default-frontendi-3e1f/2305fe802621a510",
+            "DNSName": "e84cfdb8-default-frontendi-3e1f-839848441.ap-northeast-1.elb.amazonaws.com",
+            "CanonicalHostedZoneId": "Z14GRHDCWA56QT",
+            "CreatedTime": "2021-11-04T04:52:39.270000+00:00",
+            "LoadBalancerName": "e84cfdb8-default-frontendi-3e1f",
+            "Scheme": "internet-facing",
+            "VpcId": "vpc-04748aa440577e1ce",
+            "State": {
+                "Code": "active"
+            },
+            "Type": "application",
+            "AvailabilityZones": [
+                {
+                    "ZoneName": "ap-northeast-1d",
+                    "SubnetId": "subnet-0892010209c3b11d6",
+                    "LoadBalancerAddresses": []
+                },
+                {
+                    "ZoneName": "ap-northeast-1c",
+                    "SubnetId": "subnet-0a6dee79bf442694a",
+                    "LoadBalancerAddresses": []
+                }
+            ],
+            "SecurityGroups": [
+                "sg-02fcc82fecdf6a7c2"
+            ],
+            "IpAddressType": "ipv4"
+        }
+    ]
+}
+----
+
+[source, bash]
+.*6. 设定 LOADBAL_ARN 变量*
+----
+export LOADBAL_ARN=arn:aws:elasticloadbalancing:ap-northeast-1:539363532670:loadbalancer/app/e84cfdb8-default-frontendi-3e1f/2305fe802621a510
+echo "export LOADBAL_ARN=${LOADBAL_ARN}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*7. 设定 Security Group 变量*
+----
+export LB_SG=sg-02fcc82fecdf6a7c2
+echo "export LB_SG=${LB_SG}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*8. 获取 VPC Owner ID*
+----
+$ aws ec2 describe-vpcs --filters "Name=vpc-id,Values=${VPC_ID}" --query Vpcs[].OwnerId --output text
+539363532670
+----
+
+[source, bash]
+.*9. 设定 Owener ID 变量*
+----
+export OWNER_ID=539363532670
+echo "export OWNER_ID=${OWNER_ID}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*10. Get the security group ID associated with the nodes*
+----
+$ aws ec2 describe-security-groups --filters "Name=vpc-id,Values=$VPC_ID" "Name=group-name,Values=nodes.$CLUSTER_NAME" --query SecurityGroups[].GroupId  --output text
+sg-0da80fb9a77b7079c
+----
+
+[source, bash]
+.*11. 设定 NODE_SG 变量*
+----
+export NODE_SG=sg-0da80fb9a77b7079c
+echo "export NODE_SG=${NODE_SG}" >> ccol2awsexports.sh
+----
+
+[source, bash]
+.*12. Delete Ingress Rule*
+----
+$ aws ec2 revoke-security-group-ingress --group-id=$NODE_SG --source-group=$LB_SG --group-owner=$OWNER_ID --protocol=tcp --port=0-65535
+{
+    "Return": true
+}
+----
+
+[source, bash]
+.*13. Delete Loadbalancer*
+----
+aws elbv2 delete-load-balancer --load-balancer-arn=${LOADBAL_ARN}
+----
+
+[source, bash]
+.*14. Clean Up Security Group*
+----
+aws ec2 delete-security-group --group-id=$LB_SG
+----
+
+==== Clean Up
+
+[source, bash]
+.*1. 删除 K8S 集群*
+----
+kops delete cluster --name ${CLUSTER_NAME} --yes
+----
+
+[source, bash]
+.*2. 删除 S3*
+----
+aws s3 rb ${KOPS_STATE_STORE}
 ----
 
