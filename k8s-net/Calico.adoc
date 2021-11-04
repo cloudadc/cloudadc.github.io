@@ -153,7 +153,7 @@ image:files/networkpolicy.png[]
 
 * 在容器平台需要基于IP地址或者应用端口进行流量控制（OSI L3、L4）
 * 以应用为中心的设计，通过标签匹配的方式控制着应用POD如何被访问
-* K8S 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商，实现与底层网络能力的解耦
+* Kubernetes 提供了 Network Policy API 接口，但是没有做实现，实现交给 CNI 插件实现厂商，实现与底层网络能力的解耦
 * Network Policy价值
 ** 攻击者花样更加聪明
 ** 攻击量更多
@@ -1238,27 +1238,131 @@ EOF
 
 image:files/aws-global-cloud.png[]
 
-* *AWS Global Cloud* - Devices and Services in many regions. 
-* *AWS Region* - A physical location around the world where Amazon have equipment in data centers .
-* *Virtual Private Cloud(VPC)* - A logically isolated virtual private network that exists within AWS cloud. VPC can span AZ in a region.
-* *Availability Zone(AZ)* - A group of data centers in a region, each AZ has independent power, cooling, and physical security and is connected via multiple physical networks. 
-* *Subnet* - A subnet is a section of VPC's IP range, a subnet must be reside within a single AZ,
+* *AWS Global Cloud* - A single global cloud, is made up of devices and Services in many regions. 
+* *AWS Region* - A physical location around the world where Amazon have equipment(devices and services) in data centers. 
+** 一个 Region 在一个地址位置区域
+** 一个 Region 包括多个、相互隔离、地址位置分开的 Availability Zone。
+* *Availability Zone(AZ)* - A group of data centers in a region, each AZ has independent power, cooling, and physical security and is connected via multiple physical networks.
+** 设计并部署应用到多个 AZ，可以实现应用的容错及高可以用
+* *Virtual Private Cloud(VPC)* - A logically isolated virtual private network that exists within AWS cloud. 
+** VPC 上可以定义 IP 地址的区间（space）。
+** A VPC spans all the AZ in the region.
+** 只有创建了 VPC，才可以在一个 AZ 中添加一个或多个Subnet。
+** There is a quota on the number of IPv4 CIDR blocks you can associate with a VPC(current 5),it can request an increase up to a *maximum of 50*.
+* *Subnet* - A subnet is a section of VPC's IP range where you can place a group of resource.
+** A subnet must be reside within a single AZ。
+** 和数据中心或家庭内子网类似
+** The maximum subnet size is /16 CIDR block(65536 IPs)
 * *Elastic Network Interfaces(ENI)* - A logical networking component in a VPC that represents a virtual network card.
+** 类似数据中心服务器上的网卡
+** It includes a primary private IP Address, and one or more secondary ip address
+** It has a MAC address
+** It placed in a security group in a VPC, 这个 security group 用来限制 workload 是否可以流出或者流入。
+** ENI is bandwidth constrained
+* Security Group, Network ACL, Access Control Lists
+** 在 Subnet 级别可用通过Security Group, Network ACL, Access Control Lists一起限制出入Subnet的流量
+** Network ACL can used to to set *Allow* or *Deny* rules, Network ACL 不会过滤Subnet内部实例之间的网路流量
+** Network ACL perform stateless filtering, Security Group perform stateful filtering
 
-=== AWS CNI 优缺点
+=== AWS 上运行 Kubernetes 的两种方式
 
-[cols="5a,5a"]
+[cols="2,5a,5a"]
 |===
-|优点 |缺点
+|对比项 |EKS |BYOC
+
+|定义
+|
+*Kubernetes as a Managed Cloud Service*
+
+* Fully managed control plane
+* Requires less expertise
+* Heavily integrated with AWS services(ECR, ELB, IAM, VPC)
+* Built-in support for Calico
 
 |
-* Pods get native IPs
-* Routing from outside or control nodes "just works"
-* Using multiple ENIS gives access to more bandwidth
+*Bring Your Own Cloud*
+
+* Build a Kubernetes Cluster with AWS compute resources/services.
+* Self-Managed
+
+|优点
+|
+* Full Kubernetes Network Policy API implemnetation via Calico, etc
+* Advanced Calico Network Policy L3/L4 security ability
+* EKS with Calico CNI can save the IP addresses from the underlying VPC, also use the full set of Calico network features, like flexible IPAM
+
+|
+* Extremely flexible
+* More portable
+* Less costly
+* Well documented
+* Many tools available, like Kops, kubeadm, kubespray
+
+|缺点
+|
+* The user is still required to manage dataplane worker nodes
+* Is closely tied with AWS services
+* Comparatively expensive 
+
+|
+* Significant complexity for the user to manage
+|===
+
+=== AWS 上 Kubernetes 使用AWS CNI 和 Calico CNI 对比
+
+[cols="2,5a,5a"]
+|===
+|项目 |AWS CNI |Calico CNI
+
+|定义
+|
+* AWS CNI's full name is *AWS VPC CNI*
+* Each Pod and Node get a IP(来自 VPC 中的 subnet)
+* Each Node can only handle a certain number of ENIs
+|
+* EKS 和 BYOC 集群均可使用 Calico CNI
+* Calico CNI in EKS uses Calico's high performance VXLAN tunnels to allow cluster nodes to communicate(解决跨 subnet 通信问题)
+* Calico CNI in BYOC can use below 3 options for different scenarios:
+** BGP - 计算节点在同一个 subnet
+** IP-IP/VXLAN - 计算节点在多个 subnet
+** CrossSubnet - 混合模式，计算节点在同一个 subnet 使用 L2 转发，计算节点跨 subnet 采用 Tunnel 转发
+
+|优点
+|
+* Pods get native IPs, Routing from outside or control nodes "just works"
+* Using multiple ENIS gives access to more bandwidth(一个Node上的 POD 可以通过多个 ENI 访问)
 * IAM integration is improved
 |
+* Use non-native POD IP(不会消耗 VPC subnet 中的IP)
+* More scalable
+* No IP address exhaustion consideration
+
+|缺点
+|
+* IP address exhaustion
 * Number of pods per node is limited by number of ENIs and Node type
+|
+* Connections from pods to addresses outside the cluster need to be Source NATed
+* CrossSubnet overlay mode, the user needs to disable src/dest check in the AWS CLI it GUI
+* Calico CNI can not install on EKS control plane nodes - Control Plane nodes will not be able to initiate network connections to Calico Pod.
 |===
+
+=== AWS 上 Kubernetes Network Security
+
+[cols="2,5a"]
+|===
+|TYPE | DESC
+
+|Security Group(EKS)
+|
+* EKS clusters create a security group
+* Traffic from the control plane and managed node groups can flow freely
+* Assigned to the ENIs created by EKS
+
+|
+
+|===
+
 
 === AWS 上使用 Calico 的 5 种组合方式
 
@@ -1869,7 +1973,7 @@ kube-system   calico-typha-horizontal-autoscaler-9f999cfc5-bxctw   1/1     Runni
 
 ==== 开启 eBPF Dataplane
 
-默认，K8S 中 Calico 和 api-server 通信是通过 kube-proxy 来进行的，开启 eBPF Dataplane 需要删除 kube-proxy，删除 kube-proxy 之前需要 Calico 直接和 api-server 通信。
+默认，Kubernetes 中 Calico 和 api-server 通信是通过 kube-proxy 来进行的，开启 eBPF Dataplane 需要删除 kube-proxy，删除 kube-proxy 之前需要 Calico 直接和 api-server 通信。
 
 image:img/calico-ebpf-enable.png[]
 
@@ -1943,7 +2047,7 @@ kubectl delete pod -n kube-system -l k8s-app=kube-dns
 ----
 
 [source, bash]
-.*8. 验证 K8S 当前状态*
+.*8. 验证 Kubernetes 当前状态*
 ----
 $ kubectl get pods -A -o wide
 NAMESPACE     NAME                                                 READY   STATUS    RESTARTS   AGE     IP               NODE                                                NOMINATED NODE   READINESS GATES
@@ -2379,7 +2483,7 @@ bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 eksctl delete cluster --name calicocni
 ----
 
-=== Tools for build Self Defined K8S on AWS
+=== Tools for build Self Defined Kubernetes on AWS
 
 ==== KOps
 
@@ -2394,7 +2498,7 @@ eksctl delete cluster --name calicocni
 
 ==== kubeadm
 
-* Creates a minimum viable K8S cluster that conforms to best practices
+* Creates a minimum viable Kubernetes cluster that conforms to best practices
 * Strengths
 ** As a build block in other ecosystems/installer tools
 ** Very flexible across many environments
@@ -2403,7 +2507,7 @@ eksctl delete cluster --name calicocni
 
 ==== kubespray
 
-* Install K8S using ansible
+* Install Kubernetes using ansible
 * Strengths
 ** Builds highly available clusters
 ** Fully customisable
@@ -2413,7 +2517,7 @@ eksctl delete cluster --name calicocni
 * Shortcomings
 ** more complex to use than KOps
 
-=== 基于 AWS Service 及 Calico 构建 Production Enabled K8S 环境
+=== 基于 AWS Service 及 Calico 构建 Production Enabled Kubernetes 环境
 
 ==== 创建 S3 存储
 
@@ -2438,7 +2542,7 @@ $ aws s3 ls kops.calico.kylin
 
 NOTE: 上述命令输出为空，是由于当前没有任何部署操作。
 
-==== 创建 K8S 集群
+==== 创建 Kubernetes 集群
 
 [source, bash]
 .*1. 定义集群名称*
@@ -2470,7 +2574,7 @@ $ echo "export ZONES=${ZONES}" >> ccol2awsexports.sh
 ----
 
 [source, bash]
-.*4. 创建 K8S 集群*
+.*4. 创建 Kubernetes 集群*
 ----
 kops create cluster --zones ${ZONES} --networking calico --name ${CLUSTER_NAME}
 kops update cluster --name ${CLUSTER_NAME} --yes --admin
@@ -2958,7 +3062,7 @@ aws ec2 delete-security-group --group-id=$LB_SG
 ==== Clean Up
 
 [source, bash]
-.*1. 删除 K8S 集群*
+.*1. 删除 Kubernetes 集群*
 ----
 kops delete cluster --name ${CLUSTER_NAME} --yes
 ----
