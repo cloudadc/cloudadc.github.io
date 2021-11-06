@@ -1347,7 +1347,7 @@ image:files/aws-global-cloud.png[]
 * Calico CNI can not install on EKS control plane nodes - Control Plane nodes will not be able to initiate network connections to Calico Pod.
 |===
 
-=== AWS 上 Kubernetes Network Security
+=== AWS 上 Kubernetes Security Group
 
 [cols="2,5a"]
 |===
@@ -1359,10 +1359,56 @@ image:files/aws-global-cloud.png[]
 * Traffic from the control plane and managed node groups can flow freely
 * Assigned to the ENIs created by EKS
 
+|Security Group(Pod)
 |
+* EKS support assigning SG directly to POD - SecurityGroupPolicy
+* Some instance Type not supported, eg, t3 instance not support security group on POD
+* Security Group Only - POD associate SG, means it give up the Calico Policy Enforcement
+* Source NAT is disabled - POD 出访需要通过内部 Gateway POD
 
+|Security Group(BYOC)
+|
+* Can not have Pod level SG
+* Only for coarse-grained network policy, Kubernetes NetworkPolicy or Calico NetworkPolicy is necessary for fine-grained Policy control. 
 |===
 
+=== AWS 上 Kubernetes NetworkPolicy 和 Encryption
+
+[cols="2,5a,5a"]
+|===
+|TYPE |Network Policy |Encryption
+
+|目的
+|
+* Network Policy is the primary tool for securing a Kubernetes network
+* 补充 Kubernetes Network Policy 不足，增加高级 Policy 能力 - Calico for Policy and Calico CNI both provide richer set of Policy capabilities, like *policy ordering/priority*, *deny rule*, *flexible match rules*
+|
+* An alternatives for encrypting data in flight - Without Calico CNI, a service mesh is necessary for application traffic encryption 
+
+|方式
+|
+* Abstracted from the network by using label selectors
+|
+* WireGuard encryption
+
+|优势
+|
+* Calico Policy can apply to multiple type, like Pods, VMs and host interface.
+* Massively simplifies network design
+* Istio Service Mesh Integgrated - Calico Policy for application layer security, L5 - L7 match criteria, cryptographic identity
+* Portable for Cloud vendor, eay for migration across Clouds, Avoid cloud provider lock-in
+|
+* Calico automatically creates and manages WireGuard tunnels between nodes providing transport level security for on-the-wire, in cluster pod traffic
+* WireGuard provides formally verified secure and performant tunnels with any specialized hardware
+* Ebable WireGuard only need one line command
+* Aavliable in both EKS(Calico CNI replace AWS CIS) and BYOC
+
+|缺点
+|
+|
+* Need Kernel support WireGuard mod
+* Modify the MTU used by Calico networking is recommend for increase networj performance 
+|===
 
 === AWS 上使用 Calico 的 5 种组合方式
 
@@ -1389,6 +1435,48 @@ image:files/aws-global-cloud.png[]
 |Calico Policy
 |Calico eBPF
 |===
+
+=== AWS 上构建 BYOC Kubernetes 集群工具
+
+==== KOps
+
+* Like kubectl for clusters(kubectl 管理一个集群，KOps 可跨基础设施管理多个集群)
+* Build on top of kubectl and aws cli
+** Install KOps：https://kops.sigs.k8s.io/install/
+* Strengths
+** Builds production-grade clusters
+** Builds highly available cluster
+** Also provisions the necessary cloud infrastructure
+** Access to all of the Calico's feature
+** AWS is offically support
+** idempotent
+
+* Consideration for setup KOps with AWS
+** *Authentication/IAM* - KOps use AWS SDK, so if AWS CLI is authenticated, then KOps is authenticated. On the other side, create an IAM user is recommend, with: AmazonEC2FullAccess, AmazonRoute53FullAccess, AmazonS3FullAccess, IAMFullAccess, AmazonVPCFullAccess. 
+*** `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` pair can used by KOps
+** *DNS* - DNS records are needed to setup a cluster with KOps
+** *Cluster State Storage* - Used to store Kops state and representation of the cluster, S3 Buckets be used.
+
+==== kubeadm
+
+* Creates a minimum viable Kubernetes cluster that conforms to best practices
+* Strengths
+** As a build block in other ecosystems/installer tools
+** Very flexible across many environments
+* Shortcomings
+** more complex to use than KOps
+
+==== kubespray
+
+* Install Kubernetes using ansible
+* Strengths
+** Builds highly available clusters
+** Fully customisable
+** Easier than kubeadm and more flexible than KOps
+** One Ansible playbook can build a cluster
+** Great if you already use Absible
+* Shortcomings
+** more complex to use than KOps
 
 
 === AWS CNI + Calico Policy + iptables Dataplane
@@ -2482,40 +2570,6 @@ bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 ----
 eksctl delete cluster --name calicocni
 ----
-
-=== Tools for build Self Defined Kubernetes on AWS
-
-==== KOps
-
-* Like kubectl for clusters
-* Strengths
-** Builds production-grade clusters
-** Builds highly available cluster
-** Also provisions the necessary cloud infrastructure
-** Access to all of the Calico's feature
-** AWS is offically support
-** idempotent
-
-==== kubeadm
-
-* Creates a minimum viable Kubernetes cluster that conforms to best practices
-* Strengths
-** As a build block in other ecosystems/installer tools
-** Very flexible across many environments
-* Shortcomings
-** more complex to use than KOps
-
-==== kubespray
-
-* Install Kubernetes using ansible
-* Strengths
-** Builds highly available clusters
-** Fully customisable
-** Easier than kubeadm and more flexible than KOps
-** One Ansible playbook can build a cluster
-** Great if you already use Absible
-* Shortcomings
-** more complex to use than KOps
 
 === 基于 AWS Service 及 Calico 构建 Production Enabled Kubernetes 环境
 
