@@ -140,6 +140,76 @@ cd ~/nginx
 curl localhost:8001
 ----
 
+== 基本配置
+
+== 安全能力
+
+== Rewrites
+
+* https://nginx.org/en/docs/http/ngx_http_rewrite_module.html
+
+
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
+[source, bash]
+.**
+----
+
+----
+
 == 基本使用场景
 
 === 配置一个静态资源 Web 服务器
@@ -420,26 +490,6 @@ node client.js
 
 image:img/websocket-communicate.png[]
 
-== Web Server
-
-
-== Reverse Proxy
-
-
-
-== Load Balancer
-
-
-== 安全
-
-
-== 运维
-
-
-=== Logging
-
-
-=== 性能调优
 
 
 [source, bash]

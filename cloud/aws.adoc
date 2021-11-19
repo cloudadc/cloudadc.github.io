@@ -1,0 +1,32 @@
+= AWS 
+:toc: manual
+
+== AWS Global Infrastructure
+
+image:img/aws-global-cloud.png[]
+
+* *AWS Global Cloud* - A single global cloud, is made up of devices and Services in many regions.
+* *AWS Region* - A physical location around the world where Amazon have equipment(devices and services) in data centers.
+** 一个 Region 在一个地址位置区域
+** 一个 Region 包括多个、相互隔离、地址位置分开的 Availability Zone。
+* *Availability Zone(AZ)* - A group of data centers in a region, each AZ has independent power, cooling, and physical security and is connected via multiple physical networks.
+** 设计并部署应用到多个 AZ，可以实现应用的容错及高可以用
+* *Virtual Private Cloud(VPC)* - A logically isolated virtual private network that exists within AWS cloud.
+** VPC 上可以定义 IP 地址的区间（space）。
+** A VPC spans all the AZ in the region.
+** 只有创建了 VPC，才可以在一个 AZ 中添加一个或多个Subnet。
+** There is a quota on the number of IPv4 CIDR blocks you can associate with a VPC(current 5),it can request an increase up to a *maximum of 50*.
+* *Subnet* - A subnet is a section of VPC's IP range where you can place a group of resource.
+** A subnet must be reside within a single AZ。
+** 和数据中心或家庭内子网类似
+** The maximum subnet size is /16 CIDR block(65536 IPs)
+* *Elastic Network Interfaces(ENI)* - A logical networking component in a VPC that represents a virtual network card.
+** 类似数据中心服务器上的网卡
+** It includes a primary private IP Address, and one or more secondary ip address
+** It has a MAC address
+** It placed in a security group in a VPC, 这个 security group 用来限制 workload 是否可以流出或者流入。
+** ENI is bandwidth constrained
+* Security Group, Network ACL, Access Control Lists
+** 在 Subnet 级别可用通过Security Group, Network ACL, Access Control Lists一起限制出入Subnet的流量
+** Network ACL can used to to set *Allow* or *Deny* rules, Network ACL 不会过滤Subnet内部实例之间的网路流量
+** Network ACL perform stateless filtering, Security Group perform stateful filtering
