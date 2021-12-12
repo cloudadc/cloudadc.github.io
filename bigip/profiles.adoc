@@ -1,0 +1,632 @@
+= Virtual Server Profiles
+:toc: manual
+
+Profiles 是一组配置工具帮助管理应用负载，通过一个 Profile 会关联到一个 VS，工具 Profile 上配置的参数控制 VS 接收到的应用负载。
+
+== Basic
+
+=== HTTP
+
+HTTP Profile 主要添加或修改 HTTP 协议中请求和返回参数，以达到灵活控制 HTTP 流量的作用。
+
+HTTP Profile 主要设定 HTTP Fallback 地址（当目的 pool 不可达是将流量导入到一个新的地址）；给 HTTP 请求的 Header 中添加一个参数；控制 HTTP 返回中允许的参数；添加 X-Forwarded-For 等。
+
+[source, bash]
+.*示例*
+----
+// 1. create pool and vs
+create ltm pool http_pool members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 ip-protocol tcp pool http_pool
+
+// 2. check the http request headers and response headers
+$ java -jar target/http-clients-0.0.1-SNAPSHOT.jar --uri "http://10.1.10.20/hello"  --print
+request 1, http://10.1.10.20/hello
+(GET http://10.1.10.20/hello) 200
+Request  Headers: {User-Agent=[Bot]}
+Response Headers: {accept-ranges=[bytes], connection=[close], content-length=[12], date=[Mon, 17 Feb 2020 08:04:31 GMT], etag=["c-59d8828df3517"], last-modified=[Sat, 01 Feb 2020 18:50:10 GMT], server=[Apache/2.4.7 (Ubuntu) PHP/5.5.9-1ubuntu4.12 OpenSSL/1.0.1f]}
+Hello World
+
+// 3. define http profile
+create ltm profile http custom_http_profile fallback-host http://ksoong.org fallback-status-codes add { 404 } header-erase User-Agent header-insert TESTER:"Kylin SONG, MacBook Pro" insert-xforwarded-for enabled response-headers-permitted add { Date Content-Length }
+modify ltm virtual http_vs profiles add { custom_http_profile {} }
+
+// 4. check the http headers
+$ java -jar target/http-clients-0.0.1-SNAPSHOT.jar --uri "http://10.1.10.20/hello"  --print
+request 1, http://10.1.10.20/hello
+(GET http://10.1.10.20/hello) 200
+Request  Headers: {User-Agent=[Bot]}
+Response Headers: {connection=[close], content-length=[12], date=[Mon, 17 Feb 2020 08:07:33 GMT]}
+Hello World
+
+// 5. clean up
+delete ltm virtual http_vs
+delete ltm pool http_pool
+delete ltm profile http custom_http_profile
+----
+
+NOTE: HTTP profile 通常只能添加或移除一个参数，如果想操作多个参数则需要 iRules 或 Policy。
+
+=== Stream
+
+Stream Profile 将 HTTP 请求流中的字符串替换。
+
+[source, bash]
+.*示例*
+----
+// 1. create pool and vs
+create ltm pool http_pool members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 ip-protocol tcp pool http_pool
+
+// 2. test request without stream profile
+$ curl http://10.1.10.20/teststream
+server addr 10.66.192.44, request send to 10.66.192.44
+
+// 3. create stream profile
+create ltm profile stream custom_stream source "10.66.192.44" target "10.66.196.67"
+modify ltm virtual http_vs profiles add { custom_stream { } }
+
+// 4. check the result
+$ curl http://10.1.10.20/teststream
+server addr 10.66.196.67, request send to 10.66.196.67
+
+// 5. clean up
+delete ltm virtual http_vs
+delete ltm pool http_pool
+delete ltm profile stream custom_stream
+----
+
+== Persistence
+
+Persistence Profile 既常说的会话保持，既当负载均衡策略为一个请求选择了一个节点，则后续的请求发送到同一个节点。
+
+=== Source Address Affinity
+
+根据客户端的网络进行 Persistence 配置。
+
+[source, bash]
+.*示例*
+----
+// 1. create persistence profile
+create ltm persistence source-addr custom_source_address timeout 45 mask 255.255.255.0
+
+// 2. create vs
+create ltm pool http_pool members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 ip-protocol tcp pool http_pool 
+
+// 3. test(there is no persistence, default round robin distribute traffic)
+$ for i in {1..6} ; do curl http://10.1.10.20/server_addr.php ; echo "" ; done
+10.1.20.11
+10.1.20.11
+10.1.20.12
+10.1.20.12
+10.1.20.13
+10.1.20.13
+
+// 4. relate the persistence to a VS
+modify ltm virtual http_vs persist replace-all-with { custom_source_address { default yes } } 
+
+// 5. test (persistence source address affinity enabled)
+for i in {1..6} ; do curl http://10.1.10.20/server_addr.php ; echo "" ; done
+10.1.20.11
+10.1.20.11
+10.1.20.11
+10.1.20.11
+10.1.20.11
+10.1.20.11
+
+// 6. check persistence records
+# show ltm persistence persist-records 
+Sys::Persistent Connections
+source-address  10.1.10.0  10.1.10.20:80  10.1.20.11:8081  (tmm: 0)
+
+// 7. clean up
+delete ltm virtual http_vs
+delete ltm pool http_pool 
+delete ltm persistence source-addr custom_source_address 
+----
+
+=== Cookie
+
+Cookie 的好处是不需要在负载均衡设备上记录 persistence records，Cookie Profile 依赖 HTTP Profile。
+
+Cookie persistence 有三种方法：
+
+1. HTTP Cookie Insert - 后端服务器不产生 Cookie，BIG-IP 插入一个 Cookie
+2. HTTP Cookie Rewrite - 后端服务器产生一个空 Cookie，BIG-IP 重写，添加 pool member 标识
+3. HTTP Cookie Passive - 后端服务器产生了一个完整的 Cookie，BIG-IP不做任何处理
+
+[source, bash]
+.*示例*
+----
+// 1. create a cookie profile
+create ltm persistence cookie custom_cookie cookie-name "demo_cookie" expiration "1:0:0"
+
+// 2. create vs
+create ltm pool http_pool members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 ip-protocol tcp pool http_pool
+
+// 3. test(there is no persistence, default round robin distribute traffic)
+$ for i in {1..6} ; do curl http://10.1.10.20/server_addr.php ; echo "" ; done
+10.1.20.11
+10.1.20.11
+10.1.20.12
+10.1.20.12
+10.1.20.13
+10.1.20.13
+
+// 4. relate cookie persistence to VS
+modify ltm virtual http_vs profiles add { http { } } persist replace-all-with { custom_cookie { default yes } }
+
+// 5. test the persistence(test the following url in broswer which support cookie)
+http://10.1.10.20/server_addr.php
+
+// 6. clean up
+delete ltm virtual http_vs
+delete ltm pool http_pool
+delete ltm persistence cookie custom_cookie
+----
+
+== Acceleration
+
+Acceleration Profile 从协议的调度对应用网络中 Packet 进行定制，以达到性能最大。
+
+=== TCP Express™
+
+TCP 加速（TCP Express™）主要解决 TCP 通信中客户端响应慢（网路延迟、丢包等），服务器端比较限制，带宽利用率低的问题。基于全代理的架构，TCP 加速主要从两个方面，调节、定制不同的客户端和服务器端协议参数来实现。
+
+具体客户端 TCP 优化（tcp-wan-optimized）包括：
+
+1. 调节 congestion windows
+2. 快速重传
+3. 选择性的 ACK
+4. 调节 Congestion notification
+
+服务器端 TCP 优化包括：
+
+1. Content Buffering - Content spooling
+2. Connection Management - OneConnect
+
+推荐使用 TCP 加速 profiles:
+
+1. tcp-wan-optimized
+2. tcp-lan-optimized
+
+[source, bash]
+.*示例*
+----
+modify ltm virtual http_vs profiles replace-all-with { http { } tcp-wan-optimized { context clientside } tcp-lan-optimized { context serverside } }
+----
+
+=== FastL4
+
+常见的参数：
+
+* *Reset on Timeout* - 指定系统在超过空闲过期时间后发送 reset 数据包
+* *Idel Timeout* - 多长时间连接里面没有数据流量的时候就删除连接表
+* *Loose Initiation* - client 发起tcp连接的syn经过F5到达服务器，但是服务器的syn-ack没经过F5回去，从别的路回去了，这种场景。 也叫三角路由，npath 场景，通常和 *Loose Close* 一起使用
+* *Loose Close* - 类似 *Loose Initiation*，只用在连接关闭的场景
+
+[source, bash]
+.*示例*
+----
+// 1. create reset fastl4 profile and vs
+create ltm pool echo_pool members add { 10.1.20.11:8877 { address 10.1.20.11 } 10.1.20.12:8877 { address 10.1.20.12 } }
+create ltm profile fastl4 custom_fastl4_reset defaults-from fastL4 reset-on-timeout enabled idle-timeout 10
+create ltm virtual echo_vs destination 10.1.10.27:8877 ip-protocol tcp pool echo_pool profiles add { custom_fastl4_reset { } }
+
+// 2. tcp dump monitor both client side and server side
+tcpdump -nni external host 10.1.10.20
+tcpdump -nni internal host 10.1.20.11 or 10.1.20.12
+
+// 3. start echoclient establish connection to VS without send data
+./echoclient 10.1.10.27
+
+// 4. check the connection tables
+# show sys connection cs-server-addr 10.1.10.27
+Sys::Connections
+10.1.10.1:65379  10.1.10.27:8877  10.1.10.1:65379  10.1.20.11:8877  tcp  4  (tmm: 1)  none  none
+
+// 5. wait 10 seconds, then check the tcpdump on external vlan
+07:09:30.564326 IP 10.1.10.1.65379 > 10.1.10.27.8877: Flags [SEW], seq 2304926949, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 967206611 ecr 0,sackOK,eol], length 0 in slot1/tmm1 lis=
+07:09:30.565492 IP 10.1.10.27.8877 > 10.1.10.1.65379: Flags [S.E], seq 2017636917, ack 2304926950, win 28960, options [mss 1460,sackOK,TS val 5886343 ecr 967206611,nop,wscale 7], length 0 out slot1/tmm1 lis=/Common/echo_vs
+07:09:30.566002 IP 10.1.10.1.65379 > 10.1.10.27.8877: Flags [.], ack 1, win 2058, options [nop,nop,TS val 967206612 ecr 5886343], length 0 in slot1/tmm1 lis=/Common/echo_vs
+07:09:43.413431 IP 10.1.10.27.8877 > 10.1.10.1.65379: Flags [R.], seq 1, ack 1, win 0, length 0 out slot1/tmm1 lis=/Common/echo_vs
+
+// 6. wait 10 seconds, then check the tcpdump on external vlan
+07:09:30.564393 IP 10.1.10.1.65379 > 10.1.20.11.8877: Flags [SEW], seq 2304926949, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 967206611 ecr 0,sackOK,eol], length 0 out slot1/tmm1 lis=/Common/echo_vs
+07:09:30.565395 IP 10.1.20.11.8877 > 10.1.10.1.65379: Flags [S.E], seq 2017636917, ack 2304926950, win 28960, options [mss 1460,sackOK,TS val 5886343 ecr 967206611,nop,wscale 7], length 0 in slot1/tmm1 lis=/Common/echo_vs
+07:09:30.566099 IP 10.1.10.1.65379 > 10.1.20.11.8877: Flags [.], ack 1, win 2058, options [nop,nop,TS val 967206612 ecr 5886343], length 0 out slot1/tmm1 lis=/Common/echo_vs
+07:09:43.413410 IP 10.1.10.1.65379 > 10.1.20.11.8877: Flags [R.], seq 1, ack 1, win 0, length 0 out slot1/tmm1 lis=/Common/echo_vs
+
+// 7. Analysis the step 5 and 6, after 10 seconds, both server side and client side receive RST packet
+
+// 8. create a loose initiation close profile
+create ltm profile fastl4 custom_fastl4_loose defaults-from fastL4 loose-initialization enabled loose-close enabled 
+
+// 9. replace the profile on vs
+modify ltm virtual echo_vs profiles replace-all-with { custom_fastl4_loose { } } 
+
+// 10. test client, a active client, will close connection after 5 seconds
+java -jar target/tcp-clients-0.0.1-SNAPSHOT.jar --host 10.1.10.27 --active
+
+// 11. clean up
+delete ltm virtual echo_vs 
+delete ltm pool echo_pool 
+delete ltm profile fastl4 custom_fastl4_reset
+delete ltm profile fastl4 custom_fastl4_loose
+----
+
+=== OneConnect
+
+link:oneconnect.adoc[点击查看]
+
+=== HTTP Compression
+
+HTTP Compression 对 HTTP 传输的文本进行压缩，通常现代浏览器支持 HTTP 压缩，接收到压缩后的文本可以在客户端解压渲染。
+
+HTTP Compression 类型及优缺点：
+
+[cols="2,5a,5a"]
+|===
+|类型 |优点 |缺点
+
+|Standard Compression
+|
+1. 客户端更快的获取数据
+2. 减少了 WAN 带宽的使用
+3. 传输是需要加密的数据变少
+|
+1. 客户端和服务器端都需要额外的 CPU 开销
+2. 服务器端通常需要负责压缩的软件和硬件
+
+|F5 Intelligent Compression
+|
+1. 客户端更快的获取数据
+2. 减少了 WAN 带宽的使用
+3. 传输是需要加密的数据变少
+4. 减少服务器端的需求
+5. 基于 VS 配置
+6. 基于 URI 或文件类型压缩
+7. 50 Mbps 的免费压缩
+8. 压缩速率范围可在 1 - 160 Gbps
+9. 压缩可根据 CPU 负载进行扩展
+|
+
+|===
+
+NOTE: 不是所有的文件都可以被压缩，可压缩的文件包括：TXT、HTML、CSV、LOG、RFT；不可压缩的文件包括：GIF、JPG、PNG、PDF。已经压缩过的文件，不能在 LTM 上继续压缩。
+
+[source, bash]
+.*示例*
+----
+// 1. create http compression profile
+create ltm profile http-compression custom_compression defaults-from httpcompression gzip-level 6
+
+// 2. create vs
+create ltm pool http_pool members add { 10.1.20.11:80 { address 10.1.20.11 } 10.1.20.12:80 { address 10.1.20.12 } 10.1.20.13:80 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 pool http_pool ip-protocol tcp profiles add { http { } custom_compression { } } 
+
+// 3. curl 执行一次访问
+curl http://10.1.10.20/exercise_guide.txt
+
+// 4. 查看统计信息
+# show ltm virtual http_vs 
+
+------------------------------------------------------------------
+Ltm::Virtual Server: http_vs   
+------------------------------------------------------------------
+Traffic                             ClientSide  Ephemeral  General
+  Bits In                               523.0K          0        -
+  Bits Out                               15.2M          0        -
+  Packets In                              1.1K          0        -
+  Packets Out                             1.1K          0        -
+  Current Connections                        0          0        -
+  Maximum Connections                        1          0        -
+  Total Connections                          1          0        -
+  Evicted Connections                        0          0        -
+  Slow Connections Killed                    0          0        -
+  Min Conn Duration/msec                     -          -     3.9K
+  Max Conn Duration/msec                     -          -     3.9K
+  Mean Conn Duration/msec                    -          -     3.9K
+  Total Requests                             -          -        1
+
+# show ltm pool http_pool 
+
+---------------------------------------------------------------------------------------
+Ltm::Pool: http_pool                                     
+---------------------------------------------------------------------------------------
+Traffic                                                    ServerSide
+  Bits In                                                      220.4K
+  Bits Out                                                      11.8M
+  Packets In                                                      528
+  Packets Out                                                     989
+  Current Connections                                               0
+  Maximum Connections                                               1
+  Total Connections                                                 1
+
+# show ltm profile http-compression custom_compression 
+
+-------------------------------------------------------------
+Ltm::HTTP Compression Profile: custom_compression
+-------------------------------------------------------------
+Content Type Compression (bytes)  Pre-Compress  Post-Compress
+  HTML                                       0              0
+  CSS                                        0              0
+  JavaScript                                 0              0
+  XML                                        0              0
+  SGML                                       0              0
+  Plain                                      0              0
+  Octet Stream                               0              0
+  Images                                     0              0
+  Video Files                                0              0
+  Audio Files                                0              0
+  Other                                      0              0
+  Total                                      0              0
+  NULL-Compress                              0              0
+  Compression Ratio (%) 0       
+
+// 5. reset the static
+reset-stats ltm virtual http_vs 
+reset-stats ltm pool http_pool 
+reset-stats ltm profile http-compression custom_compression 
+
+// 6. 浏览器访问一次
+http://10.1.10.20/exercise_guide.txt
+
+// 7. 查看统计信息
+# show ltm virtual http_vs 
+
+------------------------------------------------------------------
+Ltm::Virtual Server: http_vs   
+------------------------------------------------------------------
+Traffic                             ClientSide  Ephemeral  General
+  Bits In                               179.8K          0        -
+  Bits Out                                4.5M          0        -
+  Packets In                               383          0        -
+  Packets Out                              374          0        -
+  Current Connections                        0          0        -
+  Maximum Connections                        1          0        -
+  Total Connections                          1          0        -
+  Evicted Connections                        0          0        -
+  Slow Connections Killed                    0          0        -
+  Min Conn Duration/msec                     -          -     4.7K
+  Max Conn Duration/msec                     -          -     4.7K
+  Mean Conn Duration/msec                    -          -     4.7K
+  Total Requests                             -          -        1
+
+# show ltm pool http_pool
+
+---------------------------------------------------------------------------------------
+Ltm::Pool: http_pool                                     
+---------------------------------------------------------------------------------------
+Traffic                                                    ServerSide
+  Bits In                                                      220.5K
+  Bits Out                                                      11.8M
+  Packets In                                                      523
+  Packets Out                                                     989
+  Current Connections                                               0
+  Maximum Connections                                               1
+  Total Connections                                                 1
+
+# show ltm profile http-compression custom_compression
+
+-------------------------------------------------------------
+Ltm::HTTP Compression Profile: custom_compression
+-------------------------------------------------------------
+Content Type Compression (bytes)  Pre-Compress  Post-Compress
+  HTML                                       0              0
+  CSS                                        0              0
+  JavaScript                                 0              0
+  XML                                        0              0
+  SGML                                       0              0
+  Plain                                   1.4M         409.2K
+  Octet Stream                               0              0
+  Images                                     0              0
+  Video Files                                0              0
+  Audio Files                                0              0
+  Other                                      0              0
+  Total                                   1.4M         409.2K
+  NULL-Compress                              0              0
+  Compression Ratio (%) 71.2    
+
+// 8. clear up
+delete ltm virtual http_vs 
+delete ltm pool http_pool 
+delete ltm profile http-compression custom_compression
+----
+
+==== HTTP Compression Comparison
+
+本部分根据 link:#_http_compression[HTTP Compression] 部分命中压缩和无压缩下统计信息对比：
+
+.*有压缩无压缩流量对比*
+|===
+|项目 |有压缩 |无压缩
+
+|ServerSide(Bits In)
+|220.5K
+|220.4K
+
+|ServerSide(Bits Out)
+|11.8M
+|11.8M
+
+|ServerSide(Packets In)
+|523
+|528
+
+|ServerSide(Packets Out)
+|989
+|989
+
+|ServerSide(Total Connections)
+|1
+|1
+
+|ClientSide(Bits In)
+|179.8K
+|523.0K
+
+|ClientSide(Bits Out)
+|4.5M  
+|15.2M
+
+|ClientSide(Packets In)
+|383
+|1.1K
+
+|ClientSide(Packets Out)
+|374 
+|1.1K
+
+|ClientSide(Total Connections)
+|1
+|1
+|===
+
+.*压缩算法统计信息*
+|===
+|项目 |有压缩 |无压缩
+
+|Plain Pre-Compress
+|1.4M
+|0
+
+|Plain Post-Compress 
+|409.2K
+|0
+
+|Total Pre-Compress 
+|1.4M
+|0
+
+|Total Post-Compress
+|409.2K
+|0
+
+|Compression Ratio (%) 
+|71.2
+|0
+
+|===
+
+=== Web Acceleration
+
+Web Acceleration 主要是使用 RAM Cache 将静态内容（css, images 等）缓存到内存，后续的请求直接从缓存中获取静态的内容，而不需要到服务器端再次查取。增加了应用的性能，降低了服务器端的压力。
+
+Web Acceleration 需要依赖 HTTP profile。
+
+[source, bash]
+.*示例*
+----
+// 1. create ram cache
+create ltm profile web-acceleration custom_caching defaults-from optimized-caching cache-size 100
+
+// 2. create vs
+create ltm pool http_pool members add { 10.1.20.11:80 { address 10.1.20.11 } 10.1.20.12:80 { address 10.1.20.12 } 10.1.20.13:80 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 ip-protocol tcp pool http_pool profiles add { http {} } 
+
+// 3. test
+for i in {1..10} ; do curl http://10.1.10.20/c.txt ; done
+
+// 4. 查看统计信息
+show ltm virtual http_vs
+show ltm pool http_pool
+
+// 5. relate to vs
+modify ltm virtual http_vs profiles replace-all-with { http { } custom_caching { } } 
+
+// 6. reset stats
+reset-stats ltm virtual http_vs 
+reset-stats ltm pool http_pool
+
+// 7. test
+for i in {1..10} ; do curl http://10.1.10.20/c.txt ; done
+
+// 8. 查看统计信息
+show ltm virtual http_vs
+show ltm pool http_pool
+
+// 9. clean up
+delete ltm virtual http_vs 
+delete ltm pool http_pool
+delete ltm profile web-acceleration custom_caching 
+----
+
+== Security
+
+=== Client SSL Profile
+
+BIG-IP 通过 Client SSL Profile 支持加密的 HTTP 通信。
+
+[source, bash]
+.*示例*
+----
+// 1. create a self-signed certificate
+create sys crypto key custom_ssl_cert key-size 2048 gen-certificate country CN city Beijing state BJ organization 'F5, Inc' ou SE common-name www.f5demo.com email-address k.song@f5.com lifetime 3650
+
+// 2. create a client ssl profile
+create ltm profile client-ssl custom_client_ssl key custom_ssl_cert cert custom_ssl_cert 
+
+// 3. create https vs
+create ltm pool https_pool members add { 10.1.20.11:443 { address 10.1.20.11 } 10.1.20.12:443 { address 10.1.20.12 } 10.1.20.13:443 { address 10.1.20.13 } }
+create ltm virtual https_vs destination 10.1.10.30:443 ip-protocol tcp profiles add { tcp} pool https_pool 
+
+// 4. test 
+curl -kv https://10.1.10.30/hello
+
+// 5. add cookie persistence
+create ltm persistence cookie custom_cookie cookie-name "demo_cookie" expiration "1:0:0"
+modify ltm virtual https_vs profiles add { http } persist replace-all-with { custom_cookie } 
+
+// 6. test(should failed, due to no decrypt operation implement on lb)
+curl -kv https://10.1.10.30/server_addr.php
+
+// 7. enable ssl bridging
+modify ltm virtual https_vs profiles add { custom_client_ssl { context clientside } serverssl { context serverside } } 
+
+// 8. test(add blow link to broswer, refresh several times, the cookie persistence should work)
+https://10.1.10.30/server_addr.php
+
+// 9. clean up
+delete ltm virtual https_vs 
+delete ltm pool https_pool
+delete ltm profile client-ssl custom_client_ssl
+delete ltm persistence cookie custom_cookie
+delete sys crypto cert custom_ssl_cert 
+delete sys crypto key custom_ssl_cert 
+----
+
+=== SSL Offload
+
+SSL Offload 可以降低对服务器端计算资源的消耗。
+
+[source, bash]
+.*示例*
+----
+// 1. install cert files
+create sys crypto key example.com key-size 2048 gen-certificate country CN city Beijing state BJ organization 'Example, Inc' ou SE common-name www.example.com email-address k.song@f5.com lifetime 3650
+
+// 2. create a client ssl profile
+create ltm profile client-ssl custom_client_ssl cert example.com key example.com 
+
+// 3. create https vs
+create ltm virtual https_vs destination 10.1.10.30:443 ip-protocol tcp profiles add { tcp { } http { } custom_client_ssl { context clientside } } pool http_pool 
+
+// 4. test
+https://10.1.10.30/server_addr.php
+
+// 5. add cookie persistence
+create ltm persistence cookie custom_cookie cookie-name "demo_cookie" expiration "1:0:0"
+modify ltm virtual https_vs persist replace-all-with { custom_cookie }
+
+// 6. test
+https://10.1.10.30/server_addr.php
+
+// 7. clean up
+delete ltm virtual https_vs
+delete ltm profile client-ssl custom_client_ssl
+delete ltm persistence cookie custom_cookie
+delete sys crypto cert example.com 
+delete sys crypto key example.com 
+----

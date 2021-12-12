@@ -1,0 +1,30 @@
+= AS3 Response 503 Debug
+:toc: manual
+
+== Prerequisites
+
+[source, text]
+.*Prepare 200 namespace with app under it*
+----
+# kubectl apply -f deploy.yaml 
+
+# kubectl get ns | grep perftest | wc -l
+200
+----
+
+* link:deploy.yaml[deploy.yaml] 
+
+[source, text]
+.*Deploy 200 VS*
+----
+kubectl apply -f configmap.yaml
+----
+
+== Maximum child processes of 3 has been reached
+
+While continue call AS3 push 200 VS to VE, then restjavad throw the folloing notice message:
+
+[source, bash]
+----
+
+----

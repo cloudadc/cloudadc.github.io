@@ -1,0 +1,55 @@
+= Monitoring
+:toc: manual
+
+== 为什么要监控检测
+
+健康检查是负载均衡处理中一个非常重要的环节。负载均衡的主要作用就是将客户端的请求分配到多台服务器上，如果没有健康检查，在后台服务器发生故障的时候，部分的客户 端将会被分配到故障的服务器上，从而导致用户的访问失败。在一些情况下，甚至可能出现 服务器本身还在工作，但其上运行的应用系统已经故障导致无法处理请求，都将会导致用户 的请求失败。在负载均衡上应当能检查到这些故障，并在进行负载均衡的时候将这些故障 的服务器进行自动摘除，保证应用的持续性和高可用性。在一些要求比较高的场合下，更需要有各种手段通知系统的管理员有故障发生。在更高的一些级别处理时，还需要由负载均衡或者相关的管理系统对故障的应用或者服务器进行自动的重启，及时恢复系统的正常运行。
+
+== 自定义 ICMP 的健康检查
+
+[source, bash]
+----
+// create pool and virtual
+create ltm pool http_pool members add { 10.1.20.11:8081 { address 10.1.20.11 } 10.1.20.12:8081 { address 10.1.20.12 } 10.1.20.13:8081 { address 10.1.20.13 } }
+create ltm virtual http_vs destination 10.1.10.20:80 pool http_pool
+
+// create icmp monitor
+create ltm monitor icmp custom_icmp_monitor interval 10 timeout 31
+
+// assign the custom_icmp_monitor as default node monitor
+modify ltm default-node-monitor rule custom_icmp_monitor 
+----
+
+== 自定义 HTTP 的健康检查
+
+[source, bash]
+----
+// create http monitor
+create ltm monitor http custom_http_monitor interval 5 timeout 16 send "GET /HealthCheck.html\r\n" recv "SERVER_UP"
+
+// assign to pool
+modify ltm pool http_pool monitor custom_http_monitor 
+----
+
+== Inband 被动式监控检测
+
+[source, bash]
+----
+// create inband monitor
+create ltm monitor inband custom_inband_monitor retry-time 0
+
+// assign inband monitor and http monitor to pool
+modify ltm monitor http custom_http_monitor up-interval 60
+modify ltm pool http_pool monitor min 1 of { custom_http_monitor custom_inband_monitor } 
+----
+
+== 设定手动恢复
+
+[source, bash]
+----
+// update pool monitor
+modify ltm pool http_pool monitor custom_http_monitor 
+
+// monitor monitor to manual resume
+modify ltm monitor http custom_http_monitor manual-resume enabled
+----
