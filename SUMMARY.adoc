@@ -30,6 +30,7 @@
 ... link:k8s-net/Calico.adoc[Calico]
 .. link:sdn/README.adoc[SDN]
 ... link:sdn/mininet.adoc[Mininet]
+... link:sdn/ovs.adoc[OVS + FAUCET]
 . link:cloud/README.adoc[CLOUD]
 .. link:cloud/aws.adoc[AWS]
 . link:bigip/README.adoc[BIG-IP]
