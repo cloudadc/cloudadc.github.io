@@ -240,22 +240,151 @@ for i in 1 2 3 4  ; do for j in 5 6 ; do as_ns host$i ping 192.168.2.$j -c3 ; do
 for i in 1 2 3 4  ; do for j in 7 8 ; do as_ns host$i ping 192.168.3.$j -c3 ; done ; done
 ----
 
-== TD
+== Native VLAN Vs Tagged VLAN
 
 [source, bash]
-.**
+.*1. 分别在 host1 和 host3 ping host9*
 ----
+$ as_ns host1 ping 192.168.0.9 -c2
+PING 192.168.0.9 (192.168.0.9) 56(84) bytes of data.
+64 bytes from 192.168.0.9: icmp_seq=1 ttl=64 time=0.720 ms
+64 bytes from 192.168.0.9: icmp_seq=2 ttl=64 time=0.096 ms
 
+$ as_ns host3 ping 192.168.0.9 -c2
+PING 192.168.0.9 (192.168.0.9) 56(84) bytes of data.
+64 bytes from 192.168.0.9: icmp_seq=1 ttl=64 time=0.467 ms
+64 bytes from 192.168.0.9: icmp_seq=2 ttl=64 time=0.061 ms
 ----
 
 [source, bash]
-.**
+.*2. 对应交换机口上抓包*
+----
+$ sudo tcpdump -l -e -n -i veth-host1 icmp
+08:27:10.387834 92:20:d0:47:15:55 > de:02:53:53:8e:48, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.9: ICMP echo request, id 6309, seq 1, length 64
+08:27:10.388518 de:02:53:53:8e:48 > 92:20:d0:47:15:55, ethertype IPv4 (0x0800), length 98: 192.168.0.9 > 192.168.0.1: ICMP echo reply, id 6309, seq 1, length 64
+08:27:11.389582 92:20:d0:47:15:55 > de:02:53:53:8e:48, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.9: ICMP echo request, id 6309, seq 2, length 64
+08:27:11.389636 de:02:53:53:8e:48 > 92:20:d0:47:15:55, ethertype IPv4 (0x0800), length 98: 192.168.0.9 > 192.168.0.1: ICMP echo reply, id 6309, seq 2, length 64
+
+$ sudo tcpdump -l -e -n -i veth-host3 icmp
+08:27:45.714075 16:d8:4e:a6:35:9f > de:02:53:53:8e:48, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.3 > 192.168.0.9: ICMP echo request, id 6314, seq 1, length 64
+08:27:45.714520 de:02:53:53:8e:48 > 16:d8:4e:a6:35:9f, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.9 > 192.168.0.3: ICMP echo reply, id 6314, seq 1, length 64
+08:27:46.717684 16:d8:4e:a6:35:9f > de:02:53:53:8e:48, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.3 > 192.168.0.9: ICMP echo request, id 6314, seq 2, length 64
+08:27:46.717718 de:02:53:53:8e:48 > 16:d8:4e:a6:35:9f, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.9 > 192.168.0.3: ICMP echo reply, id 6314, seq 2, length 64
 ----
 
+NOTE: Tagged VLAN 抓包中有 802.1Q 标记。
+
+== VLAN 300 上 ACL blocking ping
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 添加 ACL 配置*
+----
+acls:
+  block-ping:
+  - rule:
+    dl_type: 0x800      # IPv4
+    ip_proto: 1         # ICMP
+    actions:
+      allow: False
+  - rule:
+    dl_type: 0x86dd     # IPv6
+    ip_proto: 58        # ICMPv6
+    actions:
+      allow: False
 ----
 
 [source, bash]
-.**
+.*2. 关联到 VLAN 300*
+----
+  vlan300:
+    vid: 300
+    acls_in: [block-ping]
 ----
 
+[source, bash]
+.*3. 重新加载控制器*
 ----
+sudo systemctl reload faucet.service
+----
+
+=== 测试
+
+[source, bash]
+.*1. host 7 ping host8*
+----
+$ as_ns host7 ping 192.168.3.8 -c3
+PING 192.168.3.8 (192.168.3.8) 56(84) bytes of data.
+From 192.168.3.7 icmp_seq=1 Destination Host Unreachable
+From 192.168.3.7 icmp_seq=2 Destination Host Unreachable
+----
+
+[source, bash]
+.*2. 在链路接口处抓包分析*
+----
+as_ns host7 tcpdump -l -e -n -i veth0.300 icmp
+----
+
+NOTE: 可以看到 VLAN 上 ACL 禁止了所有的 PING。
+
+== 完整配置文件
+
+[source, bash]
+----
+vlans:
+  vlan100:
+    vid: 100
+  vlan200:
+    vid: 200
+  vlan300:
+    vid: 300
+    acls_in: [block-ping]
+dps:
+  sw1:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        name: "host1"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      2:
+        name: "host2"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      3:
+        name: "host3"
+        tagged_vlans: [vlan100]
+      4:
+        name: "host4"
+        tagged_vlans: [vlan100]
+      5:
+        name: "host5"
+        native_vlan: vlan200
+      6:
+        name: "host6"
+        native_vlan: vlan200
+      7:
+        name: "host7"
+        tagged_vlans: [vlan300]
+      8:
+        name: "host8"
+        tagged_vlans: [vlan300]
+      9:
+        name: "host9"
+        tagged_vlans: [vlan100,vlan200,vlan300]
+acls:
+  block-ping:
+  - rule:
+    dl_type: 0x800      # IPv4
+    ip_proto: 1         # ICMP
+    actions:
+      allow: False
+  - rule:
+    dl_type: 0x86dd     # IPv6
+    ip_proto: 58        # ICMPv6
+    actions:
+      allow: False
+----
+
