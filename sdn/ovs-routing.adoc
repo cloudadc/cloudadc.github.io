@@ -220,7 +220,7 @@ $ as_ns server tcpdump -l -e -n -i veth0
 
 本部分在上面静态路由的基础上调整静态路由到 BG P路由，数据平面示意如下图：
 
-image:
+image:img/ovs-routing-bgp.png[]
 
 === 控制平面配置
 
