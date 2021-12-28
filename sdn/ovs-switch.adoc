@@ -1,5 +1,349 @@
-= OVS Switch 
+= Switch 
 :toc: manual
+
+== 1 Switch 1 VLAN
+
+image:img/ovs-1switch-1vlan.png[]
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 编辑 faucet 配置文件/etc/faucet/faucet.yaml，添加如下内容*
+----
+vlans:
+  office:
+    vid: 100
+    description: "office network"
+dps:
+  sw1:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        name: "host1"
+        description: "host1 network namespace"
+        native_vlan: office
+      2:
+        name: "host2"
+        description: "host2 network namespace"
+        native_vlan: office
+      3:
+        name: "host3"
+        description: "host3 network namespace"
+        native_vlan: office
+      4:
+        name: "host4"
+        description: "host4 network namespace"
+        native_vlan: office
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 添加 4 个 Host*
+----
+create_ns host1 192.168.0.1/24
+create_ns host2 192.168.0.2/24
+create_ns host3 192.168.0.3/24
+create_ns host4 192.168.0.4/24
+----
+
+[source, bash]
+.*2. 添加 Switch 配置*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- add-port br0 veth-host2 -- set interface veth-host2 ofport_request=2 \
+-- add-port br0 veth-host3 -- set interface veth-host3 ofport_request=3 \
+-- add-port br0 veth-host4 -- set interface veth-host4 ofport_request=4 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+=== 连通测试
+
+[source, bash]
+.*host 互 ping 测试*
+----
+for i in 1 2 3 4 ; do for j in 1 2 3 4 ; do as_ns host$i ping 192.168.0.$j -c3 ; done ; done
+----
+
+== 1 Switch 3 VLAN
+
+image:img/ovs-vlan-topology.png[]
+
+如上图所示，共三个VLAN：
+
+* host1, host2, host3, host4 位于 VLAN 100
+* host5, host6 位于 VLAN 200
+* host7, host8 位于 VLAN 300
+* host9 横跨三个 VLAN
+
+从是否打 tag 区分：
+
+* untagged ports: 1, 2, 5, 6
+* tagged ports: 3, 4, 7, 8, 9
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 编辑 /etc/faucet/faucet.yaml，添加如下内容*
+----
+vlans:
+  vlan100:
+    vid: 100
+  vlan200:
+    vid: 200
+  vlan300:
+    vid: 300
+dps:
+  sw1:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        name: "host1"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      2:
+        name: "host2"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      3:
+        name: "host3"
+        tagged_vlans: [vlan100]
+      4:
+        name: "host4"
+        tagged_vlans: [vlan100]
+      5:
+        name: "host5"
+        native_vlan: vlan200
+      6:
+        name: "host6"
+        native_vlan: vlan200
+      7:
+        name: "host7"
+        tagged_vlans: [vlan300]
+      8:
+        name: "host8"
+        tagged_vlans: [vlan300]
+      9:
+        name: "host9"
+        tagged_vlans: [vlan100,vlan200,vlan300]
+----
+
+[source, bash]
+.*2. faucet 控制器重新加载*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. VLAN 100 中创建 untagged host1 和 host2*
+----
+create_ns host1 192.168.0.1/24
+create_ns host2 192.168.0.2/24
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- add-port br0 veth-host2 -- set interface veth-host2 ofport_request=2 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*2. VLAN 100 中创建 tagged host3 和 host4*
+----
+create_ns host3 0.0.0.0
+create_ns host4 0.0.0.0
+create_ns host3 0.0.0.0
+create_ns host4 0.0.0.0
+add_tagged_interface host3 100 192.168.0.3/24
+add_tagged_interface host4 100 192.168.0.4/24
+----
+
+[source, bash]
+.*3. VLAN 200 中创建 untagged host5 和 host6*
+----
+create_ns host5 192.168.2.5/24
+create_ns host6 192.168.2.6/24
+----
+
+[source, bash]
+.*4. VLAN 300 中创建 tagged host7 和 host8*
+----
+create_ns host7 0.0.0.0
+create_ns host8 0.0.0.0
+add_tagged_interface host7 300 192.168.3.7/24
+add_tagged_interface host8 300 192.168.3.8/24
+----
+
+[source, bash]
+.*5. 添加 tagged host9*
+----
+create_ns host9 0.0.0.0
+add_tagged_interface host9 100 192.168.0.9/24
+add_tagged_interface host9 200 192.168.2.9/24
+add_tagged_interface host9 300 192.168.3.9/24
+----
+
+[source, bash]
+.*6. host3 - host9 连接到交换机*
+----
+sudo ovs-vsctl add-port br0 veth-host3 -- set interface veth-host3 ofport_request=3 \
+-- add-port br0 veth-host4 -- set interface veth-host4 ofport_request=4 \
+-- add-port br0 veth-host5 -- set interface veth-host5 ofport_request=5 \
+-- add-port br0 veth-host6 -- set interface veth-host6 ofport_request=6 \
+-- add-port br0 veth-host7 -- set interface veth-host7 ofport_request=7 \
+-- add-port br0 veth-host8 -- set interface veth-host8 ofport_request=8 \
+-- add-port br0 veth-host9 -- set interface veth-host9 ofport_request=9
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. 同 VLAN 中 host 互 ping(成功)*
+----
+for i in 1 2 3 4 9 ; do for j in 1 2 3 4 9 ; do as_ns host$i ping 192.168.0.$j -c3 ; done ; done
+for i in 5 6 9 ; do for j in 5 6 9 ; do as_ns host$i ping 192.168.2.$j -c3 ; done ; done
+for i in 7 8 9 ; do for j in 7 8 9 ; do as_ns host$i ping 192.168.3.$j -c3 ; done ; done
+----
+
+[source, bash]
+.*2. 不同 VLAN host ping(失败)*
+----
+for i in 1 2 3 4  ; do for j in 5 6 ; do as_ns host$i ping 192.168.2.$j -c3 ; done ; done
+for i in 1 2 3 4  ; do for j in 7 8 ; do as_ns host$i ping 192.168.3.$j -c3 ; done ; done
+----
+
+[source, bash]
+.*3. 分别在 host1 和 host3 ping host9(Native VLAN Vs Tagged VLAN)*
+----
+$ as_ns host1 ping 192.168.0.9 -c2
+PING 192.168.0.9 (192.168.0.9) 56(84) bytes of data.
+64 bytes from 192.168.0.9: icmp_seq=1 ttl=64 time=0.720 ms
+64 bytes from 192.168.0.9: icmp_seq=2 ttl=64 time=0.096 ms
+
+$ as_ns host3 ping 192.168.0.9 -c2
+PING 192.168.0.9 (192.168.0.9) 56(84) bytes of data.
+64 bytes from 192.168.0.9: icmp_seq=1 ttl=64 time=0.467 ms
+64 bytes from 192.168.0.9: icmp_seq=2 ttl=64 time=0.061 ms
+----
+
+[source, bash]
+.*4. 对应交换机口上抓包*
+----
+$ sudo tcpdump -l -e -n -i veth-host1 icmp
+08:27:10.387834 92:20:d0:47:15:55 > de:02:53:53:8e:48, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.9: ICMP echo request, id 6309, seq 1, length 64
+08:27:10.388518 de:02:53:53:8e:48 > 92:20:d0:47:15:55, ethertype IPv4 (0x0800), length 98: 192.168.0.9 > 192.168.0.1: ICMP echo reply, id 6309, seq 1, length 64
+08:27:11.389582 92:20:d0:47:15:55 > de:02:53:53:8e:48, ethertype IPv4 (0x0800), length 98: 192.168.0.1 > 192.168.0.9: ICMP echo request, id 6309, seq 2, length 64
+08:27:11.389636 de:02:53:53:8e:48 > 92:20:d0:47:15:55, ethertype IPv4 (0x0800), length 98: 192.168.0.9 > 192.168.0.1: ICMP echo reply, id 6309, seq 2, length 64
+
+$ sudo tcpdump -l -e -n -i veth-host3 icmp
+08:27:45.714075 16:d8:4e:a6:35:9f > de:02:53:53:8e:48, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.3 > 192.168.0.9: ICMP echo request, id 6314, seq 1, length 64
+08:27:45.714520 de:02:53:53:8e:48 > 16:d8:4e:a6:35:9f, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.9 > 192.168.0.3: ICMP echo reply, id 6314, seq 1, length 64
+08:27:46.717684 16:d8:4e:a6:35:9f > de:02:53:53:8e:48, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.3 > 192.168.0.9: ICMP echo request, id 6314, seq 2, length 64
+08:27:46.717718 de:02:53:53:8e:48 > 16:d8:4e:a6:35:9f, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 192.168.0.9 > 192.168.0.3: ICMP echo reply, id 6314, seq 2, length 64
+----
+
+NOTE: Tagged VLAN 抓包中有 802.1Q 标记。
+
+== 1 Switch 2 VLAN 1 Router
+
+image:img/ovs-routing-2vlan-2host.png[]
+
+如图所示所示，有一个交换机，2 个VLAN，每个 VLAN 中有 1 个Host，跨VLAN流量通过路由器转发。
+
+=== 控制平面配置
+
+[source, bash]
+----
+vlans:
+  vlan100:
+    vid: 100
+    faucet_vips: ["10.0.0.254/24"]  # Faucet's virtual IP address for vlan100
+    faucet_mac: "00:00:00:00:00:11"
+  vlan200:
+    vid: 200
+    faucet_vips: ["10.0.1.254/24"]  # Faucet's virtual IP address for vlan200
+    faucet_mac: "00:00:00:00:00:22"
+routers:
+  router-1:                           # Router name
+    vlans: [vlan100, vlan200]       # Names of vlans to allow routing between
+dps:
+  sw1:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        name: "host1"
+        description: "host1 network namespace"
+        native_vlan: vlan100
+      2:
+        name: "host2"
+        description: "host2 network namespace"
+        native_vlan: vlan200
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. Host 配置*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.2.2/24
+as_ns host1 ip route add default via 10.0.1.254 dev veth0
+as_ns host2 ip route add default via 10.0.2.254 dev veth0
+----
+
+[source, bash]
+.*2. OVS 配置*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- add-port br0 veth-host2 -- set interface veth-host2 ofport_request=2 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. host1 ping host2*
+----
+as_ns host1 ping 10.0.2.2 -c3
+----
+
+[source, bash]
+.*2. host2 抓包*
+----
+$ as_ns host2 tcpdump -l -e -n -i veth0
+10:10:40.151867 00:00:00:00:00:22 > c6:30:a7:0b:c6:80, ethertype IPv4 (0x0800), length 98: 10.0.1.1 > 10.0.2.2: ICMP echo request, id 2823, seq 213, length 64
+10:10:40.151900 c6:30:a7:0b:c6:80 > 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 2823, seq 213, length 64
+10:10:41.176232 00:00:00:00:00:22 > c6:30:a7:0b:c6:80, ethertype IPv4 (0x0800), length 98: 10.0.1.1 > 10.0.2.2: ICMP echo request, id 2823, seq 214, length 64
+10:10:41.176297 c6:30:a7:0b:c6:80 > 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 2823, seq 214, length 64
+10:10:42.200186 00:00:00:00:00:22 > c6:30:a7:0b:c6:80, ethertype IPv4 (0x0800), length 98: 10.0.1.1 > 10.0.2.2: ICMP echo request, id 2823, seq 215, length 64
+10:10:42.200252 c6:30:a7:0b:c6:80 > 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 2823, seq 215, length 64
+----
 
 == 2 Switch 1 VLAN
 

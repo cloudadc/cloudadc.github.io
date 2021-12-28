@@ -1,133 +1,11 @@
-= OVS + Faucet
+= ACL
 :toc: manual
 
-== 扁平网络
+== Port 层面的 ACL 控制
 
-数据平面网络拓扑如下所示：
+本部分基于link:ovs-switch.adoc#_1_switch_1_vlan[1 Switch 1 VLAN]的网络拓扑，增加 ACL 配置，所有配置都在控制平面完成。
 
-image:img/ovs-helloworld.png[]
-
-OVS 作为数据平面，Faucet 作为管理平面。
-
-=== 控制平面配置
-
-[source, bash]
-.*1. 编辑 faucet 配置文件/etc/faucet/faucet.yaml，添加如下内容*
-----
-vlans:
-  office:
-    vid: 100
-    description: "office network"
-
-dps:
-  sw1:
-    dp_id: 0x1
-    hardware: "Open vSwitch"
-    interfaces:
-      1:
-        name: "host1"
-        description: "host1 network namespace"
-        native_vlan: office
-      2:
-        name: "host2"
-        description: "host2 network namespace"
-        native_vlan: office
-      3:
-        name: "host3"
-        description: "host3 network namespace"
-        native_vlan: office
-      4:
-        name: "host4"
-        description: "host4 network namespace"
-        native_vlan: office
-----
-
-[source, bash]
-.*2. 启动服务*
-----
-sudo systemctl start faucet.service
-----
-
-NOTE: Faucet 可以与Prometheus、grafana 提供可观测能力，详细参照Faucet文档。
-
-
-=== 数据平面配置
-
-[source, bash]
-.*1. 创建在 namespace 中执行命令的快捷方式（本部分使用 namespace 模拟 host）*
-----
-as_ns () {
-    NAME=$1
-    NETNS=faucet-${NAME}
-    shift
-    sudo ip netns exec ${NETNS} $@
-}
-----
-
-[source, bash]
-.*2. 创建 namespace*
-----
-create_ns () {
-    NAME=$1
-    IP=$2
-    NETNS=faucet-${NAME}
-    sudo ip netns add ${NETNS}
-    sudo ip link add dev veth-${NAME} type veth peer name veth0 netns ${NETNS}
-    sudo ip link set dev veth-${NAME} up
-    as_ns ${NAME} ip link set dev lo up
-    [ -n "${IP}" ] && as_ns ${NAME} ip addr add dev veth0 ${IP}
-    as_ns ${NAME} ip link set dev veth0 up
-}
-----
-
-[source, bash]
-.*3. 创建 host*
-----
-create_ns host1 192.168.0.1/24
-create_ns host2 192.168.0.2/24
-create_ns host3 192.168.0.3/24
-create_ns host4 192.168.0.4/24
-----
-
-[source, bash]
-.*4. OVS 配置*
-----
-sudo ovs-vsctl add-br br0 \
--- set bridge br0 other-config:datapath-id=0000000000000001 \
--- set bridge br0 other-config:disable-in-band=true \
--- set bridge br0 fail_mode=secure \
--- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
--- add-port br0 veth-host2 -- set interface veth-host2 ofport_request=2 \
--- add-port br0 veth-host3 -- set interface veth-host3 ofport_request=3 \
--- add-port br0 veth-host4 -- set interface veth-host4 ofport_request=4 \
--- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
-----
-
-=== 测试
-
-[source, bash]
-.*1. ping 测试*
-----
-for i in 1 2 3 4 ; do for j in 1 2 3 4 ; do as_ns host$i ping 192.168.0.$j -c3 ; done ; done
-----
-
-[source, bash]
-.*2. iperf3 测试*
-----
-// start server in host 1
-as_ns host1 iperf3 --server --pidfile /run/iperf3-host1.pid --daemon
-
-// client test
-for i in 2 3 4 ; do as_ns host$i iperf3 --client 192.168.0.1 ; done
-----
-
-*3. 查看控制平面交换机 Port 统计数据*
-
-image:img/ovs-helloworld-stats.png[]
-
-== ACL 控制
-
-本部分基于上面部分的编排网络，增加 ACL 配置，所有配置都在控制平面完成。本部分增加 host5，执行入戏命令增加 host5
+本部分增加 host5，执行如下命令增加 host5。
 
 [source, bash]
 .*1. 创建 host5*
@@ -361,7 +239,7 @@ $ sudo tcpdump -l -e -n -i veth-host1 icmp
 14:37:12.930784 00:00:00:00:00:02 > 92:e4:39:93:c7:b9, ethertype IPv4 (0x0800), length 98: 192.168.0.5 > 192.168.0.1: ICMP echo request, id 10336, seq 2, length 64
 ----
 
-== 完整配置文件
+=== 完整控制平面配置文件
 
 [source, yaml]
 ----
@@ -437,3 +315,120 @@ acls:
         allow: True
 ----
 
+== VLAN 层面的 ACL 控制
+
+本部分基于link:ovs-switch.adoc#_1_switch_3_vlan[1 Switch 3 VLAN]部分的网络拓扑，执行VLAN 层面的 ACL 控制，在VLAN 300 上禁 ping。
+
+本部分所有配置只涉及控制平面。
+
+=== 控制平面增加 ACL 配置
+
+[source, bash]
+.*1. 添加 ACL 配置*
+----
+acls:
+  block-ping:
+  - rule:
+    dl_type: 0x800      # IPv4
+    ip_proto: 1         # ICMP
+    actions:
+      allow: False
+  - rule:
+    dl_type: 0x86dd     # IPv6
+    ip_proto: 58        # ICMPv6
+    actions:
+      allow: False
+----
+
+[source, bash]
+.*2. 关联到 VLAN 300*
+----
+  vlan300:
+    vid: 300
+    acls_in: [block-ping]
+----
+
+[source, bash]
+.*3. 重新加载控制器*
+----
+sudo systemctl reload faucet.service
+----
+
+=== 访问测试
+
+[source, bash]
+.*1. host 7 ping host8*
+----
+$ as_ns host7 ping 192.168.3.8 -c3
+PING 192.168.3.8 (192.168.3.8) 56(84) bytes of data.
+From 192.168.3.7 icmp_seq=1 Destination Host Unreachable
+From 192.168.3.7 icmp_seq=2 Destination Host Unreachable
+----
+
+[source, bash]
+.*2. 在链路接口处抓包分析*
+----
+as_ns host7 tcpdump -l -e -n -i veth0.300 icmp
+----
+
+NOTE: 可以看到 VLAN 上 ACL 禁止了所有的 PING。
+
+=== 完整控制平面配置文件
+
+[source, bash]
+----
+vlans:
+  vlan100:
+    vid: 100
+  vlan200:
+    vid: 200
+  vlan300:
+    vid: 300
+    acls_in: [block-ping]
+dps:
+  sw1:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        name: "host1"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      2:
+        name: "host2"
+        description: "host2 network namespace"
+        native_vlan: vlan100
+      3:
+        name: "host3"
+        tagged_vlans: [vlan100]
+      4:
+        name: "host4"
+        tagged_vlans: [vlan100]
+      5:
+        name: "host5"
+        native_vlan: vlan200
+      6:
+        name: "host6"
+        native_vlan: vlan200
+      7:
+        name: "host7"
+        tagged_vlans: [vlan300]
+      8:
+        name: "host8"
+        tagged_vlans: [vlan300]
+      9:
+        name: "host9"
+        tagged_vlans: [vlan100,vlan200,vlan300]
+acls:
+  block-ping:
+  - rule:
+    dl_type: 0x800      # IPv4
+    ip_proto: 1         # ICMP
+    actions:
+      allow: False
+  - rule:
+    dl_type: 0x86dd     # IPv6
+    ip_proto: 58        # ICMPv6
+    actions:
+      allow: False
+----
