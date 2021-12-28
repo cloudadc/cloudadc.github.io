@@ -1,0 +1,797 @@
+= OVS Switch 
+:toc: manual
+
+== 2 Switch 1 VLAN
+
+image:img/ovs-switch-2switch-1vlan.png[]
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 更新/etc/faucet/faucet.yaml*
+----
+vlans:
+  hosts:
+    vid: 100
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "host1 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br0 stack link to br1"
+        stack:
+          dp: br1
+          port: 2
+  br1:
+    dp_id: 0x2
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host2 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br1 stack link to br0"
+        stack:
+          dp: br0
+          port: 2
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 添加 2 个 Host*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.1.2/24
+----
+
+[source, bash]
+.*2. 增加 OVS 配置*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br1 \
+-- set bridge br1 other-config:datapath-id=0000000000000002 \
+-- set bridge br1 other-config:disable-in-band=true \
+-- set bridge br1 fail_mode=secure \
+-- add-port br1 veth-host2 -- set interface veth-host2 ofport_request=1 \
+-- set-controller br1 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*3. 将 br0 port 2 和 br1 port 2 连接*
+----
+inter_switch_link br0:2 br1:2
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. 查看 /var/log/faucet/faucet.log 日志*
+----
+Dec 28 15:46:55 faucet.valve INFO     DPID 2 (0x2) br1 LLDP on 0e:00:00:00:00:01, Port 2 from 0e:00:00:00:00:01 (remote DPID 1 (0x1), port 2) state UP
+Dec 28 15:46:55 faucet.valve INFO     DPID 1 (0x1) br0 LLDP on 0e:00:00:00:00:01, Port 2 from 0e:00:00:00:00:01 (remote DPID 2 (0x2), port 2) state UP
+Dec 28 15:47:17 faucet.valve INFO     DPID 2 (0x2) br1 L2 learned on Port 2 06:a3:79:5a:b7:31 (L2 type 0x0806, L2 dst ff:ff:ff:ff:ff:ff, L3 src 10.0.1.1, L3 dst 10.0.1.2) Port 2 VLAN 100 (1 hosts total) from remote DP br0 Port 2
+Dec 28 15:47:17 faucet.valve INFO     DPID 2 (0x2) br1 L2 learned on Port 1 3a:a7:d5:62:08:91 (L2 type 0x0806, L2 dst 06:a3:79:5a:b7:31, L3 src 10.0.1.2, L3 dst 10.0.1.1) Port 1 VLAN 100 (2 hosts total)
+Dec 28 15:47:17 faucet.valve INFO     DPID 1 (0x1) br0 L2 learned on Port 2 3a:a7:d5:62:08:91 (L2 type 0x0806, L2 dst 06:a3:79:5a:b7:31, L3 src 10.0.1.2, L3 dst 10.0.1.1) Port 2 VLAN 100 (2 hosts total) from remote DP br1 Port 2
+Dec 28 15:50:25 faucet.valve INFO     DPID 1 (0x1) br0 L2 learned on Port 1 06:a3:79:5a:b7:31 (L2 type 0x0800, L2 dst 3a:a7:d5:62:08:91, L3 src 10.0.1.1, L3 dst 10.0.1.2) Port 1 VLAN 100 (2 hosts total)
+----
+
+[source, bash]
+.*2. Ping 测试*
+----
+as_ns host1 ping 10.0.1.2 -c3
+as_ns host2 ping 10.0.1.1 -c3
+----
+
+== 2 Switch 2 VLAN 1 Router
+
+image:img/ovs-2switch-2vlan-1router.png[]
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 更新/etc/faucet/faucet.yaml*
+----
+vlans:
+  hosts:
+    vid: 100
+    faucet_vips: ["10.0.1.254/24"]
+    faucet_mac: "00:00:00:00:00:11"
+  servers:
+    vid: 200
+    faucet_vips: ["10.0.2.254/24"]
+    faucet_mac: "00:00:00:00:00:22"
+routers:
+  router-1:
+    vlans: [hosts, servers]
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "host1 network namespace"
+        native_vlan: hosts
+      2:
+        description: "server1 network namespace"
+        native_vlan: servers
+      3:
+        description: "br0 stack link to br1"
+        stack:
+          dp: br1
+          port: 3
+  br1:
+    dp_id: 0x2
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host2 network namespace"
+        native_vlan: hosts
+      2:
+        description: "server2 network namespace"
+        native_vlan: servers
+      3:
+        description: "br1 stack link to br0"
+        stack:
+          dp: br0
+          port: 3
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 添加 Host*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.1.2/24
+create_ns server1 10.0.2.1/24
+create_ns server2 10.0.2.2/24
+----
+
+[source, bash]
+.*2. Host 添加默认网关*
+----
+as_ns host1 ip route add default via 10.0.1.254
+as_ns host2 ip route add default via 10.0.1.254
+as_ns server1 ip route add default via 10.0.2.254
+as_ns server2 ip route add default via 10.0.2.254
+----
+
+[source, bash]
+.*3. OVS 配置*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- add-port br0 veth-server1 -- set interface veth-server1 ofport_request=2 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br1 \
+-- set bridge br1 other-config:datapath-id=0000000000000002 \
+-- set bridge br1 other-config:disable-in-band=true \
+-- set bridge br1 fail_mode=secure \
+-- add-port br1 veth-host2 -- set interface veth-host2 ofport_request=1 \
+-- add-port br1 veth-server2 -- set interface veth-server2 ofport_request=2 \
+-- set-controller br1 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*4. br0 和 br1 互联*
+----
+inter_switch_link br0:3 br1:3
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. host 和 server 互 ping*
+----
+for i in 1 2 ;do for j in 1 2 ; do as_ns host$i ping 10.0.2.$j -c3 ; done ; done
+----
+
+[source, bash]
+.*2. 在 br0 Port 3 口抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br0_3-br1_3
+16:43:08.408924 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br0
+16:43:08.409017 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br1
+16:43:16.828050 00:00:00:00:00:22 > 12:0a:0c:9b:f1:94, ethertype ARP (0x0806), length 60: Request who-has 10.0.2.2 tell 10.0.2.254, length 46
+16:43:16.828156 00:00:00:00:00:11 > e6:ed:57:96:3c:85, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.2 tell 10.0.1.254, length 46
+16:43:16.828502 00:00:00:00:00:22 > ca:45:be:b5:39:d2, ethertype ARP (0x0806), length 60: Request who-has 10.0.2.1 tell 10.0.2.254, length 46
+16:43:16.828625 00:00:00:00:00:11 > 9e:d7:81:79:8b:5d, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.1 tell 10.0.1.254, length 46
+16:43:23.782973 00:00:00:00:00:22 > 12:0a:0c:9b:f1:94, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.1 > 10.0.2.2: ICMP echo request, id 7178, seq 1, length 64
+16:43:23.783133 00:00:00:00:00:11 > 9e:d7:81:79:8b:5d, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 7178, seq 1, length 64
+16:43:24.784170 00:00:00:00:00:22 > 12:0a:0c:9b:f1:94, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.1 > 10.0.2.2: ICMP echo request, id 7178, seq 2, length 64
+16:43:24.784198 00:00:00:00:00:11 > 9e:d7:81:79:8b:5d, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 7178, seq 2, length 64
+16:43:25.807420 00:00:00:00:00:22 > 12:0a:0c:9b:f1:94, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.1 > 10.0.2.2: ICMP echo request, id 7178, seq 3, length 64
+16:43:25.807509 00:00:00:00:00:11 > 9e:d7:81:79:8b:5d, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.2 > 10.0.1.1: ICMP echo reply, id 7178, seq 3, length 64
+16:43:25.821270 00:00:00:00:00:22 > ca:45:be:b5:39:d2, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.2 > 10.0.2.1: ICMP echo request, id 7182, seq 1, length 64
+16:43:25.821446 00:00:00:00:00:11 > e6:ed:57:96:3c:85, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.1 > 10.0.1.2: ICMP echo reply, id 7182, seq 1, length 64
+16:43:26.831589 00:00:00:00:00:22 > ca:45:be:b5:39:d2, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.2 > 10.0.2.1: ICMP echo request, id 7182, seq 2, length 64
+16:43:26.831660 00:00:00:00:00:11 > e6:ed:57:96:3c:85, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.1 > 10.0.1.2: ICMP echo reply, id 7182, seq 2, length 64
+16:43:27.855472 00:00:00:00:00:22 > ca:45:be:b5:39:d2, ethertype 802.1Q (0x8100), length 102: vlan 200, p 0, ethertype IPv4, 10.0.1.2 > 10.0.2.1: ICMP echo request, id 7182, seq 3, length 64
+16:43:27.855576 00:00:00:00:00:11 > e6:ed:57:96:3c:85, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.2.1 > 10.0.1.2: ICMP echo reply, id 7182, seq 3, length 64
+----
+
+[source, bash]
+.*3. host1 ping server1*
+----
+as_ns host1 ping 10.0.2.1 -c3
+----
+
+[source, bash]
+.*4. 在 br0 Port 3 口抓包(没有 ICPM 包)*
+----
+$ sudo tcpdump -l -e -n -i l-br0_3-br1_3
+16:51:16.817890 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br0
+16:51:16.818580 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br1
+16:51:27.597370 00:00:00:00:00:22 > ca:45:be:b5:39:d2, ethertype ARP (0x0806), length 60: Request who-has 10.0.2.1 tell 10.0.2.254, length 46
+16:51:39.583223 00:00:00:00:00:11 > 9e:d7:81:79:8b:5d, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.1 tell 10.0.1.254, length 46
+16:51:45.607712 00:00:00:00:00:22 > 12:0a:0c:9b:f1:94, ethertype ARP (0x0806), length 60: Request who-has 10.0.2.2 tell 10.0.2.254, length 46
+16:51:45.608139 00:00:00:00:00:11 > e6:ed:57:96:3c:85, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.2 tell 10.0.1.254, length 46
+----
+
+== 3 Switch 2 VLAN 1 Tunnel
+
+image:img/ovs-3switch-2vlan-1tunnel.png[]
+
+=== 控制平面配置
+
+[source, bash]
+.*1. 更新 /etc/faucet/faucet.yaml*
+----
+acls:
+ tunnel-to-host1:
+ - rule:
+   actions:
+     output:
+       tunnel:
+         type: 'vlan'
+         tunnel_id: 901
+         dp: br0
+         port: 1
+ tunnel-to-host2:
+ - rule:
+   actions:
+     output:
+       tunnel:
+         type: 'vlan'
+         tunnel_id: 902
+         dp: br2
+         port: 1
+vlans:
+  host1:
+    vid: 101
+  host2:
+    vid: 102
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "host1 network namespace"
+        native_vlan: host1
+        acl_in: tunnel-to-host2
+      2:
+        description: "br0 stack link to br1"
+        stack:
+          dp: br1
+          port: 1
+  br1:
+    dp_id: 0x2
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "br1 stack link to br0"
+        stack:
+          dp: br0
+          port: 2
+      2:
+        description: "br1 stack link to br2"
+        stack:
+          dp: br2
+          port: 2
+  br2:
+    dp_id: 0x3
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host2 network namespace"
+        native_vlan: host2
+        acl_in: tunnel-to-host1
+      2:
+        description: "br2 stack link to br1"
+        stack:
+          dp: br1
+          port: 2
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 创建 Host*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.1.2/24
+----
+
+[source, bash]
+.*2. OVS 配置*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br1 \
+-- set bridge br1 other-config:datapath-id=0000000000000002 \
+-- set bridge br1 other-config:disable-in-band=true \
+-- set bridge br1 fail_mode=secure \
+-- set-controller br1 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br2 \
+-- set bridge br2 other-config:datapath-id=0000000000000003 \
+-- set bridge br2 other-config:disable-in-band=true \
+-- set bridge br2 fail_mode=secure \
+-- add-port br2 veth-host2 -- set interface veth-host2 ofport_request=1 \
+-- set-controller br2 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*3. 交换机互联配置*
+----
+inter_switch_link br0:2 br1:1
+inter_switch_link br1:2 br2:2
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. host1 ping host2*
+----
+as_ns host1 ping 10.0.1.2 -c3
+----
+
+[source, bash]
+.*2. 在 br1 Port 2 口抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br1_2-br2_2
+17:52:50.505589 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br1
+17:52:50.506778 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br2
+17:52:53.915819 32:4d:20:13:6a:ce > 33:33:00:00:00:02, ethertype IPv6 (0x86dd), length 70: fe80::304d:20ff:fe13:6ace > ff02::2: ICMP6, router solicitation, length 16
+17:52:55.035316 4a:9e:04:c6:e1:19 > 26:63:0a:65:14:21, ethertype 802.1Q (0x8100), length 102: vlan 902, p 3, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 9412, seq 1, length 64
+17:52:55.035402 26:63:0a:65:14:21 > 4a:9e:04:c6:e1:19, ethertype 802.1Q (0x8100), length 102: vlan 901, p 3, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 9412, seq 1, length 64
+17:52:56.060190 4a:9e:04:c6:e1:19 > 26:63:0a:65:14:21, ethertype 802.1Q (0x8100), length 102: vlan 902, p 3, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 9412, seq 2, length 64
+17:52:56.060237 26:63:0a:65:14:21 > 4a:9e:04:c6:e1:19, ethertype 802.1Q (0x8100), length 102: vlan 901, p 3, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 9412, seq 2, length 64
+17:52:57.088206 4a:9e:04:c6:e1:19 > 26:63:0a:65:14:21, ethertype 802.1Q (0x8100), length 102: vlan 902, p 3, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 9412, seq 3, length 64
+17:52:57.088290 26:63:0a:65:14:21 > 4a:9e:04:c6:e1:19, ethertype 802.1Q (0x8100), length 102: vlan 901, p 3, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 9412, seq 3, length 64
+----
+
+== 3 Switch 1 VLAN(Loop)
+
+image:img/ovs-3switch-loop.png[]
+
+=== 管理平面配置
+
+[source, bash]
+.*1. 更新 /etc/faucet/faucet.yaml*
+----
+vlans:
+  hosts:
+    vid: 100
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "host1 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br0 stack link to br1"
+        stack:
+          dp: br1
+          port: 2
+      3:
+        description: "br0 stack link to br2"
+        stack:
+          dp: br2
+          port: 2
+  br1:
+    dp_id: 0x2
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host2 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br1 stack link to br0"
+        stack:
+          dp: br0
+          port: 2
+      3:
+        description: "br1 stack link to br2"
+        stack:
+          dp: br2
+          port: 3
+  br2:
+    dp_id: 0x3
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host3 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br2 stack link to br0"
+        stack:
+          dp: br0
+          port: 3
+      3:
+        description: "br2 stack link to br1"
+        stack:
+          dp: br1
+          port: 3
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl reload faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 添加 Host*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.1.2/24
+create_ns host3 10.0.1.3/24
+----
+
+[source, bash]
+.*2. 添加 Switch*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br1 \
+-- set bridge br1 other-config:datapath-id=0000000000000002 \
+-- set bridge br1 other-config:disable-in-band=true \
+-- set bridge br1 fail_mode=secure \
+-- add-port br1 veth-host2 -- set interface veth-host2 ofport_request=1 \
+-- set-controller br1 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br2 \
+-- set bridge br2 other-config:datapath-id=0000000000000003 \
+-- set bridge br2 other-config:disable-in-band=true \
+-- set bridge br2 fail_mode=secure \
+-- add-port br2 veth-host3 -- set interface veth-host3 ofport_request=1 \
+-- set-controller br2 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*3. Switch 互联配置*
+----
+inter_switch_link br0:2 br1:2
+inter_switch_link br0:3 br2:2
+inter_switch_link br1:3 br2:3
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. host1 ping host2*
+----
+as_ns host1 ping 10.0.1.2
+----
+
+[source, bash]
+.*2. 在 br2 Port 2 上抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br1_2-br0_2
+18:28:27.454463 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br0
+18:28:27.455457 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br1
+18:28:27.676093 da:bb:a9:7a:38:cb > 9a:1e:24:58:c5:65, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 10650, seq 198, length 64
+18:28:27.676141 9a:1e:24:58:c5:65 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 10650, seq 198, length 64
+18:28:28.700539 da:bb:a9:7a:38:cb > 9a:1e:24:58:c5:65, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 10650, seq 199, length 64
+18:28:28.700586 9a:1e:24:58:c5:65 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 10650, seq 199, length 64
+18:28:29.724889 da:bb:a9:7a:38:cb > 9a:1e:24:58:c5:65, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 10650, seq 200, length 64
+----
+
+NOTE: host1 ping host2 数据包链路: `host1` -> `br0/port1` -> `br0/port2` -> `br1/port2` -> `br1/port1` -> `host2`.
+
+[source, bash]
+.*3. host1 ping host3*
+----
+as_ns host1 ping 10.0.1.3
+----
+
+[source, bash]
+.*4. 在 br2 Port 2 口抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br2_2-br0_3
+18:33:00.874678 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br0
+18:33:00.875990 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br2
+18:33:01.340137 da:bb:a9:7a:38:cb > 2a:34:84:86:0c:20, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.3: ICMP echo request, id 11005, seq 119, length 64
+18:33:01.340188 2a:34:84:86:0c:20 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.3 > 10.0.1.1: ICMP echo reply, id 11005, seq 119, length 64
+18:33:02.364210 da:bb:a9:7a:38:cb > 2a:34:84:86:0c:20, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.3: ICMP echo request, id 11005, seq 120, length 64
+18:33:02.364256 2a:34:84:86:0c:20 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.3 > 10.0.1.1: ICMP echo reply, id 11005, seq 120, length 64
+----
+
+NOTE: host1 ping host3 数据包链路: `host1` -> `br0/port1` -> `br0/port3` -> `br2/port2` -> `br2/port1` -> `host3`.
+
+[source, bash]
+.*5. 拆除 `br0/port3` -> `br2/port2` 之间连接*
+----
+sudo ip link set down l-br0_3-br2_2
+sudo ip link set down l-br2_2-br0_3
+----
+
+[source, bash]
+.*6. 再次执行 host1 ping host3*
+----
+as_ns host1 ping 10.0.1.3
+----
+
+[source, bash]
+.*7. 在 br2 Port 3 口抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br2_3-br1_3
+18:41:12.034824 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br1
+18:41:12.035013 0e:00:00:00:00:01 > 01:80:c2:00:00:0e, ethertype LLDP (0x88cc), length 75: LLDP, length 61: br2
+18:41:14.118709 da:bb:a9:7a:38:cb > 2a:34:84:86:0c:20, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.3: ICMP echo request, id 11454, seq 1, length 64
+18:41:14.118820 2a:34:84:86:0c:20 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.3 > 10.0.1.1: ICMP echo reply, id 11454, seq 1, length 64
+18:41:15.132197 da:bb:a9:7a:38:cb > 2a:34:84:86:0c:20, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.3: ICMP echo request, id 11454, seq 2, length 64
+18:41:15.132239 2a:34:84:86:0c:20 > da:bb:a9:7a:38:cb, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.3 > 10.0.1.1: ICMP echo reply, id 11454, seq 2, length 64
+----
+
+NOTE: host1 ping host3 数据包链路: `host1` -> `br0/port1` -> `br0/port2` - `br1/port2` -> `br1/port3` -> `br2/port3`  -> `br2/port1` -> `host3`.
+
+== 4 Switch 1 VLAN(Multi-root)
+
+image:img/ovs-4switch-multi-root.png[]
+
+=== 管理平面配置
+
+[source, bash]
+.*1. 更新/etc/faucet/faucet.yaml*
+----
+vlans:
+  hosts:
+    vid: 100
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "br0 stack link to br2"
+        stack:
+          dp: br2
+          port: 2
+      2:
+        description: "br0 stack link to br3"
+        stack:
+          dp: br3
+          port: 3
+  br1:
+    dp_id: 0x2
+    hardware: "Open vSwitch"
+    stack:
+      priority: 1
+    interfaces:
+      1:
+        description: "br1 stack link to br3"
+        stack:
+          dp: br3
+          port: 2
+      2:
+        description: "br1 stack link to br2"
+        stack:
+          dp: br2
+          port: 3
+  br2:
+    dp_id: 0x3
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host1 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br2 stack link to br0"
+        stack:
+          dp: br0
+          port: 1
+      3:
+        description: "br2 stack link to br1"
+        stack:
+          dp: br1
+          port: 2
+  br3:
+    dp_id: 0x4
+    hardware: "Open vSwitch"
+    interfaces:
+      1:
+        description: "host2 network namespace"
+        native_vlan: hosts
+      2:
+        description: "br3 stack link to br1"
+        stack:
+          dp: br1
+          port: 1
+      3:
+        description: "br3 stack link to br0"
+        stack:
+          dp: br0
+          port: 2
+----
+
+[source, bash]
+.*2. 重新加载服务*
+----
+sudo systemctl restart faucet
+----
+
+=== 数据平面配置
+
+[source, bash]
+.*1. 添加 Host*
+----
+create_ns host1 10.0.1.1/24
+create_ns host2 10.0.1.2/24
+----
+
+[source, bash]
+.*2. 添加 Switch*
+----
+sudo ovs-vsctl add-br br0 \
+-- set bridge br0 other-config:datapath-id=0000000000000001 \
+-- set bridge br0 other-config:disable-in-band=true \
+-- set bridge br0 fail_mode=secure \
+-- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br1 \
+-- set bridge br1 other-config:datapath-id=0000000000000002 \
+-- set bridge br1 other-config:disable-in-band=true \
+-- set bridge br1 fail_mode=secure \
+-- set-controller br1 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br2 \
+-- set bridge br2 other-config:datapath-id=0000000000000003 \
+-- set bridge br2 other-config:disable-in-band=true \
+-- set bridge br2 fail_mode=secure \
+-- add-port br2 veth-host1 -- set interface veth-host1 ofport_request=1 \
+-- set-controller br2 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+
+sudo ovs-vsctl add-br br3 \
+-- set bridge br3 other-config:datapath-id=0000000000000004 \
+-- set bridge br3 other-config:disable-in-band=true \
+-- set bridge br3 fail_mode=secure \
+-- add-port br3 veth-host2 -- set interface veth-host2 ofport_request=1 \
+-- set-controller br3 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
+----
+
+[source, bash]
+.*3. 交换机之间连接配置*
+----
+inter_switch_link br0:1 br2:2
+inter_switch_link br0:2 br3:3
+inter_switch_link br1:1 br3:2
+inter_switch_link br1:2 br2:3
+----
+
+=== 连通测试
+
+[source, bash]
+.*1. host1 ping host2*
+----
+as_ns host1 ping 10.0.1.2
+----
+
+[source, bash]
+.*2. 分别在 br2 port2、br0 port2、br3 port3、br3 port1 抓包*
+----
+$ sudo tcpdump -l -e -n -i l-br2_2-br0_1
+19:30:19.932684 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 44, length 64
+19:30:19.932722 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 44, length 64
+19:30:20.956209 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 45, length 64
+19:30:20.956257 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 45, length 64
+
+$ sudo tcpdump -l -e -n -i l-br0_2-br3_3
+19:32:25.884696 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 167, length 64
+19:32:25.884754 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 167, length 64
+19:32:26.908831 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 168, length 64
+19:32:26.908916 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 168, length 64
+
+$ sudo tcpdump -l -e -n -i l-br3_3-br0_2
+19:34:31.772899 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 290, length 64
+19:34:31.772945 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 290, length 64
+19:34:32.796892 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 291, length 64
+19:34:32.796939 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype 802.1Q (0x8100), length 102: vlan 100, p 0, ethertype IPv4, 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 291, length 64
+
+$ sudo tcpdump -l -e -n -i veth-host2
+19:35:51.644362 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype IPv4 (0x0800), length 98: 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 368, length 64
+19:35:51.644434 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype IPv4 (0x0800), length 98: 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 368, length 64
+19:35:52.668893 e6:36:0d:2d:ac:c5 > ea:1a:9e:07:b2:a4, ethertype IPv4 (0x0800), length 98: 10.0.1.1 > 10.0.1.2: ICMP echo request, id 13269, seq 369, length 64
+19:35:52.668965 ea:1a:9e:07:b2:a4 > e6:36:0d:2d:ac:c5, ethertype IPv4 (0x0800), length 98: 10.0.1.2 > 10.0.1.1: ICMP echo reply, id 13269, seq 369, length 64
+----
+
+NOTE: host1 ping host2 链路: `host1` -> `br2/port2` -> `br0/port1` -> `br0/port2` -> `br3/port3` -> `br3/port1` -> `host2`.
+
+[source, bash]
+.*3. 删除交换机 br0(模拟故障)*
+----
+sudo ovs-vsctl del-br br0
+----
+
+[source, bash]
+.*4. 查看日志，root 切换信息*
+----
+Dec 28 19:39:56 faucet INFO     Reconfiguring existing datapath DPID 1 (0x1)
+Dec 28 19:39:56 faucet.valve INFO     DPID 1 (0x1) br0 Stack root change - requires cold start
+Dec 28 19:39:56 faucet.valve INFO     DPID 1 (0x1) br0 all ports changed
+Dec 28 19:39:56 faucet.valve INFO     DPID 1 (0x1) br0 Using stacking root flood reflection
+Dec 28 19:39:56 faucet.valve INFO     DPID 1 (0x1) br0 cold starting
+Dec 28 19:39:56 faucet.valve INFO     DPID 1 (0x1) br0 forcing DP reconnection to ensure ports are synchronized
+Dec 28 19:39:56 faucet.valve ERROR    DPID 1 (0x1) br0 send_flow_msgs: DP not up
+----
+
+[source, bash]
+.*5. 再次执行 host1 ping host2*
+----
+$ as_ns host1 ping 10.0.1.2
+PING 10.0.1.2 (10.0.1.2) 56(84) bytes of data.
+64 bytes from 10.0.1.2: icmp_seq=1 ttl=64 time=0.547 ms
+64 bytes from 10.0.1.2: icmp_seq=2 ttl=64 time=0.070 ms
+64 bytes from 10.0.1.2: icmp_seq=3 ttl=64 time=0.095 ms
+----
+
+NOTE: br0 宕机后host1 ping host2 链路: `host1` -> `br2/port3` -> `br1/port2` -> `br1/port1` -> `br3/port2` -> `br3/port1` -> `host2`.
