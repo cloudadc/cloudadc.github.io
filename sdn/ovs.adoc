@@ -108,3 +108,24 @@ inter_switch_link () {
       -- set interface ${VETH_B} ofport_request=${SW_B_PORT}
 }
 ----
+
+== 日志级别调整
+
+[source, bash]
+.*1. 查看所有组件的日志级别*
+----
+sudo ovs-appctl vlog/list
+----
+
+[source, bash]
+.*2. 调整某个特定模块特定Handler日志级别*
+----
+sudo ovs-appctl vlog/list | grep vconn
+----
+
+[source, bash]
+.*3. 验证调整后级别*
+----
+$ sudo ovs-appctl vlog/list | grep vconn
+vconn              OFF        ERR        DBG
+----

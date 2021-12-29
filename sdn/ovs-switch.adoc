@@ -15,7 +15,7 @@ vlans:
     vid: 100
     description: "office network"
 dps:
-  sw1:
+  switch-1:
     dp_id: 0x1
     hardware: "Open vSwitch"
     interfaces:
@@ -48,10 +48,7 @@ sudo systemctl reload faucet
 [source, bash]
 .*1. 添加 4 个 Host*
 ----
-create_ns host1 192.168.0.1/24
-create_ns host2 192.168.0.2/24
-create_ns host3 192.168.0.3/24
-create_ns host4 192.168.0.4/24
+for i in 1 2 3 4 ; do create_ns host$i 192.168.0.$i/24 ; done
 ----
 
 [source, bash]
@@ -68,12 +65,76 @@ sudo ovs-vsctl add-br br0 \
 -- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*host 互 ping 测试*
 ----
 for i in 1 2 3 4 ; do for j in 1 2 3 4 ; do as_ns host$i ping 192.168.0.$j -c3 ; done ; done
+----
+
+=== 日志流表分析
+
+[source, bash]
+.*1. 控制器 faucet.log*
+----
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Cold start configuring DP
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Port 1 (host1 network namespace) configured
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Port 2 (host2 network namespace) configured
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Port 3 (host3 network namespace) configured
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Port 4 (host4 network namespace) configured
+Dec 29 11:10:25 faucet.valve INFO     DPID 1 (0x1) switch-1 Configuring VLAN office vid:100 untagged: Port 1,Port 2,Port 3,Port 4
+----
+
+[source, bash]
+.*2. 查看 OVS ovs-vswitchd.log*
+----
+2021-12-29T03:10:25.003Z|00262|vconn|DBG|tcp:127.0.0.1:6653: sent (Success): OFPT_HELLO (OF1.5) (xid=0x3):
+ version bitmap: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06
+2021-12-29T03:10:25.004Z|00263|vconn|DBG|tcp:127.0.0.1:6654: sent (Success): OFPT_HELLO (OF1.5) (xid=0x4):
+ version bitmap: 0x01, 0x02, 0x03, 0x04, 0x05, 0x06
+2021-12-29T03:10:25.007Z|00264|vconn|DBG|tcp:127.0.0.1:6653: received: OFPT_HELLO (OF1.3) (xid=0x39ec13fe):
+ version bitmap: 0x01, 0x02, 0x03, 0x04
+2021-12-29T03:10:25.007Z|00265|vconn|DBG|tcp:127.0.0.1:6653: negotiated OpenFlow version 0x04 (we support version 0x06 and earlier, peer supports version 0x04 and earlier)
+2021-12-29T03:10:25.007Z|00266|rconn|INFO|br0<->tcp:127.0.0.1:6653: connected
+2021-12-29T03:10:25.008Z|00267|vconn|DBG|tcp:127.0.0.1:6653: received: OFPT_FEATURES_REQUEST (OF1.3) (xid=0x39ec13ff):
+2021-12-29T03:10:25.008Z|00268|vconn|DBG|tcp:127.0.0.1:6653: sent (Success): OFPT_FEATURES_REPLY (OF1.3) (xid=0x39ec13ff): dpid:0000000000000001
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS GROUP_STATS QUEUE_STATS
+2021-12-29T03:10:25.008Z|00269|vconn|DBG|tcp:127.0.0.1:6653: received: OFPT_ECHO_REQUEST (OF1.3) (xid=0x39ec1400): 0 bytes of payload
+2021-12-29T03:10:25.008Z|00270|vconn|DBG|tcp:127.0.0.1:6653: sent (Success): OFPT_ECHO_REPLY (OF1.3) (xid=0x39ec1400): 0 bytes of payload
+2021-12-29T03:10:25.017Z|00271|vconn|DBG|tcp:127.0.0.1:6653: received: OFPST_PORT_DESC request (OF1.3) (xid=0x39ec1401): port=ANY
+2021-12-29T03:10:25.019Z|00272|vconn|DBG|tcp:127.0.0.1:6653: sent (Success): OFPST_PORT_DESC reply (OF1.3) (xid=0x39ec1401):
+ 1(veth-host1): addr:9a:72:bd:be:ec:b2
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 2(veth-host2): addr:da:23:2a:ab:df:42
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 3(veth-host3): addr:6e:9b:17:61:46:32
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 4(veth-host4): addr:ae:8e:bf:2c:93:24
+     config:     0
+     state:      LIVE
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ LOCAL(br0): addr:fe:5b:f3:3b:dd:47
+     config:     PORT_DOWN
+     state:      LINK_DOWN
+     speed: 0 Mbps now, 0 Mbps max
+----
+
+[source, bash]
+.**
+----
+
 ----
 
 == 1 Switch 3 VLAN
@@ -105,7 +166,7 @@ vlans:
   vlan300:
     vid: 300
 dps:
-  sw1:
+  switch-1:
     dp_id: 0x1
     hardware: "Open vSwitch"
     interfaces:
@@ -210,7 +271,7 @@ sudo ovs-vsctl add-port br0 veth-host3 -- set interface veth-host3 ofport_reques
 -- add-port br0 veth-host9 -- set interface veth-host9 ofport_request=9
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. 同 VLAN 中 host 互 ping(成功)*
@@ -282,7 +343,7 @@ routers:
   router-1:                           # Router name
     vlans: [vlan100, vlan200]       # Names of vlans to allow routing between
 dps:
-  sw1:
+  switch-1:
     dp_id: 0x1
     hardware: "Open vSwitch"
     interfaces:
@@ -325,7 +386,7 @@ sudo ovs-vsctl add-br br0 \
 -- set-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. host1 ping host2*
@@ -425,7 +486,7 @@ sudo ovs-vsctl add-br br1 \
 inter_switch_link br0:2 br1:2
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. 查看 /var/log/faucet/faucet.log 日志*
@@ -553,7 +614,7 @@ sudo ovs-vsctl add-br br1 \
 inter_switch_link br0:3 br1:3
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. host 和 server 互 ping*
@@ -727,7 +788,7 @@ inter_switch_link br0:2 br1:1
 inter_switch_link br1:2 br2:2
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. host1 ping host2*
@@ -867,7 +928,7 @@ inter_switch_link br0:3 br2:2
 inter_switch_link br1:3 br2:3
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. host1 ping host2*
@@ -1072,7 +1133,7 @@ inter_switch_link br1:1 br3:2
 inter_switch_link br1:2 br2:3
 ----
 
-=== 连通测试
+=== 网络连通测试
 
 [source, bash]
 .*1. host1 ping host2*
