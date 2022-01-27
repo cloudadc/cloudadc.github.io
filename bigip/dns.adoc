@@ -1,0 +1,123 @@
+= DNS
+:toc: manual
+
+== DNS Cache Performance Benchmark
+
+[source, bash]
+.*1. Prepare dnsperf*
+----
+$ dnsperf -h
+DNS Performance Testing Tool
+Version 2.9.0
+----
+
+[source, bash]
+.*2. Prepare input file ceb.fi*
+----
+test.ceb.xyz A
+---- 
+
+[source, bash]
+.*3. TEST Command*
+----
+dnsperf -d ceb.fi -s 192.168.71.222 -l 60 -c 10 -Q 1000
+----
+
+.*DNS Cache*
+|===
+|Average Latency |Min Latency |Max Latency
+
+|0.010334
+|0.005633
+|0.299198
+
+|0.009647
+|0.005386
+|0.103578
+
+|0.010180
+|0.005322
+|0.110992
+|===
+
+[source, bash]
+.*ZoneRunner*
+----
+Statistics:
+
+  Queries sent:         120000
+  Queries completed:    119997 (100.00%)
+  Queries lost:         3 (0.00%)
+
+  Response codes:       NOERROR 69982 (58.32%), SERVFAIL 50015 (41.68%)
+  Average packet size:  request 30, response 59
+  Run time (s):         60.000483
+  Queries per second:   1999.933901
+
+  Average Latency (s):  0.000864 (min 0.000361, max 0.034963)
+  Latency StdDev (s):   0.000740
+
+
+Statistics:
+
+  Queries sent:         120000
+  Queries completed:    120000 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NOERROR 35200 (29.33%), SERVFAIL 84800 (70.67%)
+  Average packet size:  request 30, response 44
+  Run time (s):         60.000302
+  Queries per second:   1999.989933
+
+  Average Latency (s):  0.000782 (min 0.000318, max 0.098865)
+  Latency StdDev (s):   0.002249
+
+
+Statistics:
+
+  Queries sent:         120000
+  Queries completed:    119962 (99.97%)
+  Queries lost:         38 (0.03%)
+
+  Response codes:       NOERROR 35103 (29.26%), SERVFAIL 84859 (70.74%)
+  Average packet size:  request 30, response 44
+  Run time (s):         60.000450
+  Queries per second:   1999.351672
+
+  Average Latency (s):  0.000704 (min 0.000318, max 0.038634)
+  Latency StdDev (s):   0.000718
+
+Statistics:
+
+  Queries sent:         120000
+  Queries completed:    120000 (100.00%)
+  Queries lost:         0 (0.00%)
+
+  Response codes:       NOERROR 69564 (57.97%), SERVFAIL 50436 (42.03%)
+  Average packet size:  request 30, response 58
+  Run time (s):         60.001264
+  Queries per second:   1999.957868
+
+  Average Latency (s):  0.000950 (min 0.000351, max 0.074750)
+  Latency StdDev (s):   0.001618
+----
+
+[source, bash]
+.*DNS Cache*
+----
+Statistics:
+
+  Queries sent:         120000
+  Queries completed:    119986 (99.99%)
+  Queries lost:         14 (0.01%)
+
+  Response codes:       NOERROR 35200 (29.34%), SERVFAIL 84786 (70.66%)
+  Average packet size:  request 30, response 34
+  Run time (s):         60.000252
+  Queries per second:   1999.758268
+
+  Average Latency (s):  0.000634 (min 0.000288, max 0.046130)
+  Latency StdDev (s):   0.000917
+
+
+----

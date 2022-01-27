@@ -42,6 +42,7 @@
 .. link:bigip/lb.adoc[Load Balancing]
 .. link:bigip/monitor.adoc[Monitor]
 .. link:bigip/profiles.adoc[Profiles]
+.. link:bigip/dns.adoc[DNS]
 . link:nginx/README.adoc[NGINX]
 .. link:nginx/concepts.adoc[入门到精通]
 .. link:nginx/install.adoc[离线安装]
