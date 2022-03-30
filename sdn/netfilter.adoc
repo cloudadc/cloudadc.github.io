@@ -1,0 +1,10 @@
+= Netfilter
+:toc: manual
+
+== 什么是 Netfilter
+
+Netfilter 是Linux内核中的一个强大的网络包过滤子系统，可以对操作系统上任何传入和传出的网络包通过可编程的方式进行检查、修改、拒绝、丢弃，常见的防火墙大都是通过netfilter过滤子系统实现的。在Linux操作系统上，iptables是位于用户层面的小工具，用来与netfilter内核子系统进行交互，如下代码表示允许当前系统上的HTTPS服务被外界访问的iptables规则。
+
+iptables的基本概念包括表（Table）、链（Chain）和规则（Rule）。表包含filter表、nat表、mangle表、raw表，filter表只用于报文过滤，nat表实现NAT服务，mangle表进行报文处理，修改报文、附加额外数据到报文，raw表可以对收到的报文在连接跟踪前进行处理，raw表只作用于PREROUTING和OUTPUT链。下图展示了iptables表处理优先顺序，raw表优先级最高，filter表优先级最低，前面分布式章节中讨论的Kubernetes中的服务发现主要依赖nat表中的规则，而常见的防火墙规则主要基于filter表。
+
+image:img/netfilter-tables.png[]

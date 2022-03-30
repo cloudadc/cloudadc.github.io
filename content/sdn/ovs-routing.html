@@ -1,0 +1,1823 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>ROUTING · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-splitter/splitter.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-back-to-top-button/plugin.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+        <link rel="stylesheet" href="../styles/website.css">
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ovs-acl.html" />
+    
+    
+    <link rel="prev" href="ovs-switch.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    ABOUT
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="../k8s-ingress/">
+            
+                <a href="../k8s-ingress/">
+            
+                    
+                    CONTAINER INGRESS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../k8s-ingress/f5-cis/">
+            
+                <a href="../k8s-ingress/f5-cis/">
+            
+                    
+                    F5 CIS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1" data-path="../k8s-ingress/f5-cis/install.html">
+            
+                <a href="../k8s-ingress/f5-cis/install.html">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.1.1" data-path="../k8s-ingress/f5-cis/solutions/flannel-etcd-mode.html">
+            
+                <a href="../k8s-ingress/f5-cis/solutions/flannel-etcd-mode.html">
+            
+                    
+                    Flannel etcd mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.2" data-path="../k8s-ingress/f5-cis/config.html">
+            
+                <a href="../k8s-ingress/f5-cis/config.html">
+            
+                    
+                    配置
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3" data-path="../k8s-ingress/f5-cis/as3/">
+            
+                <a href="../k8s-ingress/f5-cis/as3/">
+            
+                    
+                    AS3
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1.3.1" data-path="../k8s-ingress/f5-cis/as3/canary/">
+            
+                <a href="../k8s-ingress/f5-cis/as3/canary/">
+            
+                    
+                    Canary Releasing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3.2" data-path="../k8s-ingress/f5-cis/as3/ws/">
+            
+                <a href="../k8s-ingress/f5-cis/as3/ws/">
+            
+                    
+                    WebSocket
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.3.3" data-path="../k8s-ingress/f5-cis/as3/hubmode/">
+            
+                <a href="../k8s-ingress/f5-cis/as3/hubmode/">
+            
+                    
+                    HubMode
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.4" data-path="../k8s-ingress/f5-cis/ingress/">
+            
+                <a href="../k8s-ingress/f5-cis/ingress/">
+            
+                    
+                    Ingress
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.5" data-path="../k8s-ingress/f5-cis/cccl/">
+            
+                <a href="../k8s-ingress/f5-cis/cccl/">
+            
+                    
+                    CCCL
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.1.6" data-path="../k8s-ingress/f5-cis/mgmt-isolation/">
+            
+                <a href="../k8s-ingress/f5-cis/mgmt-isolation/">
+            
+                    
+                    管理隔离
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../k8s-ingress/nginx-ingress/">
+            
+                <a href="../k8s-ingress/nginx-ingress/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.2.1" data-path="../k8s-ingress/nginx-ingress/bigip/">
+            
+                <a href="../k8s-ingress/nginx-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../k8s-ingress/nginx-plus-ingress/">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/">
+            
+                    
+                    NGINX PLUS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.3.1" data-path="../k8s-ingress/nginx-plus-ingress/monitor/dashboard.html">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/monitor/dashboard.html">
+            
+                    
+                    Monitor Dashboard
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.2" data-path="../k8s-ingress/nginx-plus-ingress/bigip/">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/bigip/">
+            
+                    
+                    Deployment Architectures
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.3" data-path="../k8s-ingress/nginx-plus-ingress/l4-lb/">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/l4-lb/">
+            
+                    
+                    L4 Load Balancing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.4" data-path="../k8s-ingress/nginx-plus-ingress/health-checks/">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/health-checks/">
+            
+                    
+                    Active Health Checks
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3.5" data-path="../k8s-ingress/nginx-plus-ingress/release/">
+            
+                <a href="../k8s-ingress/nginx-plus-ingress/release/">
+            
+                    
+                    Zero-Downtime Releases
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../k8s-ingress/performance/">
+            
+                <a href="../k8s-ingress/performance/">
+            
+                    
+                    PERFORMANCE
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="../k8s-net/">
+            
+                <a href="../k8s-net/">
+            
+                    
+                    CONTAINER NETWORK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../k8s-net/docker.html">
+            
+                <a href="../k8s-net/docker.html">
+            
+                    
+                    DOCKER
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../k8s-net/k8s.html">
+            
+                <a href="../k8s-net/k8s.html">
+            
+                    
+                    K8S
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.2.1" data-path="../k8s-net/kubenet.html">
+            
+                <a href="../k8s-net/kubenet.html">
+            
+                    
+                    kubenet
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.2" data-path="../k8s-net/flannel.html">
+            
+                <a href="../k8s-net/flannel.html">
+            
+                    
+                    Flannel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2.3" data-path="../k8s-net/Calico.html">
+            
+                <a href="../k8s-net/Calico.html">
+            
+                    
+                    Calico
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="./">
+            
+                <a href="./">
+            
+                    
+                    LINUX NETWORK
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="netfilter.html">
+            
+                <a href="netfilter.html">
+            
+                    
+                    Netfilter
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="ovs.html">
+            
+                <a href="ovs.html">
+            
+                    
+                    OVS
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.2.1" data-path="ovs-switch.html">
+            
+                <a href="ovs-switch.html">
+            
+                    
+                    SWITCHING
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.2.2" data-path="ovs-routing.html">
+            
+                <a href="ovs-routing.html">
+            
+                    
+                    ROUTING
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.3" data-path="ovs-acl.html">
+            
+                <a href="ovs-acl.html">
+            
+                    
+                    ACLs
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2.4" data-path="ovs-nfv.html">
+            
+                <a href="ovs-nfv.html">
+            
+                    
+                    NFV
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="mininet.html">
+            
+                <a href="mininet.html">
+            
+                    
+                    Mininet
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="../cloud/">
+            
+                <a href="../cloud/">
+            
+                    
+                    CLOUD
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.1" data-path="../cloud/aws.html">
+            
+                <a href="../cloud/aws.html">
+            
+                    
+                    AWS
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2" data-path="../nginx/">
+            
+                <a href="../nginx/">
+            
+                    
+                    NGINX
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.1" data-path="../nginx/concepts.html">
+            
+                <a href="../nginx/concepts.html">
+            
+                    
+                    入门到精通
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.2" data-path="../nginx/install.html">
+            
+                <a href="../nginx/install.html">
+            
+                    
+                    离线安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.3" data-path="../nginx/controller.html">
+            
+                <a href="../nginx/controller.html">
+            
+                    
+                    Nginx Controller
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.3.1" data-path="../nginx/apidrive.html">
+            
+                <a href="../nginx/apidrive.html">
+            
+                    
+                    API
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.4" data-path="../nginx/usecase.html">
+            
+                <a href="../nginx/usecase.html">
+            
+                    
+                    Use Case
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.5.2.4.1" data-path="../nginx/docker.html">
+            
+                <a href="../nginx/docker.html">
+            
+                    
+                    Docker
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.5" data-path="../nginx/app/">
+            
+                <a href="../nginx/app/">
+            
+                    
+                    现代应用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5.2.6" data-path="../nginx/programming.html">
+            
+                <a href="../nginx/programming.html">
+            
+                    
+                    可编程
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="../bigip/">
+            
+                <a href="../bigip/">
+            
+                    
+                    BIG-IP
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.6.1" data-path="../bigip/vs.html">
+            
+                <a href="../bigip/vs.html">
+            
+                    
+                    Virtual Server
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.2" data-path="../bigip/lb.html">
+            
+                <a href="../bigip/lb.html">
+            
+                    
+                    Load Balancing
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.3" data-path="../bigip/monitor.html">
+            
+                <a href="../bigip/monitor.html">
+            
+                    
+                    Monitor
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.4" data-path="../bigip/profiles.html">
+            
+                <a href="../bigip/profiles.html">
+            
+                    
+                    Profiles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6.5" data-path="../bigip/dns.html">
+            
+                <a href="../bigip/dns.html">
+            
+                    
+                    DNS
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="../dist.html">
+            
+                <a href="../dist.html">
+            
+                    
+                    DISTRIBUTED
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.1" data-path="../zk/">
+            
+                <a href="../zk/">
+            
+                    
+                    ZooKeeper
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.2" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/distribute-dev-framework/content/dubbo">
+            
+                    
+                    DUBBO
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3" data-path="../mongo/">
+            
+                <a href="../mongo/">
+            
+                    
+                    MongoDB
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.3.1" data-path="../mongo/viewpoint/presentation.html">
+            
+                <a href="../mongo/viewpoint/presentation.html">
+            
+                    
+                    定位
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.3.1.1" data-path="../mongo/viewpoint/5thingsfornosql.html">
+            
+                <a href="../mongo/viewpoint/5thingsfornosql.html">
+            
+                    
+                    NOSQL 选择五维度
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.1.2" data-path="../mongo/viewpoint/oversea.html">
+            
+                <a href="../mongo/viewpoint/oversea.html">
+            
+                    
+                    MongoDB 助力企业出海
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.1.3" data-path="../mongo/viewpoint/td.html">
+            
+                <a href="../mongo/viewpoint/td.html">
+            
+                    
+                    Teradata 优化
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.1.4" data-path="../mongo/viewpoint/cards.html">
+            
+                <a href="../mongo/viewpoint/cards.html">
+            
+                    
+                    MongoDB 对话卡片
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.2" data-path="../mongo/dba/basic.html">
+            
+                <a href="../mongo/dba/basic.html">
+            
+                    
+                    基础
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.3" data-path="../mongo/dev/">
+            
+                <a href="../mongo/dev/">
+            
+                    
+                    开发
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.3.3.1" data-path="../mongo/dev/aggregation.html">
+            
+                <a href="../mongo/dev/aggregation.html">
+            
+                    
+                    Aggregation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.3.2" data-path="../mongo/dev/aggregation-sum.html">
+            
+                <a href="../mongo/dev/aggregation-sum.html">
+            
+                    
+                    $sum
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.3.3" data-path="../mongo/dev/transactions.html">
+            
+                <a href="../mongo/dev/transactions.html">
+            
+                    
+                    分布式事务
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.3.4" data-path="../mongo/dev/java.html">
+            
+                <a href="../mongo/dev/java.html">
+            
+                    
+                    Java
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.3.5" data-path="../mongo/dev/geo.html">
+            
+                <a href="../mongo/dev/geo.html">
+            
+                    
+                    地理信息
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4" data-path="../mongo/dba/cluster-admin.html">
+            
+                <a href="../mongo/dba/cluster-admin.html">
+            
+                    
+                    运维
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.3.4.1" data-path="../mongo/dba/replication.html">
+            
+                <a href="../mongo/dba/replication.html">
+            
+                    
+                    高可用
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.2" data-path="../mongo/dba/rs-deployments.html">
+            
+                <a href="../mongo/dba/rs-deployments.html">
+            
+                    
+                    部署
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.3" data-path="../mongo/dba/rs-maintenance.html">
+            
+                <a href="../mongo/dba/rs-maintenance.html">
+            
+                    
+                    维护
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.4" data-path="../mongo/dba/sharding.html">
+            
+                <a href="../mongo/dba/sharding.html">
+            
+                    
+                    分片
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.5" data-path="../mongo/dba/dba.html">
+            
+                <a href="../mongo/dba/dba.html">
+            
+                    
+                    DBA
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.6" data-path="../mongo/dba/sh-restore.html">
+            
+                <a href="../mongo/dba/sh-restore.html">
+            
+                    
+                    基于 Delayed Secondary 时间点恢复
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.7" data-path="../mongo/dba/opsmanager.html">
+            
+                <a href="../mongo/dba/opsmanager.html">
+            
+                    
+                    Ops Manager
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.8" data-path="../mongo/dba/perf.html">
+            
+                <a href="../mongo/dba/perf.html">
+            
+                    
+                    性能调优
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.4.9" data-path="../mongo/dba/troubleshooting.html">
+            
+                <a href="../mongo/dba/troubleshooting.html">
+            
+                    
+                    监控
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.3.5" data-path="../mongo/dba/security.html">
+            
+                <a href="../mongo/dba/security.html">
+            
+                    
+                    安全
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.4" data-path="../kafka/">
+            
+                <a href="../kafka/">
+            
+                    
+                    Kafka
+            
+                </a>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.7.4.1" data-path="../kafka/installing/">
+            
+                <a href="../kafka/installing/">
+            
+                    
+                    安装
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.5" data-path="../elastic/">
+            
+                <a href="../elastic/">
+            
+                    
+                    ElasticSearch
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7.6" data-path="../spark/">
+            
+                <a href="../spark/">
+            
+                    
+                    Spark
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" >
+            
+                <a target="_blank" href="https://cloudadc.github.io/nodejs-honeypot/">
+            
+                    
+                    NODE.JS HONEYPOT
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >ROUTING</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="router">Router</h1>
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#__">&#x9759;&#x6001;&#x8DEF;&#x7531;</a>
+<ul class="sectlevel2">
+<li><a href="#___2">&#x63A7;&#x5236;&#x5E73;&#x9762;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___3">&#x6570;&#x636E;&#x5E73;&#x9762;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___4">&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</a></li>
+</ul>
+</li>
+<li><a href="#_big">BIG &#x8DEF;&#x7531;</a>
+<ul class="sectlevel2">
+<li><a href="#___5">&#x63A7;&#x5236;&#x5E73;&#x9762;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___6">&#x6570;&#x636E;&#x5E73;&#x9762;&#x914D;&#x7F6E;</a></li>
+<li><a href="#___7">&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="__">&#x9759;&#x6001;&#x8DEF;&#x7531;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><span class="image"><img src="img/ovs-routing-static.png" alt="ovs routing static.png"></span></p>
+</div>
+<div class="paragraph">
+<p>&#x5982;&#x56FE;&#x6240;&#x793A;&#x6240;&#x793A;&#xFF0C;&#x6709;&#x4E00;&#x4E2A;&#x4EA4;&#x6362;&#x673A;&#xFF0C;2 &#x4E2A;VLAN&#xFF0C;&#x6BCF;&#x4E2A; VLAN 100 &#x4E2D;&#x6709; 2 &#x4E2A;Host&#xFF0C;VLAN 200 &#x4E2D; 1 &#x4E2A; Host&#xFF0C;&#x8DE8;VLAN&#x6D41;&#x91CF;&#x901A;&#x8FC7;&#x8DEF;&#x7531;&#x5668;&#x8F6C;&#x53D1;&#x3002;&#x8DEF;&#x7531;&#x5668;&#x4E2D;&#x914D;&#x7F6E;&#x6709;&#x4E00;&#x6761;&#x9759;&#x6001;&#x8DEF;&#x7531;&#xFF0C;&#x8BBF;&#x95EE; <code>192.0.2.0/24</code> &#x7F51;&#x7EDC;&#x7684;&#x7F51;&#x5173;&#x4E3A; <code>10.0.1.1</code>&#x3002;</p>
+</div>
+<div class="sect2">
+<h3 id="___2">&#x63A7;&#x5236;&#x5E73;&#x9762;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">vlans:
+  hosts:
+    vid: 100
+    description: <span class="hljs-string">&quot;vlan for clients&quot;</span>
+    faucet_mac: <span class="hljs-string">&quot;00:00:00:00:00:11&quot;</span>
+    faucet_vips: [<span class="hljs-string">&quot;10.0.0.254/24&quot;</span>]
+
+  servers:
+    vid: 200
+    description: <span class="hljs-string">&quot;vlan for servers&quot;</span>
+    faucet_mac: <span class="hljs-string">&quot;00:00:00:00:00:22&quot;</span>
+    faucet_vips: [<span class="hljs-string">&quot;10.0.1.254/24&quot;</span>]
+    routes:
+    - route:
+        ip_dst: <span class="hljs-string">&quot;192.0.2.0/24&quot;</span>
+        ip_gw: <span class="hljs-string">&apos;10.0.1.1&apos;</span>
+routers:
+  router-hosts-servers:
+    vlans: [hosts, servers]
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: <span class="hljs-string">&quot;Open vSwitch&quot;</span>
+    interfaces:
+      1:
+        name: <span class="hljs-string">&quot;host1&quot;</span>
+        description: <span class="hljs-string">&quot;host1 network namespace&quot;</span>
+        native_vlan: hosts
+      2:
+        name: <span class="hljs-string">&quot;host2&quot;</span>
+        description: <span class="hljs-string">&quot;host2 network namespace&quot;</span>
+        native_vlan: hosts
+      3:
+        name: <span class="hljs-string">&quot;server&quot;</span>
+        description: <span class="hljs-string">&quot;server network namespace&quot;</span>
+        native_vlan: servers</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+ip_dst &#x6307;&#x5B9A;&#x76EE;&#x7684;&#x5730;&#x7F51;&#x7EDC;&#x4E3A; 192.0.2.0/24&#xFF0C;ip_gw &#x4E3A;10.0.1.1&#x3002;
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___3">&#x6570;&#x636E;&#x5E73;&#x9762;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. Host &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">create_ns host1 10.0.0.1/24
+create_ns host2 10.0.0.2/24
+create_ns server 10.0.1.1/24
+as_ns host1 ip route add default via 10.0.0.254
+as_ns host2 ip route add default via 10.0.0.254
+as_ns server ip route add default via 10.0.1.254
+as_ns server ip address add 192.0.2.1/24 dev veth0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. OVS &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo ovs-vsctl add-br br0 \
+-- <span class="hljs-built_in">set</span> bridge br0 other-config:datapath-id=0000000000000001 \
+-- <span class="hljs-built_in">set</span> bridge br0 other-config:<span class="hljs-built_in">disable</span>-in-band=<span class="hljs-literal">true</span> \
+-- <span class="hljs-built_in">set</span> bridge br0 fail_mode=secure \
+-- add-port br0 veth-host1 -- <span class="hljs-built_in">set</span> interface veth-host1 ofport_request=1 \
+-- add-port br0 veth-host2 -- <span class="hljs-built_in">set</span> interface veth-host2 ofport_request=2 \
+-- add-port br0 veth-server -- <span class="hljs-built_in">set</span> interface veth-server ofport_request=3 \
+-- <span class="hljs-built_in">set</span>-controller br0 tcp:127.0.0.1:6653 tcp:127.0.0.1:6654</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x67E5;&#x770B; server &#x5730;&#x5740;&#x4FE1;&#x606F;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ as_ns server ip addr
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: veth0@<span class="hljs-keyword">if</span>12: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 8a:11:56:ed:90:1a brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 10.0.1.1/24 scope global veth0
+       valid_lft forever preferred_lft forever
+    inet 192.0.2.1/24 scope global veth0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::8811:56ff:feed:901a/64 scope link
+       valid_lft forever preferred_lft forever</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___4">&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. host1 ping server</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ as_ns host1 ping 10.0.1.1 -c2
+PING 10.0.1.1 (10.0.1.1) 56(84) bytes of data.
+64 bytes from 10.0.1.1: icmp_seq=1 ttl=63 time=0.367 ms
+64 bytes from 10.0.1.1: icmp_seq=2 ttl=63 time=0.103 ms
+
+$ as_ns host1 ping 192.0.2.1 -c2
+PING 192.0.2.1 (192.0.2.1) 56(84) bytes of data.
+64 bytes from 192.0.2.1: icmp_seq=1 ttl=63 time=0.308 ms
+64 bytes from 192.0.2.1: icmp_seq=2 ttl=63 time=0.131 ms</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x5728; server &#x4E0A;&#x6293;&#x5305;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ as_ns server tcpdump <span class="hljs-_">-l</span> <span class="hljs-_">-e</span> -n -i veth0
+10:52:16.957652 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype ARP (0x0806), length 60: Request who-has 10.0.1.1 tell 10.0.1.254, length 46
+10:52:16.957665 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype ARP (0x0806), length 42: Reply 10.0.1.1 is-at 8a:11:56:ed:90:1a, length 28
+10:52:42.127538 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype IPv4 (0x0800), length 98: 10.0.0.1 &gt; 10.0.1.1: ICMP <span class="hljs-built_in">echo</span> request, id 4105, seq 1, length 64
+10:52:42.127559 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 10.0.1.1 &gt; 10.0.0.1: ICMP <span class="hljs-built_in">echo</span> reply, id 4105, seq 1, length 64
+10:52:43.159842 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype IPv4 (0x0800), length 98: 10.0.0.1 &gt; 10.0.1.1: ICMP <span class="hljs-built_in">echo</span> request, id 4105, seq 2, length 64
+10:52:43.159878 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 10.0.1.1 &gt; 10.0.0.1: ICMP <span class="hljs-built_in">echo</span> reply, id 4105, seq 2, length 64
+10:52:47.383850 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype ARP (0x0806), length 42: Request who-has 10.0.1.254 tell 10.0.1.1, length 28
+10:52:47.386082 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype ARP (0x0806), length 60: Reply 10.0.1.254 is-at 00:00:00:00:00:22, length 46
+10:52:58.085359 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype IPv4 (0x0800), length 98: 10.0.0.1 &gt; 192.0.2.1: ICMP <span class="hljs-built_in">echo</span> request, id 4108, seq 1, length 64
+10:52:58.085380 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 192.0.2.1 &gt; 10.0.0.1: ICMP <span class="hljs-built_in">echo</span> reply, id 4108, seq 1, length 64
+10:52:59.095718 00:00:00:00:00:22 &gt; 8a:11:56:ed:90:1a, ethertype IPv4 (0x0800), length 98: 10.0.0.1 &gt; 192.0.2.1: ICMP <span class="hljs-built_in">echo</span> request, id 4108, seq 2, length 64
+10:52:59.095782 8a:11:56:ed:90:1a &gt; 00:00:00:00:00:22, ethertype IPv4 (0x0800), length 98: 192.0.2.1 &gt; 10.0.0.1: ICMP <span class="hljs-built_in">echo</span> reply, id 4108, seq 2, length 64</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_big">BIG &#x8DEF;&#x7531;</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>&#x672C;&#x90E8;&#x5206;&#x5728;&#x4E0A;&#x9762;&#x9759;&#x6001;&#x8DEF;&#x7531;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#x8C03;&#x6574;&#x9759;&#x6001;&#x8DEF;&#x7531;&#x5230; BG P&#x8DEF;&#x7531;&#xFF0C;&#x6570;&#x636E;&#x5E73;&#x9762;&#x793A;&#x610F;&#x5982;&#x4E0B;&#x56FE;&#xFF1A;</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="img/ovs-routing-bgp.png" alt="ovs routing bgp.png"></span></p>
+</div>
+<div class="sect2">
+<h3 id="___5">&#x63A7;&#x5236;&#x5E73;&#x9762;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x5220;&#x9664;&#x9759;&#x6001;&#x8DEF;&#x7531;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">    routes:
+    - route:
+        ip_dst: <span class="hljs-string">&quot;192.0.2.0/24&quot;</span>
+        ip_gw: <span class="hljs-string">&apos;10.0.1.1&apos;</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x589E;&#x52A0; BGP &#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">  bird:
+    bgp:
+      vlan: servers                       <span class="hljs-comment"># The VLAN faucet use for BGP</span>
+      as: 65000                           <span class="hljs-comment"># Faucet&apos;s AS number</span>
+      port: 9179                          <span class="hljs-comment"># BGP port for Faucet to listen on.</span>
+      routerid: <span class="hljs-string">&apos;10.0.1.3&apos;</span>                <span class="hljs-comment"># Faucet&apos;s Unique ID.</span>
+      server_addresses: [<span class="hljs-string">&apos;10.0.1.3&apos;</span>]      <span class="hljs-comment"># Faucet&apos;s listen IP for BGP</span>
+      neighbor_addresses: [<span class="hljs-string">&apos;10.0.1.2&apos;</span>]    <span class="hljs-comment"># Neighbouring IP addresses (IPv4/IPv6)</span>
+      neighbor_as: 65001                  <span class="hljs-comment"># Neighbour&apos;s AS number</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x589E;&#x52A0;&#x63A5;&#x53E3;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">      4:
+        name: <span class="hljs-string">&quot;bgp&quot;</span>
+        description: <span class="hljs-string">&quot;BIRD BGP router&quot;</span>
+        native_vlan: servers
+      5:
+        name: <span class="hljs-string">&quot;faucet&quot;</span>
+        description: <span class="hljs-string">&quot;faucet dataplane connection&quot;</span>
+        native_vlan: servers</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. &#x5B8C;&#x6574;&#x914D;&#x7F6E;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">vlans:
+  hosts:
+    vid: 100
+    description: <span class="hljs-string">&quot;vlan for clients&quot;</span>
+    faucet_mac: <span class="hljs-string">&quot;00:00:00:00:00:11&quot;</span>
+    faucet_vips: [<span class="hljs-string">&quot;10.0.0.254/24&quot;</span>]
+
+  servers:
+    vid: 200
+    description: <span class="hljs-string">&quot;vlan for servers&quot;</span>
+    faucet_mac: <span class="hljs-string">&quot;00:00:00:00:00:22&quot;</span>
+    faucet_vips: [<span class="hljs-string">&quot;10.0.1.254/24&quot;</span>]
+routers:
+  router-hosts-servers:
+    vlans: [hosts, servers]
+  bird:
+    bgp:
+      vlan: servers                       <span class="hljs-comment"># The VLAN faucet use for BGP</span>
+      as: 65000                           <span class="hljs-comment"># Faucet&apos;s AS number</span>
+      port: 9179                          <span class="hljs-comment"># BGP port for Faucet to listen on.</span>
+      routerid: <span class="hljs-string">&apos;10.0.1.3&apos;</span>                <span class="hljs-comment"># Faucet&apos;s Unique ID.</span>
+      server_addresses: [<span class="hljs-string">&apos;10.0.1.3&apos;</span>]      <span class="hljs-comment"># Faucet&apos;s listen IP for BGP</span>
+      neighbor_addresses: [<span class="hljs-string">&apos;10.0.1.2&apos;</span>]    <span class="hljs-comment"># Neighbouring IP addresses (IPv4/IPv6)</span>
+      neighbor_as: 65001                  <span class="hljs-comment"># Neighbour&apos;s AS number</span>
+dps:
+  br0:
+    dp_id: 0x1
+    hardware: <span class="hljs-string">&quot;Open vSwitch&quot;</span>
+    interfaces:
+      1:
+        name: <span class="hljs-string">&quot;host1&quot;</span>
+        description: <span class="hljs-string">&quot;host1 network namespace&quot;</span>
+        native_vlan: hosts
+      2:
+        name: <span class="hljs-string">&quot;host2&quot;</span>
+        description: <span class="hljs-string">&quot;host2 network namespace&quot;</span>
+        native_vlan: hosts
+      3:
+        name: <span class="hljs-string">&quot;server&quot;</span>
+        description: <span class="hljs-string">&quot;server network namespace&quot;</span>
+        native_vlan: servers
+      4:
+        name: <span class="hljs-string">&quot;bgp&quot;</span>
+        description: <span class="hljs-string">&quot;BIRD BGP router&quot;</span>
+        native_vlan: servers
+      5:
+        name: <span class="hljs-string">&quot;faucet&quot;</span>
+        description: <span class="hljs-string">&quot;faucet dataplane connection&quot;</span>
+        native_vlan: servers</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___6">&#x6570;&#x636E;&#x5E73;&#x9762;&#x914D;&#x7F6E;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x6DFB;&#x52A0; bgp host &#x8FD0;&#x884C; bird</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">create_ns bgp 10.0.1.2/24
+sudo ovs-vsctl add-port br0 veth-bgp -- <span class="hljs-built_in">set</span> interface veth-bgp ofport_request=4</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. &#x6761;&#x4EF6; Faucet host&#xFF0C;&#x53EF;&#x4EE5;&#x548C; bgp host &#x901A;&#x4FE1;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo ip link add veth-faucet <span class="hljs-built_in">type</span> veth peer name veth-faucet-ovs
+sudo ovs-vsctl add-port br0 veth-faucet-ovs -- <span class="hljs-built_in">set</span> interface veth-faucet-ovs ofport_request=5
+sudo ip addr add 10.0.1.3/24 dev veth-faucet
+sudo ip link <span class="hljs-built_in">set</span> veth-faucet up
+sudo ip link <span class="hljs-built_in">set</span> veth-faucet-ovs up</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. &#x5B89;&#x88C5; BIRD</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">sudo apt-get install bird
+sudo systemctl stop bird
+sudo systemctl stop bird6</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>4. BIRD &#x914D;&#x7F6E; /etc/bird/bird.conf</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">protocol kernel {
+    scan time 60;
+    import none;
+}
+
+protocol device {
+    scan time 60;
+}
+
+<span class="hljs-comment"># Generate static route inside bird</span>
+protocol static {
+    route 192.0.2.0/24 via 10.0.1.1;
+}
+
+<span class="hljs-comment"># BGP peer with faucet</span>
+<span class="hljs-comment"># Import all routes and export our static route</span>
+protocol bgp faucet {
+    <span class="hljs-built_in">local</span> as 65001;
+    neighbor 10.0.1.3 port 9179 as 65000;
+    <span class="hljs-built_in">export</span> all;
+    import all;
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>5. &#x542F;&#x52A8;&#x5E76;&#x67E5;&#x770B; BIRD &#x8FD0;&#x884C;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ as_ns bgp bird -P /run/bird-bgp.pid
+
+$ as_ns bgp ps -ef | grep bird
+
+$ as_ns bgp netstat -antulop | grep 5861
+tcp        0      0 0.0.0.0:179             0.0.0.0:*               LISTEN      5861/bird            off (0.00/0/0)
+tcp        0      1 10.0.1.2:60903          10.0.1.3:9179           SYN_SENT    5861/bird            on (1.72/1/0)</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="___7">&#x8BBF;&#x95EE;&#x6D4B;&#x8BD5;</h3>
+<div class="listingblock">
+<div class="title"><strong>1. &#x67E5;&#x770B; bird &#x72B6;&#x6001;</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>2. T</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><strong>3. T</strong></div>
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"></code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ovs-switch.html" class="navigation navigation-prev " aria-label="Previous page: SWITCHING">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ovs-acl.html" class="navigation navigation-next " aria-label="Next page: ACLs">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"ROUTING","level":"1.4.2.2","depth":3,"next":{"title":"ACLs","level":"1.4.2.3","depth":3,"path":"sdn/ovs-acl.adoc","ref":"sdn/ovs-acl.adoc","articles":[]},"previous":{"title":"SWITCHING","level":"1.4.2.1","depth":3,"path":"sdn/ovs-switch.adoc","ref":"sdn/ovs-switch.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"sdn/ovs-routing.adoc","mtime":"2021-12-28T15:54:58.312Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2022-03-30T14:13:13.098Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing-plus/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-splitter/splitter.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-back-to-top-button/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-edit-link/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
