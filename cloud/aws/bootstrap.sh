@@ -12,7 +12,7 @@ calicoctl -h &> /dev/null || (echo "Downloading calicoctl"; curl -Lo "`echo ~`/.
 kubectl -h &> /dev/null || (echo "Downloading kubectl"; curl -Lo "`echo ~`/.local/bin/kubectl" https://dl.k8s.io/release/v1.19.0/bin/linux/amd64/kubectl )
 kops -h &> /dev/null || (echo "Downloading kOps"; curl -Lo "`echo ~`/.local/bin/kops" https://github.com/kubernetes/kops/releases/download/v1.19.0/kops-linux-amd64 )
 verify &>/dev/null || (echo "Downloading verify"; curl -Lo "`echo ~`/.local/bin/verify" https://github.com/tigera/ccol1/releases/download/1.0/verify )
-eksctl -h &> /dev/null || (echo "Downloading eksctl"; curl -Lo /tmp/eksctl.tgz https://github.com/weaveworks/eksctl/releases/download/0.37.0/eksctl_Linux_amd64.tar.gz && tar xzvf /tmp/eksctl.tgz > /dev/null && mv eksctl ~/.local/bin/eksctl )
+eksctl -h &> /dev/null || (echo "Downloading eksctl"; curl -Lo /tmp/eksctl.tgz https://github.com/weaveworks/eksctl/releases/download/0.79.0/eksctl_Linux_amd64.tar.gz && tar xzvf /tmp/eksctl.tgz > /dev/null && mv eksctl ~/.local/bin/eksctl )
 chmod +x "`echo ~`/.local/bin/"*
 
 echo Verifying installation.
