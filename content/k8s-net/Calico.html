@@ -1408,16 +1408,16 @@
 </li>
 <li><a href="#_calico_with_aws">Calico with AWS</a>
 <ul class="sectlevel2">
-<li><a href="#_aws_kubernetes">AWS &#x4E0A;&#x8FD0;&#x884C; Kubernetes &#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;</a></li>
-<li><a href="#_aws_kubernetes_aws_cni_calico_cni">AWS &#x4E0A; Kubernetes &#x4F7F;&#x7528;AWS CNI &#x548C; Calico CNI &#x5BF9;&#x6BD4;</a></li>
-<li><a href="#_aws_kubernetes_security_group">AWS &#x4E0A; Kubernetes Security Group</a></li>
-<li><a href="#_aws_kubernetes_networkpolicy_encryption">AWS &#x4E0A; Kubernetes NetworkPolicy &#x548C; Encryption</a></li>
-<li><a href="#_aws_calico_5">AWS &#x4E0A;&#x4F7F;&#x7528; Calico &#x7684; 5 &#x79CD;&#x7EC4;&#x5408;&#x65B9;&#x5F0F;</a></li>
-<li><a href="#_aws_byoc_kubernetes">AWS &#x4E0A;&#x6784;&#x5EFA; BYOC Kubernetes &#x96C6;&#x7FA4;&#x5DE5;&#x5177;</a></li>
+<li><a href="#_two_ways_to_run_kubernetes_on_aws_eks_byoc">Two ways to run Kubernetes on AWS: EKS, BYOC</a></li>
+<li><a href="#_kubernetes_on_aws_using_aws_cni_vs_calico_cni">Kubernetes on AWS using AWS CNI vs Calico CNI</a></li>
+<li><a href="#_kubernetes_on_aws_integrating_aws_security_group">Kubernetes on AWS integrating AWS Security Group</a></li>
+<li><a href="#_kubernetes_networkpolicy_and_encryption_on_aws">Kubernetes NetworkPolicy and Encryption on AWS</a></li>
+<li><a href="#_5_combinations_of_calico_on_aws">5 Combinations of Calico on AWS</a></li>
+<li><a href="#_tools_for_building_byoc_kubernetes_clusters_on_aws">Tools for building BYOC Kubernetes clusters on AWS</a></li>
 <li><a href="#_aws_cni_calico_policy_iptables_dataplane">AWS CNI + Calico Policy + iptables Dataplane</a></li>
 <li><a href="#_aws_cni_calico_policy_calico_ebpf">AWS CNI + Calico Policy + Calico eBPF</a></li>
 <li><a href="#_calico_cni_calico_policy_iptables_dataplane">Calico CNI + Calico Policy + iptables Dataplane</a></li>
-<li><a href="#__aws_service_calico_production_enabled_kubernetes">&#x57FA;&#x4E8E; AWS Service &#x53CA; Calico &#x6784;&#x5EFA; Production Enabled Kubernetes &#x73AF;&#x5883;</a></li>
+<li><a href="#_build_a_production_enabled_kubernetes_environment_based_on_aws_service_and_calico">Build a Production Enabled Kubernetes environment based on AWS Service and Calico</a></li>
 </ul>
 </li>
 </ul>
@@ -2932,7 +2932,7 @@ EOF</code></pre>
 <h2 id="_calico_with_aws">Calico with AWS</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_aws_kubernetes">AWS &#x4E0A;&#x8FD0;&#x884C; Kubernetes &#x7684;&#x4E24;&#x79CD;&#x65B9;&#x5F0F;</h3>
+<h3 id="_two_ways_to_run_kubernetes_on_aws_eks_byoc">Two ways to run Kubernetes on AWS: EKS, BYOC</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -3044,7 +3044,7 @@ EOF</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_aws_kubernetes_aws_cni_calico_cni">AWS &#x4E0A; Kubernetes &#x4F7F;&#x7528;AWS CNI &#x548C; Calico CNI &#x5BF9;&#x6BD4;</h3>
+<h3 id="_kubernetes_on_aws_using_aws_cni_vs_calico_cni">Kubernetes on AWS using AWS CNI vs Calico CNI</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -3160,7 +3160,7 @@ EOF</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_aws_kubernetes_security_group">AWS &#x4E0A; Kubernetes Security Group</h3>
+<h3 id="_kubernetes_on_aws_integrating_aws_security_group">Kubernetes on AWS integrating AWS Security Group</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 28.5714%;">
@@ -3225,7 +3225,7 @@ EOF</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_aws_kubernetes_networkpolicy_encryption">AWS &#x4E0A; Kubernetes NetworkPolicy &#x548C; Encryption</h3>
+<h3 id="_kubernetes_networkpolicy_and_encryption_on_aws">Kubernetes NetworkPolicy and Encryption on AWS</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 16.6666%;">
@@ -3330,7 +3330,7 @@ EOF</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_aws_calico_5">AWS &#x4E0A;&#x4F7F;&#x7528; Calico &#x7684; 5 &#x79CD;&#x7EC4;&#x5408;&#x65B9;&#x5F0F;</h3>
+<h3 id="_5_combinations_of_calico_on_aws">5 Combinations of Calico on AWS</h3>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
 <col style="width: 33.3333%;">
@@ -3374,7 +3374,7 @@ EOF</code></pre>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_aws_byoc_kubernetes">AWS &#x4E0A;&#x6784;&#x5EFA; BYOC Kubernetes &#x96C6;&#x7FA4;&#x5DE5;&#x5177;</h3>
+<h3 id="_tools_for_building_byoc_kubernetes_clusters_on_aws">Tools for building BYOC Kubernetes clusters on AWS</h3>
 <div class="sect3">
 <h4 id="_kops">KOps</h4>
 <div class="ulist">
@@ -4818,7 +4818,7 @@ bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 </div>
 </div>
 <div class="sect2">
-<h3 id="__aws_service_calico_production_enabled_kubernetes">&#x57FA;&#x4E8E; AWS Service &#x53CA; Calico &#x6784;&#x5EFA; Production Enabled Kubernetes &#x73AF;&#x5883;</h3>
+<h3 id="_build_a_production_enabled_kubernetes_environment_based_on_aws_service_and_calico">Build a Production Enabled Kubernetes environment based on AWS Service and Calico</h3>
 <div class="sect3">
 <h4 id="__s3">&#x521B;&#x5EFA; S3 &#x5B58;&#x50A8;</h4>
 <div class="listingblock">
@@ -5434,7 +5434,7 @@ sg-0da80fb9a77b7079c</code></pre>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Calico","level":"1.3.2.3","depth":3,"next":{"title":"LINUX NETWORK","level":"1.4","depth":1,"path":"sdn/README.adoc","ref":"sdn/README.adoc","articles":[{"title":"Netfilter","level":"1.4.1","depth":2,"path":"sdn/netfilter.adoc","ref":"sdn/netfilter.adoc","articles":[]},{"title":"OVS","level":"1.4.2","depth":2,"path":"sdn/ovs.adoc","ref":"sdn/ovs.adoc","articles":[{"title":"SWITCHING","level":"1.4.2.1","depth":3,"path":"sdn/ovs-switch.adoc","ref":"sdn/ovs-switch.adoc","articles":[]},{"title":"ROUTING","level":"1.4.2.2","depth":3,"path":"sdn/ovs-routing.adoc","ref":"sdn/ovs-routing.adoc","articles":[]},{"title":"ACLs","level":"1.4.2.3","depth":3,"path":"sdn/ovs-acl.adoc","ref":"sdn/ovs-acl.adoc","articles":[]},{"title":"NFV","level":"1.4.2.4","depth":3,"path":"sdn/ovs-nfv.adoc","ref":"sdn/ovs-nfv.adoc","articles":[]}]},{"title":"Mininet","level":"1.4.3","depth":2,"path":"sdn/mininet.adoc","ref":"sdn/mininet.adoc","articles":[]}]},"previous":{"title":"Flannel","level":"1.3.2.2","depth":3,"path":"k8s-net/flannel.adoc","ref":"k8s-net/flannel.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/Calico.adoc","mtime":"2021-11-19T02:29:20.424Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2022-03-30T14:13:13.098Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Calico","level":"1.3.2.3","depth":3,"next":{"title":"LINUX NETWORK","level":"1.4","depth":1,"path":"sdn/README.adoc","ref":"sdn/README.adoc","articles":[{"title":"Netfilter","level":"1.4.1","depth":2,"path":"sdn/netfilter.adoc","ref":"sdn/netfilter.adoc","articles":[]},{"title":"OVS","level":"1.4.2","depth":2,"path":"sdn/ovs.adoc","ref":"sdn/ovs.adoc","articles":[{"title":"SWITCHING","level":"1.4.2.1","depth":3,"path":"sdn/ovs-switch.adoc","ref":"sdn/ovs-switch.adoc","articles":[]},{"title":"ROUTING","level":"1.4.2.2","depth":3,"path":"sdn/ovs-routing.adoc","ref":"sdn/ovs-routing.adoc","articles":[]},{"title":"ACLs","level":"1.4.2.3","depth":3,"path":"sdn/ovs-acl.adoc","ref":"sdn/ovs-acl.adoc","articles":[]},{"title":"NFV","level":"1.4.2.4","depth":3,"path":"sdn/ovs-nfv.adoc","ref":"sdn/ovs-nfv.adoc","articles":[]}]},{"title":"Mininet","level":"1.4.3","depth":2,"path":"sdn/mininet.adoc","ref":"sdn/mininet.adoc","articles":[]}]},"previous":{"title":"Flannel","level":"1.3.2.2","depth":3,"path":"k8s-net/flannel.adoc","ref":"k8s-net/flannel.adoc","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{"copyrightYear":"2019","copyrightHolder":"Kylin Soong"},"plugins":["collapsible-menu","-sharing","sharing-plus","splitter","back-to-top-button","edit-link"],"pluginsConfig":{"tbfed-pagefooter":{"copyright":"Copyright &copy Kylin Soong 2019","modify_label":"该文件修订时间：","modify_format":"YYYY-MM-DD HH:mm:ss"},"collapsible-menu":{},"splitter":{},"search":{},"sharing-plus":{"qq":false,"all":["facebook","google","twitter","instapaper","linkedin","pocket","stumbleupon"],"douban":false,"facebook":true,"weibo":false,"instapaper":false,"whatsapp":false,"hatenaBookmark":false,"twitter":true,"messenger":false,"line":false,"vk":false,"pocket":true,"google":false,"viber":false,"stumbleupon":false,"qzone":false,"linkedin":false},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"donate":{"wechat":"http://ksoong.org/docs/content/images/wechat.png","alipay":"http://ksoong.org/docs/content/images/alipay.png","title":"","button":"赞赏","alipayText":"支付宝捐赠","wechatText":"微信捐赠"},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"back-to-top-button":{},"sharing":{"weibo":true,"linkedin":true,"google":true,"facebook":true,"all":["facebook","google","linkedin","weibo"]},"edit-link":{"label":"Edit This Page","base":"https://github.com/kylinsoong/docs/blob/gh-pages"},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css"}},"file":{"path":"k8s-net/Calico.adoc","mtime":"2022-09-18T04:29:04.072Z","type":"asciidoc"},"gitbook":{"version":"3.2.3","time":"2022-09-18T04:29:24.522Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

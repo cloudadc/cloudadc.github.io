@@ -1234,7 +1234,7 @@ EOF
 
 == Calico with AWS
 
-=== AWS 上运行 Kubernetes 的两种方式
+=== Two ways to run Kubernetes on AWS: EKS, BYOC
 
 [cols="2,5a,5a"]
 |===
@@ -1278,7 +1278,7 @@ EOF
 * Significant complexity for the user to manage
 |===
 
-=== AWS 上 Kubernetes 使用AWS CNI 和 Calico CNI 对比
+=== Kubernetes on AWS using AWS CNI vs Calico CNI
 
 [cols="2,5a,5a"]
 |===
@@ -1317,7 +1317,7 @@ EOF
 * Calico CNI can not install on EKS control plane nodes - Control Plane nodes will not be able to initiate network connections to Calico Pod.
 |===
 
-=== AWS 上 Kubernetes Security Group
+=== Kubernetes on AWS integrating AWS Security Group 
 
 [cols="2,5a"]
 |===
@@ -1342,7 +1342,7 @@ EOF
 * Only for coarse-grained network policy, Kubernetes NetworkPolicy or Calico NetworkPolicy is necessary for fine-grained Policy control. 
 |===
 
-=== AWS 上 Kubernetes NetworkPolicy 和 Encryption
+=== Kubernetes NetworkPolicy and Encryption on AWS
 
 [cols="2,5a,5a"]
 |===
@@ -1380,7 +1380,7 @@ EOF
 * Modify the MTU used by Calico networking is recommend for increase networj performance 
 |===
 
-=== AWS 上使用 Calico 的 5 种组合方式
+=== 5 Combinations of Calico on AWS
 
 |===
 |CNI |NetworkPolicy |Dataplane
@@ -1406,7 +1406,7 @@ EOF
 |Calico eBPF
 |===
 
-=== AWS 上构建 BYOC Kubernetes 集群工具
+=== Tools for building BYOC Kubernetes clusters on AWS
 
 ==== KOps
 
@@ -2541,7 +2541,7 @@ bash: warning: setlocale: LC_ALL: cannot change locale (en_US.UTF-8)
 eksctl delete cluster --name calicocni
 ----
 
-=== 基于 AWS Service 及 Calico 构建 Production Enabled Kubernetes 环境
+=== Build a Production Enabled Kubernetes environment based on AWS Service and Calico
 
 ==== 创建 S3 存储
 
